@@ -455,7 +455,7 @@ export async function polishDailyReportWithLLM(digest, settings) {
   const reportPayload = buildDailyReportPayload(digest);
   const systemPrompt = buildCombinedSystemPrompt(
     [
-      '你是用户的科研日报编辑。请根据给定的 PaperRadar JSON 生成一份中文 Markdown 日报。',
+      '你是用户的科研日报编辑。请根据给定的 paper-daily JSON 生成一份中文 Markdown 日报。',
       '要求：',
       '1. 不要编造 JSON 中没有的信息。',
       '2. 检查范围必须按 JSON 的 scopeLabel 表述；不要把目标日期当天写成“过去 1 天”。',

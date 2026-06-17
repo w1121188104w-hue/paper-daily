@@ -1,7 +1,7 @@
 {
-  "name": "arxiv-daily-recommender",
+  "name": "paper-daily",
   "version": "1.0.0",
-  "description": "Daily arXiv recommendation system with customizable subscriptions and date-based browsing UI",
+  "description": "Daily arXiv paper recommendation app with calendar, AI summaries, and author tracking",
   "type": "module",
   "scripts": {
     "dev": "node --watch src/server.js",

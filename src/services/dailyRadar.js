@@ -116,7 +116,7 @@ function markdownPaperLine(paper) {
 export function buildDailyReportMarkdown(digest, dateKey) {
   const radar = digest?.dailyRadar || buildDailyRadar(digest, dateKey);
   const lines = [
-    `# PaperRadar Daily Report - ${radar.date}`,
+    `# paper-daily Daily Report - ${radar.date}`,
     '',
     `Generated: ${radar.generatedAt || new Date().toISOString()}`,
     '',
@@ -169,7 +169,7 @@ export function buildDailyReportMarkdown(digest, dateKey) {
 export function buildNotificationMessage(digest) {
   const radar = digest?.dailyRadar || buildDailyRadar(digest, digest?.forDate);
   if (radar.status === 'failed') {
-    return '今日论文抓取失败，请打开 PaperRadar 查看详情。';
+    return '今日论文抓取失败，请打开 paper-daily 查看详情。';
   }
   if (radar.status === 'partial') {
     return '今日论文抓取只有部分结果，系统会自动重试。';

@@ -1,19 +1,19 @@
-# PaperRadar Deployment
+# paper-daily Deployment
 
 ## macOS: keep it running with launchd
 
-This is the simplest local deployment for a personal Mac. It starts PaperRadar
+This is the simplest local deployment for a personal Mac. It starts paper-daily
 when you log in, keeps it alive, and restarts it if it crashes.
 
 From the project directory:
 
 ```bash
 mkdir -p logs
-sed "s#/ABSOLUTE/PATH/TO/paper-daily#$(pwd)#g" deploy/macos/com.paperradar.server.plist \
-  > ~/Library/LaunchAgents/com.paperradar.server.plist
-launchctl unload ~/Library/LaunchAgents/com.paperradar.server.plist 2>/dev/null || true
-launchctl load ~/Library/LaunchAgents/com.paperradar.server.plist
-launchctl start com.paperradar.server
+sed "s#/ABSOLUTE/PATH/TO/paper-daily#$(pwd)#g" deploy/macos/com.paper-daily.server.plist \
+  > ~/Library/LaunchAgents/com.paper-daily.server.plist
+launchctl unload ~/Library/LaunchAgents/com.paper-daily.server.plist 2>/dev/null || true
+launchctl load ~/Library/LaunchAgents/com.paper-daily.server.plist
+launchctl start com.paper-daily.server
 ```
 
 Then open:
@@ -25,22 +25,22 @@ http://localhost:3000
 Check status:
 
 ```bash
-launchctl list | grep com.paperradar.server
+launchctl list | grep com.paper-daily.server
 curl http://localhost:3000/api/digest/refresh-status
 ```
 
 View logs:
 
 ```bash
-tail -f logs/paperradar.out.log
-tail -f logs/paperradar.err.log
+tail -f logs/paper-daily.out.log
+tail -f logs/paper-daily.err.log
 ```
 
 Stop the service:
 
 ```bash
-launchctl stop com.paperradar.server
-launchctl unload ~/Library/LaunchAgents/com.paperradar.server.plist
+launchctl stop com.paper-daily.server
+launchctl unload ~/Library/LaunchAgents/com.paper-daily.server.plist
 ```
 
 ### Notes
@@ -49,7 +49,7 @@ launchctl unload ~/Library/LaunchAgents/com.paperradar.server.plist
 - The plist template uses `/ABSOLUTE/PATH/TO/paper-daily`; replace it with your
   local project path before loading it into launchd.
 - The default daily refresh time is `08:10` in `Asia/Shanghai`.
-- A catch-up check runs at `13:00`. On startup and page open, PaperRadar also
+- A catch-up check runs at `13:00`. On startup and page open, paper-daily also
   scans the recent backlog and refreshes missing, failed, partial, or
   interrupted days sequentially.
 - By default, catch-up scans the last 7 days for missing dates, also scans the
@@ -86,12 +86,12 @@ Example service file:
 
 ```ini
 [Unit]
-Description=PaperRadar
+Description=paper-daily
 After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/paperradar
+WorkingDirectory=/opt/paper-daily
 ExecStart=/usr/bin/node src/server.js
 Restart=always
 RestartSec=5
@@ -115,8 +115,8 @@ Enable it:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now paperradar
-sudo systemctl status paperradar
+sudo systemctl enable --now paper-daily
+sudo systemctl status paper-daily
 ```
 
 If exposing it to the internet, put it behind Nginx/Caddy with HTTPS and add

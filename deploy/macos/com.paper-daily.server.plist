@@ -4,7 +4,7 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.paperradar.server</string>
+  <string>com.paper-daily.server</string>
 
   <key>ProgramArguments</key>
   <array>
@@ -58,9 +58,9 @@
   <true/>
 
   <key>StandardOutPath</key>
-  <string>/ABSOLUTE/PATH/TO/paper-daily/logs/paperradar.out.log</string>
+  <string>/ABSOLUTE/PATH/TO/paper-daily/logs/paper-daily.out.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/ABSOLUTE/PATH/TO/paper-daily/logs/paperradar.err.log</string>
+  <string>/ABSOLUTE/PATH/TO/paper-daily/logs/paper-daily.err.log</string>
 </dict>
 </plist>

@@ -126,7 +126,7 @@ async function fetchWithEngine(targetUrl, engine) {
   const timer = withTimeout(scholarTimeoutMs);
   const headers = {
     Accept: 'text/markdown, text/plain;q=0.9',
-    'User-Agent': 'PaperRadar/1.0',
+    'User-Agent': 'paper-daily/1.0',
     'x-engine': engine,
     'x-timeout': String(Math.ceil(scholarTimeoutMs / 1000))
   };

@@ -131,7 +131,7 @@ export async function searchArxiv({
       response = await fetch(url, {
         signal: controller.signal,
         headers: {
-          'User-Agent': 'arxiv-daily-recommender/1.0'
+          'User-Agent': 'paper-daily/1.0'
         }
       });
     } catch (error) {

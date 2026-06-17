@@ -549,7 +549,7 @@ async function runRefreshForDate(dateKey = todayDateKey(), reason = 'manual') {
 
       if (shouldNotifyForReason(reason)) {
         const message = buildNotificationMessage(digest);
-        sendDesktopNotification('PaperRadar 今日推荐已更新', message).catch(() => {});
+        sendDesktopNotification('paper-daily 今日推荐已更新', message).catch(() => {});
       }
 
       return digest;
