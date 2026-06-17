@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.paperradar.server</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/node</string>
+    <string>src/server.js</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/ABSOLUTE/PATH/TO/paper-daily</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PORT</key>
+    <string>3000</string>
+    <key>REFRESH_CRON</key>
+    <string>10 8 * * *</string>
+    <key>REFRESH_CATCHUP_CRON</key>
+    <string>0 13 * * *</string>
+    <key>REFRESH_RETRY_MINUTES</key>
+    <string>30</string>
+    <key>REFRESH_RETRY_LIMIT</key>
+    <string>3</string>
+    <key>CATCHUP_LOOKBACK_DAYS</key>
+    <string>7</string>
+    <key>CATCHUP_FAILED_LOOKBACK_DAYS</key>
+    <string>30</string>
+    <key>CATCHUP_MAX_DATES</key>
+    <string>3</string>
+    <key>CATCHUP_DELAY_MS</key>
+    <string>120000</string>
+    <key>REFRESH_TIMEZONE</key>
+    <string>Asia/Shanghai</string>
+    <key>ENABLE_DESKTOP_NOTIFICATIONS</key>
+    <string>true</string>
+    <key>ARXIV_TIMEOUT_MS</key>
+    <string>45000</string>
+    <key>ARXIV_MAX_ATTEMPTS</key>
+    <string>4</string>
+    <key>ARXIV_REQUEST_DELAY_MS</key>
+    <string>3500</string>
+    <key>LLM_TIMEOUT_MS</key>
+    <string>120000</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/ABSOLUTE/PATH/TO/paper-daily/logs/paperradar.out.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/ABSOLUTE/PATH/TO/paper-daily/logs/paperradar.err.log</string>
+</dict>
+</plist>

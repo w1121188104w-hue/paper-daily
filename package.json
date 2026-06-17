@@ -1,0 +1,21 @@
+{
+  "name": "arxiv-daily-recommender",
+  "version": "1.0.0",
+  "description": "Daily arXiv recommendation system with customizable subscriptions and date-based browsing UI",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "refresh": "node src/server.js --refresh-once"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "fast-xml-parser": "^4.5.0",
+    "node-cron": "^3.0.3",
+    "pdf-parse": "^1.1.1"
+  }
+}

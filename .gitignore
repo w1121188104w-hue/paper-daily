@@ -1,0 +1,10 @@
+node_modules
+.env
+.env.*
+!.env.example
+.DS_Store
+logs/*.log
+data/*
+!data/.gitkeep
+!data/README.md
+!data/*.example.json

@@ -1,0 +1,8 @@
+{
+  "baseUrl": "https://api.openai.com/v1",
+  "apiKey": "",
+  "model": "gpt-4o-mini",
+  "temperature": 0.2,
+  "maxTokens": 700,
+  "summaryPrompt": "你是科研助手。请根据给定论文信息输出：1) 100字摘要 2) 关键贡献(3条) 3) 方法亮点(3条) 4) 局限性(2条) 5) 可复现建议。"
+}

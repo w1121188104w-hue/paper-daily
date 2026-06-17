@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>arXiv 论文日历主页</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <aside class="corner-settings">
+      <button id="settingsToggle" class="settings-fab" type="button" aria-label="打开设置">⚙</button>
+      <div id="settingsPanel" class="settings-panel" hidden>
+        <div class="settings-head">
+          <strong>设置</strong>
+          <button id="settingsClose" class="settings-close" type="button" aria-label="关闭设置">×</button>
+        </div>
+        <div class="settings-body">
+          <section class="settings-block">
+            <h3>订阅设置</h3>
+            <label>arXiv 查询语句（每行一个）</label>
+            <textarea id="queries"></textarea>
+            <p class="meta">示例：retrieval augmented generation embedding model</p>
+            <label>最低推荐分阈值</label>
+            <input id="minScore" type="number" min="0" max="40" />
+            <label>作者追踪（每行一个）</label>
+            <textarea id="authorTracks"></textarea>
+            <p class="meta">
+              格式：姓名 | from=YYYY-MM-DD | scholar=https://scholar.google.com/citations?user=xxxx | query=au:Name
+              <br />
+              示例：Yuzheng Cai | from=2026-03-01 | scholar=https://scholar.google.com/citations?user=xxxx
+              <br />
+              示例：Yoshua Bengio | from=2026-03-10 | query=Yoshua Bengio
+            </p>
+            <label>研究启发关注方向（每行一个）</label>
+            <textarea id="insightInterests"></textarea>
+            <p class="meta">
+              示例：我关心这篇论文对 RAG 系统设计有什么可迁移启发
+              <br />
+              示例：我想知道哪些实验或指标值得在我的项目里复现
+            </p>
+            <button id="saveSubsBtn">保存订阅</button>
+          </section>
+
+          <section class="settings-block">
+            <h3>LLM 设置</h3>
+            <label>Base URL</label>
+            <input id="llmBaseUrl" type="text" />
+            <label>API Key</label>
+            <input id="llmApiKey" type="password" />
+            <label>Model</label>
+            <input id="llmModel" type="text" />
+            <label>Temperature</label>
+            <input id="llmTemperature" type="number" step="0.1" min="0" max="2" />
+            <label>Max Tokens</label>
+            <input id="llmMaxTokens" type="number" min="100" max="4000" />
+            <label>总结 Prompt</label>
+            <textarea id="llmPrompt"></textarea>
+            <button id="saveLlmBtn">保存 LLM 设置</button>
+          </section>
+        </div>
+      </div>
+    </aside>
+
+    <header class="hero main-only">
+      <h1>论文日历主页</h1>
+      <p>进入主页先看日历，点击任意日期进入对应的论文详情页面。</p>
+    </header>
+
+    <main class="calendar-layout single">
+      <section class="panel radar-panel">
+        <div class="digest-head">
+          <h2>今日雷达</h2>
+          <span id="todayRefreshBadge" class="status-badge">加载中</span>
+        </div>
+        <p id="todayRadarMeta" class="meta"></p>
+        <div id="todayProgress" class="progress-shell" hidden>
+          <div class="progress-track">
+            <div id="todayProgressBar" class="progress-bar"></div>
+          </div>
+          <p id="todayProgressText" class="meta"></p>
+        </div>
+        <div id="todayRadarTop" class="radar-list"></div>
+        <div id="todayAuthorUpdates" class="author-update-list"></div>
+        <div class="hero-actions radar-actions">
+          <a id="todayDetailLink" class="ghost-link" href="#">进入今日</a>
+          <a id="todayReportLink" class="ghost-link" href="#" target="_blank" rel="noopener noreferrer">打开日报</a>
+          <button id="refreshTodayBtn" type="button">后台刷新</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="calendar-head">
+          <button id="prevMonth" type="button">上个月</button>
+          <h2 id="monthTitle"></h2>
+          <button id="nextMonth" type="button">下个月</button>
+        </div>
+        <p id="calendarMeta" class="meta">点击某个日期进入详情页</p>
+        <div id="calendarGrid" class="calendar-grid"></div>
+      </section>
+    </main>
+
+    <script type="module" src="/home.js"></script>
+  </body>
+</html>
