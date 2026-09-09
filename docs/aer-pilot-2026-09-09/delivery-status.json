@@ -1,0 +1,10 @@
+{
+  "requested_surface": "local translation sample",
+  "attempted_report_mode": "html",
+  "result": "blocked_by_chart_requirement",
+  "error": "$.manifest.blocks must include at least one chart block for report artifacts",
+  "html_generated": false,
+  "website_deployed": false,
+  "available_text_artifact": "样本与核对结果.md",
+  "explanation": "The full answer-first narrative, sources, caveats, and next steps are preserved in text. No chart was added solely to satisfy packaging; the HTML requirement remains unfulfilled."
+}

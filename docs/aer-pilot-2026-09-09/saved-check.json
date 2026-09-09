@@ -1,0 +1,69 @@
+{
+  "checked_at": "2026-09-09T01:24:44.421Z",
+  "saved": true,
+  "status": "success",
+  "run_id": "20260909T012325146Z-2689a2f5-6493-49d3-80b1-ff4cee27277f",
+  "imported_at": "2026-09-09T01:23:25.146Z",
+  "paper_count": 487,
+  "completed_paper_count": 5,
+  "completed_fields": 10,
+  "failed_fields": 0,
+  "rejected_fields": 0,
+  "pending_fields_before": 814,
+  "pending_fields_after": 804,
+  "ready_pending_fields": 788,
+  "held_pending_fields": 16,
+  "untouched_papers": 482,
+  "unchanged_nontranslation_fields": true,
+  "unchanged_collection_logs": true,
+  "collection_run_count": 1,
+  "translation_import_count": 1,
+  "preserved_historical_and_work_files": 47,
+  "only_replaced_existing_library_file": "current.json",
+  "writer_lock_released": true,
+  "duplicate_import_preview": {
+    "completed_fields": 0,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 10,
+    "changed_papers": 0
+  },
+  "pointer": {
+    "schema_version": 1,
+    "manifest": {
+      "path": "snapshots/20260909T012325146Z-2689a2f5-6493-49d3-80b1-ff4cee27277f/manifest.json",
+      "sha256": "a7f3a85d3c2567a8813a382ea8e46adbb5d1185d3e6bf574a430674455964a76"
+    }
+  },
+  "previous_pointer": {
+    "schema_version": 1,
+    "manifest": {
+      "path": "snapshots/20260908T075328173Z-04fd2f24-56e8-4750-b1f8-14f1e7648513/manifest.json",
+      "sha256": "d1866831fe14a614eb3316296c579f36d2937d914f61a8944ff794a6caa9f889"
+    }
+  },
+  "changed_papers": [
+    {
+      "id": "doi:10.1257/aer.20220264",
+      "title_zh": "组织中的人才囤积"
+    },
+    {
+      "id": "doi:10.1257/aer.20230768",
+      "title_zh": "最优公共交通网络：来自雅加达全球最大快速公交系统的证据"
+    },
+    {
+      "id": "doi:10.1257/aer.20231414",
+      "title_zh": "远程办公与城市结构"
+    },
+    {
+      "id": "doi:10.1257/aer.20231696",
+      "title_zh": "公共部门的职业动机：来自警察的证据"
+    },
+    {
+      "id": "doi:10.1257/aer.20240056",
+      "title_zh": "不确定性与变化：关于企业主观信念的调查证据"
+    }
+  ],
+  "scope": "Local translation import only; no collection, metadata repair, build, push, or deployment."
+}

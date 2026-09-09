@@ -8,3 +8,6 @@ data/*
 !data/.gitkeep
 !data/README.md
 !data/*.example.json
+!data/config/
+data/config/*
+!data/config/journals.json

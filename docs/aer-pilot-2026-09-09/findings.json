@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-09-09",
+  "timezone": "Asia/Shanghai",
+  "intended_use": "Five full title/abstract translation samples; metadata verification against AEA publisher pages; no import.",
+  "grain": "one DOI per article",
+  "selection": "Explicit five-DOI pilot, all AER candidates with non-empty abstracts; excludes Presidential Address; purposive not random.",
+  "source_snapshot": {
+    "path": "snapshots/20260908T075328173Z-04fd2f24-56e8-4750-b1f8-14f1e7648513/manifest.json",
+    "sha256": "d1866831fe14a614eb3316296c579f36d2937d914f61a8944ff794a6caa9f889"
+  },
+  "checks": {
+    "papers": 5,
+    "distinct_dois": 5,
+    "title_and_abstract_nonempty": 5,
+    "title_matches": 5,
+    "abstract_body_matches_after_whitespace_and_JEL_separation": 5,
+    "jel_matches": 5,
+    "volume_issue_pages_month_matches": 5,
+    "authors_total": 16,
+    "missing_middle_initial_author_count": 1,
+    "affected_paper_count": 1,
+    "online_date_missing": 5,
+    "day_precision_not_confirmed": 5
+  },
+  "comparison_method": "Assistant compared all five AEA article pages to local originals, preserving author order. Publisher abbreviated page ranges expanded for comparison. JEL codes compared to publisher JEL Classification separately; display paragraphs normalized conceptually. This is a manual text comparison, not an automated HTML diff or independent expert review.",
+  "rows": [
+    {
+      "doi": "10.1257/aer.20220264",
+      "title": "Talent Hoarding in Organizations",
+      "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20220264",
+      "local_authors": [
+        "Ingrid Haegele"
+      ],
+      "publisher_authors": [
+        "Ingrid Haegele"
+      ],
+      "publisher_month": "2026-08",
+      "publisher_volume": "116",
+      "publisher_issue": "8",
+      "publisher_pages_expanded": "3110-3151",
+      "source_channels": [
+        "crossref",
+        "openalex"
+      ],
+      "checks": {
+        "title": "match",
+        "abstract_body": "match",
+        "jel": "match",
+        "doi": "match",
+        "volume_issue_pages": "match",
+        "publication_month": "match",
+        "authors": "match"
+      },
+      "translation_review": "复核重点：四分之三是管理者自述的比例；“准随机”没有改成随机试验；绩效薪酬、团队规模和人才可见度均保留为代理指标。“首次”是原摘要中的作者表述，本次没有另行核验文献优先权。"
+    },
+    {
+      "doi": "10.1257/aer.20230768",
+      "title": "Optimal Public Transportation Networks: Evidence from the World's Largest Bus Rapid Transit System in Jakarta",
+      "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20230768",
+      "local_authors": [
+        "Gabriel Kreindler",
+        "Arya Gaduh",
+        "Tilman Graff",
+        "Rema Hanna",
+        "Benjamin Olken"
+      ],
+      "publisher_authors": [
+        "Gabriel Kreindler",
+        "Arya Gaduh",
+        "Tilman Graff",
+        "Rema Hanna",
+        "Benjamin A. Olken"
+      ],
+      "publisher_month": "2026-09",
+      "publisher_volume": "116",
+      "publisher_issue": "9",
+      "publisher_pages_expanded": "3330-3379",
+      "source_channels": [
+        "crossref",
+        "openalex"
+      ],
+      "checks": {
+        "title": "match",
+        "abstract_body": "match",
+        "jel": "match",
+        "doi": "match",
+        "volume_issue_pages": "match",
+        "publication_month": "match",
+        "authors": "missing_middle_initial"
+      },
+      "translation_review": "复核重点：敏感程度是 2–3 倍，不是“高出 2–3 倍”；候车时间与乘车时间没有混淆；“对较长线路关注不足”没有改写成不愿乘坐；网络变化的结果保留为研究推断。作者姓名差异已记录，未直接改库。"
+    },
+    {
+      "doi": "10.1257/aer.20231414",
+      "title": "Remote Work and City Structure",
+      "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20231414",
+      "local_authors": [
+        "Ferdinando Monte",
+        "Charly Porcher",
+        "Esteban Rossi‐Hansberg"
+      ],
+      "publisher_authors": [
+        "Ferdinando Monte",
+        "Charly Porcher",
+        "Esteban Rossi-Hansberg"
+      ],
+      "publisher_month": "2026-08",
+      "publisher_volume": "116",
+      "publisher_issue": "8",
+      "publisher_pages_expanded": "3152-3196",
+      "source_channels": [
+        "crossref",
+        "openalex"
+      ],
+      "checks": {
+        "title": "match",
+        "abstract_body": "match",
+        "jel": "match",
+        "doi": "match",
+        "volume_issue_pages": "match",
+        "publication_month": "match",
+        "authors": "hyphen_typography_only"
+      },
+      "translation_review": "复核重点：通勤出行稳定在疫情前的 60%，不是下降 60%；2.3% 指福利损失，不是 GDP 降幅；“可能导致”和“多重稳态均衡”均保留。此处只翻译摘要，不把研究结论扩展到所有城市。"
+    },
+    {
+      "doi": "10.1257/aer.20231696",
+      "title": "Professional Motivations in the Public Sector: Evidence from Police Officers",
+      "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20231696",
+      "local_authors": [
+        "Aaron Chalfin",
+        "Felipe Gonçalves"
+      ],
+      "publisher_authors": [
+        "Aaron Chalfin",
+        "Felipe Gonçalves"
+      ],
+      "publisher_month": "2026-08",
+      "publisher_volume": "116",
+      "publisher_issue": "8",
+      "publisher_pages_expanded": "2962-2995",
+      "source_channels": [
+        "crossref"
+      ],
+      "checks": {
+        "title": "match",
+        "abstract_body": "match",
+        "jel": "match",
+        "doi": "match",
+        "volume_issue_pages": "match",
+        "publication_month": "match",
+        "authors": "match"
+      },
+      "translation_review": "复核重点：个人经济考量没有误写成腐败；“逮捕质量”保留原词，不自行补充犯罪严重程度或定罪率等衡量标准；一阶影响不等于“统计显著”。"
+    },
+    {
+      "doi": "10.1257/aer.20240056",
+      "title": "Uncertainty and Change: Survey Evidence of Firms' Subjective Beliefs",
+      "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20240056",
+      "local_authors": [
+        "Rüdiger Bachmann",
+        "Kai Carstensen",
+        "Stefan Lautenbacher",
+        "Manuel Menkhoff",
+        "Martin Schneider"
+      ],
+      "publisher_authors": [
+        "Rüdiger Bachmann",
+        "Kai Carstensen",
+        "Stefan Lautenbacher",
+        "Manuel Menkhoff",
+        "Martin Schneider"
+      ],
+      "publisher_month": "2026-08",
+      "publisher_volume": "116",
+      "publisher_issue": "8",
+      "publisher_pages_expanded": "2806-2849",
+      "source_channels": [
+        "crossref"
+      ],
+      "checks": {
+        "title": "match",
+        "abstract_body": "match",
+        "jel": "match",
+        "doi": "match",
+        "volume_issue_pages": "match",
+        "publication_month": "match",
+        "authors": "unicode_composition_only"
+      },
+      "translation_review": "复核重点：主观不确定性与条件波动性没有混同；企业特有的不确定性没有误写成全体企业共同受到的冲击；用工和价格是管理者的计划，不是已经实现的变化。"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "low",
+      "confidence": "high",
+      "id": "author_initial",
+      "affected_papers": 1,
+      "denominator": 5,
+      "rate": 0.2,
+      "evidence": "Jakarta local/OpenAlex Benjamin Olken; Crossref and AEA Benjamin A. Olken.",
+      "cause": "paperMerge.quality scores entire author lists, including ORCID bonuses; choose takes OpenAlex's list. It does not independently prefer a publisher-aligned fuller name per author.",
+      "risk": "Incomplete bibliographic display; does not invalidate DOI or abstract translation.",
+      "next": "Preserve originals now. In a separately scoped code change, add regression coverage and source-backed author-name resolution without merging uncertain identities."
+    },
+    {
+      "severity": "medium",
+      "confidence": "high",
+      "id": "publication_precision",
+      "affected_papers": 5,
+      "denominator": 5,
+      "rate": 1,
+      "evidence": "All five local online dates empty, print dates encoded YYYY-MM-01; AEA article pages confirm issue month only.",
+      "risk": "A first-of-month value must not be presented as a verified online-first day.",
+      "next": "Report only month/volume/issue here. Confirm date precision from source fields before changing date storage or daily presentation."
+    }
+  ],
+  "limitations": [
+    "Only five purposively selected AER papers were checked; not all 487 records or all AER papers.",
+    "No paper full text, model replication, empirical accuracy, universal publication priority, completeness, or exhaustive retraction search was verified.",
+    "No new collection; only 2026-09-08 source snapshot available, so no trend inference.",
+    "Translation produced and reviewed by the same assistant, not an independent academic translator."
+  ],
+  "report_plan": {
+    "mode": "html",
+    "audience": "product stakeholders",
+    "sections": [
+      "结论（Executive Summary）",
+      "五篇样本逐篇核对与完整中文译文",
+      "需要保留的两处边界",
+      "预检结果与下一步"
+    ],
+    "required_structure_mapping": {
+      "title": "AER 五篇论文核对与翻译样本",
+      "executive_summary": "结论（Executive Summary）",
+      "findings": "核对范围、逐篇样本及两处边界",
+      "next_steps": "预检结果与下一步",
+      "further_questions": "是否正式导入的授权；作者修复需单独代码范围",
+      "caveats": "两处边界及文末核验限制"
+    },
+    "chart_omission": "Five bibliographic checks are exact lookups, not time-series or empirical effect estimates. A chart would duplicate simple counts or misrepresent heterogeneous findings; use narrative per-paper evidence."
+  }
+}

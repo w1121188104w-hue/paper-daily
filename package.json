@@ -6,7 +6,17 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "refresh": "node src/server.js --refresh-once"
+    "refresh": "node src/server.js --refresh-once",
+    "test": "node --test",
+    "journals:check": "node scripts/journals.js",
+    "journals:collect": "node scripts/journals.js --collect",
+    "journals:status": "node scripts/journal-library.js --status",
+    "journals:save": "node scripts/journal-library.js --collect --save",
+    "translations:queue": "node scripts/translations.js --queue",
+    "translations:export": "node scripts/translations.js --export",
+    "journals:preview": "node scripts/journal-preview.js",
+    "journals:preview:check": "node scripts/journal-preview.js --check",
+    "journals:build": "node scripts/build-journal-site.js"
   },
   "engines": {
     "node": ">=18"

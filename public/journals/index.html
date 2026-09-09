@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="按首次发现日期查看19本经济与管理期刊的论文，支持中英文搜索与期刊筛选。" />
+  <title>经管顶刊 · 论文日历</title>
+  <link rel="stylesheet" href="./base.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到论文日历</a>
+  <header class="hero journal-hero">
+    <p class="eyebrow">19 刊 · OpenAlex + Crossref</p>
+    <h1>经管顶刊论文日历</h1>
+    <p>按北京时间的首次发现日期归档；这里的日期不是论文发表日期。</p>
+  </header>
+  <main id="main" class="calendar-layout single journal-layout">
+    <section class="panel status-panel" aria-labelledby="statusTitle">
+      <div class="digest-head"><h2 id="statusTitle">采集概况</h2><span id="statusBadge" class="status-badge">正在读取</span></div>
+      <p id="statusText" class="meta" role="status">正在读取已保存的论文库…</p>
+      <p id="attemptWarning" class="notice" role="status" hidden></p>
+      <p id="libraryMeta" class="meta"></p>
+      <button id="reload" class="secondary" type="button">重新读取本地数据</button>
+    </section>
+    <section class="panel" aria-labelledby="filterTitle">
+      <h2 id="filterTitle">筛选论文</h2>
+      <form id="filters" role="search">
+        <div class="filter-row">
+          <label class="search-field">中英文搜索<input id="query" type="search" maxlength="500" placeholder="标题、作者、摘要、DOI、期刊或日期" /></label>
+          <label>学科分类<select id="category"><option value="">全部分类</option></select></label>
+          <label>期刊<select id="journal"><option value="">全部19刊</option></select></label>
+          <label>文献类型<select id="kind"><option value="candidate">研究论文候选</option></select></label>
+          <button type="submit">搜索</button><button id="reset" class="secondary" type="button">重置筛选</button>
+        </div>
+        <div id="quickFilters" class="quick-filters" aria-label="常用期刊"></div>
+      </form>
+      <p class="meta">默认显示研究论文候选，不代表已人工确认。期刊资料、更正／撤稿通知仍保留，可切换文献类型查看；分类不会改写原始记录。</p>
+    </section>
+    <section class="panel" aria-labelledby="monthTitle">
+      <div class="calendar-head"><button id="prevMonth" type="button" aria-label="上个月">上月</button><h2 id="monthTitle">论文日历</h2><button id="nextMonth" type="button" aria-label="下个月">下月</button></div>
+      <div class="calendar-tools"><p id="calendarMeta" class="meta"></p><button id="thisMonth" class="secondary" type="button">回到本月</button></div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+      <p class="meta calendar-legend">数字是当前筛选下首次发现的去重记录数，不等于当天发表的研究论文数；“0条”不等于已成功采集。日格状态仅依据已保存记录，未保存的尝试请看顶部提醒。</p>
+    </section>
+    <section class="panel" aria-labelledby="listTitle">
+      <h2 id="listTitle">全部日期的文献记录</h2><p id="listMeta" class="meta" role="status"></p>
+      <div id="paperList" class="paper-list"></div><div id="pagination" class="pagination"></div>
+    </section>
+  </main>
+  <footer class="journal-footer">本地只读预览 · 不会自动采集或翻译</footer>
+  <noscript>请启用 JavaScript 以查看日历和论文；本页面不会启动采集。</noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

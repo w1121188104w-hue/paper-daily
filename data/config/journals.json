@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-09-03",
+  "issn_supplement_verified_at": "2026-09-07",
+  "verification_sources": [
+    "OpenAlex Sources API",
+    "Crossref Journals API",
+    "ISSN Portal (AOS/JAE/JFE/JCF/RP online ISSN supplement)"
+  ],
+  "verification_note": "2026-09-03核对19刊OpenAlex source ID、名称及Crossref期刊记录；AOS/JAE/JFE/JCF/RP的电子版ISSN最初来自OpenAlex，2026-09-07补查ISSN Portal确认Online介质。见docs/journal-verification.md；配置核验不等于论文收录完整性验证。",
+  "journals": [
+    {
+      "key": "TAR",
+      "name": "The Accounting Review",
+      "category": "accounting",
+      "category_zh": "会计",
+      "print_issn": "0001-4826",
+      "electronic_issn": "1558-7967",
+      "openalex_source_id": "S160506855",
+      "crossref_route_issn": "0001-4826",
+      "enabled": true
+    },
+    {
+      "key": "AOS",
+      "name": "Accounting, Organizations and Society",
+      "category": "accounting",
+      "category_zh": "会计",
+      "print_issn": "0361-3682",
+      "electronic_issn": "1873-6289",
+      "openalex_source_id": "S198892436",
+      "crossref_route_issn": "0361-3682",
+      "enabled": true
+    },
+    {
+      "key": "JAR",
+      "name": "Journal of Accounting Research",
+      "category": "accounting",
+      "category_zh": "会计",
+      "print_issn": "0021-8456",
+      "electronic_issn": "1475-679X",
+      "openalex_source_id": "S111116695",
+      "crossref_route_issn": "0021-8456",
+      "enabled": true
+    },
+    {
+      "key": "JAE",
+      "name": "Journal of Accounting and Economics",
+      "category": "accounting",
+      "category_zh": "会计",
+      "print_issn": "0165-4101",
+      "electronic_issn": "1879-1980",
+      "openalex_source_id": "S62142384",
+      "crossref_route_issn": "0165-4101",
+      "enabled": true
+    },
+    {
+      "key": "CAR",
+      "name": "Contemporary Accounting Research",
+      "category": "accounting",
+      "category_zh": "会计",
+      "print_issn": "0823-9150",
+      "electronic_issn": "1911-3846",
+      "openalex_source_id": "S65924262",
+      "crossref_route_issn": "0823-9150",
+      "enabled": true
+    },
+    {
+      "key": "RAS",
+      "name": "Review of Accounting Studies",
+      "category": "accounting",
+      "category_zh": "会计",
+      "print_issn": "1380-6653",
+      "electronic_issn": "1573-7136",
+      "openalex_source_id": "S11853582",
+      "crossref_route_issn": "1380-6653",
+      "enabled": true
+    },
+    {
+      "key": "AER",
+      "name": "American Economic Review",
+      "category": "economics",
+      "category_zh": "经济",
+      "print_issn": "0002-8282",
+      "electronic_issn": "1944-7981",
+      "openalex_source_id": "S23254222",
+      "crossref_route_issn": "0002-8282",
+      "enabled": true
+    },
+    {
+      "key": "JPE",
+      "name": "Journal of Political Economy",
+      "category": "economics",
+      "category_zh": "经济",
+      "print_issn": "0022-3808",
+      "electronic_issn": "1537-534X",
+      "openalex_source_id": "S95323914",
+      "crossref_route_issn": "0022-3808",
+      "enabled": true
+    },
+    {
+      "key": "QJE",
+      "name": "The Quarterly Journal of Economics",
+      "category": "economics",
+      "category_zh": "经济",
+      "print_issn": "0033-5533",
+      "electronic_issn": "1531-4650",
+      "openalex_source_id": "S203860005",
+      "crossref_route_issn": "0033-5533",
+      "enabled": true
+    },
+    {
+      "key": "RES",
+      "name": "The Review of Economic Studies",
+      "category": "economics",
+      "category_zh": "经济",
+      "print_issn": "0034-6527",
+      "electronic_issn": "1467-937X",
+      "openalex_source_id": "S88935262",
+      "crossref_route_issn": "0034-6527",
+      "enabled": true
+    },
+    {
+      "key": "JF",
+      "name": "The Journal of Finance",
+      "category": "finance",
+      "category_zh": "金融",
+      "print_issn": "0022-1082",
+      "electronic_issn": "1540-6261",
+      "openalex_source_id": "S5353659",
+      "crossref_route_issn": "0022-1082",
+      "enabled": true
+    },
+    {
+      "key": "JFE",
+      "name": "Journal of Financial Economics",
+      "category": "finance",
+      "category_zh": "金融",
+      "print_issn": "0304-405X",
+      "electronic_issn": "1879-2774",
+      "openalex_source_id": "S149240962",
+      "crossref_route_issn": "0304-405X",
+      "enabled": true
+    },
+    {
+      "key": "RFS",
+      "name": "The Review of Financial Studies",
+      "category": "finance",
+      "category_zh": "金融",
+      "print_issn": "0893-9454",
+      "electronic_issn": "1465-7368",
+      "openalex_source_id": "S170137484",
+      "crossref_route_issn": "0893-9454",
+      "enabled": true
+    },
+    {
+      "key": "JCF",
+      "name": "Journal of Corporate Finance",
+      "category": "finance",
+      "category_zh": "金融",
+      "print_issn": "0929-1199",
+      "electronic_issn": "1872-6313",
+      "openalex_source_id": "S152282257",
+      "crossref_route_issn": "0929-1199",
+      "enabled": true
+    },
+    {
+      "key": "JIBS",
+      "name": "Journal of International Business Studies",
+      "category": "management_operations",
+      "category_zh": "管理/创新/运营",
+      "print_issn": "0047-2506",
+      "electronic_issn": "1478-6990",
+      "openalex_source_id": "S38024979",
+      "crossref_route_issn": "0047-2506",
+      "enabled": true
+    },
+    {
+      "key": "RP",
+      "name": "Research Policy",
+      "category": "management_operations",
+      "category_zh": "管理/创新/运营",
+      "print_issn": "0048-7333",
+      "electronic_issn": "1873-7625",
+      "openalex_source_id": "S9731383",
+      "crossref_route_issn": "0048-7333",
+      "enabled": true
+    },
+    {
+      "key": "MS",
+      "name": "Management Science",
+      "category": "management_operations",
+      "category_zh": "管理/创新/运营",
+      "print_issn": "0025-1909",
+      "electronic_issn": "1526-5501",
+      "openalex_source_id": "S33323087",
+      "crossref_route_issn": "0025-1909",
+      "enabled": true
+    },
+    {
+      "key": "JM",
+      "name": "Journal of Management",
+      "category": "management_operations",
+      "category_zh": "管理/创新/运营",
+      "print_issn": "0149-2063",
+      "electronic_issn": "1557-1211",
+      "openalex_source_id": "S122767448",
+      "crossref_route_issn": "0149-2063",
+      "enabled": true
+    },
+    {
+      "key": "JOM",
+      "name": "Journal of Operations Management",
+      "category": "management_operations",
+      "category_zh": "管理/创新/运营",
+      "print_issn": "0272-6963",
+      "electronic_issn": "1873-1317",
+      "openalex_source_id": "S142306484",
+      "crossref_route_issn": "0272-6963",
+      "enabled": true
+    }
+  ]
+}

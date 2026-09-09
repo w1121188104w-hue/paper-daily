@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="查看指定日期首次发现的经管顶刊论文，以及原文、中文翻译和来源。" />
+  <title>日期论文详情 · 经管顶刊</title>
+  <link rel="stylesheet" href="./base.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="day">
+  <a class="skip-link" href="#main">跳到论文列表</a>
+  <header class="hero journal-hero">
+    <p class="eyebrow">19 刊 · OpenAlex + Crossref</p>
+    <h1 id="dayTitle">日期论文详情</h1>
+    <p>本日首次发现的文献记录；发表日期另列在每张卡片中。</p>
+    <div class="hero-actions"><a id="backToCalendar" class="ghost-link" href="./index.html">返回论文日历</a></div>
+  </header>
+  <main id="main" class="calendar-layout single journal-layout">
+    <section class="panel status-panel" aria-labelledby="statusTitle">
+      <div class="digest-head"><h2 id="statusTitle">采集概况</h2><span id="statusBadge" class="status-badge">正在读取</span></div>
+      <p id="statusText" class="meta" role="status">正在读取已保存的论文库…</p>
+      <p id="attemptWarning" class="notice" role="status" hidden></p>
+      <p id="libraryMeta" class="meta"></p>
+      <button id="reload" class="secondary" type="button">重新读取本地数据</button>
+    </section>
+    <section class="panel" aria-labelledby="filterTitle">
+      <h2 id="filterTitle">筛选本日论文</h2>
+      <form id="filters" role="search">
+        <div class="filter-row">
+          <label class="search-field">中英文搜索<input id="query" type="search" maxlength="500" placeholder="标题、作者、摘要、DOI、期刊或日期" /></label>
+          <label>学科分类<select id="category"><option value="">全部分类</option></select></label>
+          <label>期刊<select id="journal"><option value="">全部19刊</option></select></label>
+          <label>文献类型<select id="kind"><option value="candidate">研究论文候选</option></select></label>
+          <button type="submit">搜索</button><button id="reset" class="secondary" type="button">重置筛选</button>
+        </div>
+        <div id="quickFilters" class="quick-filters" aria-label="常用期刊"></div>
+      </form>
+      <p class="meta">默认显示研究论文候选，不代表已人工确认。期刊资料、更正／撤稿通知仍保留，可切换文献类型查看；分类不会改写原始记录。</p>
+    </section>
+    <section class="panel" aria-labelledby="listTitle">
+      <h2 id="listTitle">本日文献记录</h2><p id="dayCoverage" class="meta"></p><p id="listMeta" class="meta" role="status"></p>
+      <div id="paperList" class="paper-list"></div><div id="pagination" class="pagination"></div>
+    </section>
+  </main>
+  <footer class="journal-footer">本地只读预览 · 不会自动采集或翻译</footer>
+  <noscript>请启用 JavaScript 以查看论文；本页面不会启动采集。</noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,396 @@
+{
+  "duplicates": [
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1057/s41267-026-00890-7",
+        "crossref:10.1057/s41267-026-00904-4"
+      ],
+      "dois": [
+        "10.1057/s41267-026-00890-7",
+        "10.1057/s41267-026-00904-4"
+      ],
+      "journal_key": "JIBS"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1057/s41267-026-00890-7",
+        "openalex:W7204453547"
+      ],
+      "dois": [
+        "10.1057/s41267-026-00890-7",
+        "10.1057/s41267-026-00904-4"
+      ],
+      "journal_key": "JIBS"
+    }
+  ],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7169682358",
+      "doi": "10.1016/s0165-4101(26)00065-0",
+      "journal_key": "JAE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7208773452",
+      "doi": "10.1016/s0165-4101(26)00087-x",
+      "journal_key": "JAE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0165-4101(26)00065-0",
+      "doi": "10.1016/s0165-4101(26)00065-0",
+      "journal_key": "JAE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7171966016",
+      "doi": "10.1257/aer.116.8.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204559224",
+      "doi": "10.1257/aer.116.9.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.8.i",
+      "doi": "10.1257/aer.116.8.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.9.i",
+      "doi": "10.1257/aer.116.9.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204270199",
+      "doi": "10.1086/743795",
+      "journal_key": "JPE",
+      "title": "Front Matter",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743795",
+      "doi": "10.1086/743795",
+      "journal_key": "JPE",
+      "title": "Front Matter",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7168804406",
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0304-405x(26)00087-5",
+      "doi": "10.1016/s0304-405x(26)00087-5",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0304-405x(26)00113-3",
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204646313",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0929-1199(26)00143-4",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7201983954",
+      "doi": "10.1016/s0048-7333(26)00185-x",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0048-7333(26)00145-9",
+      "doi": "10.1016/s0048-7333(26)00145-9",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7172506715",
+      "doi": "10.1287/mnsc.2026.eb.v72n8",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1287/mnsc.2026.eb.v72n8",
+      "doi": "10.1287/mnsc.2026.eb.v72n8",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 1,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "source": "openalex",
+      "source_id": "W7172385481",
+      "doi": "10.1016/j.jacceco.2026.101931",
+      "journal_key": "JAE",
+      "title": "Retraction notice to “Lost in standardization: Effects of financial statement database discrepancies on inference” [J. Account. Econ. 76/1 (2023) 101573]",
+      "classification": {
+        "version": 1,
+        "kind": "possible_retraction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1093/qje/qjag036",
+      "doi": "10.1093/qje/qjag036",
+      "journal_key": "QJE",
+      "title": "Correction to: A Further Augmentation of the Solow Model and the Empirics of Economic Growth for OECD Countries",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204453547",
+      "doi": "10.1057/s41267-026-00904-4",
+      "journal_key": "JIBS",
+      "title": "Correction: The world is your office: how work from anywhere boosts talent, productivity and innovation",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7207662313",
+      "doi": "10.1057/s41267-026-00905-3",
+      "journal_key": "JIBS",
+      "title": "Correction: Moving beyond entry modes: toward a new paradigm of international involvement in an era of digitalization and global transitions",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1057/s41267-026-00904-4",
+      "doi": "10.1057/s41267-026-00904-4",
+      "journal_key": "JIBS",
+      "title": "Correction: The world is your office: how work from anywhere boosts talent, productivity and innovation",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1057/s41267-026-00905-3",
+      "doi": "10.1057/s41267-026-00905-3",
+      "journal_key": "JIBS",
+      "title": "Correction: Moving beyond entry modes: toward a new paradigm of international involvement in an era of digitalization and global transitions",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7203822458",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204757638",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105589",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105606",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 1,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    }
+  ]
+}
