@@ -10,7 +10,7 @@ import { createTranslationBatch } from '../src/services/translationQueue.js';
 import { runJournalCollection } from '../src/services/journalRun.js';
 import { applyTranslationResult } from '../src/services/translationImport.js';
 import { importTranslationFile } from '../src/services/translationWorkflow.js';
-import { DEEPSEEK_ENDPOINT, DEEPSEEK_MODEL, PILOT_LIMITS, deepseekRequest, planDeepSeekBatch,
+import { DEEPSEEK_ENDPOINT, DEEPSEEK_MODEL, PILOT_LIMITS, deepseekRequest, normalizeDeepSeekFields, planDeepSeekBatch,
   translateDeepSeekBatch } from '../src/services/deepseekTranslation.js';
 import { generateReviewKey, reviewPublicKey, sealTranslationReview, openTranslationReview } from '../src/services/translationReviewEnvelope.js';
 import { runDeepSeekCommand } from '../scripts/deepseek-translate.js';
@@ -244,4 +244,16 @@ test('完整返回的格式错误只隔离该论文，继续下一篇，不重�
   assert.equal(count, 2); assert.equal(output.report.status, 'quality_review_needed');
   assert.equal(output.result.items.length, 1); assert.equal(output.result.items[0].id, two.items[1].id);
   assert.equal(output.report.unknown_usage_requests, 0); assert.equal(output.review_rejections.length, 1);
+});
+
+test('实机字段命名兼容：精确接收title/abstract或title_zh/abstract_zh，拒绝混用及多余内容', async () => {
+  assert.deepEqual(normalizeDeepSeekFields({ title: zh.title_zh, abstract: zh.abstract_zh }, ['title', 'abstract']), zh);
+  assert.deepEqual(normalizeDeepSeekFields({ title: zh.title_zh }, ['title']), { title_zh: zh.title_zh });
+  for (const value of [{ title: zh.title_zh, abstract_zh: zh.abstract_zh }, { ...zh, title: zh.title_zh },
+    { title: zh.title_zh, abstract: zh.abstract_zh, id: 'injected' }, { translation: zh }])
+    assert.throws(() => normalizeDeepSeekFields(value, ['title', 'abstract']), { code: 'INVALID_TRANSLATION_SHAPE' });
+  const output = await run(batch(), { fetchImpl: async () => response(payload({ choices: [{ finish_reason: 'stop',
+    message: { role: 'assistant', content: JSON.stringify({ title: zh.title_zh, abstract: zh.abstract_zh }) } }] })) });
+  assert.equal(output.report.successful_fields, 2); assert.equal(output.report.rows[0].model, DEEPSEEK_MODEL);
+  assert.deepEqual(output.result.items[0].source_text_hash, batch().items[0].source_text_hash);
 });

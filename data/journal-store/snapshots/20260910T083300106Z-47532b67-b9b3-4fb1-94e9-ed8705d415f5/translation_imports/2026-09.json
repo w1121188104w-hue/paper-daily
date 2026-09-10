@@ -1,0 +1,48 @@
+[
+  {
+    "schema_version": 1,
+    "run_id": "20260909T012325146Z-2689a2f5-6493-49d3-80b1-ff4cee27277f",
+    "run_date": "2026-09-09",
+    "started_at": "2026-09-09T01:23:25.146Z",
+    "finished_at": "2026-09-09T01:23:25.585Z",
+    "batch_id": "batch-4f39a6be67f8138e1e8e2af7e96674d65327c0c01e3cea132bc89a032107575b",
+    "model": "gpt-6-astra",
+    "translated_at": "2026-09-09T01:12:42.602Z",
+    "status": "success",
+    "stats": {
+      "completed_fields": 10,
+      "failed_fields": 0,
+      "rejected_fields": 0,
+      "rejected_rows": 0,
+      "unchanged_fields": 0,
+      "changed_papers": 5
+    },
+    "report": {
+      "path": "snapshots/20260909T012325146Z-2689a2f5-6493-49d3-80b1-ff4cee27277f/translation-report.json",
+      "sha256": "ad60ac8759d615f7d6e4ebe1d8845f92e63d9912691f33902e928f1eb7eef7c8"
+    }
+  },
+  {
+    "schema_version": 1,
+    "run_id": "20260910T083300106Z-47532b67-b9b3-4fb1-94e9-ed8705d415f5",
+    "run_date": "2026-09-10",
+    "started_at": "2026-09-10T08:33:00.106Z",
+    "finished_at": "2026-09-10T08:33:00.529Z",
+    "batch_id": "batch-8456fa0e6c85747efd758c94f911b4943072f055e15a96ffdd7f069035ba7af7",
+    "model": "deepseek-flash（请求名；Codex校订）",
+    "translated_at": "2026-09-10T08:32:45.654Z",
+    "status": "success",
+    "stats": {
+      "completed_fields": 17,
+      "failed_fields": 0,
+      "rejected_fields": 0,
+      "rejected_rows": 0,
+      "unchanged_fields": 0,
+      "changed_papers": 9
+    },
+    "report": {
+      "path": "snapshots/20260910T083300106Z-47532b67-b9b3-4fb1-94e9-ed8705d415f5/translation-report.json",
+      "sha256": "8d1b6b638337ce55b950d9011ae8c94aa6d4faaf681c79bbad3702d5672e768b"
+    }
+  }
+]
