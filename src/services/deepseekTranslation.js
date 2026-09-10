@@ -82,7 +82,7 @@ async function boundedJson(response) {
 
 // Serial, fixed-host, single-attempt requests. Never return provider error bodies, headers or reasoning.
 export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch, now = () => new Date(), startIndex = 0,
-  checkpoint = async () => {} } = {}) {
+  checkpoint = async () => {}, strictModel = false, failureStreak = 0, stopAfterFailures = Infinity } = {}) {
   requireDeepSeekKey(apiKey);
   const plan = planDeepSeekBatch(batch, { startIndex });
   check(!JSON.stringify(batch).includes(apiKey), 'SECRET_IN_SOURCE');
@@ -94,6 +94,7 @@ export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch,
       source: 'https://api-docs.deepseek.com/zh-cn/quick_start/pricing/' } };
   const result = { schema_version: 1, batch_id: batch.batch_id, model: '', translated_at: '', items: [] };
   const reviewRejections = [];
+  let badStreak = failureStreak;
   for (const item of batch.items.slice(startIndex)) {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), PILOT_LIMITS.timeout_ms);
     const rowReport = { id: item.id, status: 'failed', code: null, fields: {}, usage: null };
@@ -112,6 +113,7 @@ export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch,
       check(object(payload) && typeof payload.model === 'string' && /^deepseek-[a-z0-9._-]{1,96}$/i.test(payload.model)
         && !payload.model.includes(apiKey), 'INVALID_MODEL');
       rowReport.model = payload.model; rowReport.received_at = now().toISOString();
+      check(!strictModel || payload.model === DEEPSEEK_MODEL, 'UNEXPECTED_MODEL');
       check(!result.model || result.model === payload.model, 'MODEL_CHANGED');
       check(Array.isArray(payload.choices) && payload.choices.length === 1, 'INVALID_RESPONSE');
       const choice = payload.choices[0];
@@ -148,6 +150,9 @@ export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch,
     if (rowReport.usage) for (const key of Object.keys(report.usage)) report.usage[key] += rowReport.usage[key];
     else report.unknown_usage_requests++;
     report.rows.push(rowReport);
+    badStreak = rowReport.code ? badStreak + 1 : 0;
+    report.failure_streak = badStreak;
+    if (badStreak >= stopAfterFailures) { stop = true; report.stop_reason = 'REPEATED_INVALID_RESULTS'; }
     report.finished_at = now().toISOString();
     report.estimated_cny_known_usage = Number(((report.usage.prompt_tokens * 2 + report.usage.completion_tokens * 8) / 1000000).toFixed(6));
     report.status = stop ? 'stopped' : report.rows.some((row) => row.status !== 'ready_for_review') ? 'quality_review_needed' : 'ready_for_review';

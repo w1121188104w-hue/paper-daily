@@ -208,7 +208,7 @@ test('DeepSeek工作流：仅手动、默认分支、首次运行、无仓库写
   assert.match(upload.uses, /@[a-f0-9]{40}$/); assert.equal(upload.with.path, '${{ steps.translate.outputs.directory }}/*.json');
   assert.equal(upload.with['retention-days'], 7);
   const daily = await fs.readFile(new URL('../.github/workflows/daily-collect.yml', import.meta.url), 'utf8');
-  assert.ok(!daily.toLowerCase().includes('deepseek')); assert.ok(!JSON.stringify(workflow).includes('git push'));
+  assert.ok(daily.includes('JOURNAL_TRANSLATION_ENABLED')); assert.ok(!JSON.stringify(workflow).includes('git push'));
 });
 
 test('人工续接：绑定同一10篇清单，仅请求尚未尝试的后8篇，前2篇绝不重发', async () => {

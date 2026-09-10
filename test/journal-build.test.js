@@ -219,9 +219,12 @@ test('工作流先校验再暂存推送，随后构建和发布；不上传整�
   const steps = flow.jobs.collect.steps, stage = steps.findIndex((step) => step.run?.includes('journal-git-files.js --stage'));
   assert.equal(steps[stage - 1].run, 'node scripts/journal-library.js --validate');
   assert.ok(steps[stage + 1].run.includes('git push origin'));
-  assert.equal(steps[stage + 2].id, 'build');
+  assert.equal(steps[stage + 2].id, 'translate');
+  assert.equal(steps[stage + 3].run, 'node scripts/journal-library.js --validate');
+  assert.equal(steps[stage + 4].id, 'build');
   assert.equal(steps.find((step) => step.uses?.includes('upload-pages-artifact')).with.path, '${{ steps.build.outputs.directory }}');
-  assert.ok(!JSON.stringify(flow).includes('secrets.'));
+  assert.equal(steps.filter((step) => JSON.stringify(step).includes('secrets.')).length, 1);
+  assert.equal(steps[stage + 2].env.DEEPSEEK_API_KEY, '${{ secrets.DEEPSEEK_API_KEY }}');
 });
 
 test('按用户授权允许公开仓库，仍要求明确启用开关且不读取或上传个人配置', async () => {
@@ -233,7 +236,10 @@ test('按用户授权允许公开仓库，仍要求明确启用开关且不读�
     assert.ok(!serialized.includes('repository.private'));
     assert.ok(job.if.includes("== 'true'"));
     assert.ok(job.if.includes('github.event.repository.default_branch'));
-    assert.ok(!/secrets\.|llm-settings\.json|git add -A|path.*data\/journal-store/.test(serialized));
+    assert.ok(!/llm-settings\.json|git add -A|path.*data\/journal-store/.test(serialized));
+    const secretSteps = job.steps.filter((step) => JSON.stringify(step).includes('secrets.'));
+    assert.equal(secretSteps.length, name === 'daily-collect' ? 1 : 0);
+    if (secretSteps.length) assert.equal(secretSteps[0].if, "vars.JOURNAL_TRANSLATION_ENABLED == 'true'");
   }
 });
 
