@@ -4,8 +4,9 @@ Runtime files in this directory are intentionally ignored by git.
 
 Update 2026-09-10: the approved formal journal history and original source
 records are now saved in the public repository. The first manual server run
-preserved all existing papers and saved five new records. Website publication
-and daily scheduling remain disabled. Only explicitly stage the validated list
+preserved all existing papers and saved five new records. The public read-only
+website is now live following explicit launch approval; daily scheduling remains
+disabled. See `docs/public-launch-2026-09-10.md`. Only explicitly stage the validated list
 from `scripts/journal-git-files.js`; never add all of `data/`. Credentials, personal settings, old
 arXiv reading data, translation drafts and uncommitted attempts stay excluded.
 Historical stage descriptions below describe their original scope.
