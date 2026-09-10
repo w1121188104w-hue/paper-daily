@@ -1,0 +1,4254 @@
+{
+  "source": "openalex",
+  "journal_key": "AOS",
+  "pages": [
+    {
+      "meta": {
+        "count": 5,
+        "db_response_time_ms": 70,
+        "page": null,
+        "per_page": 100,
+        "next_cursor": null,
+        "groups_count": null,
+        "x_query": {
+          "oql": "works where date >= (2026-07-13)\n  and source is (S198892436)\n  and date <= (2026-09-10)",
+          "oqo": {
+            "get_rows": "works",
+            "filter_rows": [
+              {
+                "column_id": "from_publication_date",
+                "value": "2026-07-13"
+              },
+              {
+                "column_id": "primary_location.source.id",
+                "value": "S198892436"
+              },
+              {
+                "column_id": "to_publication_date",
+                "value": "2026-09-10"
+              }
+            ]
+          },
+          "url": "/works?filter=from_publication_date:2026-07-13,primary_location.source.id:S198892436,to_publication_date:2026-09-10&per_page=100&cursor=%2A"
+        },
+        "cost_usd": 0.0001
+      },
+      "results": [
+        {
+          "id": "https://openalex.org/W7168346946",
+          "doi": "https://doi.org/10.1016/j.aos.2026.101659",
+          "title": "Investor judgments of human capital initiatives: The role of initiative type, investor orientation, and financial performance",
+          "display_name": "Investor judgments of human capital initiatives: The role of initiative type, investor orientation, and financial performance",
+          "publication_year": 2026,
+          "publication_date": "2026-07-15",
+          "ids": {
+            "openalex": "https://openalex.org/W7168346946",
+            "doi": "https://doi.org/10.1016/j.aos.2026.101659"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.aos.2026.101659",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101659",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by-nc-nd",
+            "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://doi.org/10.1016/j.aos.2026.101659",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5140864135",
+                "display_name": "Ling Lin Harris",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I114395901",
+                  "display_name": "University of Nebraska–Lincoln",
+                  "ror": "https://ror.org/043mer456",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I114395901"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Ling Lin Harris",
+              "raw_affiliation_strings": [
+                "University of Nebraska-Lincoln, College of Business, School of Accounting, HLH 445M, P.O. Box 880488, Lincoln, NE, 68588-0488, USA"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Nebraska-Lincoln, College of Business, School of Accounting, HLH 445M, P.O. Box 880488, Lincoln, NE, 68588-0488, USA",
+                  "institution_ids": [
+                    "https://openalex.org/I114395901"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5140808712",
+                "display_name": "Khim Kelly",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I106165777",
+                  "display_name": "University of Central Florida",
+                  "ror": "https://ror.org/036nfer12",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I106165777"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Khim Kelly",
+              "raw_affiliation_strings": [
+                "KPMG Professor of Accounting, University of Central Florida, College of Business, Kenneth G. Dixon School of Accounting, BA-1 409E, 12744 Pegasus Dr, Orlando, FL, 32816, USA"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "KPMG Professor of Accounting, University of Central Florida, College of Business, Kenneth G. Dixon School of Accounting, BA-1 409E, 12744 Pegasus Dr, Orlando, FL, 32816, USA",
+                  "institution_ids": [
+                    "https://openalex.org/I106165777"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5140782891",
+                "display_name": "Bret Sheeley",
+                "orcid": "https://orcid.org/0000-0001-6653-234X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I170201317",
+                  "display_name": "University of Pittsburgh",
+                  "ror": "https://ror.org/01an3r305",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I170201317"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Bret Sheeley",
+              "raw_affiliation_strings": [
+                "University of Pittsburgh, School of Business, Accounting Area, 382A Mervis Hall, 3950 Roberto Clemente Dr, Pittsburgh, PA, 15260, USA"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0001-6653-234X",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Pittsburgh, School of Business, Accounting Area, 382A Mervis Hall, 3950 Roberto Clemente Dr, Pittsburgh, PA, 15260, USA",
+                  "institution_ids": [
+                    "https://openalex.org/I170201317"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 1,
+          "institutions_distinct_count": 3,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5140782891"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I170201317"
+          ],
+          "apc_list": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "apc_paid": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "fwci": 9.6334,
+          "has_fulltext": false,
+          "cited_by_count": 1,
+          "citation_normalized_percentile": {
+            "value": 0.97835326,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": {
+            "min": 94,
+            "max": 97
+          },
+          "biblio": {
+            "volume": "117",
+            "issue": null,
+            "first_page": "101659",
+            "last_page": "101659"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T11849",
+            "display_name": "Intellectual Capital and Performance Analysis",
+            "score": 0.10499999672174454,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1408",
+              "display_name": "Strategy and Management"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T11849",
+              "display_name": "Intellectual Capital and Performance Analysis",
+              "score": 0.10499999672174454,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1408",
+                "display_name": "Strategy and Management"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11903",
+              "display_name": "Private Equity and Venture Capital",
+              "score": 0.08460000157356262,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10019",
+              "display_name": "Corporate Finance and Governance",
+              "score": 0.07519999891519547,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/human-capital",
+              "display_name": "Human capital",
+              "score": 0.6065000295639038
+            },
+            {
+              "id": "https://openalex.org/keywords/accredited-investor",
+              "display_name": "Accredited investor",
+              "score": 0.4472000002861023
+            },
+            {
+              "id": "https://openalex.org/keywords/capital",
+              "display_name": "Capital (architecture)",
+              "score": 0.3644999861717224
+            },
+            {
+              "id": "https://openalex.org/keywords/financial-capital",
+              "display_name": "Financial capital",
+              "score": 0.2989000082015991
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.6959999799728394
+            },
+            {
+              "id": "https://openalex.org/C2776943663",
+              "wikidata": "https://www.wikidata.org/wiki/Q165687",
+              "display_name": "Human capital",
+              "level": 2,
+              "score": 0.6065000295639038
+            },
+            {
+              "id": "https://openalex.org/C10138342",
+              "wikidata": "https://www.wikidata.org/wiki/Q43015",
+              "display_name": "Finance",
+              "level": 1,
+              "score": 0.5273000001907349
+            },
+            {
+              "id": "https://openalex.org/C73283319",
+              "wikidata": "https://www.wikidata.org/wiki/Q1416617",
+              "display_name": "Financial system",
+              "level": 1,
+              "score": 0.4474000036716461
+            },
+            {
+              "id": "https://openalex.org/C178633814",
+              "wikidata": "https://www.wikidata.org/wiki/Q4218461",
+              "display_name": "Accredited investor",
+              "level": 2,
+              "score": 0.4472000002861023
+            },
+            {
+              "id": "https://openalex.org/C121955636",
+              "wikidata": "https://www.wikidata.org/wiki/Q4116214",
+              "display_name": "Accounting",
+              "level": 1,
+              "score": 0.4366999864578247
+            },
+            {
+              "id": "https://openalex.org/C83646750",
+              "wikidata": "https://www.wikidata.org/wiki/Q193893",
+              "display_name": "Capital (architecture)",
+              "level": 2,
+              "score": 0.3644999861717224
+            },
+            {
+              "id": "https://openalex.org/C44750222",
+              "wikidata": "https://www.wikidata.org/wiki/Q1897397",
+              "display_name": "Financial capital",
+              "level": 3,
+              "score": 0.2989000082015991
+            },
+            {
+              "id": "https://openalex.org/C143910263",
+              "wikidata": "https://www.wikidata.org/wiki/Q750458",
+              "display_name": "Capital market",
+              "level": 2,
+              "score": 0.2858999967575073
+            },
+            {
+              "id": "https://openalex.org/C162324750",
+              "wikidata": "https://www.wikidata.org/wiki/Q8134",
+              "display_name": "Economics",
+              "level": 0,
+              "score": 0.26809999346733093
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.aos.2026.101659",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101659",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S198892436",
+                "display_name": "Accounting Organizations and Society",
+                "issn_l": "0361-3682",
+                "issn": [
+                  "0361-3682",
+                  "1873-6289"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by-nc-nd",
+              "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Accounting, Organizations and Society",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1016/j.aos.2026.101659",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101659",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by-nc-nd",
+            "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [
+            {
+              "id": "https://openalex.org/F4320310161",
+              "display_name": "University of Central Florida",
+              "ror": "https://ror.org/036nfer12"
+            },
+            {
+              "id": "https://openalex.org/F4320310174",
+              "display_name": "University of Pittsburgh",
+              "ror": "https://ror.org/01an3r305"
+            },
+            {
+              "id": "https://openalex.org/F4320310264",
+              "display_name": "University of Nebraska-Lincoln",
+              "ror": "https://ror.org/043mer456"
+            }
+          ],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 48,
+          "referenced_works": [
+            "https://openalex.org/W60519038",
+            "https://openalex.org/W336075521",
+            "https://openalex.org/W1965497717",
+            "https://openalex.org/W1969634431",
+            "https://openalex.org/W1977242238",
+            "https://openalex.org/W2008894489",
+            "https://openalex.org/W2034025364",
+            "https://openalex.org/W2041499464",
+            "https://openalex.org/W2066824355",
+            "https://openalex.org/W2086215642",
+            "https://openalex.org/W2117735303",
+            "https://openalex.org/W2134995742",
+            "https://openalex.org/W2138870994",
+            "https://openalex.org/W2333216399",
+            "https://openalex.org/W2558627311",
+            "https://openalex.org/W2593761652",
+            "https://openalex.org/W2752617332",
+            "https://openalex.org/W2779206865",
+            "https://openalex.org/W3100074691",
+            "https://openalex.org/W3121370091",
+            "https://openalex.org/W3121472304",
+            "https://openalex.org/W3123430537",
+            "https://openalex.org/W3124006715",
+            "https://openalex.org/W3124263526",
+            "https://openalex.org/W3124461525",
+            "https://openalex.org/W3124560752",
+            "https://openalex.org/W3124595382",
+            "https://openalex.org/W3124668218",
+            "https://openalex.org/W3125269576",
+            "https://openalex.org/W3125586325",
+            "https://openalex.org/W3125944002",
+            "https://openalex.org/W3153756803",
+            "https://openalex.org/W3161378034",
+            "https://openalex.org/W3199284091",
+            "https://openalex.org/W4230604403",
+            "https://openalex.org/W4282823198",
+            "https://openalex.org/W4282921594",
+            "https://openalex.org/W4283590511",
+            "https://openalex.org/W4293236191",
+            "https://openalex.org/W4294678674",
+            "https://openalex.org/W4310017368",
+            "https://openalex.org/W4311844544",
+            "https://openalex.org/W4380050414",
+            "https://openalex.org/W4383875545",
+            "https://openalex.org/W4389032406",
+            "https://openalex.org/W4401031804",
+            "https://openalex.org/W4401913114",
+            "https://openalex.org/W4405336715"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "1": [
+              85
+            ],
+            "2": [
+              137
+            ],
+            "Companies": [
+              0
+            ],
+            "increasingly": [
+              1
+            ],
+            "disclose": [
+              2
+            ],
+            "human": [
+              3,
+              223
+            ],
+            "capital": [
+              4,
+              224
+            ],
+            "initiatives,": [
+              5
+            ],
+            "such": [
+              6
+            ],
+            "as": [
+              7,
+              33,
+              94,
+              171
+            ],
+            "diversity,": [
+              8
+            ],
+            "equity,": [
+              9
+            ],
+            "and": [
+              10,
+              13,
+              76,
+              97,
+              185,
+              219
+            ],
+            "inclusion": [
+              11
+            ],
+            "(DEI)": [
+              12
+            ],
+            "non-DEI": [
+              14,
+              50
+            ],
+            "initiatives.": [
+              15,
+              51,
+              161
+            ],
+            "Yet,": [
+              16
+            ],
+            "DEI": [
+              17,
+              48,
+              90,
+              160,
+              166,
+              179,
+              212
+            ],
+            "initiatives": [
+              18,
+              93,
+              167,
+              182
+            ],
+            "have": [
+              19
+            ],
+            "become": [
+              20
+            ],
+            "a": [
+              21,
+              139
+            ],
+            "focal": [
+              22
+            ],
+            "point": [
+              23
+            ],
+            "of": [
+              24,
+              36,
+              62,
+              113,
+              142,
+              159,
+              176,
+              178,
+              190,
+              205
+            ],
+            "debate,": [
+              25
+            ],
+            "raising": [
+              26
+            ],
+            "questions": [
+              27
+            ],
+            "about": [
+              28
+            ],
+            "whether": [
+              29,
+              147
+            ],
+            "investors": [
+              30,
+              46,
+              88,
+              103
+            ],
+            "view": [
+              31
+            ],
+            "them": [
+              32
+            ],
+            "appropriate": [
+              34
+            ],
+            "uses": [
+              35
+            ],
+            "company": [
+              37,
+              122
+            ],
+            "resources.": [
+              38
+            ],
+            "Across": [
+              39
+            ],
+            "two": [
+              40
+            ],
+            "experiments,": [
+              41
+            ],
+            "we": [
+              42,
+              56
+            ],
+            "examine": [
+              43
+            ],
+            "how": [
+              44,
+              201
+            ],
+            "nonprofessional": [
+              45
+            ],
+            "perceive": [
+              47,
+              89
+            ],
+            "versus": [
+              49
+            ],
+            "Drawing": [
+              52
+            ],
+            "on": [
+              53,
+              67,
+              116,
+              133
+            ],
+            "equity": [
+              54
+            ],
+            "theory,": [
+              55
+            ],
+            "propose": [
+              57
+            ],
+            "that": [
+              58,
+              77,
+              87,
+              164
+            ],
+            "investors'": [
+              59,
+              155,
+              173,
+              202
+            ],
+            "fairness-based": [
+              60,
+              203
+            ],
+            "perceptions": [
+              61,
+              79,
+              158,
+              175,
+              204
+            ],
+            "an": [
+              63
+            ],
+            "initiative's": [
+              64
+            ],
+            "appropriateness": [
+              65,
+              115,
+              177,
+              206
+            ],
+            "depend": [
+              66
+            ],
+            "their": [
+              68,
+              81
+            ],
+            "underlying": [
+              69
+            ],
+            "preferences": [
+              70
+            ],
+            "for": [
+              71,
+              217
+            ],
+            "what": [
+              72
+            ],
+            "companies": [
+              73,
+              218
+            ],
+            "should": [
+              74
+            ],
+            "prioritize,": [
+              75
+            ],
+            "these": [
+              78,
+              134
+            ],
+            "influence": [
+              80
+            ],
+            "investment": [
+              82,
+              117
+            ],
+            "willingness.": [
+              83
+            ],
+            "Experiment": [
+              84,
+              136
+            ],
+            "finds": [
+              86
+            ],
+            "(versus": [
+              91,
+              180,
+              192
+            ],
+            "non-DEI)": [
+              92,
+              181
+            ],
+            "less": [
+              95
+            ],
+            "appropriate,": [
+              96
+            ],
+            "this": [
+              98
+            ],
+            "difference": [
+              99
+            ],
+            "is": [
+              100,
+              119,
+              125,
+              130
+            ],
+            "exacerbated": [
+              101
+            ],
+            "when": [
+              102,
+              121,
+              128,
+              165
+            ],
+            "are": [
+              104,
+              168,
+              183
+            ],
+            "more": [
+              105
+            ],
+            "shareholder-oriented": [
+              106,
+              154
+            ],
+            "than": [
+              107,
+              127
+            ],
+            "stakeholder-oriented.": [
+              108
+            ],
+            "Furthermore,": [
+              109
+            ],
+            "the": [
+              110,
+              186
+            ],
+            "mediating": [
+              111
+            ],
+            "effect": [
+              112,
+              189
+            ],
+            "perceived": [
+              114
+            ],
+            "willingness": [
+              118
+            ],
+            "stronger": [
+              120,
+              156
+            ],
+            "financial": [
+              123
+            ],
+            "performance": [
+              124
+            ],
+            "unfavorable": [
+              126
+            ],
+            "it": [
+              129
+            ],
+            "favorable.": [
+              131
+            ],
+            "Building": [
+              132
+            ],
+            "findings,": [
+              135
+            ],
+            "tests": [
+              138
+            ],
+            "boundary": [
+              140
+            ],
+            "condition": [
+              141
+            ],
+            "our": [
+              143
+            ],
+            "theory": [
+              144
+            ],
+            "by": [
+              145
+            ],
+            "examining": [
+              146
+            ],
+            "explicitly": [
+              148,
+              169
+            ],
+            "stating": [
+              149
+            ],
+            "merit-based": [
+              150
+            ],
+            "selection": [
+              151
+            ],
+            "criteria": [
+              152
+            ],
+            "attenuates": [
+              153
+            ],
+            "negative": [
+              157,
+              174
+            ],
+            "We": [
+              162
+            ],
+            "find": [
+              163
+            ],
+            "presented": [
+              170
+            ],
+            "merit-based,": [
+              172
+            ],
+            "attenuated,": [
+              184
+            ],
+            "exacerbating": [
+              187
+            ],
+            "moderating": [
+              188
+            ],
+            "shareholder": [
+              191
+            ],
+            "stakeholder)": [
+              193
+            ],
+            "investor": [
+              194
+            ],
+            "orientation": [
+              195
+            ],
+            "also": [
+              196
+            ],
+            "diminishes.": [
+              197
+            ],
+            "Our": [
+              198
+            ],
+            "findings": [
+              199
+            ],
+            "demonstrate": [
+              200
+            ],
+            "can": [
+              207
+            ],
+            "explain": [
+              208
+            ],
+            "divergent": [
+              209
+            ],
+            "responses": [
+              210
+            ],
+            "to": [
+              211
+            ],
+            "disclosures,": [
+              213
+            ],
+            "offering": [
+              214
+            ],
+            "timely": [
+              215
+            ],
+            "implications": [
+              216
+            ],
+            "regulators": [
+              220
+            ],
+            "concerned": [
+              221
+            ],
+            "with": [
+              222
+            ],
+            "reporting.": [
+              225
+            ]
+          },
+          "counts_by_year": [
+            {
+              "year": 2026,
+              "cited_by_count": 1
+            }
+          ],
+          "updated_date": "2026-08-21T09:56:20.448147",
+          "created_date": "2026-07-16T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7169526489",
+          "doi": "https://doi.org/10.1016/j.aos.2026.101658",
+          "title": "Routine dynamics and the relationality of auditor judgement: How auditors navigate situated novelty",
+          "display_name": "Routine dynamics and the relationality of auditor judgement: How auditors navigate situated novelty",
+          "publication_year": 2026,
+          "publication_date": "2026-07-17",
+          "ids": {
+            "openalex": "https://openalex.org/W7169526489",
+            "doi": "https://doi.org/10.1016/j.aos.2026.101658"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.aos.2026.101658",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101658",
+            "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0361368226000279/pdf",
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://www.sciencedirect.com/science/article/pii/S0361368226000279/pdf",
+            "any_repository_has_fulltext": true
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5141049684",
+                "display_name": "Sameh Amer",
+                "orcid": "https://orcid.org/0000-0002-9813-8416"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I124261006",
+                  "display_name": "École Supérieure des Sciences Économiques et Commerciales",
+                  "ror": "https://ror.org/02dga6j42",
+                  "country_code": "FR",
+                  "type": "other",
+                  "lineage": [
+                    "https://openalex.org/I124261006"
+                  ]
+                }
+              ],
+              "countries": [
+                "FR"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Sameh Amer",
+              "raw_affiliation_strings": [
+                "ESSEC Business School, Paris, France"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-9813-8416",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "ESSEC Business School, Paris, France",
+                  "institution_ids": [
+                    "https://openalex.org/I124261006"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5062775100",
+                "display_name": "Anna Samsonova‐Taddei",
+                "orcid": "https://orcid.org/0000-0001-6264-6884"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I108192572",
+                  "display_name": "HEC Montréal",
+                  "ror": "https://ror.org/05ww3wq27",
+                  "country_code": "CA",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I108192572"
+                  ]
+                }
+              ],
+              "countries": [
+                "CA"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Anna Samsonova-Taddei",
+              "raw_affiliation_strings": [
+                "HEC Montreal, Montreal, Canada"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "HEC Montreal, Montreal, Canada",
+                  "institution_ids": [
+                    "https://openalex.org/I108192572"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5010338460",
+                "display_name": "Omiros Georgiou",
+                "orcid": "https://orcid.org/0000-0003-2684-7210"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I79619799",
+                  "display_name": "University of Birmingham",
+                  "ror": "https://ror.org/03angcq70",
+                  "country_code": "GB",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I79619799"
+                  ]
+                }
+              ],
+              "countries": [
+                "GB"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Omiros Georgiou",
+              "raw_affiliation_strings": [
+                "University of Birmingham, Birmingham, United Kingdom"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Birmingham, Birmingham, United Kingdom",
+                  "institution_ids": [
+                    "https://openalex.org/I79619799"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 3,
+          "institutions_distinct_count": 3,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5141049684"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I124261006"
+          ],
+          "apc_list": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "apc_paid": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "fwci": 0,
+          "has_fulltext": true,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.75985827,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": false
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "117",
+            "issue": null,
+            "first_page": "101658",
+            "last_page": "101658"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10081",
+            "display_name": "Auditing, Earnings Management, Governance",
+            "score": 0.59579998254776,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1402",
+              "display_name": "Accounting"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10081",
+              "display_name": "Auditing, Earnings Management, Governance",
+              "score": 0.59579998254776,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10344",
+              "display_name": "Management and Organizational Studies",
+              "score": 0.09210000187158585,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1407",
+                "display_name": "Organizational Behavior and Human Resource Management"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10797",
+              "display_name": "Accounting and Organizational Management",
+              "score": 0.08990000188350677,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1404",
+                "display_name": "Management Information Systems"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/audit",
+              "display_name": "Audit",
+              "score": 0.8590999841690063
+            },
+            {
+              "id": "https://openalex.org/keywords/judgement",
+              "display_name": "Judgement",
+              "score": 0.8447999954223633
+            },
+            {
+              "id": "https://openalex.org/keywords/reflexivity",
+              "display_name": "Reflexivity",
+              "score": 0.7425000071525574
+            },
+            {
+              "id": "https://openalex.org/keywords/novelty",
+              "display_name": "Novelty",
+              "score": 0.7346000075340271
+            },
+            {
+              "id": "https://openalex.org/keywords/situated",
+              "display_name": "Situated",
+              "score": 0.6987000107765198
+            },
+            {
+              "id": "https://openalex.org/keywords/action",
+              "display_name": "Action (physics)",
+              "score": 0.6152999997138977
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C199521495",
+              "wikidata": "https://www.wikidata.org/wiki/Q181487",
+              "display_name": "Audit",
+              "level": 2,
+              "score": 0.8590999841690063
+            },
+            {
+              "id": "https://openalex.org/C2776548248",
+              "wikidata": "https://www.wikidata.org/wiki/Q12621536",
+              "display_name": "Judgement",
+              "level": 2,
+              "score": 0.8447999954223633
+            },
+            {
+              "id": "https://openalex.org/C13200473",
+              "wikidata": "https://www.wikidata.org/wiki/Q2747831",
+              "display_name": "Reflexivity",
+              "level": 2,
+              "score": 0.7425000071525574
+            },
+            {
+              "id": "https://openalex.org/C2778738651",
+              "wikidata": "https://www.wikidata.org/wiki/Q16546687",
+              "display_name": "Novelty",
+              "level": 2,
+              "score": 0.7346000075340271
+            },
+            {
+              "id": "https://openalex.org/C132829578",
+              "wikidata": "https://www.wikidata.org/wiki/Q581151",
+              "display_name": "Situated",
+              "level": 2,
+              "score": 0.6987000107765198
+            },
+            {
+              "id": "https://openalex.org/C2780791683",
+              "wikidata": "https://www.wikidata.org/wiki/Q846785",
+              "display_name": "Action (physics)",
+              "level": 2,
+              "score": 0.6152999997138977
+            },
+            {
+              "id": "https://openalex.org/C15744967",
+              "wikidata": "https://www.wikidata.org/wiki/Q9418",
+              "display_name": "Psychology",
+              "level": 0,
+              "score": 0.48829999566078186
+            },
+            {
+              "id": "https://openalex.org/C121955636",
+              "wikidata": "https://www.wikidata.org/wiki/Q4116214",
+              "display_name": "Accounting",
+              "level": 1,
+              "score": 0.4108000099658966
+            },
+            {
+              "id": "https://openalex.org/C198082294",
+              "wikidata": "https://www.wikidata.org/wiki/Q3399648",
+              "display_name": "Position (finance)",
+              "level": 2,
+              "score": 0.40380001068115234
+            },
+            {
+              "id": "https://openalex.org/C145912823",
+              "wikidata": "https://www.wikidata.org/wiki/Q113558",
+              "display_name": "Dynamics (music)",
+              "level": 2,
+              "score": 0.3919999897480011
+            },
+            {
+              "id": "https://openalex.org/C144024400",
+              "wikidata": "https://www.wikidata.org/wiki/Q21201",
+              "display_name": "Sociology",
+              "level": 0,
+              "score": 0.3463999927043915
+            },
+            {
+              "id": "https://openalex.org/C150130657",
+              "wikidata": "https://www.wikidata.org/wiki/Q4819986",
+              "display_name": "Auditor independence",
+              "level": 5,
+              "score": 0.33059999346733093
+            },
+            {
+              "id": "https://openalex.org/C77805123",
+              "wikidata": "https://www.wikidata.org/wiki/Q161272",
+              "display_name": "Social psychology",
+              "level": 1,
+              "score": 0.29919999837875366
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.2985000014305115
+            },
+            {
+              "id": "https://openalex.org/C111472728",
+              "wikidata": "https://www.wikidata.org/wiki/Q9471",
+              "display_name": "Epistemology",
+              "level": 1,
+              "score": 0.2978000044822693
+            },
+            {
+              "id": "https://openalex.org/C191602146",
+              "wikidata": "https://www.wikidata.org/wiki/Q6269489",
+              "display_name": "Joint audit",
+              "level": 4,
+              "score": 0.2953000068664551
+            },
+            {
+              "id": "https://openalex.org/C170856484",
+              "wikidata": "https://www.wikidata.org/wiki/Q6452684",
+              "display_name": "Internal audit",
+              "level": 3,
+              "score": 0.2924000024795532
+            },
+            {
+              "id": "https://openalex.org/C39549134",
+              "wikidata": "https://www.wikidata.org/wiki/Q133080",
+              "display_name": "Public relations",
+              "level": 1,
+              "score": 0.28700000047683716
+            },
+            {
+              "id": "https://openalex.org/C62190432",
+              "wikidata": "https://www.wikidata.org/wiki/Q17004774",
+              "display_name": "Audit plan",
+              "level": 5,
+              "score": 0.26899999380111694
+            }
+          ],
+          "mesh": [],
+          "locations_count": 2,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.aos.2026.101658",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101658",
+              "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0361368226000279/pdf",
+              "source": {
+                "id": "https://openalex.org/S198892436",
+                "display_name": "Accounting Organizations and Society",
+                "issn_l": "0361-3682",
+                "issn": [
+                  "0361-3682",
+                  "1873-6289"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by",
+              "license_id": "https://openalex.org/licenses/cc-by",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Accounting, Organizations and Society",
+              "raw_type": "journal-article"
+            },
+            {
+              "id": "pmh:oai:pure.atira.dk:openaire/62ad7b6a-cb1a-4281-b0d9-a231923249a7",
+              "is_oa": true,
+              "landing_page_url": "https://research.birmingham.ac.uk/en/publications/62ad7b6a-cb1a-4281-b0d9-a231923249a7",
+              "pdf_url": "https://pure-oai.bham.ac.uk/ws/files/311410322/AmerS2026Routine.pdf",
+              "source": {
+                "id": "https://openalex.org/S4306402634",
+                "display_name": "University of Birmingham Research Portal (University of Birmingham)",
+                "issn_l": null,
+                "issn": null,
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": false,
+                "host_organization": "https://openalex.org/I79619799",
+                "host_organization_name": "University of Birmingham",
+                "host_organization_lineage": [
+                  "https://openalex.org/I79619799"
+                ],
+                "host_organization_lineage_names": [],
+                "type": "repository"
+              },
+              "license": "cc-by",
+              "license_id": "https://openalex.org/licenses/cc-by",
+              "version": "submittedVersion",
+              "is_accepted": false,
+              "is_published": false,
+              "raw_source_name": "Amer, S, Samsonova-Taddei, A & Georgiou, O 2026, 'Routine dynamics and the relationality of auditor judgement : How auditors navigate situated novelty', Accounting, Organizations and Society, vol. 117, 101658. https://doi.org/10.1016/j.aos.2026.101658",
+              "raw_type": "info:eu-repo/semantics/article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1016/j.aos.2026.101658",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101658",
+            "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0361368226000279/pdf",
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "awards": [
+            {
+              "id": "https://openalex.org/G8169819458",
+              "display_name": null,
+              "funder_award_id": "435-2022-0541",
+              "funder_id": "https://openalex.org/F4320334617",
+              "funder_display_name": "Social Sciences and Humanities Research Council of Canada"
+            }
+          ],
+          "funders": [
+            {
+              "id": "https://openalex.org/F4320311061",
+              "display_name": "Queen Mary University of London",
+              "ror": "https://ror.org/026zzn846"
+            },
+            {
+              "id": "https://openalex.org/F4320320291",
+              "display_name": "University of Manchester",
+              "ror": "https://ror.org/027m9bs27"
+            },
+            {
+              "id": "https://openalex.org/F4320334617",
+              "display_name": "Social Sciences and Humanities Research Council of Canada",
+              "ror": "https://ror.org/04j5jqy92"
+            }
+          ],
+          "has_content": {
+            "pdf": true,
+            "grobid_xml": true
+          },
+          "content_urls": {
+            "pdf": "https://content.openalex.org/works/W7169526489.pdf",
+            "grobid_xml": "https://content.openalex.org/works/W7169526489.grobid-xml"
+          },
+          "referenced_works_count": 63,
+          "referenced_works": [
+            "https://openalex.org/W1590323311",
+            "https://openalex.org/W1963903606",
+            "https://openalex.org/W1984596072",
+            "https://openalex.org/W1990391359",
+            "https://openalex.org/W1994088532",
+            "https://openalex.org/W2000119849",
+            "https://openalex.org/W2006561278",
+            "https://openalex.org/W2007991902",
+            "https://openalex.org/W2013204245",
+            "https://openalex.org/W2027640509",
+            "https://openalex.org/W2040326808",
+            "https://openalex.org/W2055673921",
+            "https://openalex.org/W2056124214",
+            "https://openalex.org/W2059718653",
+            "https://openalex.org/W2069629972",
+            "https://openalex.org/W2070047854",
+            "https://openalex.org/W2072035377",
+            "https://openalex.org/W2078240089",
+            "https://openalex.org/W2080862045",
+            "https://openalex.org/W2102664883",
+            "https://openalex.org/W2106480438",
+            "https://openalex.org/W2112831257",
+            "https://openalex.org/W2123348464",
+            "https://openalex.org/W2130521546",
+            "https://openalex.org/W2150313899",
+            "https://openalex.org/W2153349730",
+            "https://openalex.org/W2153981305",
+            "https://openalex.org/W2154565016",
+            "https://openalex.org/W2160923392",
+            "https://openalex.org/W2167080140",
+            "https://openalex.org/W2171736895",
+            "https://openalex.org/W2232839779",
+            "https://openalex.org/W2326042842",
+            "https://openalex.org/W2330657662",
+            "https://openalex.org/W2347174727",
+            "https://openalex.org/W2414200799",
+            "https://openalex.org/W2496552262",
+            "https://openalex.org/W2547612893",
+            "https://openalex.org/W2766061348",
+            "https://openalex.org/W2797903672",
+            "https://openalex.org/W2805571673",
+            "https://openalex.org/W2921147271",
+            "https://openalex.org/W2936682487",
+            "https://openalex.org/W2951221221",
+            "https://openalex.org/W2978362120",
+            "https://openalex.org/W3040846750",
+            "https://openalex.org/W3049229894",
+            "https://openalex.org/W3082818919",
+            "https://openalex.org/W3123109308",
+            "https://openalex.org/W3125271785",
+            "https://openalex.org/W3126134162",
+            "https://openalex.org/W3126382304",
+            "https://openalex.org/W3175895412",
+            "https://openalex.org/W3183327015",
+            "https://openalex.org/W4297217483",
+            "https://openalex.org/W4353094197",
+            "https://openalex.org/W4386161297",
+            "https://openalex.org/W4386753747",
+            "https://openalex.org/W4387524831",
+            "https://openalex.org/W4388417801",
+            "https://openalex.org/W4406864895",
+            "https://openalex.org/W4415213235",
+            "https://openalex.org/W7136807818"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "This": [
+              0
+            ],
+            "paper": [
+              1
+            ],
+            "contributes": [
+              2
+            ],
+            "to": [
+              3,
+              26,
+              52,
+              98,
+              102,
+              113,
+              130,
+              194
+            ],
+            "a": [
+              4,
+              40,
+              84,
+              104,
+              183,
+              187
+            ],
+            "long-standing": [
+              5
+            ],
+            "debate": [
+              6
+            ],
+            "in": [
+              7,
+              137,
+              150,
+              163,
+              179,
+              182
+            ],
+            "the": [
+              8,
+              12,
+              18,
+              21,
+              68,
+              92,
+              124,
+              154,
+              164,
+              195
+            ],
+            "audit": [
+              9,
+              23,
+              126
+            ],
+            "literature": [
+              10
+            ],
+            "about": [
+              11
+            ],
+            "place": [
+              13
+            ],
+            "of": [
+              14,
+              20,
+              75,
+              87,
+              94,
+              168
+            ],
+            "professional": [
+              15
+            ],
+            "judgement": [
+              16,
+              37,
+              58,
+              144
+            ],
+            "within": [
+              17,
+              121
+            ],
+            "constraints": [
+              19
+            ],
+            "formal": [
+              22
+            ],
+            "process.": [
+              24
+            ],
+            "Responding": [
+              25
+            ],
+            "recent": [
+              27
+            ],
+            "calls": [
+              28
+            ],
+            "for": [
+              29,
+              47,
+              170
+            ],
+            "deeper": [
+              30
+            ],
+            "exploration,": [
+              31
+            ],
+            "we": [
+              32,
+              82
+            ],
+            "examine": [
+              33
+            ],
+            "how": [
+              34,
+              88,
+              109,
+              142,
+              175,
+              204
+            ],
+            "auditors": [
+              35,
+              66,
+              89,
+              110,
+              176,
+              205
+            ],
+            "exercise": [
+              36
+            ],
+            "when": [
+              38
+            ],
+            "facing": [
+              39
+            ],
+            "practical": [
+              41
+            ],
+            "challenge": [
+              42
+            ],
+            "they": [
+              43,
+              49
+            ],
+            "perceive": [
+              44
+            ],
+            "as": [
+              45,
+              78
+            ],
+            "novel,": [
+              46
+            ],
+            "which": [
+              48
+            ],
+            "are": [
+              50
+            ],
+            "unable": [
+              51
+            ],
+            "easily": [
+              53
+            ],
+            "deploy": [
+              54
+            ],
+            "prior": [
+              55
+            ],
+            "understandings": [
+              56
+            ],
+            "and": [
+              57,
+              67,
+              118,
+              122,
+              134
+            ],
+            "scripts.": [
+              59
+            ],
+            "Drawing": [
+              60
+            ],
+            "on": [
+              61,
+              153
+            ],
+            "semi-structured": [
+              62
+            ],
+            "interviews": [
+              63
+            ],
+            "with": [
+              64,
+              207
+            ],
+            "practicing": [
+              65
+            ],
+            "Routine": [
+              69
+            ],
+            "Dynamics": [
+              70
+            ],
+            "(RD)": [
+              71
+            ],
+            "perspective,": [
+              72
+            ],
+            "emphasising": [
+              73
+            ],
+            "patterns": [
+              74
+            ],
+            "routine": [
+              76,
+              160
+            ],
+            "action": [
+              77
+            ],
+            "having": [
+              79
+            ],
+            "internal": [
+              80
+            ],
+            "dynamics,": [
+              81
+            ],
+            "provide": [
+              83
+            ],
+            "nuanced": [
+              85
+            ],
+            "account": [
+              86
+            ],
+            "progress": [
+              90
+            ],
+            "from": [
+              91,
+              190
+            ],
+            "position": [
+              93
+            ],
+            "relative": [
+              95
+            ],
+            "epistemic": [
+              96
+            ],
+            "obscurity": [
+              97
+            ],
+            "being": [
+              99
+            ],
+            "comfortable": [
+              100
+            ],
+            "enough": [
+              101
+            ],
+            "form": [
+              103
+            ],
+            "conclusion.": [
+              105
+            ],
+            "Our": [
+              106
+            ],
+            "findings": [
+              107
+            ],
+            "show": [
+              108,
+              174
+            ],
+            "performed": [
+              111
+            ],
+            "routines": [
+              112
+            ],
+            "establish": [
+              114
+            ],
+            "social": [
+              115
+            ],
+            ",": [
+              116
+            ],
+            "temporal,": [
+              117
+            ],
+            "spatial": [
+              119
+            ],
+            "relationalities": [
+              120
+            ],
+            "beyond": [
+              123
+            ],
+            "present": [
+              125,
+              147
+            ],
+            "context,": [
+              127
+            ],
+            "enabling": [
+              128
+            ],
+            "them": [
+              129
+            ],
+            "nuance": [
+              131
+            ],
+            "their": [
+              132,
+              138,
+              180
+            ],
+            "interpretations": [
+              133
+            ],
+            "grow": [
+              135
+            ],
+            "confident": [
+              136
+            ],
+            "judgements.": [
+              139
+            ],
+            "We": [
+              140,
+              172
+            ],
+            "reveal": [
+              141
+            ],
+            "auditor": [
+              143
+            ],
+            "is": [
+              145
+            ],
+            "continuously": [
+              146
+            ],
+            "but": [
+              148
+            ],
+            "fluctuates": [
+              149
+            ],
+            "intensity,": [
+              151
+            ],
+            "depending": [
+              152
+            ],
+            "auditors’": [
+              155
+            ],
+            "reflexive": [
+              156
+            ],
+            "intent": [
+              157
+            ],
+            "during": [
+              158
+            ],
+            "individual": [
+              159
+            ],
+            "performances,": [
+              161
+            ],
+            "resulting": [
+              162
+            ],
+            "augmentation": [
+              165
+            ],
+            "or": [
+              166
+            ],
+            "curtailment": [
+              167
+            ],
+            "opportunities": [
+              169
+            ],
+            "inference.": [
+              171
+            ],
+            "also": [
+              173
+            ],
+            "accrue": [
+              177
+            ],
+            "comfort": [
+              178
+            ],
+            "judgements": [
+              181
+            ],
+            "progressive": [
+              184
+            ],
+            "manner": [
+              185
+            ],
+            "along": [
+              186
+            ],
+            "continuum,": [
+              188
+            ],
+            "spanning": [
+              189
+            ],
+            "largely": [
+              191
+            ],
+            "ritualistic": [
+              192
+            ],
+            "performances": [
+              193
+            ],
+            "more": [
+              196
+            ],
+            "effortful,": [
+              197
+            ],
+            "inferentially": [
+              198
+            ],
+            "intensive": [
+              199
+            ],
+            "ones": [
+              200
+            ],
+            "that": [
+              201
+            ],
+            "together": [
+              202
+            ],
+            "shape": [
+              203
+            ],
+            "grapple": [
+              206
+            ],
+            "novelty.": [
+              208
+            ]
+          },
+          "counts_by_year": [],
+          "updated_date": "2026-08-26T07:47:46.906454",
+          "created_date": "2026-07-18T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7169557427",
+          "doi": "https://doi.org/10.1016/j.aos.2026.101657",
+          "title": "The bodily enactment of accounting: A study of results-based management in an NGO",
+          "display_name": "The bodily enactment of accounting: A study of results-based management in an NGO",
+          "publication_year": 2026,
+          "publication_date": "2026-07-17",
+          "ids": {
+            "openalex": "https://openalex.org/W7169557427",
+            "doi": "https://doi.org/10.1016/j.aos.2026.101657"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.aos.2026.101657",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101657",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5141078436",
+                "display_name": "Victoria Honsel",
+                "orcid": "https://orcid.org/0009-0006-5435-1588"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I180519160",
+                  "display_name": "Copenhagen Business School",
+                  "ror": "https://ror.org/04sppb023",
+                  "country_code": "DK",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I180519160"
+                  ]
+                }
+              ],
+              "countries": [
+                "DK"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Victoria Honsel",
+              "raw_affiliation_strings": [
+                "Copenhagen Business School, Department of Operational Management, Denmark"
+              ],
+              "raw_orcid": "https://orcid.org/0009-0006-5435-1588",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Copenhagen Business School, Department of Operational Management, Denmark",
+                  "institution_ids": [
+                    "https://openalex.org/I180519160"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5073145577",
+                "display_name": "David Crvelin",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I79619799",
+                  "display_name": "University of Birmingham",
+                  "ror": "https://ror.org/03angcq70",
+                  "country_code": "GB",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I79619799"
+                  ]
+                }
+              ],
+              "countries": [
+                "GB"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "David Crvelin",
+              "raw_affiliation_strings": [
+                "University of Birmingham, Department of Accounting, UK"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Birmingham, Department of Accounting, UK",
+                  "institution_ids": [
+                    "https://openalex.org/I79619799"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5057888715",
+                "display_name": "Lukas Löhlein",
+                "orcid": "https://orcid.org/0000-0001-9112-6159"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I84340266",
+                  "display_name": "WHU – Otto Beisheim School of Management",
+                  "ror": "https://ror.org/01yhahq71",
+                  "country_code": "DE",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I84340266"
+                  ]
+                }
+              ],
+              "countries": [
+                "DE"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Lukas Löhlein",
+              "raw_affiliation_strings": [
+                "WHU – Otto Beisheim School of Management, Institute of Management Accounting and Control (IMC), Germany"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0001-9112-6159",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "WHU – Otto Beisheim School of Management, Institute of Management Accounting and Control (IMC), Germany",
+                  "institution_ids": [
+                    "https://openalex.org/I84340266"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5036119194",
+                "display_name": "Utz Schäffer",
+                "orcid": "https://orcid.org/0000-0002-1837-1753"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I84340266",
+                  "display_name": "WHU – Otto Beisheim School of Management",
+                  "ror": "https://ror.org/01yhahq71",
+                  "country_code": "DE",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I84340266"
+                  ]
+                }
+              ],
+              "countries": [
+                "DE"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Utz Schäffer",
+              "raw_affiliation_strings": [
+                "WHU – Otto Beisheim School of Management, Institute of Management Accounting and Control (IMC), Germany"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "WHU – Otto Beisheim School of Management, Institute of Management Accounting and Control (IMC), Germany",
+                  "institution_ids": [
+                    "https://openalex.org/I84340266"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 3,
+          "institutions_distinct_count": 3,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5057888715"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I84340266"
+          ],
+          "apc_list": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "apc_paid": null,
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.75638859,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": false
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "117",
+            "issue": null,
+            "first_page": "101657",
+            "last_page": "101657"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10797",
+            "display_name": "Accounting and Organizational Management",
+            "score": 0.9096999764442444,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1404",
+              "display_name": "Management Information Systems"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10797",
+              "display_name": "Accounting and Organizational Management",
+              "score": 0.9096999764442444,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1404",
+                "display_name": "Management Information Systems"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10344",
+              "display_name": "Management and Organizational Studies",
+              "score": 0.02810000069439411,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1407",
+                "display_name": "Organizational Behavior and Human Resource Management"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10081",
+              "display_name": "Auditing, Earnings Management, Governance",
+              "score": 0.01140000019222498,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/object",
+              "display_name": "Object (grammar)",
+              "score": 0.6607000231742859
+            },
+            {
+              "id": "https://openalex.org/keywords/situated",
+              "display_name": "Situated",
+              "score": 0.6216999888420105
+            },
+            {
+              "id": "https://openalex.org/keywords/preference",
+              "display_name": "Preference",
+              "score": 0.5440000295639038
+            },
+            {
+              "id": "https://openalex.org/keywords/accounting-research",
+              "display_name": "Accounting research",
+              "score": 0.448199987411499
+            },
+            {
+              "id": "https://openalex.org/keywords/tacit-knowledge",
+              "display_name": "Tacit knowledge",
+              "score": 0.43849998712539673
+            },
+            {
+              "id": "https://openalex.org/keywords/management-accounting",
+              "display_name": "Management accounting",
+              "score": 0.41679999232292175
+            },
+            {
+              "id": "https://openalex.org/keywords/work",
+              "display_name": "Work (physics)",
+              "score": 0.3935000002384186
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C2781238097",
+              "wikidata": "https://www.wikidata.org/wiki/Q175026",
+              "display_name": "Object (grammar)",
+              "level": 2,
+              "score": 0.6607000231742859
+            },
+            {
+              "id": "https://openalex.org/C132829578",
+              "wikidata": "https://www.wikidata.org/wiki/Q581151",
+              "display_name": "Situated",
+              "level": 2,
+              "score": 0.6216999888420105
+            },
+            {
+              "id": "https://openalex.org/C144024400",
+              "wikidata": "https://www.wikidata.org/wiki/Q21201",
+              "display_name": "Sociology",
+              "level": 0,
+              "score": 0.5914000272750854
+            },
+            {
+              "id": "https://openalex.org/C2781249084",
+              "wikidata": "https://www.wikidata.org/wiki/Q908656",
+              "display_name": "Preference",
+              "level": 2,
+              "score": 0.5440000295639038
+            },
+            {
+              "id": "https://openalex.org/C2780514539",
+              "wikidata": "https://www.wikidata.org/wiki/Q15995649",
+              "display_name": "Accounting research",
+              "level": 2,
+              "score": 0.448199987411499
+            },
+            {
+              "id": "https://openalex.org/C121955636",
+              "wikidata": "https://www.wikidata.org/wiki/Q4116214",
+              "display_name": "Accounting",
+              "level": 1,
+              "score": 0.44179999828338623
+            },
+            {
+              "id": "https://openalex.org/C2779561248",
+              "wikidata": "https://www.wikidata.org/wiki/Q743861",
+              "display_name": "Tacit knowledge",
+              "level": 2,
+              "score": 0.43849998712539673
+            },
+            {
+              "id": "https://openalex.org/C111472728",
+              "wikidata": "https://www.wikidata.org/wiki/Q9471",
+              "display_name": "Epistemology",
+              "level": 1,
+              "score": 0.41850000619888306
+            },
+            {
+              "id": "https://openalex.org/C74275925",
+              "wikidata": "https://www.wikidata.org/wiki/Q2990807",
+              "display_name": "Management accounting",
+              "level": 2,
+              "score": 0.41679999232292175
+            },
+            {
+              "id": "https://openalex.org/C18762648",
+              "wikidata": "https://www.wikidata.org/wiki/Q42213",
+              "display_name": "Work (physics)",
+              "level": 2,
+              "score": 0.3935000002384186
+            },
+            {
+              "id": "https://openalex.org/C39549134",
+              "wikidata": "https://www.wikidata.org/wiki/Q133080",
+              "display_name": "Public relations",
+              "level": 1,
+              "score": 0.3301999866962433
+            },
+            {
+              "id": "https://openalex.org/C2778568292",
+              "wikidata": "https://www.wikidata.org/wiki/Q7727275",
+              "display_name": "The Conceptual Framework",
+              "level": 3,
+              "score": 0.326200008392334
+            },
+            {
+              "id": "https://openalex.org/C14224292",
+              "wikidata": "https://www.wikidata.org/wiki/Q13600188",
+              "display_name": "Conceptual framework",
+              "level": 2,
+              "score": 0.31929999589920044
+            },
+            {
+              "id": "https://openalex.org/C2779018934",
+              "wikidata": "https://www.wikidata.org/wiki/Q1129653",
+              "display_name": "Everyday life",
+              "level": 2,
+              "score": 0.3172999918460846
+            },
+            {
+              "id": "https://openalex.org/C13606891",
+              "wikidata": "https://www.wikidata.org/wiki/Q2623243",
+              "display_name": "Conceptual model",
+              "level": 2,
+              "score": 0.2994999885559082
+            },
+            {
+              "id": "https://openalex.org/C169900460",
+              "wikidata": "https://www.wikidata.org/wiki/Q2200417",
+              "display_name": "Cognition",
+              "level": 2,
+              "score": 0.2849999964237213
+            },
+            {
+              "id": "https://openalex.org/C2780522230",
+              "wikidata": "https://www.wikidata.org/wiki/Q1140419",
+              "display_name": "Ambiguity",
+              "level": 2,
+              "score": 0.2827000021934509
+            },
+            {
+              "id": "https://openalex.org/C13200473",
+              "wikidata": "https://www.wikidata.org/wiki/Q2747831",
+              "display_name": "Reflexivity",
+              "level": 2,
+              "score": 0.2590999901294708
+            }
+          ],
+          "mesh": [],
+          "locations_count": 2,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.aos.2026.101657",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101657",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S198892436",
+                "display_name": "Accounting Organizations and Society",
+                "issn_l": "0361-3682",
+                "issn": [
+                  "0361-3682",
+                  "1873-6289"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Accounting, Organizations and Society",
+              "raw_type": "journal-article"
+            },
+            {
+              "id": "pmh:oai:research-api.cbs.dk:openaire_cris_publications/838d8c98-2450-405a-b293-67c1c1bea665",
+              "is_oa": false,
+              "landing_page_url": "https://research.cbs.dk/en/publications/838d8c98-2450-405a-b293-67c1c1bea665",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S4306401458",
+                "display_name": "CBS Research Portal (Copenhagen Business School)",
+                "issn_l": null,
+                "issn": null,
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": false,
+                "host_organization": "https://openalex.org/I180519160",
+                "host_organization_name": "Copenhagen Business School",
+                "host_organization_lineage": [
+                  "https://openalex.org/I180519160"
+                ],
+                "host_organization_lineage_names": [],
+                "type": "repository"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "submittedVersion",
+              "is_accepted": false,
+              "is_published": false,
+              "raw_source_name": "Honsel, V, Crvelin, D, Löhlein, L & Schäffer, U 2026, 'The Bodily Enactment of Accounting : A Study of Results-Based Management in an NGO', Accounting, Organizations and Society, vol. 117, 101657. https://doi.org/10.1016/j.aos.2026.101657",
+              "raw_type": "info:eu-repo/semantics/article"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [
+            {
+              "id": "https://openalex.org/F4320322343",
+              "display_name": "Konrad-Adenauer-Stiftung",
+              "ror": "https://ror.org/03pzdmy91"
+            },
+            {
+              "id": "https://openalex.org/F4320329592",
+              "display_name": "European Accounting Association",
+              "ror": "https://ror.org/02tev8b73"
+            }
+          ],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 51,
+          "referenced_works": [
+            "https://openalex.org/W1929673237",
+            "https://openalex.org/W1967116380",
+            "https://openalex.org/W1970760462",
+            "https://openalex.org/W1981768026",
+            "https://openalex.org/W1982103347",
+            "https://openalex.org/W1991470328",
+            "https://openalex.org/W1996329361",
+            "https://openalex.org/W2009146663",
+            "https://openalex.org/W2025235055",
+            "https://openalex.org/W2031301236",
+            "https://openalex.org/W2031593223",
+            "https://openalex.org/W2043141338",
+            "https://openalex.org/W2055879990",
+            "https://openalex.org/W2059765847",
+            "https://openalex.org/W2062781769",
+            "https://openalex.org/W2066421325",
+            "https://openalex.org/W2076257914",
+            "https://openalex.org/W2115779401",
+            "https://openalex.org/W2116117075",
+            "https://openalex.org/W2126177960",
+            "https://openalex.org/W2127651500",
+            "https://openalex.org/W2151594543",
+            "https://openalex.org/W2153028749",
+            "https://openalex.org/W2157853130",
+            "https://openalex.org/W2190998099",
+            "https://openalex.org/W2274087457",
+            "https://openalex.org/W2383591425",
+            "https://openalex.org/W2581919015",
+            "https://openalex.org/W2606185237",
+            "https://openalex.org/W2611535540",
+            "https://openalex.org/W2760563083",
+            "https://openalex.org/W2783431373",
+            "https://openalex.org/W2790016911",
+            "https://openalex.org/W2913087824",
+            "https://openalex.org/W2944561165",
+            "https://openalex.org/W2966029273",
+            "https://openalex.org/W2967065061",
+            "https://openalex.org/W3121733912",
+            "https://openalex.org/W3121933129",
+            "https://openalex.org/W3124676928",
+            "https://openalex.org/W3184209782",
+            "https://openalex.org/W3185498592",
+            "https://openalex.org/W4205166718",
+            "https://openalex.org/W4211181429",
+            "https://openalex.org/W4244435195",
+            "https://openalex.org/W4256600114",
+            "https://openalex.org/W4379801420",
+            "https://openalex.org/W4399616190",
+            "https://openalex.org/W4410575994",
+            "https://openalex.org/W7125702154",
+            "https://openalex.org/W7126375991"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-08-29T07:29:34.045763",
+          "created_date": "2026-07-18T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7203638159",
+          "doi": "https://doi.org/10.1016/j.aos.2026.101661",
+          "title": "Supporting underperforming agents: The role of human capital development and relative performance information",
+          "display_name": "Supporting underperforming agents: The role of human capital development and relative performance information",
+          "publication_year": 2026,
+          "publication_date": "2026-08-17",
+          "ids": {
+            "openalex": "https://openalex.org/W7203638159",
+            "doi": "https://doi.org/10.1016/j.aos.2026.101661"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.aos.2026.101661",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101661",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://doi.org/10.1016/j.aos.2026.101661",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5028225557",
+                "display_name": "Jan Bouwens",
+                "orcid": "https://orcid.org/0000-0002-8555-7056"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I4210165760",
+                  "display_name": "College of Accounting",
+                  "ror": "https://ror.org/01e5pnf26",
+                  "country_code": "SI",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I4210165760"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I887064364",
+                  "display_name": "University of Amsterdam",
+                  "ror": "https://ror.org/04dkp9463",
+                  "country_code": "NL",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I887064364"
+                  ]
+                }
+              ],
+              "countries": [
+                "NL",
+                "SI"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Jan Bouwens",
+              "raw_affiliation_strings": [
+                "Department of Accounting, University of Amsterdam, the Netherlands"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Department of Accounting, University of Amsterdam, the Netherlands",
+                  "institution_ids": [
+                    "https://openalex.org/I4210165760",
+                    "https://openalex.org/I887064364"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5005624314",
+                "display_name": "Peter Kroos",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I4210165760",
+                  "display_name": "College of Accounting",
+                  "ror": "https://ror.org/01e5pnf26",
+                  "country_code": "SI",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I4210165760"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I887064364",
+                  "display_name": "University of Amsterdam",
+                  "ror": "https://ror.org/04dkp9463",
+                  "country_code": "NL",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I887064364"
+                  ]
+                }
+              ],
+              "countries": [
+                "NL",
+                "SI"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Peter Kroos",
+              "raw_affiliation_strings": [
+                "Department of Accounting, University of Amsterdam, the Netherlands"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-9759-3257",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Department of Accounting, University of Amsterdam, the Netherlands",
+                  "institution_ids": [
+                    "https://openalex.org/I4210165760",
+                    "https://openalex.org/I887064364"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5100435146",
+                "display_name": "Jingwen Zhang",
+                "orcid": "https://orcid.org/0000-0003-1733-6857"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I870178186",
+                  "display_name": "Nyenrode Business University",
+                  "ror": "https://ror.org/018528593",
+                  "country_code": "NL",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I870178186"
+                  ]
+                }
+              ],
+              "countries": [
+                "NL"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Jingwen Zhang",
+              "raw_affiliation_strings": [
+                "Department of Corporate Reporting, Finance, and Tax, Nyenrode University, the Netherlands"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Department of Corporate Reporting, Finance, and Tax, Nyenrode University, the Netherlands",
+                  "institution_ids": [
+                    "https://openalex.org/I870178186"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 2,
+          "institutions_distinct_count": 3,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5005624314"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I4210165760",
+            "https://openalex.org/I887064364"
+          ],
+          "apc_list": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "apc_paid": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.93375449,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "117",
+            "issue": null,
+            "first_page": "101661",
+            "last_page": "101661"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T11161",
+            "display_name": "Consumer Market Behavior and Pricing",
+            "score": 0.20630000531673431,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1406",
+              "display_name": "Marketing"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T11161",
+              "display_name": "Consumer Market Behavior and Pricing",
+              "score": 0.20630000531673431,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1406",
+                "display_name": "Marketing"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10003",
+              "display_name": "Innovation and Knowledge Management",
+              "score": 0.10830000042915344,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1408",
+                "display_name": "Strategy and Management"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11270",
+              "display_name": "Complex Systems and Time Series Analysis",
+              "score": 0.06260000169277191,
+              "subfield": {
+                "id": "https://openalex.org/subfields/2002",
+                "display_name": "Economics and Econometrics"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/20",
+                "display_name": "Economics, Econometrics and Finance"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/human-capital",
+              "display_name": "Human capital",
+              "score": 0.8087000250816345
+            },
+            {
+              "id": "https://openalex.org/keywords/quality",
+              "display_name": "Quality (philosophy)",
+              "score": 0.43869999051094055
+            },
+            {
+              "id": "https://openalex.org/keywords/capital",
+              "display_name": "Capital (architecture)",
+              "score": 0.41440001130104065
+            },
+            {
+              "id": "https://openalex.org/keywords/human-resources",
+              "display_name": "Human resources",
+              "score": 0.39399999380111694
+            },
+            {
+              "id": "https://openalex.org/keywords/efficiency",
+              "display_name": "Efficiency",
+              "score": 0.3158000111579895
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C2776943663",
+              "wikidata": "https://www.wikidata.org/wiki/Q165687",
+              "display_name": "Human capital",
+              "level": 2,
+              "score": 0.8087000250816345
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.5591999888420105
+            },
+            {
+              "id": "https://openalex.org/C2779530757",
+              "wikidata": "https://www.wikidata.org/wiki/Q1207505",
+              "display_name": "Quality (philosophy)",
+              "level": 2,
+              "score": 0.43869999051094055
+            },
+            {
+              "id": "https://openalex.org/C83646750",
+              "wikidata": "https://www.wikidata.org/wiki/Q193893",
+              "display_name": "Capital (architecture)",
+              "level": 2,
+              "score": 0.41440001130104065
+            },
+            {
+              "id": "https://openalex.org/C107645774",
+              "wikidata": "https://www.wikidata.org/wiki/Q5467169",
+              "display_name": "Human resources",
+              "level": 2,
+              "score": 0.39399999380111694
+            },
+            {
+              "id": "https://openalex.org/C149782125",
+              "wikidata": "https://www.wikidata.org/wiki/Q160039",
+              "display_name": "Econometrics",
+              "level": 1,
+              "score": 0.3488999903202057
+            },
+            {
+              "id": "https://openalex.org/C17648541",
+              "wikidata": "https://www.wikidata.org/wiki/Q2265984",
+              "display_name": "Efficiency",
+              "level": 3,
+              "score": 0.3158000111579895
+            },
+            {
+              "id": "https://openalex.org/C40700",
+              "wikidata": "https://www.wikidata.org/wiki/Q1411783",
+              "display_name": "Industrial organization",
+              "level": 1,
+              "score": 0.290800005197525
+            },
+            {
+              "id": "https://openalex.org/C162324750",
+              "wikidata": "https://www.wikidata.org/wiki/Q8134",
+              "display_name": "Economics",
+              "level": 0,
+              "score": 0.2838999927043915
+            },
+            {
+              "id": "https://openalex.org/C141571065",
+              "wikidata": "https://www.wikidata.org/wiki/Q1771949",
+              "display_name": "Performance measurement",
+              "level": 2,
+              "score": 0.27959999442100525
+            },
+            {
+              "id": "https://openalex.org/C2781089502",
+              "wikidata": "https://www.wikidata.org/wiki/Q2917873",
+              "display_name": "Human development (humanity)",
+              "level": 2,
+              "score": 0.27889999747276306
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.aos.2026.101661",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101661",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S198892436",
+                "display_name": "Accounting Organizations and Society",
+                "issn_l": "0361-3682",
+                "issn": [
+                  "0361-3682",
+                  "1873-6289"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by",
+              "license_id": "https://openalex.org/licenses/cc-by",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Accounting, Organizations and Society",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1016/j.aos.2026.101661",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101661",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 49,
+          "referenced_works": [
+            "https://openalex.org/W1513538699",
+            "https://openalex.org/W1860948533",
+            "https://openalex.org/W1939209172",
+            "https://openalex.org/W1992057172",
+            "https://openalex.org/W2007194299",
+            "https://openalex.org/W2010940490",
+            "https://openalex.org/W2021238491",
+            "https://openalex.org/W2044376291",
+            "https://openalex.org/W2044688885",
+            "https://openalex.org/W2060700143",
+            "https://openalex.org/W2073232297",
+            "https://openalex.org/W2108795964",
+            "https://openalex.org/W2121949732",
+            "https://openalex.org/W2130409227",
+            "https://openalex.org/W2143147146",
+            "https://openalex.org/W2164505476",
+            "https://openalex.org/W2166593106",
+            "https://openalex.org/W2263298829",
+            "https://openalex.org/W2336917688",
+            "https://openalex.org/W2467768649",
+            "https://openalex.org/W2488054209",
+            "https://openalex.org/W2599963605",
+            "https://openalex.org/W2601808389",
+            "https://openalex.org/W2610842814",
+            "https://openalex.org/W2762975052",
+            "https://openalex.org/W2773183873",
+            "https://openalex.org/W2787070893",
+            "https://openalex.org/W2899672395",
+            "https://openalex.org/W2997227060",
+            "https://openalex.org/W3021570663",
+            "https://openalex.org/W3022954220",
+            "https://openalex.org/W3086368125",
+            "https://openalex.org/W3121454242",
+            "https://openalex.org/W3122097890",
+            "https://openalex.org/W3123125341",
+            "https://openalex.org/W3123182417",
+            "https://openalex.org/W3123327957",
+            "https://openalex.org/W3123428852",
+            "https://openalex.org/W3124330986",
+            "https://openalex.org/W3124629868",
+            "https://openalex.org/W3124657124",
+            "https://openalex.org/W3124997201",
+            "https://openalex.org/W3125738065",
+            "https://openalex.org/W3159759907",
+            "https://openalex.org/W4229930763",
+            "https://openalex.org/W4283387379",
+            "https://openalex.org/W4312219241",
+            "https://openalex.org/W4323537239",
+            "https://openalex.org/W4404117823"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "We": [
+              0,
+              16
+            ],
+            "study": [
+              1
+            ],
+            "principals’": [
+              2
+            ],
+            "use": [
+              3,
+              17,
+              79
+            ],
+            "of": [
+              4
+            ],
+            "performance": [
+              5,
+              28,
+              81,
+              127
+            ],
+            "information": [
+              6,
+              82
+            ],
+            "to": [
+              7,
+              13,
+              30,
+              132
+            ],
+            "allocate": [
+              8
+            ],
+            "human": [
+              9,
+              56,
+              118,
+              133
+            ],
+            "capital": [
+              10,
+              57,
+              119,
+              134
+            ],
+            "development": [
+              11,
+              58
+            ],
+            "resources": [
+              12
+            ],
+            "underperforming": [
+              14,
+              87,
+              141
+            ],
+            "agents.": [
+              15
+            ],
+            "proprietary": [
+              18
+            ],
+            "data": [
+              19
+            ],
+            "from": [
+              20
+            ],
+            "a": [
+              21
+            ],
+            "retail": [
+              22
+            ],
+            "firm": [
+              23
+            ],
+            "that": [
+              24,
+              55,
+              65,
+              103,
+              125,
+              138
+            ],
+            "sets": [
+              25
+            ],
+            "uniform,": [
+              26,
+              43
+            ],
+            "noncalibrated": [
+              27,
+              44,
+              75
+            ],
+            "targets": [
+              29,
+              45,
+              113
+            ],
+            "ensure": [
+              31
+            ],
+            "consistent": [
+              32
+            ],
+            "quality": [
+              33
+            ],
+            "and": [
+              34,
+              63,
+              83
+            ],
+            "customer": [
+              35
+            ],
+            "experience": [
+              36
+            ],
+            "across": [
+              37
+            ],
+            "all": [
+              38,
+              70
+            ],
+            "stores.": [
+              39
+            ],
+            "Unlike": [
+              40
+            ],
+            "calibrated": [
+              41,
+              97,
+              112
+            ],
+            "targets,": [
+              42,
+              98
+            ],
+            "do": [
+              46,
+              67
+            ],
+            "not": [
+              47,
+              68
+            ],
+            "account": [
+              48
+            ],
+            "for": [
+              49,
+              96,
+              117,
+              140
+            ],
+            "heterogeneity": [
+              50
+            ],
+            "in": [
+              51
+            ],
+            "local": [
+              52
+            ],
+            "conditions.": [
+              53
+            ],
+            "Given": [
+              54
+            ],
+            "is": [
+              59,
+              128
+            ],
+            "costly,": [
+              60
+            ],
+            "we": [
+              61,
+              99,
+              136
+            ],
+            "predict": [
+              62
+            ],
+            "find": [
+              64,
+              100,
+              137
+            ],
+            "principals": [
+              66,
+              104
+            ],
+            "support": [
+              69,
+              85,
+              139
+            ],
+            "agents": [
+              71,
+              88,
+              109,
+              142
+            ],
+            "who": [
+              72,
+              89,
+              110,
+              143
+            ],
+            "underperform": [
+              73,
+              111
+            ],
+            "on": [
+              74,
+              86,
+              106
+            ],
+            "targets.": [
+              76
+            ],
+            "Instead,": [
+              77
+            ],
+            "they": [
+              78
+            ],
+            "relative": [
+              80,
+              107,
+              126
+            ],
+            "concentrate": [
+              84
+            ],
+            "outperform": [
+              90,
+              144
+            ],
+            "their": [
+              91,
+              145
+            ],
+            "geographical": [
+              92
+            ],
+            "peers.": [
+              93
+            ],
+            "In": [
+              94
+            ],
+            "contrast,": [
+              95
+            ],
+            "no": [
+              101
+            ],
+            "evidence": [
+              102
+            ],
+            "rely": [
+              105
+            ],
+            "performance;": [
+              108
+            ],
+            "are": [
+              114
+            ],
+            "generally": [
+              115
+            ],
+            "eligible": [
+              116
+            ],
+            "support.": [
+              120
+            ],
+            "Consistent": [
+              121
+            ],
+            "with": [
+              122
+            ],
+            "our": [
+              123
+            ],
+            "assumption": [
+              124
+            ],
+            "informative": [
+              129
+            ],
+            "about": [
+              130
+            ],
+            "returns": [
+              131
+            ],
+            "investment,": [
+              135
+            ],
+            "peers": [
+              146
+            ],
+            "improves": [
+              147
+            ],
+            "performance.": [
+              148
+            ]
+          },
+          "counts_by_year": [],
+          "updated_date": "2026-08-21T09:56:20.448147",
+          "created_date": "2026-08-18T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7204564705",
+          "doi": "https://doi.org/10.1016/j.aos.2026.101660",
+          "title": "Removing sludge: How rating system design affects the informativeness of crowd-based performance measures",
+          "display_name": "Removing sludge: How rating system design affects the informativeness of crowd-based performance measures",
+          "publication_year": 2026,
+          "publication_date": "2026-08-28",
+          "ids": {
+            "openalex": "https://openalex.org/W7204564705",
+            "doi": "https://doi.org/10.1016/j.aos.2026.101660"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.aos.2026.101660",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101660",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S198892436",
+              "display_name": "Accounting Organizations and Society",
+              "issn_l": "0361-3682",
+              "issn": [
+                "0361-3682",
+                "1873-6289"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Accounting, Organizations and Society",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5023222326",
+                "display_name": "Oliver Hegers",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I865915315",
+                  "display_name": "Vrije Universiteit Amsterdam",
+                  "ror": "https://ror.org/008xxew50",
+                  "country_code": "NL",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I865915315"
+                  ]
+                }
+              ],
+              "countries": [
+                "NL"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Oliver Hegers",
+              "raw_affiliation_strings": [
+                "Vrije Universiteit Amsterdam, De Boelelaan 1105, 1081 HV Amsterdam, The Netherlands"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Vrije Universiteit Amsterdam, De Boelelaan 1105, 1081 HV Amsterdam, The Netherlands",
+                  "institution_ids": [
+                    "https://openalex.org/I865915315"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5034277631",
+                "display_name": "Matthias D. Mahlendorf",
+                "orcid": "https://orcid.org/0000-0002-9674-472X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I71675930",
+                  "display_name": "Frankfurt School of Finance & Management",
+                  "ror": "https://ror.org/05gxyna29",
+                  "country_code": "DE",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I71675930"
+                  ]
+                }
+              ],
+              "countries": [
+                "DE"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Matthias D. Mahlendorf",
+              "raw_affiliation_strings": [
+                "Frankfurt School of Finance and Management, Adickesallee 32-34, 60322 Frankfurt am Main, Germany"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-9674-472X",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Frankfurt School of Finance and Management, Adickesallee 32-34, 60322 Frankfurt am Main, Germany",
+                  "institution_ids": [
+                    "https://openalex.org/I71675930"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5021357634",
+                "display_name": "Fan Wu",
+                "orcid": "https://orcid.org/0000-0002-1339-7188"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I177725633",
+                  "display_name": "Chinese University of Hong Kong",
+                  "ror": "https://ror.org/00t33hh48",
+                  "country_code": "HK",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I177725633"
+                  ]
+                }
+              ],
+              "countries": [
+                "HK"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Fan Wu",
+              "raw_affiliation_strings": [
+                "The Chinese University of Hong Kong, 12 Chak Cheung Street, Shatin, N.T., Hong Kong"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0003-2127-7773",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "The Chinese University of Hong Kong, 12 Chak Cheung Street, Shatin, N.T., Hong Kong",
+                  "institution_ids": [
+                    "https://openalex.org/I177725633"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 3,
+          "institutions_distinct_count": 3,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5034277631"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I71675930"
+          ],
+          "apc_list": {
+            "value": 4040,
+            "currency": "USD",
+            "value_usd": 4040
+          },
+          "apc_paid": null,
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.96590155,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "117",
+            "issue": null,
+            "first_page": "101660",
+            "last_page": "101660"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10081",
+            "display_name": "Auditing, Earnings Management, Governance",
+            "score": 0.35350000858306885,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1402",
+              "display_name": "Accounting"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10081",
+              "display_name": "Auditing, Earnings Management, Governance",
+              "score": 0.35350000858306885,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10797",
+              "display_name": "Accounting and Organizational Management",
+              "score": 0.2653000056743622,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1404",
+                "display_name": "Management Information Systems"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10646",
+              "display_name": "Experimental Behavioral Economics Studies",
+              "score": 0.03819999843835831,
+              "subfield": {
+                "id": "https://openalex.org/subfields/3311",
+                "display_name": "Safety Research"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/33",
+                "display_name": "Social Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/rating-system",
+              "display_name": "Rating system",
+              "score": 0.7060999870300293
+            },
+            {
+              "id": "https://openalex.org/keywords/quality",
+              "display_name": "Quality (philosophy)",
+              "score": 0.6029000282287598
+            },
+            {
+              "id": "https://openalex.org/keywords/rating-scale",
+              "display_name": "Rating scale",
+              "score": 0.430400013923645
+            },
+            {
+              "id": "https://openalex.org/keywords/performance-measurement",
+              "display_name": "Performance measurement",
+              "score": 0.4293000102043152
+            },
+            {
+              "id": "https://openalex.org/keywords/systems-design",
+              "display_name": "Systems design",
+              "score": 0.42250001430511475
+            },
+            {
+              "id": "https://openalex.org/keywords/measure",
+              "display_name": "Measure (data warehouse)",
+              "score": 0.4147000014781952
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C2988118254",
+              "wikidata": "https://www.wikidata.org/wiki/Q16881889",
+              "display_name": "Rating system",
+              "level": 2,
+              "score": 0.7060999870300293
+            },
+            {
+              "id": "https://openalex.org/C2779530757",
+              "wikidata": "https://www.wikidata.org/wiki/Q1207505",
+              "display_name": "Quality (philosophy)",
+              "level": 2,
+              "score": 0.6029000282287598
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.4699999988079071
+            },
+            {
+              "id": "https://openalex.org/C83849319",
+              "wikidata": "https://www.wikidata.org/wiki/Q7295720",
+              "display_name": "Rating scale",
+              "level": 2,
+              "score": 0.430400013923645
+            },
+            {
+              "id": "https://openalex.org/C141571065",
+              "wikidata": "https://www.wikidata.org/wiki/Q1771949",
+              "display_name": "Performance measurement",
+              "level": 2,
+              "score": 0.4293000102043152
+            },
+            {
+              "id": "https://openalex.org/C31352089",
+              "wikidata": "https://www.wikidata.org/wiki/Q3750474",
+              "display_name": "Systems design",
+              "level": 2,
+              "score": 0.42250001430511475
+            },
+            {
+              "id": "https://openalex.org/C2780009758",
+              "wikidata": "https://www.wikidata.org/wiki/Q6804172",
+              "display_name": "Measure (data warehouse)",
+              "level": 2,
+              "score": 0.4147000014781952
+            },
+            {
+              "id": "https://openalex.org/C41008148",
+              "wikidata": "https://www.wikidata.org/wiki/Q21198",
+              "display_name": "Computer science",
+              "level": 0,
+              "score": 0.40059998631477356
+            },
+            {
+              "id": "https://openalex.org/C21200559",
+              "wikidata": "https://www.wikidata.org/wiki/Q7451068",
+              "display_name": "Sensitivity (control systems)",
+              "level": 2,
+              "score": 0.3334999978542328
+            },
+            {
+              "id": "https://openalex.org/C2776035688",
+              "wikidata": "https://www.wikidata.org/wiki/Q1606558",
+              "display_name": "Affect (linguistics)",
+              "level": 2,
+              "score": 0.3314000070095062
+            },
+            {
+              "id": "https://openalex.org/C58328972",
+              "wikidata": "https://www.wikidata.org/wiki/Q184609",
+              "display_name": "Expert system",
+              "level": 2,
+              "score": 0.2928999960422516
+            },
+            {
+              "id": "https://openalex.org/C162853370",
+              "wikidata": "https://www.wikidata.org/wiki/Q39809",
+              "display_name": "Marketing",
+              "level": 1,
+              "score": 0.288100004196167
+            },
+            {
+              "id": "https://openalex.org/C15744967",
+              "wikidata": "https://www.wikidata.org/wiki/Q9418",
+              "display_name": "Psychology",
+              "level": 0,
+              "score": 0.27959999442100525
+            },
+            {
+              "id": "https://openalex.org/C149782125",
+              "wikidata": "https://www.wikidata.org/wiki/Q160039",
+              "display_name": "Econometrics",
+              "level": 1,
+              "score": 0.2678000032901764
+            },
+            {
+              "id": "https://openalex.org/C112930515",
+              "wikidata": "https://www.wikidata.org/wiki/Q4389547",
+              "display_name": "Risk analysis (engineering)",
+              "level": 1,
+              "score": 0.2533999979496002
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.aos.2026.101660",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1016/j.aos.2026.101660",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S198892436",
+                "display_name": "Accounting Organizations and Society",
+                "issn_l": "0361-3682",
+                "issn": [
+                  "0361-3682",
+                  "1873-6289"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Accounting, Organizations and Society",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 56,
+          "referenced_works": [
+            "https://openalex.org/W1979692185",
+            "https://openalex.org/W1992523575",
+            "https://openalex.org/W1993865695",
+            "https://openalex.org/W2007194299",
+            "https://openalex.org/W2044376291",
+            "https://openalex.org/W2078831478",
+            "https://openalex.org/W2098656726",
+            "https://openalex.org/W2116151775",
+            "https://openalex.org/W2121949732",
+            "https://openalex.org/W2124518612",
+            "https://openalex.org/W2132844726",
+            "https://openalex.org/W2135794866",
+            "https://openalex.org/W2229197100",
+            "https://openalex.org/W2268863288",
+            "https://openalex.org/W2346094809",
+            "https://openalex.org/W2418825704",
+            "https://openalex.org/W2483142831",
+            "https://openalex.org/W2530539196",
+            "https://openalex.org/W2573368831",
+            "https://openalex.org/W2582561810",
+            "https://openalex.org/W2725114605",
+            "https://openalex.org/W2729339203",
+            "https://openalex.org/W2762865301",
+            "https://openalex.org/W2768966295",
+            "https://openalex.org/W2800195100",
+            "https://openalex.org/W2883385031",
+            "https://openalex.org/W2965392285",
+            "https://openalex.org/W3008027311",
+            "https://openalex.org/W3045217231",
+            "https://openalex.org/W3046704450",
+            "https://openalex.org/W3110891946",
+            "https://openalex.org/W3121233112",
+            "https://openalex.org/W3122799784",
+            "https://openalex.org/W3122952517",
+            "https://openalex.org/W3123188814",
+            "https://openalex.org/W3123861895",
+            "https://openalex.org/W3124560547",
+            "https://openalex.org/W3124621104",
+            "https://openalex.org/W3124804010",
+            "https://openalex.org/W3125263129",
+            "https://openalex.org/W3125993287",
+            "https://openalex.org/W3126061136",
+            "https://openalex.org/W3126186784",
+            "https://openalex.org/W4200160148",
+            "https://openalex.org/W4214612011",
+            "https://openalex.org/W4214940050",
+            "https://openalex.org/W4281669385",
+            "https://openalex.org/W4309112562",
+            "https://openalex.org/W4362697170",
+            "https://openalex.org/W4376127184",
+            "https://openalex.org/W4379387124",
+            "https://openalex.org/W4387134599",
+            "https://openalex.org/W4389478878",
+            "https://openalex.org/W4402310152",
+            "https://openalex.org/W4404585049",
+            "https://openalex.org/W4404621296"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-08-29T07:29:34.045763",
+          "created_date": "2026-08-29T00:00:00"
+        }
+      ],
+      "group_by": []
+    }
+  ],
+  "rejected": []
+}
