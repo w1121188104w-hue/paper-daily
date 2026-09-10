@@ -4,9 +4,11 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { execFileSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { loadJournalConfig, findJournal } from '../src/services/journals.js';
 import { normalizeSourceRecord } from '../src/services/paperModel.js';
 import { runJournalCollection } from '../src/services/journalRun.js';
+import { translationTaskId } from '../src/services/translationQueue.js';
 import { readJournalLibrary } from '../src/services/journalLibrary.js';
 import { journalGitFiles } from '../src/services/journalGitFiles.js';
 import { DEEPSEEK_MODEL } from '../src/services/deepseekTranslation.js';
@@ -172,6 +174,25 @@ test('自动翻译命令：只读不读密钥；非已启用默认分支禁止�
     await assert.rejects(runAutomaticTranslationCommand(['--run', '--mode', 'backfill', '--github-output'], { root, env, log,
       execute: async () => { throw new Error('must not execute'); } }), /默认分支/);
   }
+});
+
+test('自动翻译：两个每日时段共用500次上限，次日未请求论文正常继续', async (t) => {
+  const { root } = await fixture(t, [record(0), record(1)]);
+  const state = emptyState(), sourceHash = 'a'.repeat(64);
+  for (let batch = 0; batch < 50; batch++) {
+    state.reservations.push({ id: randomUUID(), batch_id: `batch-${'b'.repeat(64)}`, mode: 'daily',
+      created_at: time, finished_at: time, items: Array.from({ length: batch === 49 ? 9 : 10 }, (_, i) => {
+        const id = `doi:10.1234/history-${batch}-${i}`;
+        return { id, tasks: [{ field: 'title', source_hash: sourceHash, task_id: translationTaskId(id, 'title', sourceHash) }],
+          status: 'failed', code: 'INVALID_JSON', usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 }, completed_fields: [] };
+      }) });
+  }
+  await writeTranslationState(root, state);
+  const lastSlot = await run(root, { mode: 'daily' });
+  assert.equal(lastSlot.requested_this_run, 1); assert.equal(lastSlot.stop_reason, 'REQUEST_LIMIT');
+  const sameDay = await run(root, { mode: 'daily' }); assert.equal(sameDay.requested_this_run, 0);
+  const nextDay = await run(root, { mode: 'daily', now: () => new Date('2026-09-11T01:00:00Z') });
+  assert.equal(nextDay.requested_this_run, 1); assert.equal(nextDay.available_papers, 0);
 });
 
 test('自动翻译真实 Git 测试：收费前远端已有登记，结算后只上传正式资料', async (t) => {
