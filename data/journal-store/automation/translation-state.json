@@ -1357,7 +1357,7 @@
       "batch_id": "batch-11064ca3124280371c0819ab0c62870e353149318357550ae413f7a6248fd942",
       "mode": "backfill",
       "created_at": "2026-09-10T13:33:44.074Z",
-      "finished_at": null,
+      "finished_at": "2026-09-10T13:33:59.539Z",
       "items": [
         {
           "id": "doi:10.1016/j.jfineco.2026.104305",
@@ -1368,10 +1368,16 @@
               "task_id": "task:3296733c095084cd9536993fb144e1fe2ea7db06930eb603f063fcc35787804b"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 218,
+            "completion_tokens": 13,
+            "total_tokens": 231
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104306",
@@ -1382,10 +1388,16 @@
               "task_id": "task:151cb1f5b3038af7e2e14a3cc606747bfdaed9b33848cbe5febaa7586a9f249e"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 222,
+            "completion_tokens": 18,
+            "total_tokens": 240
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104307",
@@ -1396,10 +1408,16 @@
               "task_id": "task:c7a82074125afefe04b86d726bb7bae08af8cec866b88ae875d6d96d454ab176"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 221,
+            "completion_tokens": 19,
+            "total_tokens": 240
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104308",
@@ -1410,10 +1428,16 @@
               "task_id": "task:e8d4399f7fcb5cd2d353bc8a90bbd794498e014415b4682d7efd7908b4d2656a"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 229,
+            "completion_tokens": 22,
+            "total_tokens": 251
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104309",
@@ -1424,10 +1448,16 @@
               "task_id": "task:a3b7bc0816141995cf43da2358579c54b670142f1656f82997c00819d678d79f"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 223,
+            "completion_tokens": 20,
+            "total_tokens": 243
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104310",
@@ -1438,10 +1468,16 @@
               "task_id": "task:b2602000416bc70a84018c0ecf5a3c149b3d68c300b793dea02914d7b488869b"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 225,
+            "completion_tokens": 20,
+            "total_tokens": 245
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104311",
@@ -1452,10 +1488,16 @@
               "task_id": "task:eaf7ecfac4ea3efdc2217b65e0ee34ee81b15120e013f1333c57629927ab38f9"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 219,
+            "completion_tokens": 14,
+            "total_tokens": 233
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104319",
@@ -1466,10 +1508,16 @@
               "task_id": "task:68b552645aba3d74803c2e2df571c7f007263851debceb18ee22e469a671d38d"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 212,
+            "completion_tokens": 11,
+            "total_tokens": 223
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104320",
@@ -1480,10 +1528,16 @@
               "task_id": "task:6a2c8b6f21e954398bbc93510255d70ada6cbdc2bbbcd65b7139a46d9641b497"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 212,
+            "completion_tokens": 10,
+            "total_tokens": 222
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104321",
@@ -1494,10 +1548,16 @@
               "task_id": "task:126333c1c53e300c5fe0587225fcc3ad04ae0ebe421f977a4b058ce5a44b3cff"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 211,
+            "completion_tokens": 8,
+            "total_tokens": 219
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
