@@ -210,3 +210,38 @@ test('DeepSeek工作流：仅手动、默认分支、首次运行、无仓库写
   const daily = await fs.readFile(new URL('../.github/workflows/daily-collect.yml', import.meta.url), 'utf8');
   assert.ok(!daily.toLowerCase().includes('deepseek')); assert.ok(!JSON.stringify(workflow).includes('git push'));
 });
+
+test('人工续接：绑定同一10篇清单，仅请求尚未尝试的后8篇，前2篇绝不重发', async () => {
+  const ten = batch(Array.from({ length: 10 }, (_, i) => record({ doi: `10.1234/p${i}`, source_id: `10.1234/p${i}` })));
+  const output = await run(ten, { startIndex: 2 });
+  assert.equal(output.report.plan.start_index, 2); assert.equal(output.report.plan.max_requests, 8);
+  assert.equal(output.report.attempted_requests, 8);
+  assert.deepEqual(output.report.rows.map((row) => row.id), ten.items.slice(2).map((item) => item.id));
+  for (const startIndex of [-1, 10, 1.5, NaN]) await assert.rejects(run(ten, { startIndex }), { code: 'INVALID_START_INDEX' });
+});
+
+test('格式不合格时保留模型正文供加密审阅，但不能进入导入结果或泄露密钥', async () => {
+  const content = JSON.stringify({ unexpected: '仅用于审阅的模型正文' });
+  const output = await run(batch(), { fetchImpl: async () => response(payload({ choices: [{ finish_reason: 'stop', message: { role: 'assistant', content } }] })) });
+  assert.equal(output.result.items.length, 0); assert.equal(output.review_rejections[0].content, content);
+  assert.ok(!JSON.stringify(output.report).includes('仅用于审阅'));
+  const leaked = await run(batch(), { fetchImpl: async () => response(payload({ choices: [{ finish_reason: 'stop', message: { role: 'assistant', content: apiKey } }] })) });
+  assert.equal(leaked.review_rejections.length, 0); assert.ok(!JSON.stringify(leaked).includes(apiKey));
+});
+
+test('人工续接：错误的批次指纹在读密钥和写工作目录前拒绝', async (t) => {
+  const { root } = await fixture(t);
+  const env = new Proxy({}, { get: () => { throw new Error('Must not read key before batch guard'); } });
+  await assert.rejects(runDeepSeekCommand(['--run', '--expected-batch', 'batch-wrong'], { root, env, now, log: () => {} }), { code: 'EXPECTED_BATCH_MISMATCH' });
+  await assert.rejects(fs.stat(path.join(root, 'translations')), { code: 'ENOENT' });
+});
+
+test('完整返回的格式错误只隔离该论文，继续下一篇，不重试坏条目', async () => {
+  let count = 0;
+  const two = batch([record(), record({ doi: '10.1234/two', source_id: '10.1234/two' })]);
+  const output = await run(two, { fetchImpl: async () => ++count === 1
+    ? response(payload({ choices: [{ finish_reason: 'stop', message: { role: 'assistant', content: '{}' } }] })) : response() });
+  assert.equal(count, 2); assert.equal(output.report.status, 'quality_review_needed');
+  assert.equal(output.result.items.length, 1); assert.equal(output.result.items[0].id, two.items[1].id);
+  assert.equal(output.report.unknown_usage_requests, 0); assert.equal(output.review_rejections.length, 1);
+});

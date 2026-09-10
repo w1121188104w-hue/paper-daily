@@ -17,17 +17,21 @@ const HELP = `DeepSeek小批试译：默认不联网、不写库；不自动导�
                          需环境变量DEEPSEEK_API_KEY、TRANSLATION_REVIEW_PUBLIC_KEY
   --open-review 文件 --key-id 指纹   本机解密已下载的草稿，不改正式库
   --github-output        仅与--run组合，在Actions中输出密文文件目录
+  --skip-first N --expected-batch 批次指纹
+                         仅在已核实前N篇实际请求记录后，人工跳过它们；不是重试
 禁止把API密钥放命令行、公开仓库、网页或聊天。完成的只是草稿，仍需逐篇审阅。`;
 
 export async function runDeepSeekCommand(args, { root = DEFAULT_LIBRARY_ROOT, env = process.env,
   log = console.log, fetchImpl = fetch, now = () => new Date() } = {}) {
   const { values } = parseArgs({ args, strict: true, allowPositionals: false, options: {
     help: { type: 'boolean' }, plan: { type: 'boolean' }, 'prepare-review': { type: 'boolean' },
-    run: { type: 'boolean' }, 'open-review': { type: 'string' }, 'key-id': { type: 'string' }, 'github-output': { type: 'boolean' }
+    run: { type: 'boolean' }, 'open-review': { type: 'string' }, 'key-id': { type: 'string' }, 'github-output': { type: 'boolean' },
+    'skip-first': { type: 'string' }, 'expected-batch': { type: 'string' }
   } });
   if (!Object.keys(values).length || values.help) { log(HELP); return 0; }
   const modes = ['plan', 'prepare-review', 'run', 'open-review'].filter((key) => values[key]);
-  if (modes.length !== 1 || (values['github-output'] && !values.run) || (values['key-id'] && !values['open-review']))
+  if (modes.length !== 1 || (values['github-output'] && !values.run) || (values['key-id'] && !values['open-review']) ||
+    ((values['skip-first'] !== undefined || values['expected-batch'] !== undefined) && !values.run && !values.plan))
     throw new DeepSeekError('INVALID_ARGUMENTS');
   if (values['prepare-review']) {
     const key = generateReviewKey(), prefix = `translations/review-keys/${key.fingerprint}`;
@@ -48,14 +52,21 @@ export async function runDeepSeekCommand(args, { root = DEFAULT_LIBRARY_ROOT, en
     const requestFile = await libraryPath(root, `${prefix}/request.json`);
     try {
       const existing = await readTranslationJson(requestFile);
-      if (stableJson(existing) !== stableJson(payload.request)) throw new DeepSeekError('REVIEW_BATCH_CONFLICT');
+      validateTranslationBatch(existing);
+      if (existing.batch_id !== payload.request.batch_id || stableJson(existing.items) !== stableJson(payload.request.items) ||
+        stableJson(existing.source_manifest) !== stableJson(payload.request.source_manifest) ||
+        Date.parse(existing.exported_at) > Date.parse(payload.request.exported_at)) throw new DeepSeekError('REVIEW_BATCH_CONFLICT');
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
       await writeLibraryJson(root, `${prefix}/request.json`, payload.request);
     }
-    const outputPrefix = `translations/reviews/${payload.request.batch_id}/${values['key-id']}`;
+    const startIndex = payload.report.plan?.start_index ?? 0, attempted = payload.report.attempted_requests;
+    if (!Number.isInteger(startIndex) || startIndex < 0 || startIndex > 9 || !Number.isInteger(attempted) ||
+      attempted < 1 || startIndex + attempted > payload.request.items.length) throw new DeepSeekError('INVALID_REVIEW_COUNTS');
+    const outputPrefix = `translations/reviews/${payload.request.batch_id}/${values['key-id']}/part-${startIndex}-${attempted}`;
     await writeLibraryJson(root, `${outputPrefix}/response.json`, payload.result);
     await writeLibraryJson(root, `${outputPrefix}/report.json`, payload.report);
+    if (payload.review_rejections?.length) await writeLibraryJson(root, `${outputPrefix}/review-rejections.json`, payload.review_rejections);
     log(JSON.stringify({ opened: true, formal_data_changed: false, response_path: await libraryPath(root, `${outputPrefix}/response.json`),
       report_path: await libraryPath(root, `${outputPrefix}/report.json`) }, null, 2)); return 0;
   }
@@ -63,23 +74,27 @@ export async function runDeepSeekCommand(args, { root = DEFAULT_LIBRARY_ROOT, en
   const library = await readJournalLibrary({ root, config });
   const proposed = createTranslationBatch(library.papers, { limit: 10, now: now(), sourceManifest: library.pointer?.manifest || null });
   if (!proposed.items.length) { log('没有待翻译研究论文；未联网或写文件。'); return 0; }
-  const plan = planDeepSeekBatch(proposed);
+  const startIndex = Number(values['skip-first'] ?? 0);
+  const plan = planDeepSeekBatch(proposed, { startIndex });
+  if ((startIndex > 0 && values['expected-batch'] !== proposed.batch_id) ||
+    (values['expected-batch'] && values['expected-batch'] !== proposed.batch_id)) throw new DeepSeekError('EXPECTED_BATCH_MISMATCH');
   if (values.plan) { log(JSON.stringify({ ...plan, network_called: false, formal_data_changed: false }, null, 2)); return 0; }
   requireDeepSeekKey(env.DEEPSEEK_API_KEY); reviewPublicKey(env.TRANSLATION_REVIEW_PUBLIC_KEY);
   if (values['github-output'] && (env.GITHUB_ACTIONS !== 'true' || !env.GITHUB_OUTPUT)) throw new DeepSeekError('NOT_GITHUB_ACTIONS');
   const exported = await exportTranslationBatch(config, { root, limit: 10, now });
   if (exported.empty) { log('队列已经处理完毕；未联网。'); return 0; }
-  planDeepSeekBatch(exported.batch);
-  const prefix = `translations/deepseek/${exported.batch.batch_id}`;
+  planDeepSeekBatch(exported.batch, { startIndex });
+  if (exported.batch.batch_id !== proposed.batch_id) throw new DeepSeekError('BATCH_CHANGED_BEFORE_REQUEST');
+  const prefix = `translations/deepseek/${exported.batch.batch_id}${startIndex ? `/resume-${startIndex}` : ''}`;
   try { await writeLibraryJson(root, `${prefix}/started.json`, { started_at: now().toISOString(), plan }); }
   catch (error) { if (error.code === 'EEXIST') throw new DeepSeekError('BATCH_ALREADY_ATTEMPTED'); throw error; }
   const encryptedPrefix = `${prefix}/encrypted`;
   // Emit only this narrow ciphertext directory. Never upload the parent containing local keys/drafts.
   await fs.mkdir(await libraryPath(root, encryptedPrefix), { recursive: true });
   if (values['github-output']) await fs.appendFile(env.GITHUB_OUTPUT, `directory=${await libraryPath(root, encryptedPrefix)}\n`, 'utf8');
-  const output = await translateDeepSeekBatch(exported.batch, { apiKey: env.DEEPSEEK_API_KEY, fetchImpl, now,
+  const output = await translateDeepSeekBatch(exported.batch, { apiKey: env.DEEPSEEK_API_KEY, fetchImpl, now, startIndex,
     checkpoint: async (bundle) => {
-      const index = String(bundle.report.attempted_requests).padStart(2, '0');
+      const index = String(startIndex + bundle.report.attempted_requests).padStart(2, '0');
       await writeLibraryJson(root, `${encryptedPrefix}/review-${index}.json`, sealTranslationReview(bundle, env.TRANSLATION_REVIEW_PUBLIC_KEY));
     } });
   await writeLibraryJson(root, `${prefix}/completed.json`, { status: output.report.status, attempted_requests: output.report.attempted_requests });

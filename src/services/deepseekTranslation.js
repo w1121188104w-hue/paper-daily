@@ -32,16 +32,18 @@ export function deepseekRequest(item) {
     ] };
 }
 
-export function planDeepSeekBatch(batch) {
+export function planDeepSeekBatch(batch, { startIndex = 0 } = {}) {
   validateTranslationBatch(batch);
   check(batch.items.length <= PILOT_LIMITS.papers, 'PILOT_LIMIT');
-  const bytes = batch.items.map((item) => Buffer.byteLength(JSON.stringify(deepseekRequest(item)), 'utf8'));
+  check(Number.isInteger(startIndex) && startIndex >= 0 && startIndex < batch.items.length, 'INVALID_START_INDEX');
+  const selected = batch.items.slice(startIndex);
+  const bytes = selected.map((item) => Buffer.byteLength(JSON.stringify(deepseekRequest(item)), 'utf8'));
   check(bytes.every((count) => count <= PILOT_LIMITS.input_bytes_per_paper), 'INPUT_TOO_LARGE');
   check(bytes.reduce((a, b) => a + b, 0) <= PILOT_LIMITS.input_bytes_total, 'BATCH_TOO_LARGE');
-  return { model: DEEPSEEK_MODEL, paper_count: batch.items.length,
-    field_count: batch.items.reduce((count, item) => count + item.requested_fields.length, 0),
-    input_bytes: bytes.reduce((a, b) => a + b, 0), max_requests: batch.items.length,
-    max_output_tokens: batch.items.length * PILOT_LIMITS.output_tokens_per_paper, retries: 0 };
+  return { model: DEEPSEEK_MODEL, batch_paper_count: batch.items.length, start_index: startIndex, paper_count: selected.length,
+    field_count: selected.reduce((count, item) => count + item.requested_fields.length, 0),
+    input_bytes: bytes.reduce((a, b) => a + b, 0), max_requests: selected.length,
+    max_output_tokens: selected.length * PILOT_LIMITS.output_tokens_per_paper, retries: 0 };
 }
 
 function readUsage(value) {
@@ -66,10 +68,10 @@ async function boundedJson(response) {
 }
 
 // Serial, fixed-host, single-attempt requests. Never return provider error bodies, headers or reasoning.
-export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch, now = () => new Date(),
+export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch, now = () => new Date(), startIndex = 0,
   checkpoint = async () => {} } = {}) {
   requireDeepSeekKey(apiKey);
-  const plan = planDeepSeekBatch(batch);
+  const plan = planDeepSeekBatch(batch, { startIndex });
   check(!JSON.stringify(batch).includes(apiKey), 'SECRET_IN_SOURCE');
   const report = { schema_version: 1, batch_id: batch.batch_id, requested_model: DEEPSEEK_MODEL,
     started_at: now().toISOString(), plan, attempted_requests: 0, successful_fields: 0,
@@ -78,10 +80,11 @@ export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch,
       note: '按官方高峰、无缓存单价估算；不是实际账单或平台硬性金额上限。',
       source: 'https://api-docs.deepseek.com/zh-cn/quick_start/pricing/' } };
   const result = { schema_version: 1, batch_id: batch.batch_id, model: '', translated_at: '', items: [] };
-  for (const item of batch.items) {
+  const reviewRejections = [];
+  for (const item of batch.items.slice(startIndex)) {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), PILOT_LIMITS.timeout_ms);
     const rowReport = { id: item.id, status: 'failed', code: null, fields: {}, usage: null };
-    let stop = false;
+    let stop = false, reviewContent = '';
     report.attempted_requests++;
     try {
       const response = await fetchImpl(DEEPSEEK_ENDPOINT, { method: 'POST', redirect: 'error', signal: controller.signal,
@@ -102,6 +105,7 @@ export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch,
       check(choice.message?.role === 'assistant' && !choice.message.tool_calls?.length &&
         typeof choice.message.content === 'string', 'INVALID_RESPONSE');
       check(!choice.message.content.includes(apiKey), 'SECRET_IN_RESPONSE');
+      reviewContent = choice.message.content;
       let translated;
       try { translated = JSON.parse(choice.message.content); } catch { throw new DeepSeekError('INVALID_JSON'); }
       const keys = item.requested_fields.map((field) => `${field}_zh`);
@@ -121,18 +125,23 @@ export async function translateDeepSeekBatch(batch, { apiKey, fetchImpl = fetch,
       rowReport.status = keys.length === Object.keys(row.source_text_hash).length ? 'ready_for_review' : 'quality_review_needed';
     } catch (error) {
       rowReport.code = error instanceof DeepSeekError ? error.code : controller.signal.aborted ? 'TIMEOUT' : 'NETWORK_ERROR';
-      stop = true; // An ambiguous request may already have been billed. Never auto-retry it.
+      // A fully received but malformed translation can be set aside without retrying that paper.
+      // Transport, account, model or truncation problems stop the batch; their scope is less certain.
+      stop = !['INVALID_JSON', 'INVALID_TRANSLATION_SHAPE'].includes(rowReport.code);
     } finally { clearTimeout(timer); }
+    // Keep malformed/low-quality model text ONLY inside the encrypted review bundle, never public logs.
+    if (reviewContent && rowReport.status !== 'ready_for_review') reviewRejections.push({ id: item.id,
+      code: rowReport.code || 'QUALITY_REVIEW_NEEDED', content: reviewContent });
     if (rowReport.usage) for (const key of Object.keys(report.usage)) report.usage[key] += rowReport.usage[key];
     else report.unknown_usage_requests++;
     report.rows.push(rowReport);
     report.finished_at = now().toISOString();
     report.estimated_cny_known_usage = Number(((report.usage.prompt_tokens * 2 + report.usage.completion_tokens * 8) / 1000000).toFixed(6));
     report.status = stop ? 'stopped' : report.rows.some((row) => row.status !== 'ready_for_review') ? 'quality_review_needed' : 'ready_for_review';
-    const output = { request: batch, result, report };
+    const output = { request: batch, result, report, review_rejections: reviewRejections };
     check(!JSON.stringify(output).includes(apiKey), 'SECRET_IN_OUTPUT');
     await checkpoint(structuredClone(output));
     if (stop) break;
   }
-  return { request: batch, result, report };
+  return { request: batch, result, report, review_rejections: reviewRejections };
 }

@@ -4,7 +4,9 @@
     "workflow_dispatch": {
       "inputs": {
         "confirm_pilot": { "description": "Allow at most 10 paid API requests; no automatic retries or publication", "type": "boolean", "required": true, "default": false },
-        "review_public_key": { "description": "Base64 RSA public key from --prepare-review; NEVER enter an API key or private key", "type": "string", "required": true }
+        "review_public_key": { "description": "Base64 RSA public key from --prepare-review; NEVER enter an API key or private key", "type": "string", "required": true },
+        "skip_first": { "description": "Manual continuation ONLY after verifying previous request count; skip already attempted papers, never retry them", "type": "choice", "options": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], "default": "0" },
+        "expected_batch": { "description": "Required when skipping: exact batch fingerprint from verified prior encrypted report", "type": "string", "default": "" }
       }
     }
   },
@@ -21,8 +23,9 @@
         { "name": "Install locked dependencies without lifecycle scripts", "run": "npm ci --ignore-scripts" },
         { "name": "Run offline tests", "run": "npm test" },
         { "name": "Validate formal library", "run": "node scripts/journal-library.js --validate" },
-        { "name": "Translate at most 10 papers and encrypt review drafts", "id": "translate", "run": "node scripts/deepseek-translate.js --run --github-output",
-          "env": { "DEEPSEEK_API_KEY": "${{ secrets.DEEPSEEK_API_KEY }}", "TRANSLATION_REVIEW_PUBLIC_KEY": "${{ inputs.review_public_key }}" } },
+        { "name": "Translate at most 10 papers and encrypt review drafts", "id": "translate", "run": "node scripts/deepseek-translate.js --run --github-output --skip-first \"$TRANSLATION_PILOT_SKIP_FIRST\" --expected-batch \"$TRANSLATION_PILOT_EXPECTED_BATCH\"",
+          "env": { "DEEPSEEK_API_KEY": "${{ secrets.DEEPSEEK_API_KEY }}", "TRANSLATION_REVIEW_PUBLIC_KEY": "${{ inputs.review_public_key }}",
+            "TRANSLATION_PILOT_SKIP_FIRST": "${{ inputs.skip_first }}", "TRANSLATION_PILOT_EXPECTED_BATCH": "${{ inputs.expected_batch }}" } },
         { "name": "Upload CIPHERTEXT ONLY (never plaintext drafts or private keys)", "if": "always() && steps.translate.outputs.directory != ''",
           "uses": "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
           "with": { "name": "deepseek-encrypted-review-${{ github.run_id }}", "path": "${{ steps.translate.outputs.directory }}/*.json", "if-no-files-found": "warn", "retention-days": 7, "include-hidden-files": false, "overwrite": false } }
