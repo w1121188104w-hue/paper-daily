@@ -2903,6 +2903,175 @@
           ]
         }
       ]
+    },
+    {
+      "id": "e70a4138-cd72-49a2-8852-e8e053be1267",
+      "batch_id": "batch-7d1e1ea627bae7313b51a400bd9562ff2a0c9c5259cd980218fbe1c7937d2c76",
+      "mode": "backfill",
+      "created_at": "2026-09-10T13:36:23.203Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1016/j.respol.2026.105603",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "858e0563d5392e6cde044bcffab66cc35ac935e8920e36db1450a77a76824bd1",
+              "task_id": "task:a94372b714c3249d0fd3fa64c5a91b2db5769fe88fa11c6dff28eb5454a965a5"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105604",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "89eb3b64058288684fb749022d467377958af25da9c2c2f6eccbb87beefadd05",
+              "task_id": "task:8024feb0a06a59bfbd9530737f1b5ca7fb8d06fd325fd327bd7b02a4d6db0502"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105607",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "2ad22e3e4f0eac4aa79d8261ca018aad4500b8a111d3e815746bcf67b89b2ba2",
+              "task_id": "task:90dbb1600720330469fd854dba4b7bf95fa8bda1bee837e1f61f128395a49292"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1057/s41267-026-00879-2",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "46cfe6ac37875dbd4b2b0cb6f7bef2b40e065a95dec7bb37e6c0770b0f3f592e",
+              "task_id": "task:7e9c85bf480f7b29baf471a116dc479e96d4b30cefc123238774df9c6da6835b"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "654cb088607dc8d912fb74dc025aef590dfe6316236b04aebf976ff0eef6b31c",
+              "task_id": "task:826a77f154f4d4a4c68e4897a46576016cff1a8d534d2c790cb57cd8f8ba39d6"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1057/s41267-026-00885-4",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "8c4820776ed8bbe3490f22aba81f4d3bb379e729d41ba1c01059831cc2a2df69",
+              "task_id": "task:5fe6b9acda413fc3a1a906d4de129ec48d7a738e271b92f84377b92bc73895d5"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "a10d64a0119f786fdd87d60c3b91ee12f382d7938c68a7b35a8bbe8934ab447c",
+              "task_id": "task:0f806c069ad340344cd17a438b21ef12ba519059189f7e2bb7d4870e63955f81"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1057/s41267-026-00888-1",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "25bedfa9882d07fce89660d31318736157722aeabd193e2363367bc2aeb251ff",
+              "task_id": "task:b5aef2c7b95413550ade90e1668ced0448f91cd01db926580a2ebd325d473f5d"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "82ff5d3623dc68386f3f380f1ca5d1ee7f9e5a81d21e6d65ada5d38324ec321e",
+              "task_id": "task:54ae96049921935b04274f8780870c6a3cf1ed4cb14f82482cd097caca354dee"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1057/s41267-026-00890-7",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "deb4a63c7a1327f1402b10aa25defca366c219ec0405263717963096f4f9f091",
+              "task_id": "task:fcb944dc2b699448d221330f9b9817331a89a110715c46a0442e11890e294c75"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1057/s41267-026-00891-6",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "6d5ccba45a087051b368ddfd59c53dbc1d07d3a6f112cce62b429f4893f24cb8",
+              "task_id": "task:325086aabd7e10753d2a40e208d825b184e5b67453c528ef061d668055eca775"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1057/s41267-026-00892-5",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "b0f817ade4a8e5d325c59d03d79b55965cae642a95a8be1fc794dcea43314e7d",
+              "task_id": "task:24c18b9b362d47293d64a7c68b1f62ca330ced2a859faede9fc5b31ab4075657"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1057/s41267-026-00893-4",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "e0a42a1c2b48cf236ce8fd55e07e1af68a5b349340a7e4f8e055e2733c750dd0",
+              "task_id": "task:c17cf22c1bda463d960f3bb51e5d4a494f9512411cf7b2be7d932f4dce264ed7"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "dd8eac1e7caa1d1c79dd8a7eead2255b8bcd28246d9b99ceb80ad4d697974899",
+              "task_id": "task:127ff32f4ea8ec6b6c0f689d295ee7b822cf7d5b8285c9499ae7062ba94b7a91"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
