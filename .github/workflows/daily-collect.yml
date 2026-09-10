@@ -1,7 +1,12 @@
 {
   "name": "Journal collection and optional Pages",
   "on": {
-    "workflow_dispatch": {}
+    "workflow_dispatch": {},
+    "schedule": [
+      {
+        "cron": "17 0,5 * * *"
+      }
+    ]
   },
   "permissions": {
     "contents": "read"

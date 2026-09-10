@@ -343,6 +343,27 @@ test('部分失败不触发补跑跳过；次日也必须再查', async (t) => {
   assert.notEqual((await run(root, { onlyIfNeeded: true, now: fixed('2026-09-08T01:00:00Z') })).status, 'skipped');
 });
 
+test('实际双时段全19刊日程：上午完整成功后下午不再请求来源，次日滚动60天重新采集', async (t) => {
+  const { root } = await fixture(t), morningCalls = [];
+  const morning = await run(root, { journalKey: undefined, onlyIfNeeded: true,
+    now: fixed('2026-09-10T00:17:00Z'), clients: clients([], [], { calls: morningCalls }) });
+  assert.equal(morning.status, 'no_updates'); assert.equal(morningCalls.length, 38);
+  assert.equal(morning.run.run_date, '2026-09-10');
+  assert.equal(morning.run.from_date, '2026-07-13'); assert.equal(morning.run.to_date, '2026-09-10');
+  const pointer = await pointerText(root), afternoonCalls = [];
+  const afternoon = await run(root, { journalKey: undefined, onlyIfNeeded: true,
+    now: fixed('2026-09-10T05:17:00Z'), clients: clients([], [], { calls: afternoonCalls }) });
+  assert.equal(afternoon.status, 'skipped'); assert.equal(afternoonCalls.length, 0);
+  assert.equal(await pointerText(root), pointer); assert.equal((await read(root)).runs.length, 1);
+  const nextDayCalls = [];
+  const nextDay = await run(root, { journalKey: undefined, onlyIfNeeded: true,
+    now: fixed('2026-09-11T00:17:00Z'), clients: clients([], [], { calls: nextDayCalls }) });
+  assert.equal(nextDay.status, 'no_updates'); assert.equal(nextDayCalls.length, 38);
+  assert.equal(nextDay.run.run_date, '2026-09-11');
+  assert.equal(nextDay.run.from_date, '2026-07-14'); assert.equal(nextDay.run.to_date, '2026-09-11');
+  assert.equal((await read(root)).runs.length, 2);
+});
+
 test('只读查询空库不创建任何数据目录', async (t) => {
   const { root } = await fixture(t);
   assert.equal((await read(root)).papers.length, 0);

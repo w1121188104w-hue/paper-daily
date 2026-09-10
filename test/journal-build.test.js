@@ -247,14 +247,19 @@ test('更新的官方上传组件只打包已校验目录，保留.nojekyll，�
   }
 });
 
-test('首次线上试运行文件只有手动入口，未开启每日日程、推送触发或无条件发布', async () => {
+test('已授权的采集日程每天北京时间08:17和13:17运行，独立发布仍只接受手动入口', async () => {
   for (const name of ['daily-collect', 'deploy-pages']) {
     const template = JSON.parse(await fs.readFile(new URL(`../deploy/github/${name}.yml.example`, import.meta.url), 'utf8'));
     const prepared = JSON.parse(await fs.readFile(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8'));
     template.name = template.name.replace(' (INACTIVE TEMPLATE)', '');
-    delete template.on.schedule;
     assert.deepEqual(prepared, template);
-    assert.deepEqual(prepared.on, { workflow_dispatch: {} });
+    assert.deepEqual(prepared.on, name === 'daily-collect'
+      ? { workflow_dispatch: {}, schedule: [{ cron: '17 0,5 * * *' }] }
+      : { workflow_dispatch: {} });
     assert.equal(prepared.jobs.deploy.if, "vars.JOURNAL_PAGES_ENABLED == 'true'");
+    if (name === 'daily-collect') {
+      assert.equal(prepared.jobs.collect.steps.find((step) => step.id === 'collect').run,
+        'node scripts/journal-library.js --collect --save --all --lookback-days 60 --only-if-needed');
+    }
   }
 });
