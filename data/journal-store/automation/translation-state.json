@@ -3380,7 +3380,7 @@
       "batch_id": "batch-58006832071c11fc074949962b4b9fe326166bd0623f9513691316ee6952112f",
       "mode": "backfill",
       "created_at": "2026-09-10T13:37:17.623Z",
-      "finished_at": null,
+      "finished_at": "2026-09-10T13:37:33.012Z",
       "items": [
         {
           "id": "doi:10.1086/741274",
@@ -3391,10 +3391,16 @@
               "task_id": "task:719107568a176c66de87b1b9c3879e5fa1ab0e9e3b274ca20ab98ff7104cedeb"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 218,
+            "completion_tokens": 15,
+            "total_tokens": 233
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/741622",
@@ -3405,10 +3411,16 @@
               "task_id": "task:bf17d975f4f34f026308a3ac0cf252f8b5e4e4bd6d4c30fe012eed091a51fa3b"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 212,
+            "completion_tokens": 9,
+            "total_tokens": 221
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/741623",
@@ -3419,10 +3431,16 @@
               "task_id": "task:9a704da2f870def5fac1a6fc44f910cf556e7209970543c1ccda8088b0cab130"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 220,
+            "completion_tokens": 15,
+            "total_tokens": 235
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/741624",
@@ -3433,10 +3451,16 @@
               "task_id": "task:62532be431b2125e4e13111c4dd2bd09ac5a15d6ecadf941bc047a5f7ff9925c"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 218,
+            "completion_tokens": 14,
+            "total_tokens": 232
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/741641",
@@ -3447,10 +3471,16 @@
               "task_id": "task:95ecb349d108416153161d27b56f01ba976175d9a09e3a6a0484e767dce6eec5"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 214,
+            "completion_tokens": 12,
+            "total_tokens": 226
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/742418",
@@ -3461,10 +3491,16 @@
               "task_id": "task:e73e1c583eb3a2c445b665a82e4988c15b5a77bcc4ddb672e428bd050a367eac"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 214,
+            "completion_tokens": 12,
+            "total_tokens": 226
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/742420",
@@ -3475,10 +3511,16 @@
               "task_id": "task:81432c5aded9b38aa2298623a2bdc683ebadaeeefa94234bdf532fa67661b05a"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 216,
+            "completion_tokens": 13,
+            "total_tokens": 229
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/742421",
@@ -3489,10 +3531,16 @@
               "task_id": "task:c323bb553c882ca93684e53b4eae951d232cfe2c1db40b80f95f51dc92adeb30"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 220,
+            "completion_tokens": 20,
+            "total_tokens": 240
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/742422",
@@ -3503,10 +3551,16 @@
               "task_id": "task:76bfb5224ece7bf2657f1356fde6091caf05d392bc16db6e2aa3fc2bfc1f1dc1"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 213,
+            "completion_tokens": 9,
+            "total_tokens": 222
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1086/742423",
@@ -3517,10 +3571,16 @@
               "task_id": "task:07aa8dfe222c27bbdff2d5e2e8bd44d621fddfa0467bb8e15afb6f68b9e66c06"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 220,
+            "completion_tokens": 15,
+            "total_tokens": 235
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
