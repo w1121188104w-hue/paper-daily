@@ -1,0 +1,32 @@
+{
+  "name": "DeepSeek translation pilot (max 10, encrypted review only)",
+  "on": {
+    "workflow_dispatch": {
+      "inputs": {
+        "confirm_pilot": { "description": "Allow at most 10 paid API requests; no automatic retries or publication", "type": "boolean", "required": true, "default": false },
+        "review_public_key": { "description": "Base64 RSA public key from --prepare-review; NEVER enter an API key or private key", "type": "string", "required": true }
+      }
+    }
+  },
+  "permissions": { "contents": "read" },
+  "concurrency": { "group": "journal-production", "cancel-in-progress": false },
+  "jobs": {
+    "pilot": {
+      "if": "inputs.confirm_pilot && github.run_attempt == 1 && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)",
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 25,
+      "steps": [
+        { "name": "Checkout selected default-branch commit", "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803", "with": { "persist-credentials": false } },
+        { "name": "Set up Node.js 24", "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38", "with": { "node-version": "24", "package-manager-cache": false } },
+        { "name": "Install locked dependencies without lifecycle scripts", "run": "npm ci --ignore-scripts" },
+        { "name": "Run offline tests", "run": "npm test" },
+        { "name": "Validate formal library", "run": "node scripts/journal-library.js --validate" },
+        { "name": "Translate at most 10 papers and encrypt review drafts", "id": "translate", "run": "node scripts/deepseek-translate.js --run --github-output",
+          "env": { "DEEPSEEK_API_KEY": "${{ secrets.DEEPSEEK_API_KEY }}", "TRANSLATION_REVIEW_PUBLIC_KEY": "${{ inputs.review_public_key }}" } },
+        { "name": "Upload CIPHERTEXT ONLY (never plaintext drafts or private keys)", "if": "always() && steps.translate.outputs.directory != ''",
+          "uses": "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "with": { "name": "deepseek-encrypted-review-${{ github.run_id }}", "path": "${{ steps.translate.outputs.directory }}/*.json", "if-no-files-found": "warn", "retention-days": 7, "include-hidden-files": false, "overwrite": false } }
+      ]
+    }
+  }
+}
