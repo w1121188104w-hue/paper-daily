@@ -2204,6 +2204,155 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2f7eb343-87c5-4dcc-8c05-2728e3e50b57",
+      "batch_id": "batch-712dd42ebfdfba14a7991d99a8acfbca408033afab5fa358c883116d7af844e7",
+      "mode": "backfill",
+      "created_at": "2026-09-10T13:35:06.126Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1016/j.respol.2026.105500",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "bcdfa14c16744575c217b1955c6a19302b6a3188456f1bfe3f0feaf5766d4252",
+              "task_id": "task:24c5a170abd64238370da22da88568d5131b9481a5fa801d43be7152327278d9"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105501",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "0b1c5e64e310aecef73d1aafd074f74bf463a93982f9ef30a5f7bab430c6bc54",
+              "task_id": "task:e1e6e1d5652143b577b29690cddf1b5c607f805f5681da5b9bb9817472e9a92d"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105502",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "1bf233560e35cf79353ae6c20bad5842c6327808fc3e4679a118e6bbb7110b1d",
+              "task_id": "task:f2cc37cb6eadc37303ad961cefccb64940a0070b0a0f5c82c2c89436b170f7a2"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105503",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "4c40f8d77c4140b12fc1e63d55d109191e305dbe1db28f43d97c480f1860b325",
+              "task_id": "task:09ecf3714805e55fead6d7b75a98c0e9b40ca35e4b8416be2d4a0f6e12f2b95e"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105504",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "315e02bd05849dbfbd57dbd2cd6e4ecd85a9318d5c6c668f8e89db0d54693508",
+              "task_id": "task:4904e30e1de580bd4d22f7c950c6a22fb950775dc516c4038e0a3ebc1a5fc0f9"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105506",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "c62fd1f32c32d461b4a6eb3fc1e80ad92c6b1bf0087283ed2e7ffff3498ebdf4",
+              "task_id": "task:cf5bc94bbed494a551ef42be98bc9c7112ab837e67b79d99da393740449d7d8b"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105507",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "57aafc7b180dfd018dfd51219fe02c7bff5a73c435ffbade710f20bed957eb5c",
+              "task_id": "task:acda193b3df008febe6b1b9f24e2d96bf648f8af34bc1e390f40f9fae983bfb3"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105508",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "d2eb72b83e476b296254801f4d414b8174c3b3dd4bc0895e672bf2ffc6b88517",
+              "task_id": "task:f182f92b7fecdea6fc32f19fe9950132d8ad7e8091cdd21019ce600f039475ff"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105509",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "c30f0033be723ede4306a70ec5b2d2718f306e2ff63665c0f45612bef5329586",
+              "task_id": "task:05a4a156a905f27a7f60df00946c4dd9988956b2ba145cc60dd51ae19b377bc3"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.respol.2026.105510",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "99dc7a3e123761be0f534802c17ba8d7fabaaf3b0dad72a4148521d1d4a6f4f6",
+              "task_id": "task:7879a6f19206b4ae2924c9b4d6e5fc1cfd7bc6191de4aafc99e6d5e340459842"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
