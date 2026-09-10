@@ -2,10 +2,11 @@
 
 Runtime files in this directory are intentionally ignored by git.
 
-Update 2026-09-09: the user approved a public repository and reading website,
-including formal journal history and original source records. Only explicitly
-stage the validated list from `scripts/journal-git-files.js`; no data has been
-uploaded yet. Never add all of `data/`. Credentials, personal settings, old
+Update 2026-09-10: the approved formal journal history and original source
+records are now saved in the public repository. The first manual server run
+preserved all existing papers and saved five new records. Website publication
+and daily scheduling remain disabled. Only explicitly stage the validated list
+from `scripts/journal-git-files.js`; never add all of `data/`. Credentials, personal settings, old
 arXiv reading data, translation drafts and uncommitted attempts stay excluded.
 Historical stage descriptions below describe their original scope.
 
