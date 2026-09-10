@@ -5616,7 +5616,7 @@
       "batch_id": "batch-78867ae19b5b5456216e26544766fa207844a53c43b8713ad423289a94da7fad",
       "mode": "backfill",
       "created_at": "2026-09-10T13:41:21.378Z",
-      "finished_at": null,
+      "finished_at": "2026-09-10T13:41:50.225Z",
       "items": [
         {
           "id": "doi:10.1111/1911-3846.70067",
@@ -5632,10 +5632,17 @@
               "task_id": "task:58bfe58e254ea5a35d65b260e63b8054b0401d3a15b4b5bd98687e55dbf55189"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 482,
+            "completion_tokens": 249,
+            "total_tokens": 731
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70068",
@@ -5651,10 +5658,17 @@
               "task_id": "task:7f78166a35981c816cea6b037e2f25b6c9947c77f0b26ca2833d3af32e6c121d"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 424,
+            "completion_tokens": 196,
+            "total_tokens": 620
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70069",
@@ -5670,10 +5684,17 @@
               "task_id": "task:db1b4ef04652520f21417824d3d35add78e794882481d4f9fb3f6a135c1fd3f3"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 421,
+            "completion_tokens": 190,
+            "total_tokens": 611
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70070",
@@ -5689,10 +5710,17 @@
               "task_id": "task:dfbad37e477809611beed430a22bfd81fbf8e3c94d5f4c85d4b25df216cb4110"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 577,
+            "completion_tokens": 343,
+            "total_tokens": 920
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70072",
@@ -5708,10 +5736,17 @@
               "task_id": "task:6589b6b306f34e69418cdc3c47bf98ef924ce6dffc6c83c6766e33961333660e"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 557,
+            "completion_tokens": 309,
+            "total_tokens": 866
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70073",
@@ -5727,10 +5762,17 @@
               "task_id": "task:10c42c01bf74aaf129539bbe6e4967a5fefba01c76d4c15853eb9d690a1a75c4"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 457,
+            "completion_tokens": 221,
+            "total_tokens": 678
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70074",
@@ -5746,10 +5788,17 @@
               "task_id": "task:e8ee3dd86798119ce00d1610d9dac4818f14765f9887bfe718b60f2acd9a66cf"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 481,
+            "completion_tokens": 237,
+            "total_tokens": 718
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70075",
@@ -5765,10 +5814,17 @@
               "task_id": "task:50da709ac50dbe05d8120fa3630add1ee325234224c5f626cf826b17c744c8a8"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 466,
+            "completion_tokens": 237,
+            "total_tokens": 703
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70076",
@@ -5784,10 +5840,17 @@
               "task_id": "task:b424648784d9f92a93becdfb2662ec5386501a80b78e241f546b9fb5ceab0f05"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 529,
+            "completion_tokens": 298,
+            "total_tokens": 827
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70079",
@@ -5803,10 +5866,17 @@
               "task_id": "task:03518891f86a1e1d0db06b767e6c907b35317c77f2c0c183bab70cefad1762ef"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 421,
+            "completion_tokens": 187,
+            "total_tokens": 608
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
