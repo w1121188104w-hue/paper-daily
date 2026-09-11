@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-84fcf434d1a7db52a1b9a57a7cdc4b778f0e35df04b6baed1aab64cca26c94ae",
+  "stats": {
+    "completed_fields": 8,
+    "failed_fields": 2,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 10
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.jacceco.2026.101872",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1016/j.jacceco.2026.101876",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1016/j.jacceco.2026.101894",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1016/j.jacceco.2026.101895",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1016/j.jcorpfin.2026.103044",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "doi:10.1016/j.jcorpfin.2026.103045",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 6,
+      "id": "doi:10.1016/j.jfineco.2026.104295",
+      "field": "abstract",
+      "action": "failed",
+      "code": "EXPLICIT_FAILURE",
+      "message": "该字段被主动标记为翻译失败"
+    },
+    {
+      "index": 7,
+      "id": "doi:10.1016/j.jfineco.2026.104305",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 8,
+      "id": "doi:10.1016/j.jfineco.2026.104306",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 9,
+      "id": "doi:10.1016/j.jfineco.2026.104308",
+      "field": "abstract",
+      "action": "failed",
+      "code": "EXPLICIT_FAILURE",
+      "message": "该字段被主动标记为翻译失败"
+    }
+  ],
+  "status": "partial_failure"
+}
