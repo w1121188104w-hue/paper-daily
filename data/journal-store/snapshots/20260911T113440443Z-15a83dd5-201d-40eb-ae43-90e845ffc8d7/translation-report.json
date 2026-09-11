@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-5f751f2ec75cb377aa136db6b5603e621f873775eddb8bf4c9b1923d6040a932",
+  "stats": {
+    "completed_fields": 1,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1086/743899",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
