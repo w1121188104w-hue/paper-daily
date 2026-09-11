@@ -122,6 +122,19 @@ test('摘要补全只填空，不改标题作者日期和中文；新增英文�
   assert.throws(() => fillMissingAbstract(p,record({ doi: '10.1234/wrong',abstract })),/UNVERIFIED_IDENTITY/);
   assert.throws(() => validateEnrichmentOnlyChange([p],[{ ...n,title_original: 'changed' }]),/不能改动/);
 });
+test('订阅日期在补摘要来源和后续合并中仍仅是线索，不变成发表日期', () => {
+  for (const date_role of ['feed_update_date','issue_cover_date','publisher_feed_date']) {
+    const source = publisherRecord(lead({ abstract,date_role }),journal);
+    assert.equal(source.publication_date,'');
+    assert.equal(source.raw_dates.publisher_date,'2026-08-01');
+    const original = record({ publication_date: '' });
+    const enriched = fillMissingAbstract(paper({ publication_date: '' }),source);
+    assert.equal(enriched.abstract_original,abstract);
+    assert.equal(enriched.publication_date,'');
+    const merged = mergePapers([original,source],{ firstSeenDate: '2026-09-08',checkedAt: at }).papers[0];
+    assert.equal(merged.publication_date,'');
+  }
+});
 test('摘要查询严格按Crossref、OpenAlex、Semantic Scholar、官网顺序；找到立即停止', async () => {
   const calls = [], s = Object.fromEntries(['crossref','openalex','semanticscholar','publisher'].map(source => [source,async () => {
     calls.push(source); return record({ source,source_id: source,abstract: source === 'openalex' ? abstract : '' });
@@ -202,6 +215,7 @@ test('命令默认只读；缺明确save/类型/范围不能联网，不允许�
   await enrichmentCommand([],{ execute,log }); assert.equal(calls,0);
   await assert.rejects(enrichmentCommand(['--run','--all','--official'],{ execute,log }));
   await assert.rejects(enrichmentCommand(['--run','--save','--all','--official','--lookback-days','365'],{ execute,log }));
+  await assert.rejects(enrichmentCommand(['--run','--save','--all','--official','--github-output'],{ execute,log,env: {} }),/GitHub输出路径/);
   assert.equal(calls,0);
 });
 

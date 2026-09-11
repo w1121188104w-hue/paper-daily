@@ -57,10 +57,13 @@ function evidence(response, method, scopeUrl) {
     method, scope_url: scopeUrl || response.url };
 }
 export function publisherRecord(lead, journal) {
+  // Keep subscription/issue timestamps as evidence only, including when this
+  // source record is adopted for an abstract and later participates in a merge.
+  const unverifiedDate = ['issue_cover_date','feed_update_date','publisher_feed_date'].includes(lead.date_role);
   return normalizeSourceRecord({ source: 'publisher', source_id: canonicalPublisherUrl(lead.url),
     ...journalFields(journal), doi: lead.doi, title: lead.title, authors: lead.authors,
     abstract: lead.abstract || '', raw_abstract: lead.raw_abstract || lead.abstract || '',
-    publication_date: lead.date, raw_dates: { publisher_date: lead.raw_date || lead.date, date_role: lead.date_role || 'publisher_publication' },
+    publication_date: unverifiedDate ? '' : lead.date, raw_dates: { publisher_date: lead.raw_date || lead.date, date_role: lead.date_role || 'publisher_publication' },
     url: canonicalPublisherUrl(lead.url), last_checked_at: lead.evidence.fetched_at,
     type: lead.type || 'journal-article', source_evidence: lead.evidence });
 }

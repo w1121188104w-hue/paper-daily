@@ -28,13 +28,13 @@ export async function enrichmentCommand(args, { root = DEFAULT_LIBRARY_ROOT, env
     Boolean(values.all) === Boolean(values.journal)) throw new Error('必须明确执行、保存、范围和补全类型');
   const lookbackDays = Number(values['lookback-days'] || 60), maxAbstracts = Number(values['max-abstracts'] || 100);
   if (lookbackDays !== 60) throw new Error('当前授权范围固定为最近60天');
+  if (values['github-output'] && (env.GITHUB_ACTIONS !== 'true' || !path.isAbsolute(env.GITHUB_OUTPUT || ''))) throw new Error('缺少GitHub输出路径');
   const http = makeEvidenceHttp();
   const result = await execute(config,{ root,journalKey: values.journal,official: Boolean(values.official),abstracts: Boolean(values.abstracts),
     lookbackDays,maxAbstracts,onlyIfNeeded: Boolean(values['only-if-needed']),http,
     sources: makeEnrichmentSources(http,{ semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '' }),onProgress: progress => log(JSON.stringify(progress)) });
   log(JSON.stringify({ status: result.status,committed: result.committed,run_id: result.run_id,stats: result.stats,requests: http.count() },null,2));
   if (values['github-output']) {
-    if (env.GITHUB_ACTIONS !== 'true' || !path.isAbsolute(env.GITHUB_OUTPUT || '')) throw new Error('缺少GitHub输出路径');
     await fs.appendFile(env.GITHUB_OUTPUT,`status=${result.status}\n`, 'utf8');
     if (path.isAbsolute(env.GITHUB_STEP_SUMMARY || '')) {
       const stats = result.stats || { added: 0,abstracts_filled: 0,abstracts_checked: 0 };
