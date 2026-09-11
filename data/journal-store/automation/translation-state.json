@@ -11708,6 +11708,34 @@
           ]
         }
       ]
+    },
+    {
+      "id": "eb84b7e9-1ef4-4fa8-9b30-f45fa756c171",
+      "batch_id": "batch-5285c807d5c7786cac1e6a9502ed6379ff4d99703c7f09e911b35062fc2789c6",
+      "mode": "daily",
+      "created_at": "2026-09-11T09:41:59.500Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1093/restud/rdag101",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "b5989976e13e1d785c63077b5a348f0c9fb1170895cb02acf87a114fe327d661",
+              "task_id": "task:fbcf19766cb48050bd62bc61c4d3562c963fdff9f471ed82e18c26fdf052e3b0"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "14c1046926f31a2b327bfb117bdd5d0d4bcb4030009c63bc97a783604e54532b",
+              "task_id": "task:48f8627cb3f15a9dd705b77099b0161262768a0e7a8628c36b815b31e4b94ba6"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
