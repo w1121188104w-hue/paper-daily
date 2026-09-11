@@ -12364,6 +12364,29 @@
           ]
         }
       ]
+    },
+    {
+      "id": "100ab99a-5ac8-41ba-9c2e-3c725791171a",
+      "batch_id": "batch-5f751f2ec75cb377aa136db6b5603e621f873775eddb8bf4c9b1923d6040a932",
+      "mode": "backfill",
+      "created_at": "2026-09-11T11:34:30.921Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1086/743899",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "8a83d57398b56f7a7d04410b43b0ab5a99f1c3a78f55f91c98127dc56d381154",
+              "task_id": "task:50d7173896a16ea0149037faa34b5d3fddb30a91e5ee222fb1a6708b6b9da359"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
