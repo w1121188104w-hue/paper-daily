@@ -25,6 +25,7 @@
       },
       "outputs": {
         "collection_outcome": "${{ steps.collect.outcome }}",
+        "enrichment_outcome": "${{ steps.enrich.outcome }}",
         "translation_attention": "${{ steps.translate.outputs.attention }}"
       },
       "steps": [
@@ -61,6 +62,14 @@
           "id": "collect",
           "continue-on-error": true,
           "run": "node scripts/journal-library.js --collect --save --all --lookback-days 60 --only-if-needed"
+        },
+        {
+          "name": "Check official lists for 60 days and fill only real missing abstracts",
+          "id": "enrich",
+          "if": "vars.JOURNAL_ENRICHMENT_ENABLED == 'true'",
+          "continue-on-error": true,
+          "env": { "SEMANTIC_SCHOLAR_API_KEY": "${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}" },
+          "run": "node scripts/enrich-library.js --run --save --all --official --abstracts --lookback-days 60 --max-abstracts 100 --only-if-needed --github-output"
         },
         {
           "name": "Validate saved results even after source failures",
@@ -143,7 +152,7 @@
       "steps": [{ "name": "Report held translations after preserving accepted data", "run": "echo 'Some translation tasks are held or paused. Accepted translations were preserved; do not blindly retry paid requests.'\nexit 1" }]
     },
     "report_source_failure": {
-      "if": "always() && needs.collect.outputs.collection_outcome == 'failure'",
+      "if": "always() && (needs.collect.outputs.collection_outcome == 'failure' || needs.collect.outputs.enrichment_outcome == 'failure')",
       "needs": [
         "collect",
         "deploy"

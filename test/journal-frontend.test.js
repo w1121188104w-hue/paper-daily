@@ -41,7 +41,7 @@ function payload(overrides = {}) {
 }
 let sequence = 0;
 async function app(t, { data = payload(), day = false, search = '?month=2026-09', fail = false } = {}) {
-  const commonIds = ['main', 'statusTitle', 'statusBadge', 'statusText', 'attemptWarning', 'libraryMeta', 'reload',
+  const commonIds = ['main', 'statusTitle', 'statusBadge', 'statusText', 'attemptWarning', 'libraryMeta', 'enrichmentStatus', 'enrichmentJournals', 'reload',
     'filterTitle', 'filters', 'query', 'category', 'journal', 'kind', 'reset', 'quickFilters', 'listTitle', 'listMeta', 'paperList', 'pagination'];
   const ids = new Map([...commonIds, ...(day ? ['dayTitle', 'backToCalendar', 'dayCoverage'] :
     ['monthTitle', 'prevMonth', 'nextMonth', 'calendarMeta', 'thisMonth', 'calendarGrid'])].map((id) => [id, new Element('div')]));
@@ -268,4 +268,28 @@ test('作者来源差异可展开对照，保持来源顺序并将特殊文本�
   assert.ok(text.includes(`Crossref：Benjamin A. Olken；${name}`));
   assert.ok(text.includes('不据此自动合并作者'));
   assert.ok(!elements.some(element => element.tagName === 'img'));
+});
+
+test('网页显示官网部分核对/受限与摘要真实来源，不把未知显示成零篇或生成摘要', async t => {
+  const ui = await app(t,{ data: payload({ papers: [paper({ sources: ['publisher'],abstract_status: 'found',abstract_source: 'publisher',
+    abstract_source_url: 'https://www.aeaweb.org/articles?id=10.1234/one' })],enrichment: {
+      latest: { finished_at: '2026-09-11T01:00:00Z',stats: { added: 0,abstracts_filled: 1 } },missing_abstracts: 3,
+      journals: [{ journal_key: 'AER',coverage: 'partial',official_observed_count: 10,official_in_window_count: 9,
+        existing_total_count: 9,missing_count: 0,added_count: 0,pending_count: 1,from_date: '2026-07-14',to_date: '2026-09-11',checked_at: '2026-09-11T01:00:00Z' },
+      { journal_key: 'JPE',coverage: 'restricted',official_observed_count: null,official_in_window_count: 0,
+        existing_total_count: 4,missing_count: 0,added_count: 0,pending_count: 0,from_date: '2026-07-14',to_date: '2026-09-11',checked_at: '2026-09-11T01:00:00Z' }] }
+  }) });
+  assert.ok(ui.get('enrichmentJournals').textContent.includes('官网清单观察 未知 条'));
+  assert.ok(ui.get('enrichmentJournals').textContent.includes('部分核对'));
+  assert.ok(ui.get('paperList').textContent.includes('期刊／出版社官网'));
+  assert.ok(ui.get('paperList').textContent.includes('已从真实来源补全'));
+  assert.ok(descendants(ui.get('paperList')).some(e => e.href === 'https://www.aeaweb.org/articles?id=10.1234/one'));
+});
+
+test('摘要来源链接白名单拒绝脚本/凭据/站外地址，待重试不展示伪中文', async t => {
+  const ui = await app(t,{ data: payload({ papers: [paper({ abstract_original: '',abstract_zh: '',abstract_translation_status: 'no_abstract',
+    abstract_status: 'access_restricted',abstract_next_retry_at: '2026-09-12T01:00:00Z',abstract_source_url: 'javascript:alert(1)' })] }) });
+  assert.ok(ui.get('paperList').textContent.includes('部分来源访问受限'));
+  assert.ok(ui.get('paperList').textContent.includes('不补写或推测'));
+  assert.ok(!descendants(ui.get('paperList')).some(e => e.href?.startsWith('javascript:')));
 });

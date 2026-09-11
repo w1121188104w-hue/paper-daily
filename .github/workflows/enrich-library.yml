@@ -1,0 +1,43 @@
+{
+  "name": "Official journal audit and abstract backfill",
+  "on": { "workflow_dispatch": {} },
+  "permissions": { "contents": "read" },
+  "concurrency": { "group": "journal-production", "cancel-in-progress": false },
+  "jobs": {
+    "enrich": {
+      "if": "vars.JOURNAL_ENRICHMENT_ENABLED == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)",
+      "runs-on": "ubuntu-latest", "timeout-minutes": 90,
+      "permissions": { "contents": "write" },
+      "outputs": { "enrichment_outcome": "${{ steps.enrich.outcome }}", "translation_attention": "${{ steps.translate.outputs.attention }}" },
+      "steps": [
+        { "name": "Checkout default branch", "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803", "with": { "ref": "${{ github.event.repository.default_branch }}", "persist-credentials": true } },
+        { "name": "Set up Node.js 24", "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38", "with": { "node-version": "24", "package-manager-cache": false } },
+        { "name": "Install locked dependencies", "run": "npm ci --ignore-scripts" },
+        { "name": "Offline tests and validate history", "run": "npm test\nnode scripts/journal-library.js --validate" },
+        { "name": "Official 60-day audit and due abstract backfill; no AI", "id": "enrich", "continue-on-error": true,
+          "env": { "SEMANTIC_SCHOLAR_API_KEY": "${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}" },
+          "run": "node scripts/enrich-library.js --run --save --all --official --abstracts --lookback-days 60 --max-abstracts 1000 --only-if-needed --github-output" },
+        { "name": "Validate and stage only formal history", "run": "node scripts/journal-library.js --validate\nnode scripts/journal-git-files.js --stage" },
+        { "name": "Save source-backed enrichment", "env": { "DATA_BRANCH": "${{ github.event.repository.default_branch }}" },
+          "run": "git config user.name 'github-actions[bot]'\ngit config user.email '41898282+github-actions[bot]@users.noreply.github.com'\nif ! git diff --cached --quiet; then\n  git commit -m 'data: save official audit and real abstracts'\n  git push origin \"HEAD:refs/heads/$DATA_BRANCH\"\nfi" },
+        { "name": "Translate only available original fields", "id": "translate", "if": "vars.JOURNAL_TRANSLATION_ENABLED == 'true'",
+          "env": { "DEEPSEEK_API_KEY": "${{ secrets.DEEPSEEK_API_KEY }}", "JOURNAL_TRANSLATION_ENABLED": "${{ vars.JOURNAL_TRANSLATION_ENABLED }}", "DATA_BRANCH": "${{ github.event.repository.default_branch }}" },
+          "run": "node scripts/translate-library.js --run --mode backfill --github-output" },
+        { "name": "Validate and build", "id": "build", "run": "node scripts/journal-library.js --validate\nnode scripts/build-journal-site.js --github-output" },
+        { "name": "Check existing Pages configuration", "if": "vars.JOURNAL_PAGES_ENABLED == 'true'", "uses": "actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b" },
+        { "name": "Upload only website", "if": "vars.JOURNAL_PAGES_ENABLED == 'true'", "uses": "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9", "with": { "path": "${{ steps.build.outputs.directory }}", "include-hidden-files": true } }
+      ]
+    },
+    "deploy": {
+      "needs": "enrich", "if": "vars.JOURNAL_PAGES_ENABLED == 'true'", "runs-on": "ubuntu-latest", "timeout-minutes": 15,
+      "permissions": { "pages": "write", "id-token": "write" },
+      "environment": { "name": "github-pages", "url": "${{ steps.deployment.outputs.page_url }}" },
+      "steps": [{ "name": "Deploy validated static site", "id": "deployment", "uses": "actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e" }]
+    },
+    "attention": {
+      "needs": ["enrich", "deploy"], "if": "always() && (needs.enrich.outputs.enrichment_outcome == 'failure' || needs.enrich.outputs.translation_attention == 'true')",
+      "runs-on": "ubuntu-latest", "timeout-minutes": 5, "permissions": {},
+      "steps": [{ "name": "Report attention after preserving accepted data", "run": "echo 'Inspect enrichment failure or held translation logs. Accepted data was retained. Do not blindly retry paid translations.'\nexit 1" }]
+    }
+  }
+}

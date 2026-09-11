@@ -22,6 +22,11 @@
       <p id="statusText" class="meta" role="status">正在读取已保存的论文库…</p>
       <p id="attemptWarning" class="notice" role="status" hidden></p>
       <p id="libraryMeta" class="meta"></p>
+      <p id="enrichmentStatus" class="meta" role="status"></p>
+      <details><summary>官网漏收核对明细（最近60天）</summary>
+        <p class="meta">官网订阅清单可能不完整；“部分核对”和“访问受限”都不表示没有漏收。观察数包含清单中的其他日期，60天内数量另列。摘要只采用可追溯的原文，不由AI补写。</p>
+        <div id="enrichmentJournals"></div>
+      </details>
       <button id="reload" class="secondary" type="button">重新读取本地数据</button>
     </section>
     <section class="panel" aria-labelledby="filterTitle">

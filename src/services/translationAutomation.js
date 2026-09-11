@@ -36,7 +36,7 @@ export function validateTranslationState(state) {
     ids.add(entry.id); const paperIds = new Set();
     for (const item of entry.items) {
       assertLibrary(exact(item, ['id', 'tasks', 'status', 'code', 'usage', 'completed_fields']) && typeof item.id === 'string' &&
-        item.id.length <= 512 && /^(doi:|fp:|openalex:|crossref:|unknown:)/.test(item.id) && !/[\x00-\x1f\x7f]/.test(item.id) && !paperIds.has(item.id) && STATUS.includes(item.status) &&
+        item.id.length <= 512 && /^(doi:|fp:|openalex:|crossref:|publisher:|semanticscholar:|unknown:)/.test(item.id) && !/[\x00-\x1f\x7f]/.test(item.id) && !paperIds.has(item.id) && STATUS.includes(item.status) &&
         code(item.code) && Array.isArray(item.tasks) && item.tasks.length >= 1 && item.tasks.length <= 2 &&
         Array.isArray(item.completed_fields) && new Set(item.completed_fields).size === item.completed_fields.length, '自动翻译条目无效');
       paperIds.add(item.id); const fields = new Set();

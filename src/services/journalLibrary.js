@@ -5,6 +5,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { LibraryError, assertLibrary, isObject, isCount, isIsoTime, stableJson,
   validatePapers, validateRuns, validateHistoryPreserved, validateTranslationImports, validateTranslationOnlyChange } from './libraryValidation.js';
 import { buildTranslationQueue } from './translationQueue.js';
+import { emptyEnrichmentState, validateEnrichmentState, validateEnrichmentRuns, validateEnrichmentReport,
+  validateEnrichmentOnlyChange } from './enrichmentValidation.js';
 
 export const DEFAULT_LIBRARY_ROOT = fileURLToPath(new URL('../../data/journal-store/', import.meta.url));
 const sha256 = (text) => createHash('sha256').update(text).digest('hex');
@@ -61,7 +63,7 @@ async function readManifest(root, manifestRef, config) {
   assertLibrary(manifest.schema_version === 1 && /^[A-Za-z0-9-]{10,100}$/.test(manifest.run_id) &&
     manifestRef.path === `snapshots/${manifest.run_id}/manifest.json` && isIsoTime(manifest.created_at) &&
     isObject(manifest.papers) && isObject(manifest.runs), '版本清单结构无效');
-  const papers = [], runs = [], imports = [];
+  const papers = [], runs = [], imports = [], enrichments = [];
   for (const [year, ref] of Object.entries(manifest.papers)) {
     assertLibrary(/^\d{4}$/.test(year) && ref.path?.endsWith(`/papers/${year}.json`) && isCount(ref.count), '年度论文引用无效');
     const rows = await readLibraryRef(root, ref);
@@ -81,10 +83,20 @@ async function readManifest(root, manifestRef, config) {
     assertLibrary(Array.isArray(rows) && rows.length === ref.count && rows.every((row) => row.run_date?.slice(0, 7) === month), '翻译日志归档或计数不符');
     imports.push(...rows);
   }
-  validatePapers(papers, config); validateRuns(runs); validateTranslationImports(imports);
+  if (manifest.enrichment_runs !== undefined) assertLibrary(isObject(manifest.enrichment_runs), '补全日志引用无效');
+  for (const [month, ref] of Object.entries(manifest.enrichment_runs || {})) {
+    assertLibrary(/^\d{4}-\d{2}$/.test(month) && ref.path?.endsWith(`/enrichment_runs/${month}.json`) && isCount(ref.count), '补全日志归档引用无效');
+    const rows = await readLibraryRef(root, ref);
+    assertLibrary(Array.isArray(rows) && rows.length === ref.count && rows.every(r => r.run_date?.slice(0,7) === month), '补全日志归档计数不符');
+    enrichments.push(...rows);
+  }
+  validatePapers(papers, config); validateRuns(runs); validateTranslationImports(imports); validateEnrichmentRuns(enrichments);
+  const enrichmentState = manifest.enrichment_state ? await readLibraryRef(root, manifest.enrichment_state) : emptyEnrichmentState();
+  validateEnrichmentState(enrichmentState, papers);
+  for (const log of enrichments) validateEnrichmentReport(await readLibraryRef(root, log.report), log);
   const operation = manifest.operation || 'collection';
-  assertLibrary(['collection', 'translation_import'].includes(operation), '版本操作类型无效');
-  assertLibrary((operation === 'collection' ? runs : imports).some((entry) => entry.run_id === manifest.run_id), '版本缺少本轮日志');
+  assertLibrary(['collection', 'translation_import', 'metadata_enrichment'].includes(operation), '版本操作类型无效');
+  assertLibrary(({ collection: runs, translation_import: imports, metadata_enrichment: enrichments })[operation].some((entry) => entry.run_id === manifest.run_id), '版本缺少本轮日志');
   if (operation === 'translation_import') {
     const log = imports.find((entry) => entry.run_id === manifest.run_id);
     const report = await readLibraryRef(root, log.report);
@@ -96,7 +108,7 @@ async function readManifest(root, manifestRef, config) {
   for (const ref of manifest.raw) await readLibraryRef(root, ref);
   const queue = buildTranslationQueue(papers);
   if (manifest.translation_queue) assertLibrary(stableJson(await readLibraryRef(root, manifest.translation_queue)) === stableJson(queue), '待翻译队列与论文状态不一致');
-  return { manifest, papers: papers.sort((a, b) => a.id.localeCompare(b.id)), runs, imports, queue, audit };
+  return { manifest, papers: papers.sort((a, b) => a.id.localeCompare(b.id)), runs, imports, enrichments, enrichmentState, queue, audit };
 }
 
 export async function readJournalLibrary({ root = DEFAULT_LIBRARY_ROOT, config }) {
@@ -106,7 +118,7 @@ export async function readJournalLibrary({ root = DEFAULT_LIBRARY_ROOT, config }
     try { entries = await fs.readdir(await libraryPath(root, 'snapshots')); }
     catch (error) { if (error.code !== 'ENOENT') throw error; }
     if (entries.length) throw new LibraryError('MISSING_POINTER', '发现历史版本但缺少 current.json，请先人工检查恢复，不能当空库继续');
-    return { manifest: null, pointer: null, pointerText: null, papers: [], runs: [], imports: [], queue: buildTranslationQueue([]), audit: null };
+    return { manifest: null, pointer: null, pointerText: null, papers: [], runs: [], imports: [], enrichments: [], enrichmentState: emptyEnrichmentState(), queue: buildTranslationQueue([]), audit: null };
   }
   const pointer = parseJson(pointerText);
   assertLibrary(pointer.schema_version === 1 && isObject(pointer.manifest), '当前版本指针无效');
@@ -143,25 +155,34 @@ function groupBy(items, key) {
 }
 
 /** Caller must hold writer.lock. Immutable files first, one pointer replacement last. */
-export async function publishLibrarySnapshot({ root, config, previous, papers, run, translationImport, audit, raw = [], beforePublish }) {
+export async function publishLibrarySnapshot({ root, config, previous, papers, run, translationImport, enrichment, enrichmentState, audit, raw = [], beforePublish }) {
   validatePapers(papers, config); validateHistoryPreserved(previous.papers, papers);
-  assertLibrary(Boolean(run) !== Boolean(translationImport), '每个版本必须且只能有一种操作');
+  assertLibrary([run, translationImport, enrichment].filter(Boolean).length === 1, '每个版本必须且只能有一种操作');
   const runs = run ? [...previous.runs, run] : previous.runs;
   const imports = translationImport ? [...(previous.imports || []), translationImport] : previous.imports || [];
+  const enrichments = enrichment ? [...(previous.enrichments || []), enrichment] : previous.enrichments || [];
+  validateEnrichmentRuns(enrichments);
+  if (enrichment) {
+    validateEnrichmentOnlyChange(previous.papers, papers);
+    assertLibrary(enrichment.stats.added === papers.length - previous.papers.length, '补入数量与论文库不一致');
+  }
   validateRuns(runs); validateTranslationImports(imports);
   if (run) assertLibrary(run.stats.added + run.stats.updated + run.stats.unchanged === papers.length &&
     run.stats.added === papers.length - previous.papers.length, '运行统计与论文总数不一致');
   if (translationImport) validateTranslationOnlyChange(previous.papers, papers);
-  const operationLog = run || translationImport;
+  const operationLog = run || translationImport || enrichment;
   const prefix = `snapshots/${operationLog.run_id}`;
   const manifest = { schema_version: 1, run_id: operationLog.run_id, created_at: operationLog.finished_at,
-    operation: run ? 'collection' : 'translation_import', parent: previous.pointer?.manifest || null,
+    operation: run ? 'collection' : translationImport ? 'translation_import' : 'metadata_enrichment', parent: previous.pointer?.manifest || null,
     papers: {}, runs: {}, translation_imports: {}, audit: null, raw };
   for (const [kind, items, oldItems, key] of [
     ['papers', papers, previous.papers, (paper) => paper.first_seen_date.slice(0, 4)],
     ['runs', runs, previous.runs, (entry) => entry.run_date.slice(0, 7)],
-    ['translation_imports', imports, previous.imports || [], (entry) => entry.run_date.slice(0, 7)]
+    ['translation_imports', imports, previous.imports || [], (entry) => entry.run_date.slice(0, 7)],
+    ['enrichment_runs', enrichments, previous.enrichments || [], (entry) => entry.run_date.slice(0, 7)]
   ]) {
+    if (kind === 'enrichment_runs' && !items.length) continue;
+    manifest[kind] ||= {};
     const oldGroups = groupBy(oldItems, key);
     for (const [bucket, rows] of Object.entries(groupBy(items, key))) {
       const order = (a, b) => (a.id || a.run_id).localeCompare(b.id || b.run_id);
@@ -170,6 +191,11 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
       else manifest[kind][bucket] = { ...await writeLibraryJson(root, `${prefix}/${kind}/${bucket}.json`, rows), count: rows.length };
     }
   }
+  if (enrichmentState !== undefined) {
+    assertLibrary(Boolean(enrichment), '仅补全操作可更新重试状态');
+    validateEnrichmentState(enrichmentState, papers);
+    manifest.enrichment_state = await writeLibraryJson(root, `${prefix}/enrichment-state.json`, enrichmentState);
+  } else if (previous.manifest?.enrichment_state) manifest.enrichment_state = previous.manifest.enrichment_state;
   manifest.audit = await writeLibraryJson(root, `${prefix}/audit.json`, audit);
   manifest.translation_queue = await writeLibraryJson(root, `${prefix}/translation-queue.json`, buildTranslationQueue(papers));
   const manifestRef = await writeLibraryJson(root, `${prefix}/manifest.json`, manifest);

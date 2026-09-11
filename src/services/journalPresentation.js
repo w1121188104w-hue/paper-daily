@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { DEFAULT_LIBRARY_ROOT, libraryPath, readJournalLibrary } from './journalLibrary.js';
+import { DEFAULT_LIBRARY_ROOT, libraryPath, readJournalLibrary, readLibraryRef } from './journalLibrary.js';
 import { isIsoTime } from './libraryValidation.js';
 import { classifyPaper, CLASSIFICATION_VERSION } from './paperClassification.js';
 import { translationEligibility } from './translationQueue.js';
@@ -12,7 +12,19 @@ const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_categ
   'published_print_date', 'publication_date', 'volume', 'issue', 'pages'];
 const select = (value, fields) => Object.fromEntries(fields.map((key) => [key, value[key]]));
 const DATE_FIELDS = ['published_online_date', 'published_print_date', 'publication_date'];
-const publicSource = (source) => ['crossref', 'openalex'].includes(source) ? source : null;
+const publicSource = (source) => ['crossref', 'openalex', 'publisher', 'semanticscholar'].includes(source) ? source : null;
+function abstractInfo(paper, state) {
+  const provenance = paper.provenance?.abstract_original;
+  const record = paper.source_records.find(r => r.source === provenance?.source && r.source_id === provenance?.source_id && r.abstract === paper.abstract_original);
+  const retry = state?.abstracts?.[paper.id];
+  let url = record?.source_evidence?.url || '';
+  if (!url && record?.source === 'crossref' && paper.doi) url = `https://api.crossref.org/works/${encodeURIComponent(paper.doi)}`;
+  if (!url && record?.source === 'openalex' && /^W\d+$/.test(record.source_id)) url = `https://openalex.org/${record.source_id}`;
+  return { abstract_status: paper.abstract_original ? record?.source_evidence ? 'found' : 'available' : retry?.status || 'missing',
+    abstract_source: publicSource(provenance?.source), abstract_source_url: url,
+    abstract_last_checked_at: retry?.last_checked_at || record?.last_checked_at || null,
+    abstract_next_retry_at: !paper.abstract_original ? retry?.next_retry_at || null : null };
+}
 const comparableNames = (names) => JSON.stringify(names.map((name) => name.normalize('NFKC')
   .replace(/[\u2010-\u2015]/g, '-').replace(/\s+/g, ' ').trim().toLowerCase()));
 
@@ -35,6 +47,7 @@ export function authorVariants(paper) {
 
 export function presentJournalLibrary(library, config) {
   const papers = library.papers.map((paper) => ({ ...select(paper, PAPER_FIELDS),
+    ...abstractInfo(paper,library.enrichmentState),
     sources: [...paper.sources], authors: paper.authors.map((author) => select(author, ['name', 'orcid'])),
     author_variants: authorVariants(paper),
     date_sources: Object.fromEntries(DATE_FIELDS.map((field) => [field, publicSource(paper.provenance?.[field]?.source)])),
@@ -56,6 +69,9 @@ export function presentJournalLibrary(library, config) {
       sources: run.sources.map((source) => select(source, ['source', 'journal_key', 'ok', 'complete']))
     })).sort((a, b) => b.started_at.localeCompare(a.started_at)),
     pending: select(library.queue, ['paper_count', 'field_count']),
+    enrichment: { latest: [...(library.enrichments || [])].sort((a,b) => b.started_at.localeCompare(a.started_at))[0] ?
+      select([...(library.enrichments || [])].sort((a,b) => b.started_at.localeCompare(a.started_at))[0], ['started_at','finished_at','from_date','to_date','status','stats']) : null,
+      journals: [], missing_abstracts: papers.filter(p => !p.abstract_original).length },
     attempt_warning: null
   };
 }
@@ -94,6 +110,16 @@ export async function latestAttemptWarning(root, library) {
 export async function loadJournalPresentation(config, { root = DEFAULT_LIBRARY_ROOT } = {}) {
   const library = await readJournalLibrary({ root, config });
   const data = presentJournalLibrary(library, config);
+  // Most recent OFFICIAL result per journal survives later abstract-only and collection/translation runs.
+  const seen = new Set();
+  for (const run of [...(library.enrichments || [])].sort((a,b) => b.started_at.localeCompare(a.started_at))) {
+    const report = await readLibraryRef(root,run.report);
+    for (const j of report.journals) if (!seen.has(j.journal_key)) {
+      seen.add(j.journal_key);
+      data.enrichment.journals.push({ ...select(j,['journal_key','coverage','official_observed_count','official_in_window_count','existing_total_count','matched_count','missing_count','added_count','pending_count']),
+        checked_at: run.finished_at,from_date: run.from_date,to_date: run.to_date });
+    }
+  }
   data.attempt_warning = await latestAttemptWarning(root, library);
   return data;
 }

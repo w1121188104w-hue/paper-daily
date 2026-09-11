@@ -46,7 +46,16 @@ export function monthCells(month) {
     ...Array.from({ length: last.getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)];
 }
 const normalized = (value) => String(value || '').normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
-export const sourceLabel = (source) => ({ crossref: 'Crossref', openalex: 'OpenAlex' })[source] || '来源未标明';
+export const sourceLabel = (source) => ({ crossref: 'Crossref', openalex: 'OpenAlex', publisher: '期刊／出版社官网', semanticscholar: 'Semantic Scholar' })[source] || '来源未标明';
+export const ABSTRACT_LABELS = { available: '已有原始摘要', found: '已从真实来源补全', missing: '待补全', not_found: '暂时未找到',
+  publisher_no_abstract: '本次官网页面未提供摘要', access_restricted: '部分来源访问受限', retry_later: '稍后自动重试', identity_unverified: '论文身份尚未核实' };
+export function abstractSourceHref(value) {
+  try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password && !url.port &&
+    ['api.crossref.org','openalex.org','api.openalex.org','api.semanticscholar.org','www.semanticscholar.org','www.aeaweb.org','pubs.aeaweb.org',
+      'publications.aaahq.org','www.sciencedirect.com','rss.sciencedirect.com','api.elsevier.com','onlinelibrary.wiley.com','link.springer.com',
+      'api.springernature.com','www.journals.uchicago.edu','academic.oup.com','pubsonline.informs.org','journals.sagepub.com'].includes(url.hostname) ? url.href : ''; }
+  catch { return ''; }
+}
 export function publicationDateText(value, source) {
   if (!value) return '未提供';
   const precision = /^\d{4}$/.test(value) && Number(value) > 0 ? '仅提供年份' : validMonth(value) ? '仅提供月份' :

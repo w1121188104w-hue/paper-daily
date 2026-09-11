@@ -1,7 +1,7 @@
 import { RUN_LABELS, TRANSLATION_LABELS, DOCUMENT_LABELS, CLASSIFICATION_REASONS, documentKind, normalizeDocumentFilter,
   beijingDay, validDay, validMonth, shiftMonth, monthCells,
   filterPapers, countsByDay, selectedJournalKeys, coverageForDay, paperTitle, doiHref, pageHref,
-  sourceLabel, publicationDateText } from './viewModel.js';
+  sourceLabel, publicationDateText, ABSTRACT_LABELS, abstractSourceHref } from './viewModel.js';
 
 const $ = (id) => document.getElementById(id);
 const node = (tag, text = '', className = '') => {
@@ -51,6 +51,14 @@ function renderStatus() {
       unavailable: '注意：暂时无法核实是否有未保存的采集尝试，上方仅显示已通过校验的历史记录。'
     })[warning.status];
     $('statusBadge').textContent = '最新尝试需核查'; $('statusBadge').className = 'status-badge partial';
+  }
+  const enrichment = data.enrichment;
+  if ($('enrichmentStatus')) {
+    $('enrichmentStatus').textContent = enrichment?.latest ? `最近补全：${timeText(enrichment.latest.finished_at)}；本轮补入 ${enrichment.latest.stats.added} 篇，找到真实摘要 ${enrichment.latest.stats.abstracts_filled} 篇。库中仍有 ${enrichment.missing_abstracts} 条缺摘要，将按间隔重试。` : '官网核对与摘要补全尚未运行。';
+    const items = (enrichment?.journals || []).sort((a,b) => a.journal_key.localeCompare(b.journal_key)).map(j => node('p',
+      `${j.journal_key}：${j.coverage === 'restricted' ? `访问受限／未核实；官网清单观察 未知 条，无法判断60天内覆盖和漏收情况，原库 ${j.existing_total_count} 条，本次未补入` :
+        `部分核对；官网清单观察 ${j.official_observed_count} 条，60天内确认 ${j.official_in_window_count} 条，原库 ${j.existing_total_count} 条，确认漏收 ${j.missing_count} 条，补入 ${j.added_count} 条，待核实 ${j.pending_count} 条`}。核对 ${j.from_date} 至 ${j.to_date}，完成于 ${timeText(j.checked_at)}。`, 'meta'));
+    $('enrichmentJournals').replaceChildren(...items);
   }
 }
 
@@ -108,7 +116,7 @@ function renderPaper(paper) {
   const kind = documentKind(paper);
   tags.append(node('span', `${paper.journal_key} · ${paper.journal_category_zh}`, 'status-badge'),
     node('span', DOCUMENT_LABELS[kind], `status-badge document-kind ${kind}`),
-    ...paper.sources.map((source) => node('span', source === 'openalex' ? 'OpenAlex' : 'Crossref', 'status-badge')));
+    ...paper.sources.map((source) => node('span', sourceLabel(source), 'status-badge')));
   card.append(tags, node('h3', paperTitle(paper)));
   const classification = node('details', '', 'classification-detail');
   classification.append(node('summary', '为什么这样分类？'), node('p',
@@ -135,6 +143,12 @@ function renderPaper(paper) {
     card.append(details);
   }
   card.append(node('p', paper.journal_name, 'meta'));
+  const abstractState = node('p', `原始摘要：${ABSTRACT_LABELS[paper.abstract_status] || (paper.abstract_original ? '已有摘要' : '待补全')}${paper.abstract_next_retry_at ? `；下次尝试不早于 ${timeText(paper.abstract_next_retry_at)}` : ''}`, 'meta');
+  const sourceUrl = abstractSourceHref(paper.abstract_source_url);
+  if (sourceUrl && paper.abstract_original) {
+    const link = node('a', ` · 查看 ${sourceLabel(paper.abstract_source)} 来源`, 'ghost-link'); link.href = sourceUrl; link.target = '_blank'; link.rel = 'noopener noreferrer'; abstractState.append(link);
+  }
+  card.append(abstractState);
   if (paper.abstract_original) {
     const translated = paper.abstract_translation_status === 'done' && Boolean(paper.abstract_zh);
     const abstract = node('p', translated ? paper.abstract_zh : paper.abstract_original, 'summary');

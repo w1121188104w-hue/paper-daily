@@ -223,7 +223,9 @@ test('工作流先校验再暂存推送，随后构建和发布；不上传整�
   assert.equal(steps[stage + 3].run, 'node scripts/journal-library.js --validate');
   assert.equal(steps[stage + 4].id, 'build');
   assert.equal(steps.find((step) => step.uses?.includes('upload-pages-artifact')).with.path, '${{ steps.build.outputs.directory }}');
-  assert.equal(steps.filter((step) => JSON.stringify(step).includes('secrets.')).length, 1);
+  assert.equal(steps.filter((step) => JSON.stringify(step).includes('secrets.')).length, 2);
+  assert.ok(steps.findIndex(step => step.id === 'collect') < steps.findIndex(step => step.id === 'enrich'));
+  assert.ok(steps.findIndex(step => step.id === 'enrich') < stage);
   assert.equal(steps[stage + 2].env.DEEPSEEK_API_KEY, '${{ secrets.DEEPSEEK_API_KEY }}');
 });
 
@@ -238,8 +240,8 @@ test('按用户授权允许公开仓库，仍要求明确启用开关且不读�
     assert.ok(job.if.includes('github.event.repository.default_branch'));
     assert.ok(!/llm-settings\.json|git add -A|path.*data\/journal-store/.test(serialized));
     const secretSteps = job.steps.filter((step) => JSON.stringify(step).includes('secrets.'));
-    assert.equal(secretSteps.length, name === 'daily-collect' ? 1 : 0);
-    if (secretSteps.length) assert.equal(secretSteps[0].if, "vars.JOURNAL_TRANSLATION_ENABLED == 'true'");
+    assert.equal(secretSteps.length, name === 'daily-collect' ? 2 : 0);
+    for (const step of secretSteps) assert.equal(step.if, step.id === 'enrich' ? "vars.JOURNAL_ENRICHMENT_ENABLED == 'true'" : "vars.JOURNAL_TRANSLATION_ENABLED == 'true'");
   }
 });
 

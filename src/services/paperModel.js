@@ -1,6 +1,19 @@
 import { createHash } from 'node:crypto';
 
-export const PAPER_SOURCES = Object.freeze(['openalex', 'crossref']);
+export const PAPER_SOURCES = Object.freeze(['openalex', 'crossref', 'publisher', 'semanticscholar']);
+
+function normalizeSourceEvidence(value) {
+  const keys = ['url', 'fetched_at', 'body_sha256', 'method', 'scope_url'];
+  if (!value || keys.some(k => typeof value[k] !== 'string') || Object.keys(value).some(k => !keys.includes(k)) ||
+    !/^[a-f0-9]{64}$/.test(value.body_sha256) || !Number.isFinite(Date.parse(value.fetched_at)) || !/^[a-zA-Z0-9_:.[\]# -]{1,100}$/.test(value.method)) {
+    throw new Error('来源证据格式无效');
+  }
+  for (const field of ['url', 'scope_url']) {
+    const url = new URL(value[field]);
+    if (url.protocol !== 'https:' || url.username || url.password || [...url.searchParams.keys()].some(k => /api[_-]?key|token|secret|authorization/i.test(k))) throw new Error('来源证据网址无效');
+  }
+  return Object.fromEntries(keys.map(k => [k, value[k]]));
+}
 
 const NAMED_ENTITIES = Object.freeze({
   amp: '&',
@@ -173,6 +186,7 @@ export function normalizeSourceRecord(input) {
   if (!String(input?.source_id || '').trim()) throw new Error('来源记录缺少稳定 source_id');
   const doi = normalizeDoi(input?.doi);
   if (doi && !/^10\.\d{4,9}\/\S+$/.test(doi)) throw new Error('来源记录的 DOI 格式无效');
+  if (['publisher', 'semanticscholar'].includes(source) && !input?.source_evidence) throw new Error('补充来源必须保留可追溯证据');
 
   return {
     source,
@@ -200,7 +214,8 @@ export function normalizeSourceRecord(input) {
     volume: cleanText(input?.volume),
     issue: cleanText(input?.issue),
     pages: cleanText(input?.pages),
-    type: String(input?.type || '').trim()
+    type: String(input?.type || '').trim(),
+    ...(input?.source_evidence !== undefined ? { source_evidence: normalizeSourceEvidence(input.source_evidence) } : {})
   };
 }
 

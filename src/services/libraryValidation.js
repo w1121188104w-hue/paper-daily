@@ -143,7 +143,7 @@ export function validateRuns(runs) {
     const pairs = new Set();
     for (const source of run.sources) {
       const pair = `${source.journal_key}:${source.source}`;
-      assertLibrary(!pairs.has(pair) && run.journal_keys.includes(source.journal_key) && PAPER_SOURCES.includes(source.source), '日志来源身份无效');
+      assertLibrary(!pairs.has(pair) && run.journal_keys.includes(source.journal_key) && ['openalex', 'crossref'].includes(source.source), '日志来源身份无效');
       pairs.add(pair);
       assertLibrary(['raw_count', 'accepted_count', 'excluded_count', 'rejected_count', 'pages'].every((key) => isCount(source[key])) &&
         Number.isFinite(source.duration_ms) && source.duration_ms >= 0 &&
