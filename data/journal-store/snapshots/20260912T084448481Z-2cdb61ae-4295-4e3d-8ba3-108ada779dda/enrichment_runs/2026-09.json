@@ -1,0 +1,62 @@
+[
+  {
+    "schema_version": 1,
+    "run_id": "20260911T112826066Z-06d4b5ec-a7da-48f4-84f5-b0ca4a45702f",
+    "run_date": "2026-09-11",
+    "started_at": "2026-09-11T11:28:26.066Z",
+    "finished_at": "2026-09-11T11:28:26.066Z",
+    "from_date": "2026-07-14",
+    "to_date": "2026-09-11",
+    "status": "partial",
+    "stats": {
+      "added": 0,
+      "abstracts_filled": 31,
+      "abstracts_checked": 163,
+      "pending_candidates": 0
+    },
+    "report": {
+      "path": "snapshots/20260911T112826066Z-06d4b5ec-a7da-48f4-84f5-b0ca4a45702f/enrichment-report.json",
+      "sha256": "2007ae10a6d39e34307d7f9a317b3ef32f4429e122c77bb1a674531f82afb0f7"
+    }
+  },
+  {
+    "schema_version": 1,
+    "run_id": "20260912T034546293Z-9c2490b5-7767-49f2-891c-0dd47f89a9be",
+    "run_date": "2026-09-12",
+    "started_at": "2026-09-12T03:45:46.293Z",
+    "finished_at": "2026-09-12T03:49:23.616Z",
+    "from_date": "2026-07-15",
+    "to_date": "2026-09-12",
+    "status": "partial",
+    "stats": {
+      "added": 0,
+      "abstracts_filled": 0,
+      "abstracts_checked": 7,
+      "pending_candidates": 0
+    },
+    "report": {
+      "path": "snapshots/20260912T034546293Z-9c2490b5-7767-49f2-891c-0dd47f89a9be/enrichment-report.json",
+      "sha256": "2c69f8bb4a54ff104f1600c0fdb9b48cf29022e81b3c0f6420da52bf545af85c"
+    }
+  },
+  {
+    "schema_version": 1,
+    "run_id": "20260912T084448481Z-2cdb61ae-4295-4e3d-8ba3-108ada779dda",
+    "run_date": "2026-09-12",
+    "started_at": "2026-09-12T08:44:48.481Z",
+    "finished_at": "2026-09-12T08:46:48.118Z",
+    "from_date": "2026-07-15",
+    "to_date": "2026-09-12",
+    "status": "partial",
+    "stats": {
+      "added": 0,
+      "abstracts_filled": 0,
+      "abstracts_checked": 100,
+      "pending_candidates": 0
+    },
+    "report": {
+      "path": "snapshots/20260912T084448481Z-2cdb61ae-4295-4e3d-8ba3-108ada779dda/enrichment-report.json",
+      "sha256": "e23f4eebd79912bd5225a1906b52e92afbe99f22c19755adf2141268293f5706"
+    }
+  }
+]

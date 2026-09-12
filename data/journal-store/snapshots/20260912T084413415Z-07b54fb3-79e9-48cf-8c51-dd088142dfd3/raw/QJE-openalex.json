@@ -1,0 +1,5049 @@
+{
+  "source": "openalex",
+  "journal_key": "QJE",
+  "pages": [
+    {
+      "meta": {
+        "count": 5,
+        "db_response_time_ms": 39,
+        "page": null,
+        "per_page": 100,
+        "next_cursor": null,
+        "groups_count": null,
+        "x_query": {
+          "oql": "works where date >= (2026-07-15)\n  and source is (S203860005)\n  and date <= (2026-09-12)",
+          "oqo": {
+            "get_rows": "works",
+            "filter_rows": [
+              {
+                "column_id": "from_publication_date",
+                "value": "2026-07-15"
+              },
+              {
+                "column_id": "primary_location.source.id",
+                "value": "S203860005"
+              },
+              {
+                "column_id": "to_publication_date",
+                "value": "2026-09-12"
+              }
+            ]
+          },
+          "url": "/works?filter=from_publication_date:2026-07-15,primary_location.source.id:S203860005,to_publication_date:2026-09-12&per_page=100&cursor=%2A"
+        },
+        "cost_usd": 0.0001
+      },
+      "results": [
+        {
+          "id": "https://openalex.org/W4408814171",
+          "doi": "https://doi.org/10.1093/qje/qjag044",
+          "title": "Fairness Across the World",
+          "display_name": "Fairness Across the World",
+          "publication_year": 2026,
+          "publication_date": "2026-09-06",
+          "ids": {
+            "openalex": "https://openalex.org/W4408814171",
+            "doi": "https://doi.org/10.1093/qje/qjag044"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1093/qje/qjag044",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag044",
+            "pdf_url": "https://academic.oup.com/qje/advance-article-pdf/doi/10.1093/qje/qjag044/70986336/qjag044.pdf",
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://academic.oup.com/qje/advance-article-pdf/doi/10.1093/qje/qjag044/70986336/qjag044.pdf",
+            "any_repository_has_fulltext": true
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5013143506",
+                "display_name": "Ingvild Almås",
+                "orcid": "https://orcid.org/0000-0002-6340-1384"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I931913249",
+                  "display_name": "Norwegian School of Economics",
+                  "ror": "https://ror.org/04v53s997",
+                  "country_code": "NO",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ],
+              "countries": [
+                "NO"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Ingvild Almås",
+              "raw_affiliation_strings": [
+                "University of Zurich, Stockholm University (IIES—Institute for International Economic Studies), and NHH Norwegian School of Economics"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Zurich, Stockholm University (IIES—Institute for International Economic Studies), and NHH Norwegian School of Economics",
+                  "institution_ids": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5030866489",
+                "display_name": "Alexander W. Cappelen",
+                "orcid": "https://orcid.org/0000-0002-3489-7085"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I931913249",
+                  "display_name": "Norwegian School of Economics",
+                  "ror": "https://ror.org/04v53s997",
+                  "country_code": "NO",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ],
+              "countries": [
+                "NO"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Alexander W Cappelen",
+              "raw_affiliation_strings": [
+                "Norwegian School of Economics"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Norwegian School of Economics",
+                  "institution_ids": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5069507377",
+                "display_name": "Erik Ø. Sørensen",
+                "orcid": "https://orcid.org/0000-0002-7155-4188"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I931913249",
+                  "display_name": "Norwegian School of Economics",
+                  "ror": "https://ror.org/04v53s997",
+                  "country_code": "NO",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ],
+              "countries": [
+                "NO"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Erik Ø Sørensen",
+              "raw_affiliation_strings": [
+                "NHH Norwegian School of Economics"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "NHH Norwegian School of Economics",
+                  "institution_ids": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5017105549",
+                "display_name": "Bertil Tungodden",
+                "orcid": "https://orcid.org/0000-0002-4182-8491"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I931913249",
+                  "display_name": "Norwegian School of Economics",
+                  "ror": "https://ror.org/04v53s997",
+                  "country_code": "NO",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ],
+              "countries": [
+                "NO"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Bertil Tungodden",
+              "raw_affiliation_strings": [
+                "NHH Norwegian School of Economics"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "NHH Norwegian School of Economics",
+                  "institution_ids": [
+                    "https://openalex.org/I931913249"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 1,
+          "institutions_distinct_count": 1,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5013143506"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I931913249"
+          ],
+          "apc_list": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "apc_paid": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "fwci": 66.6542,
+          "has_fulltext": true,
+          "cited_by_count": 6,
+          "citation_normalized_percentile": {
+            "value": 0.9973959,
+            "is_in_top_1_percent": true,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": {
+            "min": 96,
+            "max": 98
+          },
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": null,
+            "last_page": null
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10718",
+            "display_name": "Political Philosophy and Ethics",
+            "score": 0.07970000058412552,
+            "subfield": {
+              "id": "https://openalex.org/subfields/3320",
+              "display_name": "Political Science and International Relations"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/33",
+              "display_name": "Social Sciences"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10718",
+              "display_name": "Political Philosophy and Ethics",
+              "score": 0.07970000058412552,
+              "subfield": {
+                "id": "https://openalex.org/subfields/3320",
+                "display_name": "Political Science and International Relations"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/33",
+                "display_name": "Social Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10443",
+              "display_name": "Social Policy and Reform Studies",
+              "score": 0.07919999957084656,
+              "subfield": {
+                "id": "https://openalex.org/subfields/3320",
+                "display_name": "Political Science and International Relations"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/33",
+                "display_name": "Social Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/political-science",
+              "display_name": "Political science",
+              "score": 0.3312583267688751
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C17744445",
+              "wikidata": "https://www.wikidata.org/wiki/Q36442",
+              "display_name": "Political science",
+              "level": 0,
+              "score": 0.3312583267688751
+            }
+          ],
+          "mesh": [],
+          "locations_count": 4,
+          "locations": [
+            {
+              "id": "doi:10.1093/qje/qjag044",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1093/qje/qjag044",
+              "pdf_url": "https://academic.oup.com/qje/advance-article-pdf/doi/10.1093/qje/qjag044/70986336/qjag044.pdf",
+              "source": {
+                "id": "https://openalex.org/S203860005",
+                "display_name": "The Quarterly Journal of Economics",
+                "issn_l": "0033-5533",
+                "issn": [
+                  "0033-5533",
+                  "1531-4650"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310311648",
+                "host_organization_name": "Oxford University Press",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310311648",
+                  "https://openalex.org/P4310311647"
+                ],
+                "host_organization_lineage_names": [
+                  "Oxford University Press",
+                  "University of Oxford"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by",
+              "license_id": "https://openalex.org/licenses/cc-by",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "The Quarterly Journal of Economics",
+              "raw_type": "journal-article"
+            },
+            {
+              "id": "doi:10.2139/ssrn.5192932",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.2139/ssrn.5192932",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S4210172589",
+                "display_name": "SSRN Electronic Journal",
+                "issn_l": "1556-5068",
+                "issn": [
+                  "1556-5068"
+                ],
+                "is_oa": true,
+                "is_in_doaj": false,
+                "is_core": false,
+                "host_organization": "https://openalex.org/I1318003438",
+                "host_organization_name": "RELX Group (Netherlands)",
+                "host_organization_lineage": [
+                  "https://openalex.org/I1318003438"
+                ],
+                "host_organization_lineage_names": [],
+                "type": "repository"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "acceptedVersion",
+              "is_accepted": true,
+              "is_published": false,
+              "raw_source_name": null,
+              "raw_type": "posted-content"
+            },
+            {
+              "id": "pmh:oai:RePEc:hhs:nhheco:2025_006",
+              "is_oa": false,
+              "landing_page_url": "https://openaccess.nhh.no/nhh-xmlui/handle/11250/3184837",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S4306401271",
+                "display_name": "RePEc: Research Papers in Economics",
+                "issn_l": null,
+                "issn": null,
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": false,
+                "host_organization": "https://openalex.org/I77793887",
+                "host_organization_name": "Federal Reserve Bank of St. Louis",
+                "host_organization_lineage": [
+                  "https://openalex.org/I77793887"
+                ],
+                "host_organization_lineage_names": [],
+                "type": "repository"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "submittedVersion",
+              "is_accepted": false,
+              "is_published": false,
+              "raw_source_name": null,
+              "raw_type": "preprint"
+            },
+            {
+              "id": "pmh:oai:openaccess.nhh.no:11250/3057516",
+              "is_oa": true,
+              "landing_page_url": "https://hdl.handle.net/11250/3057516",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S7407064446",
+                "display_name": "NORA - Norwegian Open Research Archives",
+                "issn_l": null,
+                "issn": null,
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": false,
+                "host_organization": null,
+                "host_organization_name": null,
+                "host_organization_lineage": [],
+                "host_organization_lineage_names": [],
+                "type": "repository"
+              },
+              "license": "other-oa",
+              "license_id": "https://openalex.org/licenses/other-oa",
+              "version": "submittedVersion",
+              "is_accepted": false,
+              "is_published": false,
+              "raw_source_name": "",
+              "raw_type": "info:eu-repo/semantics/workingPaper"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1093/qje/qjag044",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag044",
+            "pdf_url": "https://academic.oup.com/qje/advance-article-pdf/doi/10.1093/qje/qjag044/70986336/qjag044.pdf",
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "awards": [
+            {
+              "id": "https://openalex.org/G2422714063",
+              "display_name": null,
+              "funder_award_id": "262675",
+              "funder_id": "https://openalex.org/F4320323299",
+              "funder_display_name": "Norges Forskningsråd"
+            },
+            {
+              "id": "https://openalex.org/G4915557450",
+              "display_name": null,
+              "funder_award_id": "236995",
+              "funder_id": "https://openalex.org/F4320323299",
+              "funder_display_name": "Norges Forskningsråd"
+            },
+            {
+              "id": "https://openalex.org/G5114839132",
+              "display_name": "TRR 190: Rationalität und Wettbewerb: Die ökonomische Leistungsfähigkeit von Individuen und Unternehmen",
+              "funder_award_id": "280092119",
+              "funder_id": "https://openalex.org/F4320320879",
+              "funder_display_name": "Deutsche Forschungsgemeinschaft"
+            },
+            {
+              "id": "https://openalex.org/G5302339824",
+              "display_name": null,
+              "funder_award_id": "TRR 190",
+              "funder_id": "https://openalex.org/F4320320879",
+              "funder_display_name": "Deutsche Forschungsgemeinschaft"
+            },
+            {
+              "id": "https://openalex.org/G6365122866",
+              "display_name": null,
+              "funder_award_id": "250170",
+              "funder_id": "https://openalex.org/F4320323299",
+              "funder_display_name": "Norges Forskningsråd"
+            }
+          ],
+          "funders": [
+            {
+              "id": "https://openalex.org/F4320320879",
+              "display_name": "Deutsche Forschungsgemeinschaft",
+              "ror": "https://ror.org/018mejw64"
+            },
+            {
+              "id": "https://openalex.org/F4320323299",
+              "display_name": "Norges Forskningsråd",
+              "ror": "https://ror.org/00epmv149"
+            }
+          ],
+          "has_content": {
+            "pdf": true,
+            "grobid_xml": true
+          },
+          "content_urls": {
+            "pdf": "https://content.openalex.org/works/W4408814171.pdf",
+            "grobid_xml": "https://content.openalex.org/works/W4408814171.grobid-xml"
+          },
+          "referenced_works_count": 0,
+          "referenced_works": [],
+          "related_works": [
+            "https://openalex.org/W4391375266",
+            "https://openalex.org/W2899084033",
+            "https://openalex.org/W2748952813",
+            "https://openalex.org/W2949263084",
+            "https://openalex.org/W2743539335",
+            "https://openalex.org/W594353338",
+            "https://openalex.org/W2922049016",
+            "https://openalex.org/W4390697879",
+            "https://openalex.org/W2070214669",
+            "https://openalex.org/W2724734218"
+          ],
+          "abstract_inverted_index": {
+            "14": [
+              89
+            ],
+            "50": [
+              96
+            ],
+            "60": [
+              44
+            ],
+            "85": [
+              75
+            ],
+            "Abstract": [
+              0
+            ],
+            "This": [
+              1
+            ],
+            "paper": [
+              2
+            ],
+            "provides": [
+              3
+            ],
+            "the": [
+              4,
+              17,
+              22,
+              49,
+              62,
+              68,
+              139,
+              189,
+              202,
+              211
+            ],
+            "first": [
+              5
+            ],
+            "comprehensive": [
+              6
+            ],
+            "global": [
+              7,
+              69
+            ],
+            "evidence": [
+              8
+            ],
+            "on": [
+              9
+            ],
+            "people’s": [
+              10
+            ],
+            "fairness": [
+              11,
+              105,
+              116,
+              130,
+              192
+            ],
+            "and": [
+              12,
+              21,
+              27,
+              107,
+              111,
+              128,
+              168,
+              176,
+              181,
+              194,
+              208
+            ],
+            "efficiency": [
+              13,
+              23,
+              63,
+              98,
+              159
+            ],
+            "preferences,": [
+              14
+            ],
+            "beliefs": [
+              15,
+              108,
+              156,
+              169,
+              195,
+              209
+            ],
+            "about": [
+              16
+            ],
+            "sources": [
+              18
+            ],
+            "of": [
+              19,
+              25,
+              51,
+              65,
+              138,
+              161,
+              204,
+              214
+            ],
+            "inequality": [
+              20,
+              52,
+              59,
+              72,
+              78,
+              149
+            ],
+            "cost": [
+              24,
+              64
+            ],
+            "redistribution,": [
+              26
+            ],
+            "policy": [
+              28
+            ],
+            "attitudes": [
+              29,
+              175
+            ],
+            "toward": [
+              30
+            ],
+            "redistribution.": [
+              31,
+              66,
+              215
+            ],
+            "Using": [
+              32
+            ],
+            "a": [
+              33,
+              54,
+              88,
+              95
+            ],
+            "globally": [
+              34
+            ],
+            "harmonized": [
+              35
+            ],
+            "consequential": [
+              36
+            ],
+            "experiment": [
+              37
+            ],
+            "with": [
+              38,
+              173
+            ],
+            "more": [
+              39,
+              144
+            ],
+            "than": [
+              40,
+              61,
+              84,
+              153
+            ],
+            "65,000": [
+              41
+            ],
+            "individuals": [
+              42
+            ],
+            "across": [
+              43,
+              112,
+              183,
+              199
+            ],
+            "countries,": [
+              45
+            ],
+            "we": [
+              46
+            ],
+            "show": [
+              47
+            ],
+            "that": [
+              48,
+              148
+            ],
+            "source": [
+              50
+            ],
+            "plays": [
+              53
+            ],
+            "substantially": [
+              55
+            ],
+            "larger": [
+              56
+            ],
+            "role": [
+              57
+            ],
+            "for": [
+              58
+            ],
+            "acceptance": [
+              60
+            ],
+            "At": [
+              67
+            ],
+            "level,": [
+              70
+            ],
+            "implemented": [
+              71
+            ],
+            "increases": [
+              73
+            ],
+            "by": [
+              74,
+              81
+            ],
+            "percent": [
+              76,
+              90,
+              97
+            ],
+            "when": [
+              77,
+              92
+            ],
+            "is": [
+              79,
+              118
+            ],
+            "caused": [
+              80
+            ],
+            "merit": [
+              82
+            ],
+            "rather": [
+              83,
+              152
+            ],
+            "luck,": [
+              85
+            ],
+            "compared": [
+              86
+            ],
+            "to": [
+              87,
+              146
+            ],
+            "increase": [
+              91
+            ],
+            "redistribution": [
+              93,
+              162,
+              174,
+              178,
+              198
+            ],
+            "entails": [
+              94
+            ],
+            "cost.": [
+              99
+            ],
+            "We": [
+              100
+            ],
+            "document": [
+              101
+            ],
+            "substantial": [
+              102
+            ],
+            "heterogeneity": [
+              103
+            ],
+            "in": [
+              104,
+              121,
+              134,
+              157,
+              210
+            ],
+            "views": [
+              106,
+              131,
+              193
+            ],
+            "both": [
+              109
+            ],
+            "within": [
+              110
+            ],
+            "societies.": [
+              113
+            ],
+            "The": [
+              114
+            ],
+            "meritocratic": [
+              115
+            ],
+            "view": [
+              117
+            ],
+            "most": [
+              119
+            ],
+            "prominent": [
+              120
+            ],
+            "many": [
+              122,
+              135
+            ],
+            "richer": [
+              123
+            ],
+            "Western": [
+              124
+            ],
+            "societies,": [
+              125,
+              200
+            ],
+            "while": [
+              126,
+              155
+            ],
+            "libertarian": [
+              127
+            ],
+            "egalitarian": [
+              129
+            ],
+            "are": [
+              132,
+              143,
+              163,
+              170
+            ],
+            "widespread": [
+              133
+            ],
+            "other": [
+              136
+            ],
+            "parts": [
+              137
+            ],
+            "world.": [
+              140
+            ],
+            "Globally,": [
+              141
+            ],
+            "people": [
+              142
+            ],
+            "likely": [
+              145
+            ],
+            "believe": [
+              147
+            ],
+            "reflects": [
+              150
+            ],
+            "luck": [
+              151
+            ],
+            "merit,": [
+              154
+            ],
+            "large": [
+              158
+            ],
+            "costs": [
+              160
+            ],
+            "relatively": [
+              164
+            ],
+            "weak.": [
+              165
+            ],
+            "Fairness": [
+              166
+            ],
+            "preferences": [
+              167,
+              207
+            ],
+            "strongly": [
+              171
+            ],
+            "associated": [
+              172
+            ],
+            "actual": [
+              177
+            ],
+            "through": [
+              179
+            ],
+            "taxes": [
+              180
+            ],
+            "transfers": [
+              182
+            ],
+            "countries.": [
+              184
+            ],
+            "Our": [
+              185
+            ],
+            "findings": [
+              186
+            ],
+            "illustrate": [
+              187
+            ],
+            "how": [
+              188
+            ],
+            "interaction": [
+              190
+            ],
+            "between": [
+              191
+            ],
+            "may": [
+              196
+            ],
+            "shape": [
+              197
+            ],
+            "highlighting": [
+              201
+            ],
+            "importance": [
+              203
+            ],
+            "jointly": [
+              205
+            ],
+            "understanding": [
+              206
+            ],
+            "political": [
+              212
+            ],
+            "economy": [
+              213
+            ]
+          },
+          "counts_by_year": [
+            {
+              "year": 2026,
+              "cited_by_count": 3
+            },
+            {
+              "year": 2025,
+              "cited_by_count": 3
+            }
+          ],
+          "updated_date": "2026-09-10T07:47:47.112893",
+          "created_date": "2025-10-10T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7171249781",
+          "doi": "https://doi.org/10.1093/qje/qjag037",
+          "title": "The Transmission of Reliable and Unreliable Information",
+          "display_name": "The Transmission of Reliable and Unreliable Information",
+          "publication_year": 2026,
+          "publication_date": "2026-07-23",
+          "ids": {
+            "openalex": "https://openalex.org/W7171249781",
+            "doi": "https://doi.org/10.1093/qje/qjag037"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1093/qje/qjag037",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag037",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by-nc-nd",
+            "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://doi.org/10.1093/qje/qjag037",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5130200780",
+                "display_name": "Thomas Graeber",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I202697423",
+                  "display_name": "University of Zurich",
+                  "ror": "https://ror.org/02crff812",
+                  "country_code": "CH",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I202697423"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I4210113798",
+                  "display_name": "Max Planck Institute for the Study of Societies",
+                  "ror": "https://ror.org/01dwpbz64",
+                  "country_code": "DE",
+                  "type": "facility",
+                  "lineage": [
+                    "https://openalex.org/I149899117",
+                    "https://openalex.org/I4210113798"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I63966007",
+                  "display_name": "Massachusetts Institute of Technology",
+                  "ror": "https://ror.org/042nb2s44",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I63966007"
+                  ]
+                }
+              ],
+              "countries": [
+                "CH",
+                "DE",
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Thomas Graeber",
+              "raw_affiliation_strings": [
+                "Massachusetts Institute of Technology ,",
+                "University of Cologne, Econtribute, CESifo, Max-Planck Institute for Behavioral Economics ,",
+                "University of Zurich ,"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Massachusetts Institute of Technology ,",
+                  "institution_ids": [
+                    "https://openalex.org/I63966007"
+                  ]
+                },
+                {
+                  "raw_affiliation_string": "University of Cologne, Econtribute, CESifo, Max-Planck Institute for Behavioral Economics ,",
+                  "institution_ids": [
+                    "https://openalex.org/I4210113798"
+                  ]
+                },
+                {
+                  "raw_affiliation_string": "University of Zurich ,",
+                  "institution_ids": [
+                    "https://openalex.org/I202697423"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5143640628",
+                "display_name": "Shakked Noy",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I202697423",
+                  "display_name": "University of Zurich",
+                  "ror": "https://ror.org/02crff812",
+                  "country_code": "CH",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I202697423"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I4210113798",
+                  "display_name": "Max Planck Institute for the Study of Societies",
+                  "ror": "https://ror.org/01dwpbz64",
+                  "country_code": "DE",
+                  "type": "facility",
+                  "lineage": [
+                    "https://openalex.org/I149899117",
+                    "https://openalex.org/I4210113798"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I63966007",
+                  "display_name": "Massachusetts Institute of Technology",
+                  "ror": "https://ror.org/042nb2s44",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I63966007"
+                  ]
+                }
+              ],
+              "countries": [
+                "CH",
+                "DE",
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Shakked Noy",
+              "raw_affiliation_strings": [
+                "Massachusetts Institute of Technology ,",
+                "University of Cologne, Econtribute, CESifo, Max-Planck Institute for Behavioral Economics ,",
+                "University of Zurich ,"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Massachusetts Institute of Technology ,",
+                  "institution_ids": [
+                    "https://openalex.org/I63966007"
+                  ]
+                },
+                {
+                  "raw_affiliation_string": "University of Cologne, Econtribute, CESifo, Max-Planck Institute for Behavioral Economics ,",
+                  "institution_ids": [
+                    "https://openalex.org/I4210113798"
+                  ]
+                },
+                {
+                  "raw_affiliation_string": "University of Zurich ,",
+                  "institution_ids": [
+                    "https://openalex.org/I202697423"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5142959591",
+                "display_name": "Christopher Roth",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I202697423",
+                  "display_name": "University of Zurich",
+                  "ror": "https://ror.org/02crff812",
+                  "country_code": "CH",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I202697423"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I4210113798",
+                  "display_name": "Max Planck Institute for the Study of Societies",
+                  "ror": "https://ror.org/01dwpbz64",
+                  "country_code": "DE",
+                  "type": "facility",
+                  "lineage": [
+                    "https://openalex.org/I149899117",
+                    "https://openalex.org/I4210113798"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I63966007",
+                  "display_name": "Massachusetts Institute of Technology",
+                  "ror": "https://ror.org/042nb2s44",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I63966007"
+                  ]
+                }
+              ],
+              "countries": [
+                "CH",
+                "DE",
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Christopher Roth",
+              "raw_affiliation_strings": [
+                "Massachusetts Institute of Technology ,",
+                "University of Cologne, Econtribute, CESifo, Max-Planck Institute for Behavioral Economics ,",
+                "University of Zurich ,"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Massachusetts Institute of Technology ,",
+                  "institution_ids": [
+                    "https://openalex.org/I63966007"
+                  ]
+                },
+                {
+                  "raw_affiliation_string": "University of Cologne, Econtribute, CESifo, Max-Planck Institute for Behavioral Economics ,",
+                  "institution_ids": [
+                    "https://openalex.org/I4210113798"
+                  ]
+                },
+                {
+                  "raw_affiliation_string": "University of Zurich ,",
+                  "institution_ids": [
+                    "https://openalex.org/I202697423"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 3,
+          "institutions_distinct_count": 3,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [],
+          "apc_list": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "apc_paid": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "fwci": 6.3716,
+          "has_fulltext": false,
+          "cited_by_count": 1,
+          "citation_normalized_percentile": {
+            "value": 0.97514261,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": {
+            "min": 93,
+            "max": 96
+          },
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": null,
+            "last_page": null
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10646",
+            "display_name": "Experimental Behavioral Economics Studies",
+            "score": 0.1412999927997589,
+            "subfield": {
+              "id": "https://openalex.org/subfields/3311",
+              "display_name": "Safety Research"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/33",
+              "display_name": "Social Sciences"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10646",
+              "display_name": "Experimental Behavioral Economics Studies",
+              "score": 0.1412999927997589,
+              "subfield": {
+                "id": "https://openalex.org/subfields/3311",
+                "display_name": "Safety Research"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/33",
+                "display_name": "Social Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T13718",
+              "display_name": "Media Influence and Politics",
+              "score": 0.07900000363588333,
+              "subfield": {
+                "id": "https://openalex.org/subfields/3312",
+                "display_name": "Sociology and Political Science"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/33",
+                "display_name": "Social Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11031",
+              "display_name": "Game Theory and Applications",
+              "score": 0.06989999860525131,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1803",
+                "display_name": "Management Science and Operations Research"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/18",
+                "display_name": "Decision Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/reliability",
+              "display_name": "Reliability (semiconductor)",
+              "score": 0.8151999711990356
+            },
+            {
+              "id": "https://openalex.org/keywords/incentive",
+              "display_name": "Incentive",
+              "score": 0.5565999746322632
+            },
+            {
+              "id": "https://openalex.org/keywords/transmission",
+              "display_name": "Transmission (telecommunications)",
+              "score": 0.5557000041007996
+            },
+            {
+              "id": "https://openalex.org/keywords/transmitter",
+              "display_name": "Transmitter",
+              "score": 0.4487000107765198
+            },
+            {
+              "id": "https://openalex.org/keywords/information-transmission",
+              "display_name": "Information transmission",
+              "score": 0.4471000134944916
+            },
+            {
+              "id": "https://openalex.org/keywords/process",
+              "display_name": "Process (computing)",
+              "score": 0.3944000005722046
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C43214815",
+              "wikidata": "https://www.wikidata.org/wiki/Q7310987",
+              "display_name": "Reliability (semiconductor)",
+              "level": 3,
+              "score": 0.8151999711990356
+            },
+            {
+              "id": "https://openalex.org/C29122968",
+              "wikidata": "https://www.wikidata.org/wiki/Q1414816",
+              "display_name": "Incentive",
+              "level": 2,
+              "score": 0.5565999746322632
+            },
+            {
+              "id": "https://openalex.org/C761482",
+              "wikidata": "https://www.wikidata.org/wiki/Q118093",
+              "display_name": "Transmission (telecommunications)",
+              "level": 2,
+              "score": 0.5557000041007996
+            },
+            {
+              "id": "https://openalex.org/C41008148",
+              "wikidata": "https://www.wikidata.org/wiki/Q21198",
+              "display_name": "Computer science",
+              "level": 0,
+              "score": 0.5224999785423279
+            },
+            {
+              "id": "https://openalex.org/C15744967",
+              "wikidata": "https://www.wikidata.org/wiki/Q9418",
+              "display_name": "Psychology",
+              "level": 0,
+              "score": 0.49900001287460327
+            },
+            {
+              "id": "https://openalex.org/C47798520",
+              "wikidata": "https://www.wikidata.org/wiki/Q190157",
+              "display_name": "Transmitter",
+              "level": 3,
+              "score": 0.4487000107765198
+            },
+            {
+              "id": "https://openalex.org/C2983568541",
+              "wikidata": "https://www.wikidata.org/wiki/Q389772",
+              "display_name": "Information transmission",
+              "level": 2,
+              "score": 0.4471000134944916
+            },
+            {
+              "id": "https://openalex.org/C77805123",
+              "wikidata": "https://www.wikidata.org/wiki/Q161272",
+              "display_name": "Social psychology",
+              "level": 1,
+              "score": 0.3953000009059906
+            },
+            {
+              "id": "https://openalex.org/C98045186",
+              "wikidata": "https://www.wikidata.org/wiki/Q205663",
+              "display_name": "Process (computing)",
+              "level": 2,
+              "score": 0.3944000005722046
+            },
+            {
+              "id": "https://openalex.org/C38652104",
+              "wikidata": "https://www.wikidata.org/wiki/Q3510521",
+              "display_name": "Computer security",
+              "level": 1,
+              "score": 0.3269999921321869
+            },
+            {
+              "id": "https://openalex.org/C106485872",
+              "wikidata": "https://www.wikidata.org/wiki/Q5088884",
+              "display_name": "Cheap talk",
+              "level": 2,
+              "score": 0.326200008392334
+            },
+            {
+              "id": "https://openalex.org/C180747234",
+              "wikidata": "https://www.wikidata.org/wiki/Q23373",
+              "display_name": "Cognitive psychology",
+              "level": 1,
+              "score": 0.31679999828338623
+            },
+            {
+              "id": "https://openalex.org/C26760741",
+              "wikidata": "https://www.wikidata.org/wiki/Q160402",
+              "display_name": "Perception",
+              "level": 2,
+              "score": 0.30570000410079956
+            },
+            {
+              "id": "https://openalex.org/C2776035688",
+              "wikidata": "https://www.wikidata.org/wiki/Q1606558",
+              "display_name": "Affect (linguistics)",
+              "level": 2,
+              "score": 0.2709999978542328
+            },
+            {
+              "id": "https://openalex.org/C89611455",
+              "wikidata": "https://www.wikidata.org/wiki/Q6804646",
+              "display_name": "Mechanism (biology)",
+              "level": 2,
+              "score": 0.26409998536109924
+            },
+            {
+              "id": "https://openalex.org/C76155785",
+              "wikidata": "https://www.wikidata.org/wiki/Q418",
+              "display_name": "Telecommunications",
+              "level": 1,
+              "score": 0.2524000108242035
+            },
+            {
+              "id": "https://openalex.org/C87868495",
+              "wikidata": "https://www.wikidata.org/wiki/Q750843",
+              "display_name": "Information processing",
+              "level": 2,
+              "score": 0.2506999969482422
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1093/qje/qjag037",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1093/qje/qjag037",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S203860005",
+                "display_name": "The Quarterly Journal of Economics",
+                "issn_l": "0033-5533",
+                "issn": [
+                  "0033-5533",
+                  "1531-4650"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310311648",
+                "host_organization_name": "Oxford University Press",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310311648",
+                  "https://openalex.org/P4310311647"
+                ],
+                "host_organization_lineage_names": [
+                  "Oxford University Press",
+                  "University of Oxford"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by-nc-nd",
+              "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "The Quarterly Journal of Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1093/qje/qjag037",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag037",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by-nc-nd",
+            "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 66,
+          "referenced_works": [
+            "https://openalex.org/W1493772365",
+            "https://openalex.org/W1575321350",
+            "https://openalex.org/W2008936587",
+            "https://openalex.org/W2061939747",
+            "https://openalex.org/W2086645750",
+            "https://openalex.org/W2089913923",
+            "https://openalex.org/W2097264537",
+            "https://openalex.org/W2099526465",
+            "https://openalex.org/W2112449497",
+            "https://openalex.org/W2120061261",
+            "https://openalex.org/W2128004070",
+            "https://openalex.org/W2130474499",
+            "https://openalex.org/W2140950724",
+            "https://openalex.org/W2157242241",
+            "https://openalex.org/W2164646550",
+            "https://openalex.org/W2239666518",
+            "https://openalex.org/W2472695113",
+            "https://openalex.org/W2593481629",
+            "https://openalex.org/W2773385331",
+            "https://openalex.org/W2800542281",
+            "https://openalex.org/W2918175664",
+            "https://openalex.org/W2924266705",
+            "https://openalex.org/W3008566380",
+            "https://openalex.org/W3024643960",
+            "https://openalex.org/W3097487882",
+            "https://openalex.org/W3111762729",
+            "https://openalex.org/W3121812901",
+            "https://openalex.org/W3122000667",
+            "https://openalex.org/W3122155496",
+            "https://openalex.org/W3122179711",
+            "https://openalex.org/W3123865767",
+            "https://openalex.org/W3124726575",
+            "https://openalex.org/W3126081245",
+            "https://openalex.org/W3154759968",
+            "https://openalex.org/W3167312943",
+            "https://openalex.org/W3202749896",
+            "https://openalex.org/W4207050161",
+            "https://openalex.org/W4211000585",
+            "https://openalex.org/W4233731957",
+            "https://openalex.org/W4234477066",
+            "https://openalex.org/W4282828782",
+            "https://openalex.org/W4291754980",
+            "https://openalex.org/W4292157289",
+            "https://openalex.org/W4293452805",
+            "https://openalex.org/W4296129585",
+            "https://openalex.org/W4299553473",
+            "https://openalex.org/W4312389500",
+            "https://openalex.org/W4378530323",
+            "https://openalex.org/W4385982115",
+            "https://openalex.org/W4391489974",
+            "https://openalex.org/W4399483231",
+            "https://openalex.org/W4399657847",
+            "https://openalex.org/W4402736919",
+            "https://openalex.org/W4403394193",
+            "https://openalex.org/W4406466683",
+            "https://openalex.org/W4407632117",
+            "https://openalex.org/W4407768766",
+            "https://openalex.org/W4410007077",
+            "https://openalex.org/W4410616666",
+            "https://openalex.org/W4415508442",
+            "https://openalex.org/W7129100840",
+            "https://openalex.org/W7130387645",
+            "https://openalex.org/W7160189042",
+            "https://openalex.org/W7161548885",
+            "https://openalex.org/W7171249781",
+            "https://openalex.org/W7171691774"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "Abstract": [
+              0
+            ],
+            "Information": [
+              1
+            ],
+            "often": [
+              2
+            ],
+            "spreads": [
+              3
+            ],
+            "and": [
+              4,
+              42,
+              59,
+              82,
+              134,
+              147
+            ],
+            "influences": [
+              5
+            ],
+            "beliefs": [
+              6,
+              91
+            ],
+            "regardless": [
+              7
+            ],
+            "of": [
+              8,
+              20,
+              29,
+              131
+            ],
+            "its": [
+              9,
+              149
+            ],
+            "reliability.": [
+              10
+            ],
+            "We": [
+              11,
+              32
+            ],
+            "show": [
+              12,
+              95
+            ],
+            "that": [
+              13,
+              96,
+              139
+            ],
+            "this": [
+              14
+            ],
+            "occurs": [
+              15
+            ],
+            "in": [
+              16,
+              26,
+              73,
+              153
+            ],
+            "part": [
+              17
+            ],
+            "because": [
+              18,
+              101,
+              113
+            ],
+            "indicators": [
+              19
+            ],
+            "reliability": [
+              21,
+              70,
+              97,
+              144
+            ],
+            "tend": [
+              22
+            ],
+            "to": [
+              23,
+              39,
+              53,
+              110,
+              118,
+              120,
+              145
+            ],
+            "be": [
+              24
+            ],
+            "lost": [
+              25,
+              72,
+              99
+            ],
+            "the": [
+              27,
+              78
+            ],
+            "process": [
+              28
+            ],
+            "word-of-mouth": [
+              30
+            ],
+            "transmission.": [
+              31,
+              123
+            ],
+            "conduct": [
+              33
+            ],
+            "controlled": [
+              34
+            ],
+            "experiments": [
+              35,
+              94
+            ],
+            "where": [
+              36
+            ],
+            "participants": [
+              37,
+              50
+            ],
+            "listen": [
+              38,
+              51
+            ],
+            "economic": [
+              40,
+              135
+            ],
+            "forecasts": [
+              41
+            ],
+            "pass": [
+              43
+            ],
+            "them": [
+              44
+            ],
+            "on": [
+              45
+            ],
+            "through": [
+              46,
+              87
+            ],
+            "voice": [
+              47
+            ],
+            "messages.": [
+              48
+            ],
+            "Other": [
+              49
+            ],
+            "either": [
+              52
+            ],
+            "original": [
+              54
+            ],
+            "or": [
+              55,
+              108
+            ],
+            "transmitted": [
+              56
+            ],
+            "audio": [
+              57
+            ],
+            "recordings": [
+              58
+            ],
+            "report": [
+              60
+            ],
+            "incentivized": [
+              61
+            ],
+            "beliefs.": [
+              62
+            ],
+            "Across": [
+              63
+            ],
+            "various": [
+              64
+            ],
+            "transmitter": [
+              65
+            ],
+            "incentive": [
+              66
+            ],
+            "schemes,": [
+              67
+            ],
+            "a": [
+              68,
+              128
+            ],
+            "claim’s": [
+              69
+            ],
+            "is": [
+              71,
+              98,
+              103,
+              115
+            ],
+            "transmission": [
+              74
+            ],
+            "much": [
+              75
+            ],
+            "more": [
+              76
+            ],
+            "than": [
+              77
+            ],
+            "claim": [
+              79
+            ],
+            "itself.": [
+              80
+            ],
+            "Reliable": [
+              81
+            ],
+            "unreliable": [
+              83
+            ],
+            "information,": [
+              84
+            ],
+            "once": [
+              85
+            ],
+            "filtered": [
+              86
+            ],
+            "transmission,": [
+              88,
+              150
+            ],
+            "affect": [
+              89
+            ],
+            "listeners’": [
+              90
+            ],
+            "similarly.": [
+              92
+            ],
+            "Mechanism": [
+              93
+            ],
+            "not": [
+              100
+            ],
+            "it": [
+              102,
+              114
+            ],
+            "perceived": [
+              104
+            ],
+            "as": [
+              105
+            ],
+            "less": [
+              106,
+              116
+            ],
+            "relevant": [
+              107
+            ],
+            "harder": [
+              109
+            ],
+            "transmit": [
+              111
+            ],
+            "but": [
+              112,
+              151
+            ],
+            "likely": [
+              117
+            ],
+            "come": [
+              119
+            ],
+            "mind": [
+              121,
+              146
+            ],
+            "during": [
+              122
+            ],
+            "Evidence": [
+              124
+            ],
+            "from": [
+              125
+            ],
+            "our": [
+              126
+            ],
+            "experiments,": [
+              127
+            ],
+            "large": [
+              129
+            ],
+            "corpus": [
+              130
+            ],
+            "everyday": [
+              132
+            ],
+            "conversations,": [
+              133
+            ],
+            "TV": [
+              136
+            ],
+            "news": [
+              137
+            ],
+            "shows": [
+              138
+            ],
+            "contextual": [
+              140
+            ],
+            "cues": [
+              141
+            ],
+            "can": [
+              142
+            ],
+            "bring": [
+              143
+            ],
+            "induce": [
+              148
+            ],
+            "situations": [
+              152
+            ],
+            "which": [
+              154
+            ],
+            "people": [
+              155
+            ],
+            "share": [
+              156
+            ],
+            "information": [
+              157
+            ],
+            "seldom": [
+              158
+            ],
+            "contain": [
+              159
+            ],
+            "such": [
+              160
+            ],
+            "cues.": [
+              161
+            ]
+          },
+          "counts_by_year": [
+            {
+              "year": 2026,
+              "cited_by_count": 1
+            }
+          ],
+          "updated_date": "2026-09-09T07:26:56.047234",
+          "created_date": "2026-07-26T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7171485853",
+          "doi": "https://doi.org/10.1093/qje/qjag041",
+          "title": "Capital Services in Global Value Chains",
+          "display_name": "Capital Services in Global Value Chains",
+          "publication_year": 2026,
+          "publication_date": "2026-07-28",
+          "ids": {
+            "openalex": "https://openalex.org/W7171485853",
+            "doi": "https://doi.org/10.1093/qje/qjag041"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1093/qje/qjag041",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag041",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5108513277",
+                "display_name": "Xiang Ding",
+                "orcid": "https://orcid.org/0009-0008-7318-293X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I184565670",
+                  "display_name": "Georgetown University",
+                  "ror": "https://ror.org/05vzafd60",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I184565670"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Xiang Ding",
+              "raw_affiliation_strings": [
+                "Georgetown University ,"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Georgetown University ,",
+                  "institution_ids": [
+                    "https://openalex.org/I184565670"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 1,
+          "institutions_distinct_count": 1,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5108513277"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I184565670"
+          ],
+          "apc_list": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "apc_paid": null,
+          "fwci": 18.4825,
+          "has_fulltext": false,
+          "cited_by_count": 1,
+          "citation_normalized_percentile": {
+            "value": 0.99149704,
+            "is_in_top_1_percent": true,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": {
+            "min": 93,
+            "max": 96
+          },
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": null,
+            "last_page": null
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10128",
+            "display_name": "Global trade and economics",
+            "score": 0.5758000016212463,
+            "subfield": {
+              "id": "https://openalex.org/subfields/2000",
+              "display_name": "General Economics, Econometrics and Finance"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/20",
+              "display_name": "Economics, Econometrics and Finance"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10128",
+              "display_name": "Global trade and economics",
+              "score": 0.5758000016212463,
+              "subfield": {
+                "id": "https://openalex.org/subfields/2000",
+                "display_name": "General Economics, Econometrics and Finance"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/20",
+                "display_name": "Economics, Econometrics and Finance"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11552",
+              "display_name": "Global trade, sustainability, and social impact",
+              "score": 0.1120000034570694,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1408",
+                "display_name": "Strategy and Management"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11742",
+              "display_name": "Economic Theory and Policy",
+              "score": 0.03240000084042549,
+              "subfield": {
+                "id": "https://openalex.org/subfields/2000",
+                "display_name": "General Economics, Econometrics and Finance"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/20",
+                "display_name": "Economics, Econometrics and Finance"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/capital",
+              "display_name": "Capital (architecture)",
+              "score": 0.6391000151634216
+            },
+            {
+              "id": "https://openalex.org/keywords/consumption",
+              "display_name": "Consumption (sociology)",
+              "score": 0.6291999816894531
+            },
+            {
+              "id": "https://openalex.org/keywords/capital-intensity",
+              "display_name": "Capital intensity",
+              "score": 0.486299991607666
+            },
+            {
+              "id": "https://openalex.org/keywords/globalization",
+              "display_name": "Globalization",
+              "score": 0.44760000705718994
+            },
+            {
+              "id": "https://openalex.org/keywords/renting",
+              "display_name": "Renting",
+              "score": 0.4438000023365021
+            },
+            {
+              "id": "https://openalex.org/keywords/physical-capital",
+              "display_name": "Physical capital",
+              "score": 0.4284000098705292
+            },
+            {
+              "id": "https://openalex.org/keywords/capital-expenditure",
+              "display_name": "Capital expenditure",
+              "score": 0.41909998655319214
+            },
+            {
+              "id": "https://openalex.org/keywords/service",
+              "display_name": "Service (business)",
+              "score": 0.398499995470047
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C83646750",
+              "wikidata": "https://www.wikidata.org/wiki/Q193893",
+              "display_name": "Capital (architecture)",
+              "level": 2,
+              "score": 0.6391000151634216
+            },
+            {
+              "id": "https://openalex.org/C30772137",
+              "wikidata": "https://www.wikidata.org/wiki/Q5164762",
+              "display_name": "Consumption (sociology)",
+              "level": 2,
+              "score": 0.6291999816894531
+            },
+            {
+              "id": "https://openalex.org/C162324750",
+              "wikidata": "https://www.wikidata.org/wiki/Q8134",
+              "display_name": "Economics",
+              "level": 0,
+              "score": 0.5940999984741211
+            },
+            {
+              "id": "https://openalex.org/C143369678",
+              "wikidata": "https://www.wikidata.org/wiki/Q467212",
+              "display_name": "Capital intensity",
+              "level": 3,
+              "score": 0.486299991607666
+            },
+            {
+              "id": "https://openalex.org/C2119116",
+              "wikidata": "https://www.wikidata.org/wiki/Q7181",
+              "display_name": "Globalization",
+              "level": 2,
+              "score": 0.44760000705718994
+            },
+            {
+              "id": "https://openalex.org/C85502023",
+              "wikidata": "https://www.wikidata.org/wiki/Q157171",
+              "display_name": "Renting",
+              "level": 2,
+              "score": 0.4438000023365021
+            },
+            {
+              "id": "https://openalex.org/C9127897",
+              "wikidata": "https://www.wikidata.org/wiki/Q990550",
+              "display_name": "Physical capital",
+              "level": 3,
+              "score": 0.4284000098705292
+            },
+            {
+              "id": "https://openalex.org/C172497479",
+              "wikidata": "https://www.wikidata.org/wiki/Q302208",
+              "display_name": "Capital expenditure",
+              "level": 2,
+              "score": 0.41909998655319214
+            },
+            {
+              "id": "https://openalex.org/C2780378061",
+              "wikidata": "https://www.wikidata.org/wiki/Q25351891",
+              "display_name": "Service (business)",
+              "level": 2,
+              "score": 0.398499995470047
+            },
+            {
+              "id": "https://openalex.org/C2776291640",
+              "wikidata": "https://www.wikidata.org/wiki/Q2912517",
+              "display_name": "Value (mathematics)",
+              "level": 2,
+              "score": 0.37439998984336853
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.3686000108718872
+            },
+            {
+              "id": "https://openalex.org/C24649204",
+              "wikidata": "https://www.wikidata.org/wiki/Q3656853",
+              "display_name": "Capital deepening",
+              "level": 5,
+              "score": 0.3474000096321106
+            },
+            {
+              "id": "https://openalex.org/C81751973",
+              "wikidata": "https://www.wikidata.org/wiki/Q420062",
+              "display_name": "Capital accumulation",
+              "level": 3,
+              "score": 0.3418999910354614
+            },
+            {
+              "id": "https://openalex.org/C560292",
+              "wikidata": "https://www.wikidata.org/wiki/Q1113011",
+              "display_name": "Fixed capital",
+              "level": 5,
+              "score": 0.326200008392334
+            },
+            {
+              "id": "https://openalex.org/C556758197",
+              "wikidata": "https://www.wikidata.org/wiki/Q580018",
+              "display_name": "Monetary economics",
+              "level": 1,
+              "score": 0.32359999418258667
+            },
+            {
+              "id": "https://openalex.org/C2778348673",
+              "wikidata": "https://www.wikidata.org/wiki/Q739302",
+              "display_name": "Production (economics)",
+              "level": 2,
+              "score": 0.3222000002861023
+            },
+            {
+              "id": "https://openalex.org/C2778764706",
+              "wikidata": "https://www.wikidata.org/wiki/Q17154120",
+              "display_name": "Global value chain",
+              "level": 3,
+              "score": 0.2752000093460083
+            },
+            {
+              "id": "https://openalex.org/C6422946",
+              "wikidata": "https://www.wikidata.org/wiki/Q857354",
+              "display_name": "Panel data",
+              "level": 2,
+              "score": 0.27379998564720154
+            },
+            {
+              "id": "https://openalex.org/C58202505",
+              "wikidata": "https://www.wikidata.org/wiki/Q5035700",
+              "display_name": "Capital formation",
+              "level": 4,
+              "score": 0.2581999897956848
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1093/qje/qjag041",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1093/qje/qjag041",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S203860005",
+                "display_name": "The Quarterly Journal of Economics",
+                "issn_l": "0033-5533",
+                "issn": [
+                  "0033-5533",
+                  "1531-4650"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310311648",
+                "host_organization_name": "Oxford University Press",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310311648",
+                  "https://openalex.org/P4310311647"
+                ],
+                "host_organization_lineage_names": [
+                  "Oxford University Press",
+                  "University of Oxford"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "The Quarterly Journal of Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 63,
+          "referenced_works": [
+            "https://openalex.org/W349361653",
+            "https://openalex.org/W1555657485",
+            "https://openalex.org/W1670319311",
+            "https://openalex.org/W2004103375",
+            "https://openalex.org/W2025713926",
+            "https://openalex.org/W2025974875",
+            "https://openalex.org/W2052489773",
+            "https://openalex.org/W2072985749",
+            "https://openalex.org/W2076881948",
+            "https://openalex.org/W2096302870",
+            "https://openalex.org/W2099686204",
+            "https://openalex.org/W2100362027",
+            "https://openalex.org/W2100744881",
+            "https://openalex.org/W2101575604",
+            "https://openalex.org/W2102966366",
+            "https://openalex.org/W2108031289",
+            "https://openalex.org/W2118948993",
+            "https://openalex.org/W2152065848",
+            "https://openalex.org/W2154726695",
+            "https://openalex.org/W2155379226",
+            "https://openalex.org/W2156203513",
+            "https://openalex.org/W2161918707",
+            "https://openalex.org/W2162512124",
+            "https://openalex.org/W2162670720",
+            "https://openalex.org/W2166001406",
+            "https://openalex.org/W2169830338",
+            "https://openalex.org/W2185770530",
+            "https://openalex.org/W2258507177",
+            "https://openalex.org/W2588756662",
+            "https://openalex.org/W2751063888",
+            "https://openalex.org/W2763351311",
+            "https://openalex.org/W2906312492",
+            "https://openalex.org/W2917589549",
+            "https://openalex.org/W3007666992",
+            "https://openalex.org/W3043512971",
+            "https://openalex.org/W3102785289",
+            "https://openalex.org/W3121589528",
+            "https://openalex.org/W3121662226",
+            "https://openalex.org/W3122817164",
+            "https://openalex.org/W3123246357",
+            "https://openalex.org/W3123337016",
+            "https://openalex.org/W3123660889",
+            "https://openalex.org/W3124286745",
+            "https://openalex.org/W3124477778",
+            "https://openalex.org/W3124494824",
+            "https://openalex.org/W3124656445",
+            "https://openalex.org/W3124873083",
+            "https://openalex.org/W3125207107",
+            "https://openalex.org/W3125391194",
+            "https://openalex.org/W3125986346",
+            "https://openalex.org/W3127600389",
+            "https://openalex.org/W3156031534",
+            "https://openalex.org/W3203128295",
+            "https://openalex.org/W4212821384",
+            "https://openalex.org/W4226082363",
+            "https://openalex.org/W4230479189",
+            "https://openalex.org/W4231446042",
+            "https://openalex.org/W4248142843",
+            "https://openalex.org/W4313422802",
+            "https://openalex.org/W4393282011",
+            "https://openalex.org/W4399727124",
+            "https://openalex.org/W4409879242",
+            "https://openalex.org/W7171485853"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "Abstract": [
+              0
+            ],
+            "This": [
+              1
+            ],
+            "article": [
+              2
+            ],
+            "constructs": [
+              3
+            ],
+            "the": [
+              4,
+              48,
+              83
+            ],
+            "first": [
+              5
+            ],
+            "global": [
+              6,
+              42
+            ],
+            "data": [
+              7,
+              17
+            ],
+            "set": [
+              8
+            ],
+            "on": [
+              9
+            ],
+            "intersectoral": [
+              10
+            ],
+            "capital": [
+              11,
+              20,
+              75,
+              94,
+              100
+            ],
+            "service": [
+              12
+            ],
+            "expenditures.": [
+              13
+            ],
+            "I": [
+              14
+            ],
+            "use": [
+              15
+            ],
+            "these": [
+              16
+            ],
+            "to": [
+              18,
+              35,
+              76
+            ],
+            "disaggregate": [
+              19
+            ],
+            "services": [
+              21
+            ],
+            "and": [
+              22,
+              33,
+              102
+            ],
+            "intermediate": [
+              23
+            ],
+            "inputs": [
+              24
+            ],
+            "in": [
+              25,
+              66,
+              82,
+              93
+            ],
+            "a": [
+              26,
+              40
+            ],
+            "dynamic": [
+              27
+            ],
+            "multisector": [
+              28
+            ],
+            "trade": [
+              29
+            ],
+            "model.": [
+              30
+            ],
+            "Steady-state": [
+              31
+            ],
+            "allocations": [
+              32
+            ],
+            "responses": [
+              34
+            ],
+            "shocks": [
+              36
+            ],
+            "are": [
+              37
+            ],
+            "determined": [
+              38
+            ],
+            "by": [
+              39
+            ],
+            "capital-augmented": [
+              41
+            ],
+            "input-output": [
+              43
+            ],
+            "matrix.": [
+              44
+            ],
+            "Two": [
+              45
+            ],
+            "properties": [
+              46
+            ],
+            "of": [
+              47
+            ],
+            "measured": [
+              49
+            ],
+            "network": [
+              50,
+              84
+            ],
+            "deliver": [
+              51
+            ],
+            "larger": [
+              52,
+              64,
+              91
+            ],
+            "long-run": [
+              53
+            ],
+            "consumption": [
+              54,
+              104
+            ],
+            "gains": [
+              55,
+              65
+            ],
+            "from": [
+              56
+            ],
+            "globalization": [
+              57
+            ],
+            "than": [
+              58
+            ],
+            "existing": [
+              59
+            ],
+            "estimates,": [
+              60
+            ],
+            "as": [
+              61,
+              63
+            ],
+            "well": [
+              62
+            ],
+            "more": [
+              67,
+              71,
+              77
+            ],
+            "capital-intensive": [
+              68
+            ],
+            "countries.": [
+              69
+            ],
+            "First,": [
+              70
+            ],
+            "trade-exposed": [
+              72
+            ],
+            "sectors": [
+              73
+            ],
+            "supply": [
+              74
+            ],
+            "consumption-influential": [
+              78
+            ],
+            "producers.": [
+              79
+            ],
+            "Second,": [
+              80
+            ],
+            "heterogeneity": [
+              81
+            ],
+            "reallocates": [
+              85
+            ],
+            "sectoral": [
+              86
+            ],
+            "expenditures": [
+              87
+            ],
+            "toward": [
+              88
+            ],
+            "producers": [
+              89
+            ],
+            "with": [
+              90
+            ],
+            "declines": [
+              92
+            ],
+            "rental": [
+              95
+            ],
+            "prices.": [
+              96
+            ],
+            "These": [
+              97
+            ],
+            "reallocations": [
+              98
+            ],
+            "raise": [
+              99
+            ],
+            "incomes": [
+              101
+            ],
+            "lower": [
+              103
+            ],
+            "price": [
+              105
+            ],
+            "indices.": [
+              106
+            ]
+          },
+          "counts_by_year": [
+            {
+              "year": 2026,
+              "cited_by_count": 1
+            }
+          ],
+          "updated_date": "2026-08-31T07:19:18.363097",
+          "created_date": "2026-07-29T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W4405361191",
+          "doi": "https://doi.org/10.1093/qje/qjag040",
+          "title": "Clause and Effect: Theory and Field Experimental Evidence on Noncompete Clauses",
+          "display_name": "Clause and Effect: Theory and Field Experimental Evidence on Noncompete Clauses",
+          "publication_year": 2026,
+          "publication_date": "2026-07-18",
+          "ids": {
+            "openalex": "https://openalex.org/W4405361191",
+            "doi": "https://doi.org/10.1093/qje/qjag040"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1093/qje/qjag040",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag040",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://doi.org/10.1093/qje/qjag040",
+            "any_repository_has_fulltext": true
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5008658368",
+                "display_name": "Bo Cowgill",
+                "orcid": "https://orcid.org/0000-0002-2525-2306"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I185261750",
+                  "display_name": "University of Toronto",
+                  "ror": "https://ror.org/03dbr7087",
+                  "country_code": "CA",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I185261750"
+                  ]
+                }
+              ],
+              "countries": [
+                "CA"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Bo Cowgill",
+              "raw_affiliation_strings": [
+                "University of Toronto"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Toronto",
+                  "institution_ids": [
+                    "https://openalex.org/I185261750"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5115428550",
+                "display_name": "Brandon Freiberg",
+                "orcid": null
+              },
+              "institutions": [],
+              "countries": [],
+              "is_corresponding": true,
+              "raw_author_name": "Brandon Freiberg",
+              "raw_affiliation_strings": [
+                "INSEAD"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "INSEAD",
+                  "institution_ids": []
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5066901091",
+                "display_name": "Evan Starr",
+                "orcid": "https://orcid.org/0000-0002-4368-1710"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I66946132",
+                  "display_name": "University of Maryland, College Park",
+                  "ror": "https://ror.org/047s2c258",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I66946132"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Evan Starr",
+              "raw_affiliation_strings": [
+                "University of Maryland"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Maryland",
+                  "institution_ids": [
+                    "https://openalex.org/I66946132"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 2,
+          "institutions_distinct_count": 2,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5008658368",
+            "https://openalex.org/A5066901091",
+            "https://openalex.org/A5115428550"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I185261750",
+            "https://openalex.org/I66946132"
+          ],
+          "apc_list": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "apc_paid": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 1,
+          "citation_normalized_percentile": {
+            "value": 0.00358438,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": false
+          },
+          "cited_by_percentile_year": {
+            "min": 91,
+            "max": 95
+          },
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": null,
+            "last_page": null
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T11762",
+            "display_name": "Law, Economics, and Judicial Systems",
+            "score": 0.9991000294685364,
+            "subfield": {
+              "id": "https://openalex.org/subfields/2002",
+              "display_name": "Economics and Econometrics"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/20",
+              "display_name": "Economics, Econometrics and Finance"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T11762",
+              "display_name": "Law, Economics, and Judicial Systems",
+              "score": 0.9991000294685364,
+              "subfield": {
+                "id": "https://openalex.org/subfields/2002",
+                "display_name": "Economics and Econometrics"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/20",
+                "display_name": "Economics, Econometrics and Finance"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11043",
+              "display_name": "Merger and Competition Analysis",
+              "score": 0.9908000230789185,
+              "subfield": {
+                "id": "https://openalex.org/subfields/2002",
+                "display_name": "Economics and Econometrics"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/20",
+                "display_name": "Economics, Econometrics and Finance"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11182",
+              "display_name": "Auction Theory and Applications",
+              "score": 0.9865999817848206,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1803",
+                "display_name": "Management Science and Operations Research"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/18",
+                "display_name": "Decision Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/field",
+              "display_name": "Field (mathematics)",
+              "score": 0.5613906979560852
+            },
+            {
+              "id": "https://openalex.org/keywords/dependent-clause",
+              "display_name": "Dependent clause",
+              "score": 0.48944607377052307
+            },
+            {
+              "id": "https://openalex.org/keywords/law-and-economics",
+              "display_name": "Law and economics",
+              "score": 0.44484078884124756
+            },
+            {
+              "id": "https://openalex.org/keywords/economics",
+              "display_name": "Economics",
+              "score": 0.3374979496002197
+            },
+            {
+              "id": "https://openalex.org/keywords/computer-science",
+              "display_name": "Computer science",
+              "score": 0.3184354901313782
+            },
+            {
+              "id": "https://openalex.org/keywords/mathematics",
+              "display_name": "Mathematics",
+              "score": 0.21787041425704956
+            },
+            {
+              "id": "https://openalex.org/keywords/artificial-intelligence",
+              "display_name": "Artificial intelligence",
+              "score": 0.14616602659225464
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C9652623",
+              "wikidata": "https://www.wikidata.org/wiki/Q190109",
+              "display_name": "Field (mathematics)",
+              "level": 2,
+              "score": 0.5613906979560852
+            },
+            {
+              "id": "https://openalex.org/C134510687",
+              "wikidata": "https://www.wikidata.org/wiki/Q1122094",
+              "display_name": "Dependent clause",
+              "level": 3,
+              "score": 0.48944607377052307
+            },
+            {
+              "id": "https://openalex.org/C190253527",
+              "wikidata": "https://www.wikidata.org/wiki/Q295354",
+              "display_name": "Law and economics",
+              "level": 1,
+              "score": 0.44484078884124756
+            },
+            {
+              "id": "https://openalex.org/C162324750",
+              "wikidata": "https://www.wikidata.org/wiki/Q8134",
+              "display_name": "Economics",
+              "level": 0,
+              "score": 0.3374979496002197
+            },
+            {
+              "id": "https://openalex.org/C41008148",
+              "wikidata": "https://www.wikidata.org/wiki/Q21198",
+              "display_name": "Computer science",
+              "level": 0,
+              "score": 0.3184354901313782
+            },
+            {
+              "id": "https://openalex.org/C33923547",
+              "wikidata": "https://www.wikidata.org/wiki/Q395",
+              "display_name": "Mathematics",
+              "level": 0,
+              "score": 0.21787041425704956
+            },
+            {
+              "id": "https://openalex.org/C154945302",
+              "wikidata": "https://www.wikidata.org/wiki/Q11660",
+              "display_name": "Artificial intelligence",
+              "level": 1,
+              "score": 0.14616602659225464
+            },
+            {
+              "id": "https://openalex.org/C202444582",
+              "wikidata": "https://www.wikidata.org/wiki/Q837863",
+              "display_name": "Pure mathematics",
+              "level": 1,
+              "score": 0
+            },
+            {
+              "id": "https://openalex.org/C2777530160",
+              "wikidata": "https://www.wikidata.org/wiki/Q41796",
+              "display_name": "Sentence",
+              "level": 2,
+              "score": 0
+            }
+          ],
+          "mesh": [],
+          "locations_count": 3,
+          "locations": [
+            {
+              "id": "doi:10.1093/qje/qjag040",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1093/qje/qjag040",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S203860005",
+                "display_name": "The Quarterly Journal of Economics",
+                "issn_l": "0033-5533",
+                "issn": [
+                  "0033-5533",
+                  "1531-4650"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310311648",
+                "host_organization_name": "Oxford University Press",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310311648",
+                  "https://openalex.org/P4310311647"
+                ],
+                "host_organization_lineage_names": [
+                  "Oxford University Press",
+                  "University of Oxford"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by",
+              "license_id": "https://openalex.org/licenses/cc-by",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "The Quarterly Journal of Economics",
+              "raw_type": "journal-article"
+            },
+            {
+              "id": "doi:10.65864/5mjgw6m9wl",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.65864/5mjgw6m9wl",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S7407053623",
+                "display_name": "CESifo",
+                "issn_l": "2364-1428",
+                "issn": [
+                  "2364-1428"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": false,
+                "host_organization": null,
+                "host_organization_name": null,
+                "host_organization_lineage": [],
+                "host_organization_lineage_names": [],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "CESifo Working Papers",
+              "raw_type": "report"
+            },
+            {
+              "id": "doi:10.2139/ssrn.5012370",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.2139/ssrn.5012370",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S4210172589",
+                "display_name": "SSRN Electronic Journal",
+                "issn_l": "1556-5068",
+                "issn": [
+                  "1556-5068"
+                ],
+                "is_oa": true,
+                "is_in_doaj": false,
+                "is_core": false,
+                "host_organization": "https://openalex.org/I1318003438",
+                "host_organization_name": "RELX Group (Netherlands)",
+                "host_organization_lineage": [
+                  "https://openalex.org/I1318003438"
+                ],
+                "host_organization_lineage_names": [],
+                "type": "repository"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "acceptedVersion",
+              "is_accepted": true,
+              "is_published": false,
+              "raw_source_name": null,
+              "raw_type": "posted-content"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1093/qje/qjag040",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag040",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [
+            {
+              "id": "https://metadata.un.org/sdg/5",
+              "display_name": "Gender equality",
+              "score": 0.4300000071525574
+            }
+          ],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 80,
+          "referenced_works": [
+            "https://openalex.org/W1278644386",
+            "https://openalex.org/W1518061545",
+            "https://openalex.org/W1541185770",
+            "https://openalex.org/W1584881829",
+            "https://openalex.org/W1595067803",
+            "https://openalex.org/W1832773464",
+            "https://openalex.org/W1964116851",
+            "https://openalex.org/W1980361506",
+            "https://openalex.org/W2016729285",
+            "https://openalex.org/W2021163855",
+            "https://openalex.org/W2029050771",
+            "https://openalex.org/W2043593255",
+            "https://openalex.org/W2082312367",
+            "https://openalex.org/W2097346962",
+            "https://openalex.org/W2097457252",
+            "https://openalex.org/W2109176358",
+            "https://openalex.org/W2115349970",
+            "https://openalex.org/W2117455041",
+            "https://openalex.org/W2118052532",
+            "https://openalex.org/W2121924506",
+            "https://openalex.org/W2134072516",
+            "https://openalex.org/W2139122730",
+            "https://openalex.org/W2144046143",
+            "https://openalex.org/W2145046219",
+            "https://openalex.org/W2157579402",
+            "https://openalex.org/W2158163701",
+            "https://openalex.org/W2161889143",
+            "https://openalex.org/W2171786276",
+            "https://openalex.org/W2466690843",
+            "https://openalex.org/W2470160363",
+            "https://openalex.org/W2582281480",
+            "https://openalex.org/W2597067704",
+            "https://openalex.org/W2604629106",
+            "https://openalex.org/W2747007295",
+            "https://openalex.org/W2767451811",
+            "https://openalex.org/W2768098152",
+            "https://openalex.org/W2801892427",
+            "https://openalex.org/W2913862212",
+            "https://openalex.org/W2978017171",
+            "https://openalex.org/W2979886951",
+            "https://openalex.org/W3002162059",
+            "https://openalex.org/W3007017729",
+            "https://openalex.org/W3011998597",
+            "https://openalex.org/W3094260005",
+            "https://openalex.org/W3111036653",
+            "https://openalex.org/W3121595457",
+            "https://openalex.org/W3121736041",
+            "https://openalex.org/W3123253634",
+            "https://openalex.org/W3123871502",
+            "https://openalex.org/W3124347181",
+            "https://openalex.org/W3125229453",
+            "https://openalex.org/W3125972585",
+            "https://openalex.org/W3135806055",
+            "https://openalex.org/W3146299149",
+            "https://openalex.org/W3155626880",
+            "https://openalex.org/W3165640340",
+            "https://openalex.org/W3181106101",
+            "https://openalex.org/W3185672611",
+            "https://openalex.org/W3207937158",
+            "https://openalex.org/W4214506270",
+            "https://openalex.org/W4244285382",
+            "https://openalex.org/W4250388725",
+            "https://openalex.org/W4281685731",
+            "https://openalex.org/W4285190934",
+            "https://openalex.org/W4311207654",
+            "https://openalex.org/W4321766694",
+            "https://openalex.org/W4324122822",
+            "https://openalex.org/W4360591465",
+            "https://openalex.org/W4376625416",
+            "https://openalex.org/W4384132162",
+            "https://openalex.org/W4389579476",
+            "https://openalex.org/W4389773814",
+            "https://openalex.org/W4389903269",
+            "https://openalex.org/W4392733272",
+            "https://openalex.org/W4394710324",
+            "https://openalex.org/W4396918900",
+            "https://openalex.org/W4400448714",
+            "https://openalex.org/W4402587229",
+            "https://openalex.org/W4402770322",
+            "https://openalex.org/W4404301594"
+          ],
+          "related_works": [
+            "https://openalex.org/W2899084033",
+            "https://openalex.org/W2748952813",
+            "https://openalex.org/W4391375266",
+            "https://openalex.org/W2390279801",
+            "https://openalex.org/W4391913857",
+            "https://openalex.org/W2358668433",
+            "https://openalex.org/W4396701345",
+            "https://openalex.org/W2376932109",
+            "https://openalex.org/W2001405890",
+            "https://openalex.org/W4396696052"
+          ],
+          "abstract_inverted_index": {
+            "Abstract": [
+              0
+            ],
+            "We": [
+              1,
+              64,
+              76
+            ],
+            "study": [
+              2
+            ],
+            "worker": [
+              3
+            ],
+            "noncompete": [
+              4,
+              45,
+              84
+            ],
+            "clauses": [
+              5
+            ],
+            "in": [
+              6
+            ],
+            "a": [
+              7,
+              40,
+              44,
+              103
+            ],
+            "large": [
+              8
+            ],
+            "field": [
+              9
+            ],
+            "experiment": [
+              10
+            ],
+            "with": [
+              11,
+              102
+            ],
+            "two": [
+              12,
+              60
+            ],
+            "finance": [
+              13
+            ],
+            "firms.": [
+              14
+            ],
+            "Across": [
+              15
+            ],
+            "~14,000": [
+              16
+            ],
+            "job": [
+              17
+            ],
+            "offers": [
+              18
+            ],
+            "to": [
+              19
+            ],
+            "freelance": [
+              20
+            ],
+            "recruiters": [
+              21
+            ],
+            "on": [
+              22
+            ],
+            "short-term": [
+              23
+            ],
+            "contracts,": [
+              24
+            ],
+            "we": [
+              25
+            ],
+            "randomize": [
+              26
+            ],
+            "wages": [
+              27
+            ],
+            "and": [
+              28,
+              32,
+              53,
+              107
+            ],
+            "the": [
+              29,
+              59
+            ],
+            "presence,": [
+              30
+            ],
+            "salience,": [
+              31
+            ],
+            "duration": [
+              33
+            ],
+            "of": [
+              34,
+              93,
+              105
+            ],
+            "noncompetes": [
+              35,
+              72,
+              94
+            ],
+            "(all": [
+              36
+            ],
+            "contracts": [
+              37
+            ],
+            "also": [
+              38,
+              77
+            ],
+            "included": [
+              39
+            ],
+            "nondisclosure": [
+              41
+            ],
+            "agreement).": [
+              42
+            ],
+            "Removing": [
+              43
+            ],
+            "increases": [
+              46
+            ],
+            "mobility": [
+              47
+            ],
+            "between": [
+              48
+            ],
+            "competing": [
+              49
+            ],
+            "employers": [
+              50
+            ],
+            "by": [
+              51,
+              62
+            ],
+            "36–52%": [
+              52
+            ],
+            "raises": [
+              54
+            ],
+            "workers’": [
+              55
+            ],
+            "total": [
+              56
+            ],
+            "earnings": [
+              57
+            ],
+            "from": [
+              58
+            ],
+            "firms": [
+              61
+            ],
+            "12–17%.": [
+              63
+            ],
+            "find": [
+              65,
+              78
+            ],
+            "no": [
+              66,
+              79
+            ],
+            "evidence—rejecting": [
+              67
+            ],
+            "even": [
+              68
+            ],
+            "small": [
+              69
+            ],
+            "effects—that": [
+              70
+            ],
+            "removing": [
+              71
+            ],
+            "generates": [
+              73
+            ],
+            "secret": [
+              74
+            ],
+            "leakage.": [
+              75
+            ],
+            "evidence": [
+              80
+            ],
+            "that": [
+              81
+            ],
+            "workers": [
+              82,
+              90
+            ],
+            "choose": [
+              83
+            ],
+            "jobs": [
+              85
+            ],
+            "for": [
+              86
+            ],
+            "higher": [
+              87
+            ],
+            "pay.": [
+              88
+            ],
+            "Many": [
+              89
+            ],
+            "appear": [
+              91
+            ],
+            "unaware": [
+              92
+            ],
+            "before": [
+              95
+            ],
+            "firms’": [
+              96
+            ],
+            "post-employment": [
+              97
+            ],
+            "communication.": [
+              98
+            ],
+            "The": [
+              99
+            ],
+            "results": [
+              100
+            ],
+            "align": [
+              101
+            ],
+            "model": [
+              104
+            ],
+            "inattention": [
+              106
+            ],
+            "uncertainty": [
+              108
+            ],
+            "about": [
+              109
+            ],
+            "enforcement.": [
+              110
+            ]
+          },
+          "counts_by_year": [
+            {
+              "year": 2025,
+              "cited_by_count": 1
+            }
+          ],
+          "updated_date": "2026-08-21T09:56:20.448147",
+          "created_date": "2025-10-10T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7171132448",
+          "doi": "https://doi.org/10.1093/qje/qjag039",
+          "title": "Mental Models of the Stock Market",
+          "display_name": "Mental Models of the Stock Market",
+          "publication_year": 2026,
+          "publication_date": "2026-07-23",
+          "ids": {
+            "openalex": "https://openalex.org/W7171132448",
+            "doi": "https://doi.org/10.1093/qje/qjag039"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1093/qje/qjag039",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag039",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://doi.org/10.1093/qje/qjag039",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": null,
+                "display_name": "Peter Andre",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I114090438",
+                  "display_name": "Goethe University Frankfurt",
+                  "ror": "https://ror.org/04cvxnb49",
+                  "country_code": "DE",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I114090438"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I4210163226",
+                  "display_name": "Leibniz Institute for Financial Research SAFE",
+                  "ror": "https://ror.org/05wxywg93",
+                  "country_code": "DE",
+                  "type": "facility",
+                  "lineage": [
+                    "https://openalex.org/I315704651",
+                    "https://openalex.org/I4210163226"
+                  ]
+                }
+              ],
+              "countries": [
+                "DE"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Peter Andre",
+              "raw_affiliation_strings": [
+                "Leibniz Institute for Financial Research SAFE and Goethe University Frankfurt ,"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Leibniz Institute for Financial Research SAFE and Goethe University Frankfurt ,",
+                  "institution_ids": [
+                    "https://openalex.org/I114090438",
+                    "https://openalex.org/I4210163226"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": null,
+                "display_name": "Philipp Schirmer",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I135140700",
+                  "display_name": "University of Bonn",
+                  "ror": "https://ror.org/041nas322",
+                  "country_code": "DE",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I135140700"
+                  ]
+                }
+              ],
+              "countries": [
+                "DE"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Philipp Schirmer",
+              "raw_affiliation_strings": [
+                "University of Bonn ,"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Bonn ,",
+                  "institution_ids": [
+                    "https://openalex.org/I135140700"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": null,
+                "display_name": "Johannes Wohlfart",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I180923762",
+                  "display_name": "University of Cologne",
+                  "ror": "https://ror.org/00rcxh774",
+                  "country_code": "DE",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I180923762"
+                  ]
+                }
+              ],
+              "countries": [
+                "DE"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Johannes Wohlfart",
+              "raw_affiliation_strings": [
+                "University of Cologne ,"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "University of Cologne ,",
+                  "institution_ids": [
+                    "https://openalex.org/I180923762"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 1,
+          "institutions_distinct_count": 4,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [],
+          "apc_list": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "apc_paid": {
+            "value": 7619,
+            "currency": "USD",
+            "value_usd": 7619
+          },
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.79534884,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": false
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": null,
+            "last_page": null
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10315",
+            "display_name": "Decision-Making and Behavioral Economics",
+            "score": 0.44510000944137573,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1800",
+              "display_name": "General Decision Sciences"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/18",
+              "display_name": "Decision Sciences"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10315",
+              "display_name": "Decision-Making and Behavioral Economics",
+              "score": 0.44510000944137573,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1800",
+                "display_name": "General Decision Sciences"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/18",
+                "display_name": "Decision Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10047",
+              "display_name": "Financial Markets and Investment Strategies",
+              "score": 0.22280000150203705,
+              "subfield": {
+                "id": "https://openalex.org/subfields/2003",
+                "display_name": "Finance"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/20",
+                "display_name": "Economics, Econometrics and Finance"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10081",
+              "display_name": "Auditing, Earnings Management, Governance",
+              "score": 0.08619999885559082,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/earnings",
+              "display_name": "Earnings",
+              "score": 0.794700026512146
+            },
+            {
+              "id": "https://openalex.org/keywords/investment-decisions",
+              "display_name": "Investment decisions",
+              "score": 0.5430999994277954
+            },
+            {
+              "id": "https://openalex.org/keywords/stock",
+              "display_name": "Stock (firearms)",
+              "score": 0.5333999991416931
+            },
+            {
+              "id": "https://openalex.org/keywords/cash-flow",
+              "display_name": "Cash flow",
+              "score": 0.4851999878883362
+            },
+            {
+              "id": "https://openalex.org/keywords/context",
+              "display_name": "Context (archaeology)",
+              "score": 0.4578000009059906
+            },
+            {
+              "id": "https://openalex.org/keywords/stock-market",
+              "display_name": "Stock market",
+              "score": 0.4521999955177307
+            },
+            {
+              "id": "https://openalex.org/keywords/cash",
+              "display_name": "Cash",
+              "score": 0.44839999079704285
+            },
+            {
+              "id": "https://openalex.org/keywords/mental-accounting",
+              "display_name": "Mental accounting",
+              "score": 0.42410001158714294
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C2781426361",
+              "wikidata": "https://www.wikidata.org/wiki/Q5326940",
+              "display_name": "Earnings",
+              "level": 2,
+              "score": 0.794700026512146
+            },
+            {
+              "id": "https://openalex.org/C2778865806",
+              "wikidata": "https://www.wikidata.org/wiki/Q6060850",
+              "display_name": "Investment decisions",
+              "level": 3,
+              "score": 0.5430999994277954
+            },
+            {
+              "id": "https://openalex.org/C204036174",
+              "wikidata": "https://www.wikidata.org/wiki/Q909380",
+              "display_name": "Stock (firearms)",
+              "level": 2,
+              "score": 0.5333999991416931
+            },
+            {
+              "id": "https://openalex.org/C163428354",
+              "wikidata": "https://www.wikidata.org/wiki/Q1047513",
+              "display_name": "Cash flow",
+              "level": 2,
+              "score": 0.4851999878883362
+            },
+            {
+              "id": "https://openalex.org/C162324750",
+              "wikidata": "https://www.wikidata.org/wiki/Q8134",
+              "display_name": "Economics",
+              "level": 0,
+              "score": 0.48170000314712524
+            },
+            {
+              "id": "https://openalex.org/C2779343474",
+              "wikidata": "https://www.wikidata.org/wiki/Q3109175",
+              "display_name": "Context (archaeology)",
+              "level": 2,
+              "score": 0.4578000009059906
+            },
+            {
+              "id": "https://openalex.org/C2780299701",
+              "wikidata": "https://www.wikidata.org/wiki/Q475000",
+              "display_name": "Stock market",
+              "level": 3,
+              "score": 0.4521999955177307
+            },
+            {
+              "id": "https://openalex.org/C2778083465",
+              "wikidata": "https://www.wikidata.org/wiki/Q693464",
+              "display_name": "Cash",
+              "level": 2,
+              "score": 0.44839999079704285
+            },
+            {
+              "id": "https://openalex.org/C106159729",
+              "wikidata": "https://www.wikidata.org/wiki/Q2294553",
+              "display_name": "Financial economics",
+              "level": 1,
+              "score": 0.4325999915599823
+            },
+            {
+              "id": "https://openalex.org/C159144042",
+              "wikidata": "https://www.wikidata.org/wiki/Q1107958",
+              "display_name": "Mental accounting",
+              "level": 2,
+              "score": 0.42410001158714294
+            },
+            {
+              "id": "https://openalex.org/C12713177",
+              "wikidata": "https://www.wikidata.org/wiki/Q1900281",
+              "display_name": "Perspective (graphical)",
+              "level": 2,
+              "score": 0.4088999927043915
+            },
+            {
+              "id": "https://openalex.org/C27548731",
+              "wikidata": "https://www.wikidata.org/wiki/Q88272",
+              "display_name": "Investment (military)",
+              "level": 3,
+              "score": 0.39320001006126404
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.38449999690055847
+            },
+            {
+              "id": "https://openalex.org/C2776035688",
+              "wikidata": "https://www.wikidata.org/wiki/Q1606558",
+              "display_name": "Affect (linguistics)",
+              "level": 2,
+              "score": 0.37950000166893005
+            },
+            {
+              "id": "https://openalex.org/C19244329",
+              "wikidata": "https://www.wikidata.org/wiki/Q208697",
+              "display_name": "Financial market",
+              "level": 2,
+              "score": 0.34950000047683716
+            },
+            {
+              "id": "https://openalex.org/C162118730",
+              "wikidata": "https://www.wikidata.org/wiki/Q1128453",
+              "display_name": "Actuarial science",
+              "level": 1,
+              "score": 0.3488999903202057
+            },
+            {
+              "id": "https://openalex.org/C10138342",
+              "wikidata": "https://www.wikidata.org/wiki/Q43015",
+              "display_name": "Finance",
+              "level": 1,
+              "score": 0.3314000070095062
+            },
+            {
+              "id": "https://openalex.org/C109574028",
+              "wikidata": "https://www.wikidata.org/wiki/Q647525",
+              "display_name": "Behavioral economics",
+              "level": 2,
+              "score": 0.3091000020503998
+            },
+            {
+              "id": "https://openalex.org/C198477413",
+              "wikidata": "https://www.wikidata.org/wiki/Q7647069",
+              "display_name": "Survey data collection",
+              "level": 2,
+              "score": 0.28380000591278076
+            },
+            {
+              "id": "https://openalex.org/C86637286",
+              "wikidata": "https://www.wikidata.org/wiki/Q7317264",
+              "display_name": "Rate of return",
+              "level": 2,
+              "score": 0.2786000072956085
+            },
+            {
+              "id": "https://openalex.org/C143910263",
+              "wikidata": "https://www.wikidata.org/wiki/Q750458",
+              "display_name": "Capital market",
+              "level": 2,
+              "score": 0.266400009393692
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1093/qje/qjag039",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1093/qje/qjag039",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S203860005",
+                "display_name": "The Quarterly Journal of Economics",
+                "issn_l": "0033-5533",
+                "issn": [
+                  "0033-5533",
+                  "1531-4650"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310311648",
+                "host_organization_name": "Oxford University Press",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310311648",
+                  "https://openalex.org/P4310311647"
+                ],
+                "host_organization_lineage_names": [
+                  "Oxford University Press",
+                  "University of Oxford"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by",
+              "license_id": "https://openalex.org/licenses/cc-by",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "The Quarterly Journal of Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1093/qje/qjag039",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1093/qje/qjag039",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S203860005",
+              "display_name": "The Quarterly Journal of Economics",
+              "issn_l": "0033-5533",
+              "issn": [
+                "0033-5533",
+                "1531-4650"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310311648",
+              "host_organization_name": "Oxford University Press",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310311648",
+                "https://openalex.org/P4310311647"
+              ],
+              "host_organization_lineage_names": [
+                "Oxford University Press",
+                "University of Oxford"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "The Quarterly Journal of Economics",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [
+            {
+              "id": "https://metadata.un.org/sdg/8",
+              "display_name": "Decent work and economic growth",
+              "score": 0.5779431462287903
+            }
+          ],
+          "awards": [
+            {
+              "id": "https://openalex.org/G3872646602",
+              "display_name": "EXC 2126: ECONtribute: Märkte & Public Policy",
+              "funder_award_id": "390838866",
+              "funder_id": "https://openalex.org/F4320320879",
+              "funder_display_name": "Deutsche Forschungsgemeinschaft"
+            }
+          ],
+          "funders": [
+            {
+              "id": "https://openalex.org/F4320306869",
+              "display_name": "American Floral Endowment",
+              "ror": "https://ror.org/023m03q03"
+            },
+            {
+              "id": "https://openalex.org/F4320310697",
+              "display_name": "Joachim Herz Stiftung",
+              "ror": "https://ror.org/01j8qgg43"
+            },
+            {
+              "id": "https://openalex.org/F4320320879",
+              "display_name": "Deutsche Forschungsgemeinschaft",
+              "ror": "https://ror.org/018mejw64"
+            }
+          ],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 94,
+          "referenced_works": [
+            "https://openalex.org/W1463637956",
+            "https://openalex.org/W1515067367",
+            "https://openalex.org/W1578180415",
+            "https://openalex.org/W2008565199",
+            "https://openalex.org/W2099227715",
+            "https://openalex.org/W2101631451",
+            "https://openalex.org/W2101679768",
+            "https://openalex.org/W2109767864",
+            "https://openalex.org/W2125520394",
+            "https://openalex.org/W2139860711",
+            "https://openalex.org/W2144487825",
+            "https://openalex.org/W2164718518",
+            "https://openalex.org/W2170399808",
+            "https://openalex.org/W2476444236",
+            "https://openalex.org/W2544489044",
+            "https://openalex.org/W2566637050",
+            "https://openalex.org/W2622015926",
+            "https://openalex.org/W2758449449",
+            "https://openalex.org/W2891745453",
+            "https://openalex.org/W2907819883",
+            "https://openalex.org/W2911296070",
+            "https://openalex.org/W2914323996",
+            "https://openalex.org/W3014040189",
+            "https://openalex.org/W3018089439",
+            "https://openalex.org/W3024643960",
+            "https://openalex.org/W3038619515",
+            "https://openalex.org/W3093344182",
+            "https://openalex.org/W3094633476",
+            "https://openalex.org/W3111409405",
+            "https://openalex.org/W3116395489",
+            "https://openalex.org/W3121222283",
+            "https://openalex.org/W3122260906",
+            "https://openalex.org/W3122727604",
+            "https://openalex.org/W3122890729",
+            "https://openalex.org/W3123312015",
+            "https://openalex.org/W3123502129",
+            "https://openalex.org/W3124305668",
+            "https://openalex.org/W3124340264",
+            "https://openalex.org/W3125011952",
+            "https://openalex.org/W3125394587",
+            "https://openalex.org/W3125685058",
+            "https://openalex.org/W3125766507",
+            "https://openalex.org/W3134103383",
+            "https://openalex.org/W3142261399",
+            "https://openalex.org/W3168562670",
+            "https://openalex.org/W3189373747",
+            "https://openalex.org/W3196710638",
+            "https://openalex.org/W3217144444",
+            "https://openalex.org/W4205539948",
+            "https://openalex.org/W4207083472",
+            "https://openalex.org/W4211176770",
+            "https://openalex.org/W4213038271",
+            "https://openalex.org/W4226466877",
+            "https://openalex.org/W4231546411",
+            "https://openalex.org/W4240205250",
+            "https://openalex.org/W4246833228",
+            "https://openalex.org/W4280643126",
+            "https://openalex.org/W4280645001",
+            "https://openalex.org/W4281748884",
+            "https://openalex.org/W4290960174",
+            "https://openalex.org/W4293327480",
+            "https://openalex.org/W4293452805",
+            "https://openalex.org/W4296129585",
+            "https://openalex.org/W4297954287",
+            "https://openalex.org/W4308473155",
+            "https://openalex.org/W4318174421",
+            "https://openalex.org/W4318244074",
+            "https://openalex.org/W4318244268",
+            "https://openalex.org/W4319736267",
+            "https://openalex.org/W4386475401",
+            "https://openalex.org/W4386699965",
+            "https://openalex.org/W4387325871",
+            "https://openalex.org/W4392013261",
+            "https://openalex.org/W4392296050",
+            "https://openalex.org/W4392934796",
+            "https://openalex.org/W4396716389",
+            "https://openalex.org/W4402559291",
+            "https://openalex.org/W4403279432",
+            "https://openalex.org/W4403920613",
+            "https://openalex.org/W4405728159",
+            "https://openalex.org/W4409120899",
+            "https://openalex.org/W4409760294",
+            "https://openalex.org/W4410616666",
+            "https://openalex.org/W4412698073",
+            "https://openalex.org/W4414104056",
+            "https://openalex.org/W4414118635",
+            "https://openalex.org/W4416863096",
+            "https://openalex.org/W7106031207",
+            "https://openalex.org/W7130387645",
+            "https://openalex.org/W7147093387",
+            "https://openalex.org/W7161548885",
+            "https://openalex.org/W7163325355",
+            "https://openalex.org/W7163702076",
+            "https://openalex.org/W7165386169"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "Abstract": [
+              0
+            ],
+            "Investors’": [
+              1
+            ],
+            "return": [
+              2
+            ],
+            "expectations": [
+              3,
+              14
+            ],
+            "are": [
+              4,
+              101
+            ],
+            "pivotal": [
+              5
+            ],
+            "in": [
+              6,
+              51,
+              66,
+              173,
+              187
+            ],
+            "stock": [
+              7,
+              131
+            ],
+            "markets,": [
+              8
+            ],
+            "but": [
+              9
+            ],
+            "the": [
+              10,
+              32,
+              151,
+              180
+            ],
+            "reasoning": [
+              11,
+              189
+            ],
+            "behind": [
+              12
+            ],
+            "these": [
+              13,
+              160
+            ],
+            "is": [
+              15
+            ],
+            "not": [
+              16
+            ],
+            "well": [
+              17
+            ],
+            "understood.": [
+              18
+            ],
+            "This": [
+              19
+            ],
+            "article": [
+              20
+            ],
+            "explores": [
+              21
+            ],
+            "economic": [
+              22
+            ],
+            "agents’": [
+              23
+            ],
+            "mental": [
+              24
+            ],
+            "models": [
+              25
+            ],
+            "of": [
+              26,
+              156,
+              169,
+              182
+            ],
+            "what": [
+              27
+            ],
+            "drives": [
+              28
+            ],
+            "returns.": [
+              29,
+              99
+            ],
+            "We": [
+              30,
+              60,
+              122
+            ],
+            "survey": [
+              31
+            ],
+            "general": [
+              33
+            ],
+            "population,": [
+              34
+            ],
+            "retail": [
+              35
+            ],
+            "investors,": [
+              36
+            ],
+            "financial": [
+              37
+            ],
+            "professionals,": [
+              38
+            ],
+            "and": [
+              39,
+              47,
+              69,
+              107,
+              154,
+              175,
+              178,
+              185,
+              190
+            ],
+            "academic": [
+              40,
+              72
+            ],
+            "experts": [
+              41,
+              73
+            ],
+            "to": [
+              42,
+              129,
+              143,
+              147
+            ],
+            "investigate": [
+              43
+            ],
+            "how": [
+              44,
+              130,
+              138
+            ],
+            "they": [
+              45,
+              90
+            ],
+            "forecast": [
+              46
+            ],
+            "explain": [
+              48
+            ],
+            "future": [
+              49,
+              57,
+              148
+            ],
+            "returns": [
+              50
+            ],
+            "scenarios": [
+              52
+            ],
+            "with": [
+              53,
+              96
+            ],
+            "stale": [
+              54
+            ],
+            "news": [
+              55
+            ],
+            "about": [
+              56
+            ],
+            "company": [
+              58
+            ],
+            "earnings.": [
+              59
+            ],
+            "find": [
+              61
+            ],
+            "that": [
+              62,
+              124
+            ],
+            "investors": [
+              63,
+              140
+            ],
+            "strongly": [
+              64
+            ],
+            "disagree": [
+              65
+            ],
+            "their": [
+              67
+            ],
+            "forecasts": [
+              68
+            ],
+            "reasoning.": [
+              70,
+              110,
+              121
+            ],
+            "Most": [
+              71
+            ],
+            "view": [
+              74
+            ],
+            "markets": [
+              75
+            ],
+            "as": [
+              76
+            ],
+            "efficient.": [
+              77
+            ],
+            "By": [
+              78
+            ],
+            "contrast,": [
+              79
+            ],
+            "most": [
+              80
+            ],
+            "households": [
+              81,
+              117
+            ],
+            "express": [
+              82
+            ],
+            "a": [
+              83,
+              145,
+              167
+            ],
+            "perspective": [
+              84
+            ],
+            "we": [
+              85,
+              114
+            ],
+            "call": [
+              86
+            ],
+            "“expected": [
+              87
+            ],
+            "earnings": [
+              88,
+              95,
+              109,
+              120
+            ],
+            "reasoning”:": [
+              89
+            ],
+            "directly": [
+              91
+            ],
+            "equate": [
+              92
+            ],
+            "higher": [
+              93,
+              97
+            ],
+            "expected": [
+              94,
+              98,
+              108,
+              119
+            ],
+            "Professionals": [
+              100
+            ],
+            "split": [
+              102
+            ],
+            "between": [
+              103
+            ],
+            "market": [
+              104
+            ],
+            "efficiency,": [
+              105
+            ],
+            "mispricing,": [
+              106
+            ],
+            "In": [
+              111
+            ],
+            "detailed": [
+              112
+            ],
+            "experiments,": [
+              113
+            ],
+            "dissect": [
+              115
+            ],
+            "why": [
+              116
+            ],
+            "adopt": [
+              118
+            ],
+            "show": [
+              123
+            ],
+            "it": [
+              125
+            ],
+            "arises": [
+              126
+            ],
+            "from": [
+              127
+            ],
+            "inattention": [
+              128
+            ],
+            "price": [
+              132
+            ],
+            "changes": [
+              133
+            ],
+            "affect": [
+              134
+            ],
+            "investor": [
+              135
+            ],
+            "costs—that": [
+              136
+            ],
+            "is,": [
+              137
+            ],
+            "much": [
+              139
+            ],
+            "must": [
+              141
+            ],
+            "pay": [
+              142
+            ],
+            "acquire": [
+              144
+            ],
+            "claim": [
+              146
+            ],
+            "cash": [
+              149
+            ],
+            "flows—because": [
+              150
+            ],
+            "typical": [
+              152
+            ],
+            "format": [
+              153
+            ],
+            "context": [
+              155,
+              186
+            ],
+            "investment": [
+              157
+            ],
+            "problems": [
+              158
+            ],
+            "obscure": [
+              159
+            ],
+            "cost": [
+              161
+            ],
+            "implications.": [
+              162
+            ],
+            "Our": [
+              163
+            ],
+            "results": [
+              164
+            ],
+            "help": [
+              165
+            ],
+            "connect": [
+              166
+            ],
+            "series": [
+              168
+            ],
+            "previously": [
+              170
+            ],
+            "documented": [
+              171
+            ],
+            "anomalies": [
+              172
+            ],
+            "expectation": [
+              174
+            ],
+            "trading": [
+              176
+            ],
+            "data": [
+              177
+            ],
+            "highlight": [
+              179
+            ],
+            "importance": [
+              181
+            ],
+            "selective": [
+              183
+            ],
+            "attention": [
+              184
+            ],
+            "shaping": [
+              188
+            ],
+            "belief": [
+              191
+            ],
+            "formation.": [
+              192
+            ]
+          },
+          "counts_by_year": [],
+          "updated_date": "2026-09-02T07:38:04.252551",
+          "created_date": "2025-10-10T00:00:00"
+        }
+      ],
+      "group_by": []
+    }
+  ],
+  "rejected": []
+}
