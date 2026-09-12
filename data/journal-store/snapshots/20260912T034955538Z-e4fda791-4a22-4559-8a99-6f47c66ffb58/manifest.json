@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "run_id": "20260912T034955538Z-e4fda791-4a22-4559-8a99-6f47c66ffb58",
+  "created_at": "2026-09-12T03:49:56.042Z",
+  "operation": "translation_import",
+  "parent": {
+    "path": "snapshots/20260912T034546293Z-9c2490b5-7767-49f2-891c-0dd47f89a9be/manifest.json",
+    "sha256": "54514784cc9fa39636703e150cbfe36c4c4cb56e3268960c16c9e773a43b8787"
+  },
+  "papers": {
+    "2026": {
+      "path": "snapshots/20260912T034955538Z-e4fda791-4a22-4559-8a99-6f47c66ffb58/papers/2026.json",
+      "sha256": "4523f451864e9f2f0a9237d4bfff27bfd80fa980f6884182fcb36580f4c78031",
+      "count": 545
+    }
+  },
+  "runs": {
+    "2026-09": {
+      "path": "snapshots/20260912T034514693Z-d9c0c39d-1e6e-438c-9733-3b98045974da/runs/2026-09.json",
+      "sha256": "e0f38d98248bc6a9283cca86a653c5cc2e060b6c3d742c5990daed44d7809c28",
+      "count": 6
+    }
+  },
+  "translation_imports": {
+    "2026-09": {
+      "path": "snapshots/20260912T034955538Z-e4fda791-4a22-4559-8a99-6f47c66ffb58/translation_imports/2026-09.json",
+      "sha256": "98174c29ab989e467c19b1898e50f29743af74c39f941c1a400dbeaf0611bc40",
+      "count": 56
+    }
+  },
+  "audit": {
+    "path": "snapshots/20260912T034955538Z-e4fda791-4a22-4559-8a99-6f47c66ffb58/audit.json",
+    "sha256": "8daf7ff2a1d50fde4e3e6b513cb740e8d192dbfbcb34e683c9903403fb72378a"
+  },
+  "raw": [],
+  "enrichment_runs": {
+    "2026-09": {
+      "path": "snapshots/20260912T034546293Z-9c2490b5-7767-49f2-891c-0dd47f89a9be/enrichment_runs/2026-09.json",
+      "sha256": "42142afd87974cc34f5920d6a5dd7b2507a62a77d358e255a5f5bb360d2cbbd5",
+      "count": 2
+    }
+  },
+  "enrichment_state": {
+    "path": "snapshots/20260912T034546293Z-9c2490b5-7767-49f2-891c-0dd47f89a9be/enrichment-state.json",
+    "sha256": "5ee020d993f18d6292233eba4bd3c51afbc73e318811d605826cdf9e2db821b6"
+  },
+  "translation_queue": {
+    "path": "snapshots/20260912T034955538Z-e4fda791-4a22-4559-8a99-6f47c66ffb58/translation-queue.json",
+    "sha256": "8f0c3222c5206b42529aeb434873f32ee9154fb0b9419dac800868ab3be8dd92"
+  }
+}
