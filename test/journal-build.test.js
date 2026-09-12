@@ -206,7 +206,7 @@ test('工作流模板是可解析的JSON格式YAML，权限及门控完整', asy
       if (step.run) assert.ok(!/npm (?:start|run (?:refresh|dev))|translations\.js|git add -A|git push --force/.test(step.run));
     }
   }
-  assert.deepEqual(templates[0].on.schedule, [{ cron: '17 0,5 * * *' }]);
+  assert.deepEqual(templates[0].on.schedule, [{ cron: '7,17,27,37,47,57 * * * *', timezone: 'Asia/Shanghai' }]);
   assert.equal(templates[1].on.schedule, undefined);
   const collect = templates[0].jobs.collect;
   assert.equal(collect.permissions.contents, 'write'); assert.ok(collect.if.includes('JOURNAL_AUTOMATION_ENABLED'));
@@ -261,9 +261,11 @@ test('已授权的采集日程每天北京时间08:17和13:17运行，独立发�
     const prepared = JSON.parse(await fs.readFile(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8'));
     template.name = template.name.replace(' (INACTIVE TEMPLATE)', '');
     assert.deepEqual(prepared, template);
-    assert.deepEqual(prepared.on, name === 'daily-collect'
-      ? { workflow_dispatch: {}, schedule: [{ cron: '17 0,5 * * *' }] }
-      : { workflow_dispatch: {} });
+    if (name === 'daily-collect') {
+      assert.deepEqual(prepared.on.schedule, [{ cron: '7,17,27,37,47,57 * * * *', timezone: 'Asia/Shanghai' }]);
+      assert.equal(prepared.on.workflow_dispatch.inputs.respect_schedule.default,false);
+      assert.deepEqual(Object.keys(prepared.on),['workflow_dispatch','schedule']);
+    } else assert.deepEqual(prepared.on,{ workflow_dispatch: {} });
     assert.equal(prepared.jobs.deploy.if, "vars.JOURNAL_PAGES_ENABLED == 'true'");
     if (name === 'daily-collect') {
       assert.equal(prepared.jobs.collect.steps.find((step) => step.id === 'collect').run,

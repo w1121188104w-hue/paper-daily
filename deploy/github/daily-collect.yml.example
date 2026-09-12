@@ -1,10 +1,19 @@
 {
   "name": "Journal collection and optional Pages (INACTIVE TEMPLATE)",
   "on": {
-    "workflow_dispatch": {},
+    "workflow_dispatch": {
+      "inputs": {
+        "respect_schedule": {
+          "description": "按北京时间时段检查，已运行则跳过（关闭则保留原手动运行方式）",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
     "schedule": [
       {
-        "cron": "17 0,5 * * *"
+        "cron": "7,17,27,37,47,57 * * * *",
+        "timezone": "Asia/Shanghai"
       }
     ]
   },
@@ -16,8 +25,44 @@
     "cancel-in-progress": false
   },
   "jobs": {
-    "collect": {
+    "check_schedule": {
       "if": "vars.JOURNAL_AUTOMATION_ENABLED == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)",
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 5,
+      "permissions": { "contents": "write" },
+      "outputs": { "run_collection": "${{ steps.gate.outputs.run_collection }}" },
+      "steps": [
+        {
+          "name": "Checkout only the dependency-free time gate",
+          "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "with": {
+            "ref": "${{ github.event.repository.default_branch }}",
+            "persist-credentials": false,
+            "sparse-checkout-cone-mode": false,
+            "sparse-checkout": "package.json\nscripts/journal-schedule.js\nsrc/services/journalSchedule.js"
+          }
+        },
+        {
+          "name": "Set up Node.js 24 for time check only",
+          "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "with": { "node-version": "24", "package-manager-cache": false }
+        },
+        {
+          "name": "Claim only a due Beijing time slot; no sources or AI",
+          "id": "gate",
+          "env": {
+            "GITHUB_TOKEN": "${{ github.token }}",
+            "DATA_BRANCH": "${{ github.event.repository.default_branch }}",
+            "JOURNAL_AUTOMATION_ENABLED": "${{ vars.JOURNAL_AUTOMATION_ENABLED }}",
+            "RESPECT_SCHEDULE": "${{ inputs.respect_schedule }}"
+          },
+          "run": "node scripts/journal-schedule.js --run"
+        }
+      ]
+    },
+    "collect": {
+      "needs": "check_schedule",
+      "if": "needs.check_schedule.outputs.run_collection == 'true' && vars.JOURNAL_AUTOMATION_ENABLED == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)",
       "runs-on": "ubuntu-latest",
       "timeout-minutes": 90,
       "permissions": {
