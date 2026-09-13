@@ -7,6 +7,11 @@
           "description": "只读检查免费账户，不消耗任何搜索次数",
           "type": "boolean",
           "default": true
+        },
+        "retry_unknown": {
+          "description": "已获授权再次诊断；旧的未知计费仍保留，每次运行最多1次Pro请求",
+          "type": "boolean",
+          "default": false
         }
       }
     }
@@ -30,7 +35,7 @@
           "name": "Checkout reviewed search code only",
           "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
           "with": {
-            "ref": "30a1898c3bb0b168b65184f77407ab57f6701aad",
+            "ref": "10e3c1ed0e0bf05b74fbe1e5bc60b4f2f0708514",
             "persist-credentials": false
           }
         },
@@ -56,9 +61,10 @@
             "ZHIPU_API_KEY": "${{ secrets.ZHIPU_API_KEY }}",
             "SERPAPI_API_KEY": "${{ secrets.SERPAPI_API_KEY }}",
             "GITHUB_TOKEN": "${{ github.token }}",
-            "ACCOUNT_ONLY": "${{ inputs.account_only }}"
+            "ACCOUNT_ONLY": "${{ inputs.account_only }}",
+            "RETRY_UNKNOWN": "${{ inputs.retry_unknown }}"
           },
-          "run": "if [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelse\n  node scripts/search-preflight.js --run\nfi"
+          "run": "if [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
         }
       ]
     }
