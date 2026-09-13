@@ -1,7 +1,15 @@
 {
   "name": "Search API preflight (no publication)",
   "on": {
-    "workflow_dispatch": {}
+    "workflow_dispatch": {
+      "inputs": {
+        "account_only": {
+          "description": "只读检查免费账户，不消耗任何搜索次数",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
   },
   "permissions": {
     "contents": "read"
@@ -22,7 +30,7 @@
           "name": "Checkout reviewed search code only",
           "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
           "with": {
-            "ref": "d6f3c3daafb0d9383ad32912bc51d068dd599892",
+            "ref": "7643aca2a38f76437ebbbeda093f1b9c34058cb2",
             "persist-credentials": false
           }
         },
@@ -47,9 +55,10 @@
           "env": {
             "ZHIPU_API_KEY": "${{ secrets.ZHIPU_API_KEY }}",
             "SERPAPI_API_KEY": "${{ secrets.SERPAPI_API_KEY }}",
-            "GITHUB_TOKEN": "${{ github.token }}"
+            "GITHUB_TOKEN": "${{ github.token }}",
+            "ACCOUNT_ONLY": "${{ inputs.account_only }}"
           },
-          "run": "node scripts/search-preflight.js --run"
+          "run": "if [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelse\n  node scripts/search-preflight.js --run\nfi"
         }
       ]
     }
