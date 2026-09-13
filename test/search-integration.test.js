@@ -10,7 +10,7 @@ import { readSearchCatalog, searchJournalCatalog, catalogSearchQuery, catalogMon
 import { repairPaperMetadata, fillMissingMetadata } from '../src/services/searchMetadata.js';
 import { loadSearchPolicy, validateSearchPolicy } from '../src/services/searchPolicy.js';
 import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
-import { emptySearchBudget, reserveSearchRequest, safeSerpAccountDiagnostics } from '../src/services/searchBudget.js';
+import { emptySearchBudget, reserveSearchRequest, settleSearchRequest, safeSerpAccountDiagnostics } from '../src/services/searchBudget.js';
 import { searchPreflight } from '../scripts/search-preflight.js';
 const config = await loadJournalConfig(), journal = config.journals.find(row => row.key === 'AER');
 const at = '2026-09-13T02:00:00.000Z', window = { fromDate: '2026-07-16', toDate: '2026-09-13' };
@@ -161,6 +161,23 @@ test('密钥验证失败：显示安全错误码，保留未知计费且不自�
   assert.deepEqual(report.zhipu_diagnostic, { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' });
   assert.equal(report.papers_changed, 0); assert.equal(report.translation_calls, 0); assert.equal(report.website_deployed, false);
   assert.doesNotMatch(outputs.join(''), /private-secret/);
+});
+
+test('手动诊断重试：新运行获准后单次重试，旧预占保留，同一运行不能重复请求', async () => {
+  const today = new Date(), month = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit' }).format(today);
+  const old = reserveSearchRequest(emptySearchBudget(), { provider: 'zhipu', query: `American Economic Review ${month} articles`,
+    taskId: 'search-preflight-official-catalog', now: today, zhipuMonthlyLimit: 2000 });
+  let state = settleSearchRequest(old.state, old.reservation.id, { status: 'unknown', charged: null, now: today }), calls = 0;
+  const outputs = [], options = { env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily', GITHUB_RUN_ID: '123456789' },
+    sourceFactory: () => ({ account: async () => ({ free_plan: true, remaining: 250, used: 0, renewal_date: '2026-10-13' }),
+      request: async () => { calls++; throw new Error('temporary failure'); } }),
+    ledgerFactory: () => ({ read: async () => state, persist: async next => { state = next; } }), log: row => outputs.push(JSON.parse(row)) };
+  await searchPreflight(options); assert.equal(calls, 0); // Normal mode preserves cooldown.
+  await searchPreflight({ ...options, retryUnknown: true }); assert.equal(calls, 1);
+  assert.equal(state.requests.length, 2); assert.ok(state.requests.every(row => row.charged === null));
+  await searchPreflight({ ...options, retryUnknown: true }); assert.equal(calls, 1); // Same run remains protected.
+  assert.equal(outputs[1].zhipu_local_used, 2); assert.equal(outputs[2].zhipu_request_sent, false);
+  await assert.rejects(searchPreflight({ ...options, env: { ...options.env, GITHUB_RUN_ID: '' }, retryUnknown: true }));
 });
 
 test('账户只读诊断：仅允许枚举、数值和格式标记，禁止密钥邮箱及任意字符串', () => {

@@ -8,10 +8,12 @@ import { makeBudgetedSearch, searchAllowance } from '../src/services/searchBudge
 import { assertLibrary } from '../src/services/libraryValidation.js';
 
 // Explicit manual GitHub-only smoke test: no paper writes, no translations, no deployment.
-export async function searchPreflight({ env = process.env, accountOnly = false, policyLoader = loadSearchPolicy,
+export async function searchPreflight({ env = process.env, accountOnly = false, retryUnknown = false, policyLoader = loadSearchPolicy,
   sourceFactory = makeSearchSources, ledgerFactory = makeSearchBudgetGitHub, log = console.log } = {}) {
   assertLibrary(env.GITHUB_ACTIONS === 'true' && env.GITHUB_REPOSITORY === 'w1121188104w-hue/paper-daily' &&
     env.GITHUB_EVENT_NAME === 'workflow_dispatch', '搜索密钥验证只能由明确的GitHub手动任务执行');
+  assertLibrary(typeof retryUnknown === 'boolean' && (!retryUnknown ||
+    (!accountOnly && /^\d{1,20}$/.test(env.GITHUB_RUN_ID || ''))), '手动重试必须有明确模式及GitHub运行编号');
   const policy = await policyLoader();
   const sources = sourceFactory({ zhipuKey: env.ZHIPU_API_KEY || '', serpapiKey: env.SERPAPI_API_KEY || '', zhipuEngine: policy.zhipu_engine });
   if (accountOnly) {
@@ -26,10 +28,14 @@ export async function searchPreflight({ env = process.env, accountOnly = false, 
   const search = makeBudgetedSearch({ initialState, persist: state => ledger.persist(state), request: request => sources.request(request) });
   const query = journalSearchQuery({ name: 'American Economic Review' }, new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit' }).format(new Date()), 'zhipu');
-  const result = await search.run({ provider: 'zhipu', query, taskId: 'search-preflight-official-catalog', zhipuMonthlyLimit: policy.zhipu_monthly_limit });
+  // An explicitly approved NEW manual run may try again without erasing the old
+  // unknown charge. Re-running the same GitHub run ID still hits the cooldown.
+  const taskId = `search-preflight-official-catalog${retryUnknown ? `:manual-retry:${env.GITHUB_RUN_ID}` : ''}`;
+  const result = await search.run({ provider: 'zhipu', query, taskId, zhipuMonthlyLimit: policy.zhipu_monthly_limit });
   const allowance = searchAllowance(search.state(), { provider: 'zhipu', zhipuMonthlyLimit: policy.zhipu_monthly_limit });
   const report = { status: result.result ? 'success' : 'incomplete', zhipu_engine: policy.zhipu_engine,
     zhipu_request_sent: result.called, zhipu_block_reason: result.reason ?? null,
+    zhipu_manual_retry: retryUnknown,
     zhipu_diagnostic: result.diagnostic ?? null,
     zhipu_local_used: allowance.local_used, zhipu_monthly_limit: policy.zhipu_monthly_limit,
     zhipu_result_count: result.result?.leads.length ?? null,
@@ -44,7 +50,7 @@ export async function searchPreflight({ env = process.env, accountOnly = false, 
   return report.status === 'success' ? 0 : 1;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  try { const option = process.argv.slice(2).join(' '); assertLibrary(['--run', '--account-only'].includes(option), '必须显式指定验证模式');
-    process.exitCode = await searchPreflight({ accountOnly: option === '--account-only' }); }
+  try { const option = process.argv.slice(2).join(' '); assertLibrary(['--run', '--run --retry-unknown', '--account-only'].includes(option), '必须显式指定验证模式');
+    process.exitCode = await searchPreflight({ accountOnly: option === '--account-only', retryUnknown: option === '--run --retry-unknown' }); }
   catch (error) { console.error(`SEARCH_PREFLIGHT_FAILED：${/^[A-Z_]{3,50}$/.test(error.code || '') ? error.code : 'CHECK_FAILED'}；没有输出密钥、账户信息或远端错误正文。`); process.exitCode = 1; }
 }
