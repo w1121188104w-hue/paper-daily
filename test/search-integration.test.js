@@ -149,6 +149,20 @@ test('密钥验证：先查免费账户，再远端预记账，仅调用一次Pr
   assert.ok(!outputs.join('').includes('private-')); assert.equal(JSON.parse(outputs[0]).papers_changed, 0);
 });
 
+test('密钥验证失败：显示安全错误码，保留未知计费且不自动再次搜索', async () => {
+  const outputs = [], events = [];
+  const result = await searchPreflight({ env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily' },
+    sourceFactory: () => ({ account: async () => ({ free_plan: true, remaining: 250, used: 0, renewal_date: '2026-10-13' }),
+      request: async () => { events.push('request'); throw Object.assign(new Error('private-secret'), { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' }); } }),
+    ledgerFactory: () => ({ read: async () => emptySearchBudget(), persist: async state => events.push(state.requests.at(-1).status) }), log: row => outputs.push(row) });
+  assert.equal(result, 1); assert.deepEqual(events, ['reserved', 'request', 'unknown']);
+  const report = JSON.parse(outputs[0]);
+  assert.equal(report.zhipu_request_sent, true); assert.equal(report.zhipu_local_used, 1);
+  assert.deepEqual(report.zhipu_diagnostic, { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' });
+  assert.equal(report.papers_changed, 0); assert.equal(report.translation_calls, 0); assert.equal(report.website_deployed, false);
+  assert.doesNotMatch(outputs.join(''), /private-secret/);
+});
+
 test('账户只读诊断：仅允许枚举、数值和格式标记，禁止密钥邮箱及任意字符串', () => {
   const result = safeSerpAccountDiagnostics({ api_key: 'private-secret', account_email: 'private@example.com', account_status: 'private-secret',
     plan_monthly_price: 'private-secret', searches_per_month: 250, plan_searches_left: 250, this_month_usage: 0, extra_credits: 0,

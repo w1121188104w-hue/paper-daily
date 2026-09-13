@@ -1,6 +1,7 @@
 import { cleanText } from './paperModel.js';
 import { safeSerpAccount, safeSerpAccountDiagnostics } from './searchBudget.js';
 import { EvidenceError } from './evidenceHttp.js';
+import { safeSearchDiagnostic } from './searchDiagnostics.js';
 
 const fail = (condition, code) => { if (!condition) throw new EvidenceError(code); };
 const credential = value => typeof value === 'string' && value.length >= 8 && value.length <= 1000 && !/\s/.test(value);
@@ -56,23 +57,32 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
   fetchImpl = globalThis.fetch, now = () => new Date(), timeoutMs = 20000, maxBytes = 2000000 } = {}) {
   fail(['search_std', 'search_pro', 'search_pro_sogou', 'search_pro_quark'].includes(zhipuEngine), 'INVALID_SEARCH_ENGINE');
   fail(Number.isFinite(timeoutMs) && timeoutMs > 0 && Number.isInteger(maxBytes) && maxBytes > 0, 'INVALID_SEARCH_OPTIONS');
-  async function json(url, init) {
+  async function json(url, init, provider) {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), timeoutMs);
+    let httpStatus = null;
     try {
       const response = await fetchImpl(url, { ...init, redirect: 'error', signal: controller.signal });
-      if (!response.ok) { await response.body?.cancel(); throw new EvidenceError(response.status === 429 ? 'RATE_LIMITED' : [401, 403].includes(response.status) ? 'ACCESS_RESTRICTED' : 'SEARCH_HTTP_ERROR'); }
-      const reader = response.body?.getReader(); fail(reader, 'INVALID_SEARCH_RESPONSE');
+      httpStatus = response.status;
+      const httpCode = response.status === 429 ? 'RATE_LIMITED' : [401, 403].includes(response.status) ? 'ACCESS_RESTRICTED' : 'SEARCH_HTTP_ERROR';
+      // Error bodies have the same byte/time bounds as successful responses. Their
+      // message text is discarded; only a known numeric business code can survive.
+      const reader = response.body?.getReader(); fail(reader, response.ok ? 'INVALID_SEARCH_RESPONSE' : httpCode);
       const chunks = []; let size = 0;
       try {
         for (;;) { const { done, value } = await reader.read(); if (done) break; size += value.byteLength;
           fail(size <= maxBytes, 'SEARCH_RESPONSE_TOO_LARGE'); chunks.push(value); }
       } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
       let data;
-      try { data = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new EvidenceError('INVALID_SEARCH_RESPONSE'); }
-      fail(data && typeof data === 'object' && !data.error, 'SEARCH_PROVIDER_ERROR'); return data;
+      try { data = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new EvidenceError(response.ok ? 'INVALID_SEARCH_RESPONSE' : httpCode); }
+      if (!response.ok || data?.error) throw new EvidenceError(response.ok ? 'SEARCH_PROVIDER_ERROR' : httpCode,
+        { provider_error_code: data?.error?.code });
+      fail(data && typeof data === 'object', 'SEARCH_PROVIDER_ERROR'); return data;
     } catch (error) {
-      if (error instanceof EvidenceError) throw error;
-      throw new EvidenceError(controller.signal.aborted ? 'TIMEOUT' : 'SEARCH_NETWORK_ERROR');
+      const diagnostic = safeSearchDiagnostic({
+        code: error instanceof EvidenceError ? error.code : controller.signal.aborted ? 'TIMEOUT' : 'SEARCH_NETWORK_ERROR',
+        http_status: httpStatus, provider_error_code: error instanceof EvidenceError ? error.provider_error_code : null
+      }, provider);
+      throw new EvidenceError(diagnostic.code, diagnostic);
     } finally { clearTimeout(timer); }
   }
   async function readAccount() {
@@ -94,7 +104,7 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
         data = await json('https://open.bigmodel.cn/api/paas/v4/web_search', { method: 'POST',
           headers: { Authorization: `Bearer ${zhipuKey}`, 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ search_engine: zhipuEngine, search_query: query, search_intent: false,
-            count: 10, search_recency_filter: 'noLimit', content_size: 'medium' }) });
+            count: 10, search_recency_filter: 'noLimit', content_size: 'medium' }) }, provider);
       } else {
         fail(['serpapi_scholar', 'serpapi_google'].includes(provider), 'INVALID_SEARCH_PROVIDER');
         fail(credential(serpapiKey), 'MISSING_SERPAPI_KEY');

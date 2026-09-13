@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
 import { publisherFor, canonicalPublisherUrl } from './publisherCatalog.js';
-import { discoverPublisherLinks, parsePublisherArticle, parsePublisherFeed, aeaIssueLinks, doiFromPublisherUrl, windowMembership } from './publisherParsers.js';
+import { discoverPublisherLinks, parsePublisherArticle, parsePublisherFeed, aeaIssueLinks, doiFromPublisherUrl } from './publisherParsers.js';
 import { safeSearchLink } from './searchSources.js';
 import { safeEvidenceCode } from './publisherDiscovery.js';
 import { EvidenceError } from './evidenceHttp.js';

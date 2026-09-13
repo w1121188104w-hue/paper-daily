@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { assertLibrary, isCount, isIsoTime, isObject } from './libraryValidation.js';
 import { dateInShanghai } from './paperMerge.js';
+import { safeSearchDiagnostic } from './searchDiagnostics.js';
 
 export const SERPAPI_MONTHLY_LIMIT = 250;
 const providers = ['zhipu', 'serpapi_scholar', 'serpapi_google'];
@@ -130,10 +131,11 @@ export function makeBudgetedSearch({ initialState = emptySearchBudget(), persist
         await persist(reserved.state); state = reserved.state; // Before ANY billable network request.
         let result;
         try { result = await request(options); }
-        catch {
+        catch (error) {
           const uncertain = settleSearchRequest(state, reserved.reservation.id, { status: 'unknown', charged: null, now: now() });
           await persist(uncertain); state = uncertain;
-          return { called: true, status: 'source_unavailable', reason: 'request_outcome_unknown' };
+          return { called: true, status: 'source_unavailable', reason: 'request_outcome_unknown',
+            diagnostic: safeSearchDiagnostic(error, options.provider) };
         }
         assertLibrary(result && [null, 0, 1].includes(result.charged), '搜索计费结果无法核实');
         const settled = settleSearchRequest(state, reserved.reservation.id, { status: 'succeeded', charged: result.charged, now: now() });

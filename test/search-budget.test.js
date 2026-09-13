@@ -73,6 +73,21 @@ test('搜索额度：先落盘再请求，保存失败不得调用收费服务',
   await assert.rejects(failed.run(options())); assert.equal(calls, 0);
 });
 
+test('安全诊断不改变记账：失败仍占额度、不重试，原始错误不进入日志或账本', async () => {
+  const persisted = []; let calls = 0;
+  const search = makeBudgetedSearch({ now, persist: async state => persisted.push(structuredClone(state)), request: async () => {
+    calls++; throw Object.assign(new Error('private-secret'), { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113', api_key: 'private-secret' });
+  } });
+  const opts = options({ provider: 'zhipu', zhipuMonthlyLimit: 2000 });
+  const result = await search.run(opts);
+  assert.deepEqual(result.diagnostic, { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' });
+  assert.equal(result.reason, 'request_outcome_unknown');
+  assert.deepEqual(persisted.map(state => state.requests.at(-1).status), ['reserved', 'unknown']);
+  assert.equal(search.state().requests[0].charged, null); assert.equal(searchAllowance(search.state(), opts).local_used, 1);
+  assert.equal((await search.run(opts)).called, false); assert.equal(calls, 1);
+  assert.doesNotMatch(JSON.stringify({ result, persisted }), /private-secret/);
+});
+
 test('搜索额度：只剩一次时两个并行调用只有一个能发出', async () => {
   let calls = 0;
   const last = account({ plan_searches_left: 1, this_month_usage: 249 });

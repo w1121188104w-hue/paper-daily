@@ -29,6 +29,8 @@ export async function searchPreflight({ env = process.env, accountOnly = false, 
   const result = await search.run({ provider: 'zhipu', query, taskId: 'search-preflight-official-catalog', zhipuMonthlyLimit: policy.zhipu_monthly_limit });
   const allowance = searchAllowance(search.state(), { provider: 'zhipu', zhipuMonthlyLimit: policy.zhipu_monthly_limit });
   const report = { status: result.result ? 'success' : 'incomplete', zhipu_engine: policy.zhipu_engine,
+    zhipu_request_sent: result.called, zhipu_block_reason: result.reason ?? null,
+    zhipu_diagnostic: result.diagnostic ?? null,
     zhipu_local_used: allowance.local_used, zhipu_monthly_limit: policy.zhipu_monthly_limit,
     zhipu_result_count: result.result?.leads.length ?? null,
     zhipu_official_link_count: result.result?.leads.filter(lead => ['www.aeaweb.org', 'pubs.aeaweb.org'].includes(new URL(lead.url).hostname)).length ?? null,
@@ -37,6 +39,8 @@ export async function searchPreflight({ env = process.env, accountOnly = false, 
   log(JSON.stringify(report, null, 2));
   if (path.isAbsolute(env.GITHUB_STEP_SUMMARY || '')) await fs.appendFile(env.GITHUB_STEP_SUMMARY,
     `## 搜索接口验证（不发布网站）\n\n智谱：${report.status}，${policy.zhipu_engine}；返回 ${report.zhipu_result_count ?? '未知'} 条线索，其中 AER 官方域名 ${report.zhipu_official_link_count ?? '未知'} 条。线索数量不是论文数量，也不证明清单完整。\n\n智谱本月保守记账 ${allowance.local_used} / ${policy.zhipu_monthly_limit}。SerpAPI 已确认免费方案，账户本周期已用 ${account.used}，剩余 ${account.remaining}，重置日期 ${account.renewal_date}。本次没有调用 SerpAPI 搜索。\n\n论文写入 0，翻译调用 0，网站部署 0。密钥和账户个人信息不写入输出。\n`, 'utf8');
+  if (report.zhipu_diagnostic && path.isAbsolute(env.GITHUB_STEP_SUMMARY || '')) await fs.appendFile(env.GITHUB_STEP_SUMMARY,
+    `\n安全错误码（不包含远端错误正文）：\n\n\`\`\`json\n${JSON.stringify(report.zhipu_diagnostic, null, 2)}\n\`\`\`\n\n错误码不能证明实际扣费；结果不明时继续保留预占额度，且不自动重发。\n`, 'utf8');
   return report.status === 'success' ? 0 : 1;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

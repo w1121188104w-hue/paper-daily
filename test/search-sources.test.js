@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { makeSearchSources, searchLeads, safeSearchLink, paperSearchQuery, journalSearchQuery, searchWithFallback } from '../src/services/searchSources.js';
+import { safeSearchDiagnostic } from '../src/services/searchDiagnostics.js';
 const at = '2026-09-12T01:00:00.000Z';
 const response = data => new Response(JSON.stringify(data));
 const lead = { title: 'Published research paper', link: 'https://www.aeaweb.org/articles?id=10.1257/example', content: 'This is a search snippet, not an original abstract.' };
@@ -61,6 +62,47 @@ test('搜索来源：网络异常不重试、原始报错正文和密钥不回�
   assert.equal(calls, 1);
   const large = makeSearchSources({ zhipuKey: 'secret-zhipu-fixture', maxBytes: 10, fetchImpl: async () => response({ search_result: [lead] }) });
   await assert.rejects(large.request({ provider: 'zhipu', query: 'test' }), /SEARCH_RESPONSE_TOO_LARGE/);
+});
+
+test('安全搜索诊断：保留标准业务错误码，不保留远端消息和密钥，不重试', async () => {
+  let calls = 0;
+  for (const remoteCode of ['1113', 1113]) {
+    const api = makeSearchSources({ zhipuKey: 'secret-zhipu-fixture', fetchImpl: async () => { calls++;
+      return new Response(JSON.stringify({ error: { code: remoteCode, message: 'private-secret@example.com' }, api_key: 'secret-zhipu-fixture' }), { status: 429 }); } });
+    await assert.rejects(api.request({ provider: 'zhipu', query: 'test' }), error => {
+      assert.deepEqual(safeSearchDiagnostic(error, 'zhipu'), { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' });
+      assert.doesNotMatch(String(error) + JSON.stringify(error), /private|secret|example.com/); return true;
+    });
+  }
+  assert.equal(calls, 2); // Exactly one request per explicit test invocation.
+});
+
+test('安全搜索诊断：200中的业务错误、非JSON错误和空正文均不泄漏正文', async () => {
+  for (const [body, status, code, providerCode] of [
+    [JSON.stringify({ error: { code: '1210', message: 'private-secret' } }), 200, 'SEARCH_PROVIDER_ERROR', '1210'],
+    ['<html>private-secret</html>', 502, 'SEARCH_HTTP_ERROR', null],
+    [null, 403, 'ACCESS_RESTRICTED', null],
+    [JSON.stringify({ error: { code: 'private-secret', message: 'private-secret' } }), 429, 'RATE_LIMITED', null]
+  ]) {
+    const api = makeSearchSources({ zhipuKey: 'secret-zhipu-fixture', fetchImpl: async () => new Response(body, { status }) });
+    await assert.rejects(api.request({ provider: 'zhipu', query: 'test' }), error => {
+      assert.deepEqual(safeSearchDiagnostic(error, 'zhipu'), { code, http_status: status, provider_error_code: providerCode });
+      assert.doesNotMatch(String(error) + JSON.stringify(error), /private-secret/); return true;
+    });
+  }
+});
+
+test('安全搜索诊断：错误正文受大小限制，未知代码和非智谱业务代码不输出', async () => {
+  const api = makeSearchSources({ zhipuKey: 'secret-zhipu-fixture', maxBytes: 20,
+    fetchImpl: async () => new Response('private-secret'.repeat(20), { status: 500 }) });
+  await assert.rejects(api.request({ provider: 'zhipu', query: 'test' }), error => {
+    assert.equal(error.code, 'SEARCH_RESPONSE_TOO_LARGE'); assert.equal(error.http_status, 500);
+    assert.doesNotMatch(JSON.stringify(error), /private-secret/); return true;
+  });
+  assert.deepEqual(safeSearchDiagnostic({ code: 'PRIVATE_SECRET', http_status: 'private-secret', provider_error_code: 'unknown-secret' }, 'zhipu'),
+    { code: 'SEARCH_REQUEST_FAILED', http_status: null, provider_error_code: null });
+  assert.equal(safeSearchDiagnostic({ provider_error_code: '1113' }, 'serpapi_google').provider_error_code, null);
+  assert.equal(safeSearchDiagnostic({ provider_error_code: '9999' }, 'zhipu').provider_error_code, null);
 });
 
 test('搜索顺序：智谱查到已核实原文即停，否则Scholar再Google', async () => {
