@@ -23,7 +23,7 @@ const STRINGS = ['id', 'doi', 'doi_url', 'journal_key', 'journal_name', 'journal
   'print_issn', 'electronic_issn', 'first_seen_date', 'last_checked_at', 'title_original', 'abstract_original',
   'published_online_date', 'published_print_date', 'publication_date', 'volume', 'issue', 'pages', 'url',
   'title_zh', 'abstract_zh', 'title_translation_status', 'abstract_translation_status', 'translation_model', 'translated_at'];
-const PAPER_KEYS = new Set(['schema_version', ...STRINGS, 'sources', 'authors', 'provenance', 'source_records', 'source_text_hash', 'translation_provenance']);
+const PAPER_KEYS = new Set(['schema_version', ...STRINGS, 'discovered_at', 'sources', 'authors', 'provenance', 'source_records', 'source_text_hash', 'translation_provenance']);
 const STAT_KEYS = ['added', 'updated', 'unchanged', 'new_pending_fields'];
 export const RUN_STATUSES = ['success', 'no_updates', 'partial_failure', 'full_failure'];
 
@@ -52,6 +52,11 @@ export function validatePapers(papers, config) {
       assertLibrary(!dois.has(identity), '同刊 DOI 重复'); dois.add(identity);
     }
     assertLibrary(isDay(paper.first_seen_date) && isIsoTime(paper.last_checked_at), '论文发现日期或核对时间无效');
+    if (paper.discovered_at !== undefined) {
+      assertLibrary(isIsoTime(paper.discovered_at) &&
+        new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit' })
+          .format(new Date(paper.discovered_at)) === paper.first_seen_date, '精确发现时间与发现日不一致');
+    }
     for (const field of ['publication_date', 'published_online_date', 'published_print_date']) {
       assertLibrary(!paper[field] || normalizePartialDate(paper[field]) === paper[field], '论文出版日期无效');
     }
@@ -119,6 +124,7 @@ export function validateHistoryPreserved(previous, next) {
     const current = nextById.get(old.id);
     assertLibrary(current && current.first_seen_date === old.first_seen_date && current.journal_key === old.journal_key &&
       (!old.doi || old.doi === current.doi), '不能删除历史论文或改变首次发现日、期刊、既有DOI');
+    assertLibrary(!old.discovered_at || current.discovered_at === old.discovered_at, '不能改写精确首次发现时间');
     const versions = new Set(current.source_records.map(sourceVersion));
     assertLibrary(old.source_records.every((record) => versions.has(sourceVersion(record))), '不能丢弃历史来源原文');
     for (const field of ['title', 'abstract']) {
@@ -140,20 +146,33 @@ export function validateRuns(runs) {
     assertLibrary(isObject(run.stats) && STAT_KEYS.every((key) => isCount(run.stats[key])), '运行计数无效');
     assertLibrary(Array.isArray(run.journal_keys) && run.journal_keys.every((key) => /^[A-Z][A-Z0-9]{1,7}$/.test(key)), '运行期刊列表无效');
     assertLibrary(Array.isArray(run.sources), '缺少双源运行明细');
+    const requiredSources = run.collection_sources || ['openalex', 'crossref'];
+    assertLibrary(Array.isArray(requiredSources) && requiredSources.includes('openalex') && requiredSources.includes('crossref') &&
+      new Set(requiredSources).size === requiredSources.length &&
+      requiredSources.every(source => ['openalex', 'crossref', 'semanticscholar'].includes(source)), '日志声明的采集来源无效');
     const pairs = new Set();
     for (const source of run.sources) {
       const pair = `${source.journal_key}:${source.source}`;
-      assertLibrary(!pairs.has(pair) && run.journal_keys.includes(source.journal_key) && ['openalex', 'crossref'].includes(source.source), '日志来源身份无效');
+      assertLibrary(!pairs.has(pair) && run.journal_keys.includes(source.journal_key) && requiredSources.includes(source.source), '日志来源身份无效');
       pairs.add(pair);
       assertLibrary(['raw_count', 'accepted_count', 'excluded_count', 'rejected_count', 'pages'].every((key) => isCount(source[key])) &&
         Number.isFinite(source.duration_ms) && source.duration_ms >= 0 &&
         typeof source.ok === 'boolean' && typeof source.complete === 'boolean', '来源运行计数或状态无效');
     }
     if (['success', 'no_updates'].includes(run.status)) {
-      assertLibrary(run.sources.length === run.journal_keys.length * 2 && run.sources.every((source) => source.ok && source.complete),
-        '成功状态必须有每刊双源完整结果');
+      assertLibrary(run.sources.length === run.journal_keys.length * requiredSources.length && run.sources.every((source) => source.ok && source.complete),
+        '成功状态必须有每刊所有已启用来源的完整结果');
     }
     if (run.status === 'no_updates') assertLibrary(run.stats.added === 0 && run.stats.updated === 0, '没有新增状态与计数不符');
+    if (run.discovery_summary !== undefined) {
+      const summary = run.discovery_summary;
+      assertLibrary(isObject(summary) && summary.coverage === 'not_proven_complete' && isCount(summary.union_count) &&
+        Array.isArray(summary.sources) && summary.sources.length === 3 &&
+        new Set(summary.sources.map(row => row.source)).size === 3, '发现统计结构无效');
+      for (const row of summary.sources) assertLibrary(['crossref', 'openalex', 'semanticscholar'].includes(row.source) &&
+        (requiredSources.includes(row.source) ? ['success', 'partial_failure'].includes(row.status) && isCount(row.observed_unique_papers) && isCount(row.raw_count)
+          : row.status === 'not_enabled' && row.observed_unique_papers === null && row.raw_count === null), '发现统计的来源状态无效');
+    }
     if (run.status === 'success') assertLibrary(run.stats.added + run.stats.updated > 0, '成功状态缺少新增或更新');
     if (run.status === 'full_failure') assertLibrary(run.stats.added + run.stats.updated + run.stats.new_pending_fields === 0,
       '完全失败状态不能计入新论文或新翻译任务');

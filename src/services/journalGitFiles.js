@@ -32,6 +32,8 @@ export async function journalGitFiles(config, { root = DEFAULT_LIBRARY_ROOT, rep
       for (const log of logs) await read(log.report);
     }
     if (manifest.enrichment_state) await read(manifest.enrichment_state);
+    if (manifest.master_list) await read(manifest.master_list);
+    if (manifest.repair_state) await read(manifest.repair_state);
     for (const bucket of Object.values(manifest.translation_imports || {})) {
       const logs = await read(bucket); assertLibrary(Array.isArray(logs), '历史翻译日志结构无效');
       for (const log of logs) await read(log.report);

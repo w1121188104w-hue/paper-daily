@@ -134,12 +134,13 @@ export function parsePublisherArticle(response, journal, expected = {}) {
   if (expected.title && title && compact(expected.title) !== compact(title)) throw new EvidenceError('TITLE_MISMATCH');
   // No abstract adoption based only on landing URL or a related-article title.
   if (!(expected.doi && doi === normalizeDoi(expected.doi)) && !journalConfirmed) throw new EvidenceError('UNVERIFIED_IDENTITY');
-  if (!doi && !expected.title) throw new EvidenceError('UNVERIFIED_IDENTITY');
+  const discoveryIdentity = expected.discovery === true && journalConfirmed && Boolean(meta('citation_title')[0] || jsonArticle);
+  if (!doi && !expected.title && !discoveryIdentity) throw new EvidenceError('UNVERIFIED_IDENTITY');
   const authors = normalizeAuthors(meta('citation_author').length ? meta('citation_author') :
     [jsonArticle?.author].flat().filter(Boolean).map(a => typeof a === 'string' ? a : a.name));
   const rawDate = meta('citation_online_date')[0] || meta('citation_publication_date')[0] || meta('dc.date')[0] || jsonArticle?.datePublished || '';
   const date = publicationDate(rawDate);
-  if (!doi && (!expected.title || !authors.length || !date || !expected.authors?.some(a => authors.some(b => compact(a.name || a) === compact(b.name))) ||
+  if (!doi && !discoveryIdentity && (!expected.title || !authors.length || !date || !expected.authors?.some(a => authors.some(b => compact(a.name || a) === compact(b.name))) ||
     !expected.date || date.slice(0,4) !== expected.date.slice(0,4))) throw new EvidenceError('UNVERIFIED_IDENTITY');
   let rawAbstract = meta('citation_abstract')[0] || jsonArticle?.abstract || '', method = rawAbstract ? 'article_metadata_abstract' : '';
   for (const selector of ['#abstract', '.article-abstract', '.article-information .abstract', '.abstractInFull', '[role="doc-abstract"]', 'section.abstract', 'div.abstract']) {

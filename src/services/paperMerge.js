@@ -1,6 +1,6 @@
 import {
   buildFallbackFingerprint, buildSourceTextHash, canonicalPaperId, doiUrl,
-  normalizeAuthorName, normalizeDate, normalizeSourceRecord, normalizeTitleForMatch
+  normalizeAuthorName, normalizeDate, normalizeSourceRecord, normalizeTitleForMatch, yearFromRecord
 } from './paperModel.js';
 import { createHash } from 'node:crypto';
 
@@ -37,7 +37,13 @@ function related(a, b) {
 
 function fingerprintMatches(a, b) {
   const fingerprint = buildFallbackFingerprint(a);
-  return fingerprint && fingerprint === buildFallbackFingerprint(b);
+  if (fingerprint && fingerprint === buildFallbackFingerprint(b)) return true;
+  // A missing year or changed author order must not force an otherwise strong, DOI-less
+  // match into a new identity. Generic short titles still require the stricter fingerprint.
+  const title = normalizeTitleForMatch(a.title).replace(/\s/g, '');
+  const other = normalizeTitleForMatch(b.title).replace(/\s/g, '');
+  const year = yearFromRecord(a), otherYear = yearFromRecord(b);
+  return title.length >= 24 && title === other && authorOverlap(a, b) && (!year || !otherYear || year === otherYear);
 }
 
 export function evidence(records, field) {
@@ -90,6 +96,9 @@ function materialize(group, firstSeenDate, checkedAt) {
     journal_category: base.journal_category, journal_category_zh: base.journal_category_zh,
     print_issn: base.print_issn, electronic_issn: base.electronic_issn,
     first_seen_date: group.previous?.first_seen_date || firstSeenDate,
+    // Never invent an exact discovery timestamp for a legacy day-only entry.
+    ...((!group.previous && dateInShanghai(new Date(checkedAt)) === firstSeenDate) || group.previous?.discovered_at
+      ? { discovered_at: group.previous?.discovered_at || checkedAt } : {}),
     last_checked_at: checkedAt, sources: [...new Set(records.map((record) => record.source))].sort(),
     provenance: {}, source_records: records };
   for (const field of FIELDS) {

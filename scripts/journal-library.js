@@ -3,6 +3,7 @@ import { pathToFileURL } from 'node:url';
 import { loadJournalConfig } from '../src/services/journals.js';
 import { DEFAULT_LIBRARY_ROOT, readJournalLibrary } from '../src/services/journalLibrary.js';
 import { runJournalCollection, collectionWindow, safeRunError } from '../src/services/journalRun.js';
+import { repairSummary } from '../src/services/repairState.js';
 
 const HELP = `经管期刊第三阶段：本地永久库（不启动网站、不调用AI）
 
@@ -14,6 +15,7 @@ const HELP = `经管期刊第三阶段：本地永久库（不启动网站、不
   node scripts/journal-library.js --collect --save --journal AER
 
 可选：--all 替代 --journal；--lookback-days 60；--max-pages 1000；--only-if-needed
+--with-semantic-scholar：额外独立查询Semantic Scholar；可读取SEMANTIC_SCHOLAR_API_KEY，仅发送给该来源。
 也可使用 --from YYYY-MM-DD --to YYYY-MM-DD 指定范围，与 --lookback-days 互斥。
 --only-if-needed：今天所选期刊和范围已经双源成功时跳过；默认手动重跑不跳过。
 正式库位于 data/journal-store，仅本地保存。需备份整个目录，不能只复制最新版本子目录。
@@ -24,7 +26,7 @@ export function parseLibraryArgs(args) {
     help: { type: 'boolean' }, status: { type: 'boolean' }, validate: { type: 'boolean' },
     collect: { type: 'boolean' }, save: { type: 'boolean' }, all: { type: 'boolean' },
     journal: { type: 'string' }, 'lookback-days': { type: 'string' }, 'max-pages': { type: 'string' },
-    'only-if-needed': { type: 'boolean' }, from: { type: 'string' }, to: { type: 'string' }
+    'only-if-needed': { type: 'boolean' }, 'with-semantic-scholar': { type: 'boolean' }, from: { type: 'string' }, to: { type: 'string' }
   } });
   if (values.help || !Object.keys(values).length) return { mode: 'help' };
   if (Number(Boolean(values.status)) + Number(Boolean(values.validate)) + Number(Boolean(values.collect)) !== 1) {
@@ -41,10 +43,12 @@ export function parseLibraryArgs(args) {
   collectionWindow({ lookbackDays, fromDate: values.from, toDate: values.to });
   if (!Number.isInteger(maxPages) || maxPages < 1 || maxPages > 1000) throw new Error('页数上限应为1–1000');
   return { mode: 'collect', journalKey: values.journal, fromDate: values.from, toDate: values.to,
-    lookbackDays, maxPages, onlyIfNeeded: Boolean(values['only-if-needed']) };
+    lookbackDays, maxPages, onlyIfNeeded: Boolean(values['only-if-needed']),
+    ...(values['with-semantic-scholar'] ? { withSemanticScholar: true } : {}) };
 }
 
-export async function runLibraryCommand(args, { log = console.log, read = readJournalLibrary, run = runJournalCollection } = {}) {
+export async function runLibraryCommand(args, { log = console.log, read = readJournalLibrary, run = runJournalCollection,
+  getSemanticScholarKey = () => process.env.SEMANTIC_SCHOLAR_API_KEY || '' } = {}) {
   const { mode, ...options } = parseLibraryArgs(args);
   if (mode === 'help') { log(HELP); return 0; }
   const config = await loadJournalConfig();
@@ -55,12 +59,15 @@ export async function runLibraryCommand(args, { log = console.log, read = readJo
       validated: true, paper_count: library.papers.length, run_count: library.runs.length,
       translation_import_count: library.imports?.length || 0,
       pending_translation_fields: library.queue?.field_count || 0,
+      master_list: library.masterList?.statistics || null,
+      unresolved: library.repairState ? repairSummary(library.repairState) : null,
       latest_committed_run: latest || null }, null, 2));
     log('只读校验结束，没有联网或写文件。此处显示最近正式提交的日志；提交前中断的诊断位于 attempts 目录。');
     return 0;
   }
-  log(`将联网采集并保存到 ${DEFAULT_LIBRARY_ROOT}。不会读取密钥、调用AI或启动旧网站。`);
-  const result = await run(config, { ...options, onProgress: (source) => log(
+  log(`将联网采集并保存到 ${DEFAULT_LIBRARY_ROOT}。不调用AI、不启动旧网站；只有显式启用第三来源才读取它的专用密钥。`);
+  const result = await run(config, { ...options,
+    ...(options.withSemanticScholar ? { semanticScholarKey: getSemanticScholarKey() } : {}), onProgress: (source) => log(
     `${source.journal_key} / ${source.source}：${source.ok ? '完整成功' : '失败或不完整'}，原始${source.raw_count}条，排除资料${source.excluded_count}条`) });
   log(JSON.stringify({ status: result.status, committed: result.committed, run_id: result.run_id,
     reason: result.reason, paper_count: result.papers?.length ?? result.paper_count,

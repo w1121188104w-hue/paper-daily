@@ -37,7 +37,11 @@ export async function fetchPages(source, journal, options, adapter) {
       pageHashes.add(hash);
       result.raw_count += items.length;
       for (const [index, item] of items.entries()) {
-        try { result.records.push(adapter.normalize(item, journal, checkedAt)); }
+        try {
+          const record = adapter.normalize(item, journal, checkedAt, { url: String(url), payload });
+          // An adapter may deliberately exclude an otherwise valid out-of-window record.
+          if (record) result.records.push(record);
+        }
         catch {
           result.rejected.push({ index: result.raw_count - items.length + index,
             code: 'INVALID_RECORD', message: '期刊标识或论文必需字段校验失败' });
