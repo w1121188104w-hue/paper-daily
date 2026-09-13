@@ -1,10 +1,12 @@
 import { assertLibrary, isObject, isIsoTime, isDay, isCount, stableJson } from './libraryValidation.js';
+import { validateCatalogSearchState } from './catalogSearchState.js';
 
 export const ABSTRACT_STATUSES = ['found', 'missing', 'not_found', 'publisher_no_abstract', 'access_restricted', 'retry_later', 'identity_unverified'];
 export const emptyEnrichmentState = () => ({ schema_version: 1, abstracts: {}, official_last_run_date: '' });
 export function validateEnrichmentState(state, papers) {
   assertLibrary(isObject(state) && state.schema_version === 1 && isObject(state.abstracts) &&
     (state.official_last_run_date === '' || isDay(state.official_last_run_date)), '补全状态结构无效');
+  if (state.catalog_search !== undefined) validateCatalogSearchState(state.catalog_search);
   const ids = new Set(papers.map(p => p.id));
   for (const [id, row] of Object.entries(state.abstracts)) {
     assertLibrary(ids.has(id) && isObject(row) && ABSTRACT_STATUSES.includes(row.status) &&
@@ -18,6 +20,7 @@ export function validateEnrichmentRuns(runs) {
   assertLibrary(Array.isArray(runs), '补全日志应为数组');
   const ids = new Set();
   for (const row of runs) {
+    if (row.kind !== undefined) assertLibrary(row.kind === 'missing_metadata_repair', '未知补全操作子类型');
     assertLibrary(row.schema_version === 1 && /^[A-Za-z0-9-]{10,100}$/.test(row.run_id) && !ids.has(row.run_id) &&
       isDay(row.run_date) && isIsoTime(row.started_at) && isIsoTime(row.finished_at) && row.finished_at >= row.started_at &&
       isDay(row.from_date) && isDay(row.to_date) && row.from_date <= row.to_date &&
@@ -30,6 +33,9 @@ export function validateEnrichmentReport(report, log) {
   assertLibrary(report.schema_version === 1 && report.run_id === log.run_id && report.status === log.status &&
     report.from_date === log.from_date && report.to_date === log.to_date &&
     stableJson(report.stats) === stableJson(log.stats) && Array.isArray(report.journals) && Array.isArray(report.abstracts), '补全日志与报告不一致');
+  if (log.kind === 'missing_metadata_repair') assertLibrary(report.stage === 'missing_metadata_repair' &&
+    Array.isArray(report.repairs) && new Set(report.repairs.map(r => r.paper_id)).size === report.repairs.length && log.stats.added === 0,
+    '字段修复报告无效');
   const keys = new Set();
   for (const journal of report.journals) {
     assertLibrary(!keys.has(journal.journal_key) && /^[A-Z]{2,4}$/.test(journal.journal_key) &&

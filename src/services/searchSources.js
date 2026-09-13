@@ -131,7 +131,8 @@ export async function searchWithFallback({ queryFor, search, verifyLead, maxLead
   for (const provider of ['zhipu', 'serpapi_scholar', 'serpapi_google']) {
     let result;
     try { result = await search({ provider, query: queryFor(provider) }); }
-    catch { incomplete = true; attempts.push({ provider, status: 'source_unavailable' }); continue; }
+    catch (error) { if (['EVIDENCE_STORAGE_ERROR', 'SEARCH_LEDGER_CHECKPOINT_FAILED'].includes(error?.code)) throw error;
+      incomplete = true; attempts.push({ provider, status: 'source_unavailable' }); continue; }
     if (!result.called) {
       const status = result.reason === 'quota_exhausted' ? 'quota_exhausted' : 'source_unavailable';
       blockedQuota ||= provider.startsWith('serpapi_') && status === 'quota_exhausted'; incomplete = true;
@@ -147,7 +148,7 @@ export async function searchWithFallback({ queryFor, search, verifyLead, maxLead
         const evidence = await verifyLead(lead);
         if (evidence?.resolved === true && evidence.record?.source_evidence && evidence.record?.title &&
             !Object.hasOwn(evidence.record, 'snippet')) { confirmed = evidence; break; }
-      } catch { restricted = true; }
+      } catch (error) { if (error?.code === 'EVIDENCE_STORAGE_ERROR') throw error; restricted = true; }
     }
     if (confirmed) { attempts.push({ provider, status: 'resolved' }); return { status: 'resolved', confirmed, attempts }; }
     incomplete ||= restricted; attempts.push({ provider, status: restricted ? 'access_restricted' : 'not_found' });

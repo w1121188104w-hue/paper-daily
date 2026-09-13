@@ -2,13 +2,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
-import { LibraryError, assertLibrary, isObject, isCount, isIsoTime, stableJson,
+import { LibraryError, assertLibrary, isObject, isCount, isIsoTime, isDay, stableJson,
   validatePapers, validateRuns, validateHistoryPreserved, validateTranslationImports, validateTranslationOnlyChange } from './libraryValidation.js';
 import { buildTranslationQueue } from './translationQueue.js';
 import { emptyEnrichmentState, validateEnrichmentState, validateEnrichmentRuns, validateEnrichmentReport,
   validateEnrichmentOnlyChange } from './enrichmentValidation.js';
 import { buildMasterList, officialDiscoveries } from './masterList.js';
 import { emptyRepairState, reconcileRepairState, validateRepairState, validateRepairProjection } from './repairState.js';
+import { validateMetadataRepairOnlyChange } from './metadataRepairValidation.js';
 
 export const DEFAULT_LIBRARY_ROOT = fileURLToPath(new URL('../../data/journal-store/', import.meta.url));
 const sha256 = (text) => createHash('sha256').update(text).digest('hex');
@@ -114,8 +115,11 @@ async function readManifest(root, manifestRef, config) {
   const queue = buildTranslationQueue(papers);
   if (manifest.translation_queue) assertLibrary(stableJson(await readLibraryRef(root, manifest.translation_queue)) === stableJson(queue), '待翻译队列与论文状态不一致');
   const latestRun = [...runs].sort((a, b) => a.started_at.localeCompare(b.started_at)).at(-1);
+  if (manifest.master_window !== undefined) assertLibrary(isObject(manifest.master_window) &&
+    isDay(manifest.master_window.fromDate) && isDay(manifest.master_window.toDate) && manifest.master_window.fromDate <= manifest.master_window.toDate &&
+    Object.keys(manifest.master_window).every(k => ['fromDate', 'toDate'].includes(k)), '总名册时间窗口无效');
   const masterList = buildMasterList(papers, { generatedAt: manifest.created_at,
-    fromDate: latestRun?.from_date, toDate: latestRun?.to_date, officialIds: officialDiscoveries(enrichmentReports) });
+    fromDate: manifest.master_window?.fromDate ?? latestRun?.from_date, toDate: manifest.master_window?.toDate ?? latestRun?.to_date, officialIds: officialDiscoveries(enrichmentReports) });
   if (manifest.master_list) assertLibrary(stableJson(await readLibraryRef(root, manifest.master_list)) === stableJson(masterList), '总名册与论文及来源证据不一致');
   const repairState = manifest.repair_state ? await readLibraryRef(root, manifest.repair_state) : reconcileRepairState(emptyRepairState(), masterList);
   validateRepairState(repairState, papers); validateRepairProjection(repairState, masterList);
@@ -168,7 +172,7 @@ function groupBy(items, key) {
 }
 
 /** Caller must hold writer.lock. Immutable files first, one pointer replacement last. */
-export async function publishLibrarySnapshot({ root, config, previous, papers, run, translationImport, enrichment, enrichmentState, audit, raw = [], beforePublish }) {
+export async function publishLibrarySnapshot({ root, config, previous, papers, run, translationImport, enrichment, enrichmentState, repairState, masterWindow, audit, raw = [], beforePublish }) {
   validatePapers(papers, config); validateHistoryPreserved(previous.papers, papers);
   assertLibrary([run, translationImport, enrichment].filter(Boolean).length === 1, '每个版本必须且只能有一种操作');
   const runs = run ? [...previous.runs, run] : previous.runs;
@@ -176,7 +180,8 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   const enrichments = enrichment ? [...(previous.enrichments || []), enrichment] : previous.enrichments || [];
   validateEnrichmentRuns(enrichments);
   if (enrichment) {
-    validateEnrichmentOnlyChange(previous.papers, papers);
+    if (enrichment.kind === 'missing_metadata_repair') validateMetadataRepairOnlyChange(previous.papers, papers);
+    else validateEnrichmentOnlyChange(previous.papers, papers);
     assertLibrary(enrichment.stats.added === papers.length - previous.papers.length, '补入数量与论文库不一致');
   }
   validateRuns(runs); validateTranslationImports(imports);
@@ -188,6 +193,8 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   const manifest = { schema_version: 1, run_id: operationLog.run_id, created_at: operationLog.finished_at,
     operation: run ? 'collection' : translationImport ? 'translation_import' : 'metadata_enrichment', parent: previous.pointer?.manifest || null,
     papers: {}, runs: {}, translation_imports: {}, audit: null, raw };
+  const nextWindow = masterWindow || (run ? { fromDate: run.from_date, toDate: run.to_date } : previous.manifest?.master_window);
+  if (nextWindow) manifest.master_window = nextWindow;
   for (const [kind, items, oldItems, key] of [
     ['papers', papers, previous.papers, (paper) => paper.first_seen_date.slice(0, 4)],
     ['runs', runs, previous.runs, (entry) => entry.run_date.slice(0, 7)],
@@ -214,9 +221,13 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   const reports = [...(previous.enrichmentReports || [])];
   if (enrichment) reports.push(await readLibraryRef(root, enrichment.report));
   const latestRun = [...runs].sort((a, b) => a.started_at.localeCompare(b.started_at)).at(-1);
-  const master = buildMasterList(papers, { generatedAt: manifest.created_at, fromDate: latestRun?.from_date,
-    toDate: latestRun?.to_date, officialIds: officialDiscoveries(reports) });
-  const repairs = reconcileRepairState(previous.repairState, master);
+  const master = buildMasterList(papers, { generatedAt: manifest.created_at, fromDate: manifest.master_window?.fromDate ?? latestRun?.from_date,
+    toDate: manifest.master_window?.toDate ?? latestRun?.to_date, officialIds: officialDiscoveries(reports) });
+  if (repairState !== undefined) {
+    assertLibrary(enrichment?.kind === 'missing_metadata_repair', '仅明确的字段修复操作可写入待办尝试记录');
+    validateRepairState(repairState, papers);
+  }
+  const repairs = reconcileRepairState(repairState ?? previous.repairState, master);
   validateRepairState(repairs, papers); validateRepairProjection(repairs, master);
   manifest.master_list = await writeLibraryJson(root, `${prefix}/master-list.json`, master);
   manifest.repair_state = await writeLibraryJson(root, `${prefix}/repair-state.json`, repairs);

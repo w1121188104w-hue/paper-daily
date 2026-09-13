@@ -49,10 +49,19 @@ function directoryLinks(response, journal, window) {
 /** First search phase: read ALL bounded official entries, not the first matching paper.
  * Search snippets are never parsed as publication lists or abstracts. Coverage stays partial. */
 export async function readSearchCatalog(journal, window, seeds, { http, maxPages = 12, maxArticles = 100 } = {}) {
-  const p = publisherFor(journal), pending = [], visited = new Set(), queued = new Set(), rows = new Map(), attempts = [];
+  const p = publisherFor(journal), pending = [], visited = new Set(), failed = new Set(), queued = new Set(), rows = new Map(), attempts = [];
   let pages = 0, articles = 0, listRead = false, incomplete = false;
   function enqueue(value, kind, scope) {
-    const url = officialUrl(value, journal); if (!url || queued.has(url)) return;
+    const url = officialUrl(value, journal); if (!url) return;
+    if (queued.has(url)) {
+      // A remembered article URL may already be a seed. If the current directory
+      // links it before it is read, retain that fresh list-to-article evidence.
+      const existing = pending.find(item => item.url === url);
+      if (existing?.kind === 'unknown' && kind === 'article' && !visited.has(url)) {
+        existing.kind = kind; existing.scope = scope || url;
+      }
+      return;
+    }
     if (queued.size >= 1000) { incomplete = true; return; }
     queued.add(url); pending.push({ url, kind, scope: scope || url });
   }
@@ -67,7 +76,7 @@ export async function readSearchCatalog(journal, window, seeds, { http, maxPages
     let response;
     try { response = await http.request(item.url, p.hosts); }
     catch (error) { if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
-      incomplete = true; attempts.push({ url: item.url, status: safeEvidenceCode(error) }); continue; }
+      incomplete = true; failed.add(item.url); attempts.push({ url: item.url, status: safeEvidenceCode(error) }); continue; }
     let article = null;
     try { article = parsePublisherArticle(response, journal, { doi: doiFromPublisherUrl(item.url), scope_url: item.scope, discovery: true }); }
     catch { /* A directory is not an article. A rejected article is never accepted from a snippet. */ }
@@ -99,44 +108,55 @@ export async function readSearchCatalog(journal, window, seeds, { http, maxPages
     coverage_reason: 'Search-assisted official catalog evidence; complete publication coverage is not certified.',
     official_observed_count: leads.length || (listRead ? 0 : null), leads, attempts,
     verified_list_read: listRead && leads.some(row => row.evidence.scope_url !== row.url || row.evidence.method === 'publisher_rss'),
-    incomplete, pending_urls: pending.filter(item => !visited.has(item.url)).map(item => item.url),
+    incomplete, pending_urls: pending.filter(item => !visited.has(item.url) || failed.has(item.url)).map(item => item.url),
     checked_urls: [...visited] };
 }
 
 export async function searchJournalCatalog(journal, window, { search, readCatalog = readSearchCatalog, http, months = catalogMonths(window) } = {}) {
-  const records = new Map(), attempts = [], queries = [], seen = new Set(); let anyList = false;
+  const records = new Map(), attempts = [], queries = [], pending = new Set(), checked = new Set(), responses = new Map(); let anyList = false;
+  // Reuse page responses, not just a visited flag: the SAME directory can contain
+  // several months. Later months must still inspect its articles before falling back.
+  const cachedHttp = http && { request: (url, hosts) => {
+    const key = JSON.stringify([url, hosts]);
+    if (!responses.has(key)) responses.set(key, Promise.resolve().then(() => http.request(url, hosts)));
+    return responses.get(key);
+  } };
   for (const month of months) {
-    let taskStatus = 'not_found';
+    let taskStatus = 'not_found', unavailable = false, restricted = false;
     for (const provider of engines) {
       let result;
       try { result = await search({ provider, query: catalogSearchQuery(journal, month, provider),
         taskId: `catalog:${journal.key}:${month}` }); }
-      catch { taskStatus = 'source_unavailable'; attempts.push({ month, provider, status: 'SOURCE_UNAVAILABLE' }); continue; }
+      catch (error) { if (['EVIDENCE_STORAGE_ERROR', 'SEARCH_LEDGER_CHECKPOINT_FAILED'].includes(error?.code)) throw error;
+        unavailable = true; taskStatus = 'source_unavailable'; attempts.push({ month, provider, status: 'SOURCE_UNAVAILABLE' }); continue; }
       if (!result.called || !result.result?.leads) {
         taskStatus = result.reason === 'quota_exhausted' ? 'quota_exhausted' : 'source_unavailable';
+        unavailable ||= taskStatus === 'source_unavailable';
         attempts.push({ month, provider, status: taskStatus.toUpperCase() });
         if (provider.startsWith('serpapi_') && taskStatus === 'quota_exhausted') break;
         continue;
       }
       // Only known publisher domains become fetch targets. No generated text enters the list.
-      const seeds = result.result.leads.filter(lead => officialUrl(lead.url, journal) && !seen.has(lead.url));
+      const seeds = result.result.leads.filter(lead => officialUrl(lead.url, journal));
       let found;
-      try { found = await readCatalog(journal, window, seeds, { http }); }
+      try { found = await readCatalog(journal, window, seeds, { http: cachedHttp }); }
       catch (error) { if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
-        taskStatus = 'source_unavailable'; continue; }
-      found.checked_urls.forEach(url => seen.add(url));
-      found.leads.forEach(row => records.set(entryKey(row), row));
+        unavailable = true; taskStatus = 'source_unavailable'; continue; }
+      found.checked_urls.forEach(url => checked.add(url));
+      (found.pending_urls || []).forEach(url => pending.add(url));
+      found.leads.forEach(row => records.set(entryKey(row), { ...row, search_provider: provider }));
       anyList ||= found.verified_list_read;
       attempts.push(...found.attempts.map(row => ({ ...row, month, provider })));
       // Finding one article is NOT a completed catalog search. Dates must support this query month.
       const relevant = found.leads.some(row => row.date?.startsWith(month) && !['feed_update_date', 'issue_cover_date'].includes(row.date_role));
       if (found.verified_list_read && !found.incomplete && relevant) { taskStatus = 'catalog_checked_partial'; break; }
-      if (found.incomplete) taskStatus = 'access_restricted';
+      if (found.incomplete) { restricted = true; taskStatus = 'access_restricted'; }
     }
+    if (!['catalog_checked_partial', 'quota_exhausted'].includes(taskStatus)) taskStatus = restricted ? 'access_restricted' : unavailable ? 'source_unavailable' : taskStatus;
     queries.push({ month, status: taskStatus });
   }
   return { journal_key: journal.key, coverage: records.size ? 'partial' : 'restricted',
     coverage_reason: 'Journal-level search supplements official lists; it does not certify exhaustive coverage.',
     official_observed_count: records.size || (anyList ? 0 : null), leads: [...records.values()], attempts,
-    search_queries: queries };
+    search_queries: queries, checked_urls: [...checked], pending_urls: [...pending] };
 }

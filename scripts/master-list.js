@@ -34,8 +34,20 @@ export async function runMasterCommand(args, { log = console.log, read = readJou
     const issues = (options.due ? dueRepairIssues(library.repairState, now(), { limit: 10000 }) :
       Object.values(library.repairState.issues).filter(issue => issue.status !== 'resolved')).filter(match);
     const papers = new Map((library.masterList?.entries || []).map(row => [row.id, row]));
+    const catalogTasks = Object.values(library.enrichmentState?.catalog_search || {}).filter(row => match(row) &&
+      row.status !== 'catalog_checked_partial' && (!options.due || Date.parse(row.next_retry_at) <= now().getTime()));
+    const latestCatalogs = new Map();
+    for (const report of [...(library.enrichmentReports || [])].sort((a, b) => a.run_id.localeCompare(b.run_id))) {
+      for (const row of report.journals || []) if (match(row)) latestCatalogs.set(row.journal_key, row);
+    }
+    const pendingDiscoveries = [...latestCatalogs.values()].filter(row => {
+      const checks = Object.values(library.enrichmentState?.catalog_search || {}).filter(check => check.journal_key === row.journal_key);
+      return !options.due || !checks.length || checks.some(check => Date.parse(check.next_retry_at) <= now().getTime());
+    }).flatMap(row => row.entries.filter(entry => entry.status === 'pending')
+      .map(entry => ({ journal_key: row.journal_key, ...entry })));
     log(JSON.stringify({ schema_version: 1, automatic_queue: true, manual_review_required: false,
       issue_count: issues.length, paper_count: new Set(issues.map(issue => issue.paper_id)).size,
+      catalog_tasks: catalogTasks, pending_discoveries: pendingDiscoveries,
       issues: issues.map(issue => ({ ...issue, title: papers.get(issue.paper_id)?.title, doi: papers.get(issue.paper_id)?.doi })) }, null, 2));
   } else log(JSON.stringify({ initialized: Boolean(library.pointer), persisted: Boolean(library.manifest?.master_list),
     generated_at: library.masterList?.generated_at || null, coverage: library.masterList?.coverage || 'not_proven_complete',
