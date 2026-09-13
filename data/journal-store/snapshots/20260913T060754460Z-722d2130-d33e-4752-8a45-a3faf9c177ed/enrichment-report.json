@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "run_id": "20260913T060754460Z-722d2130-d33e-4752-8a45-a3faf9c177ed",
+  "status": "partial",
+  "from_date": "2026-07-16",
+  "to_date": "2026-09-13",
+  "stats": {
+    "added": 0,
+    "abstracts_filled": 0,
+    "abstracts_checked": 7,
+    "pending_candidates": 0
+  },
+  "journals": [],
+  "abstracts": [
+    {
+      "paper_id": "doi:10.1016/j.jcorpfin.2026.103091",
+      "journal_key": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103091",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "openalex",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher_api",
+          "status": "NO_CONFIGURED_OFFICIAL_API"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        }
+      ],
+      "next_retry_at": "2026-09-16T06:07:54.912Z"
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105601",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105601",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "openalex",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher_api",
+          "status": "NO_CONFIGURED_OFFICIAL_API"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        }
+      ],
+      "next_retry_at": "2026-09-16T06:07:57.732Z"
+    },
+    {
+      "paper_id": "doi:10.1086/744012",
+      "journal_key": "JPE",
+      "doi": "10.1086/744012",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "openalex",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher_api",
+          "status": "NO_CONFIGURED_OFFICIAL_API"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        }
+      ],
+      "next_retry_at": "2026-09-16T06:07:58.842Z"
+    },
+    {
+      "paper_id": "doi:10.1086/744015",
+      "journal_key": "JPE",
+      "doi": "10.1086/744015",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "openalex",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher_api",
+          "status": "NO_CONFIGURED_OFFICIAL_API"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        }
+      ],
+      "next_retry_at": "2026-09-16T06:08:00.034Z"
+    },
+    {
+      "paper_id": "doi:10.1086/744016",
+      "journal_key": "JPE",
+      "doi": "10.1086/744016",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "openalex",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher_api",
+          "status": "NO_CONFIGURED_OFFICIAL_API"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        }
+      ],
+      "next_retry_at": "2026-09-16T06:08:01.146Z"
+    },
+    {
+      "paper_id": "doi:10.1086/744049",
+      "journal_key": "JPE",
+      "doi": "10.1086/744049",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "openalex",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher_api",
+          "status": "NO_CONFIGURED_OFFICIAL_API"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        }
+      ],
+      "next_retry_at": "2026-09-16T06:08:02.247Z"
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105588",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105588",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "openalex",
+          "status": "NO_ABSTRACT"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher_api",
+          "status": "NO_CONFIGURED_OFFICIAL_API"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        }
+      ],
+      "next_retry_at": "2026-09-16T06:08:03.349Z"
+    }
+  ]
+}
