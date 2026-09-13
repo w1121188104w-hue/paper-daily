@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { makeSearchSources, searchLeads, safeSearchLink, paperSearchQuery, journalSearchQuery, searchWithFallback } from '../src/services/searchSources.js';
-import { safeSearchDiagnostic } from '../src/services/searchDiagnostics.js';
+import { safeSearchDiagnostic, safeSearchCredentialCheck } from '../src/services/searchDiagnostics.js';
 const at = '2026-09-12T01:00:00.000Z';
 const response = data => new Response(JSON.stringify(data));
 const lead = { title: 'Published research paper', link: 'https://www.aeaweb.org/articles?id=10.1257/example', content: 'This is a search snippet, not an original abstract.' };
@@ -79,6 +79,8 @@ test('安全搜索诊断：保留标准业务错误码，不保留远端消息�
 
 test('安全搜索诊断：200中的业务错误、非JSON错误和空正文均不泄漏正文', async () => {
   for (const [body, status, code, providerCode] of [
+    [JSON.stringify({ error: { code: '1002', message: 'private-secret' } }), 401, 'ACCESS_RESTRICTED', '1002'],
+    [JSON.stringify({ error: { code: '1004', message: 'private-secret' } }), 401, 'ACCESS_RESTRICTED', '1004'],
     [JSON.stringify({ error: { code: '1210', message: 'private-secret' } }), 200, 'SEARCH_PROVIDER_ERROR', '1210'],
     ['<html>private-secret</html>', 502, 'SEARCH_HTTP_ERROR', null],
     [null, 403, 'ACCESS_RESTRICTED', null],
@@ -90,6 +92,17 @@ test('安全搜索诊断：200中的业务错误、非JSON错误和空正文均�
       assert.doesNotMatch(String(error) + JSON.stringify(error), /private-secret/); return true;
     });
   }
+});
+
+test('密钥格式诊断：只输出固定枚举与是否误用同一个密钥，不泄漏任何片段', () => {
+  for (const [key, format] of [['', 'missing'], ['private secret', 'contains_whitespace'], ['"private-secret"', 'wrapped_in_quotes'],
+    ['https://example.com/private-secret', 'url_instead_of_key'], ['private-***-secret', 'possibly_masked'],
+    ['private-id.private-secret', 'id_secret_pair'], ['private-id.private-secret.private-signature', 'jwt_like'], ['private-secret', 'opaque']]) {
+    const result = safeSearchCredentialCheck({ zhipuKey: key, serpapiKey: 'different-secret' });
+    assert.deepEqual(result, { format, same_as_serpapi_key: false });
+    assert.doesNotMatch(JSON.stringify(result), /private-|example.com|signature/);
+  }
+  assert.equal(safeSearchCredentialCheck({ zhipuKey: 'same-private-key', serpapiKey: 'same-private-key' }).same_as_serpapi_key, true);
 });
 
 test('安全搜索诊断：错误正文受大小限制，未知代码和非智谱业务代码不输出', async () => {

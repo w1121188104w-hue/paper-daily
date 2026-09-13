@@ -6,6 +6,7 @@ import { makeSearchSources, journalSearchQuery } from '../src/services/searchSou
 import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
 import { makeBudgetedSearch, searchAllowance } from '../src/services/searchBudget.js';
 import { assertLibrary } from '../src/services/libraryValidation.js';
+import { safeSearchCredentialCheck } from '../src/services/searchDiagnostics.js';
 
 // Explicit manual GitHub-only smoke test: no paper writes, no translations, no deployment.
 export async function searchPreflight({ env = process.env, accountOnly = false, retryUnknown = false, policyLoader = loadSearchPolicy,
@@ -15,9 +16,12 @@ export async function searchPreflight({ env = process.env, accountOnly = false, 
   assertLibrary(typeof retryUnknown === 'boolean' && (!retryUnknown ||
     (!accountOnly && /^\d{1,20}$/.test(env.GITHUB_RUN_ID || ''))), '手动重试必须有明确模式及GitHub运行编号');
   const policy = await policyLoader();
+  // Fixed booleans/enums only: never print the key, its fragments, or its length.
+  const credentialCheck = safeSearchCredentialCheck({ zhipuKey: env.ZHIPU_API_KEY, serpapiKey: env.SERPAPI_API_KEY });
   const sources = sourceFactory({ zhipuKey: env.ZHIPU_API_KEY || '', serpapiKey: env.SERPAPI_API_KEY || '', zhipuEngine: policy.zhipu_engine });
   if (accountOnly) {
-    const report = { mode: 'account_only', ...await sources.accountDiagnostics(), search_calls: 0, papers_changed: 0, website_deployed: false };
+    const report = { mode: 'account_only', ...await sources.accountDiagnostics(), zhipu_credential_check: credentialCheck,
+      search_calls: 0, papers_changed: 0, website_deployed: false };
     log(JSON.stringify(report, null, 2));
     return 0; // Diagnostics completed; verified_free_account independently states validation outcome.
   }
@@ -34,6 +38,7 @@ export async function searchPreflight({ env = process.env, accountOnly = false, 
   const result = await search.run({ provider: 'zhipu', query, taskId, zhipuMonthlyLimit: policy.zhipu_monthly_limit });
   const allowance = searchAllowance(search.state(), { provider: 'zhipu', zhipuMonthlyLimit: policy.zhipu_monthly_limit });
   const report = { status: result.result ? 'success' : 'incomplete', zhipu_engine: policy.zhipu_engine,
+    zhipu_credential_check: credentialCheck,
     zhipu_request_sent: result.called, zhipu_block_reason: result.reason ?? null,
     zhipu_manual_retry: retryUnknown,
     zhipu_diagnostic: result.diagnostic ?? null,
