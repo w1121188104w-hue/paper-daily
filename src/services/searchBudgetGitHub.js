@@ -14,7 +14,7 @@ export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetc
   async function api(endpoint, method = 'GET', body) {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const response = await fetchImpl(`https://api.github.com/repos/${repository}/${endpoint}`, {
+      const response = await fetchImpl(`https://api.github.com/repos/${repository}${endpoint ? `/${endpoint}` : ''}`, {
         method, redirect: 'error', signal: controller.signal,
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json',
           'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
@@ -28,7 +28,7 @@ export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetc
         size += value.length; assertLibrary(size <= 8000000, '搜索记账响应过大'); chunks.push(value); }
       } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
       return JSON.parse(Buffer.concat(chunks).toString('utf8'));
-    } catch { throw new Error('SEARCH_LEDGER_CHECKPOINT_FAILED'); }
+    } catch { const error = new Error('SEARCH_LEDGER_CHECKPOINT_FAILED'); error.code = 'SEARCH_LEDGER_CHECKPOINT_FAILED'; throw error; }
     finally { clearTimeout(timer); }
   }
   const contentEndpoint = `contents/${SEARCH_LEDGER_PATH}`;

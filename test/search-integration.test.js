@@ -115,6 +115,28 @@ test('远端搜索账本：已存在分支却丢失账本时停止，禁止将�
     url.includes('/git/ref/') ? new Response(JSON.stringify({ object: { sha: 'a'.repeat(40) } })) : new Response('', { status: 404 }) });
   await assert.rejects(ledger.read({ initialize: true }));
 });
+
+test('远端搜索账本：首次创建使用无尾斜杠仓库地址，分支建立后才能预占', async () => {
+  const calls = [], base = 'https://api.github.com/repos/w1121188104w-hue/paper-daily';
+  const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {
+    calls.push({ url, method: init.method });
+    if (url.endsWith('/')) return new Response('', { status: 404 }); // GitHub rejects the former root endpoint.
+    if (url === base) return new Response(JSON.stringify({ default_branch: 'master' }));
+    if (url === `${base}/git/ref/heads/master`) return new Response(JSON.stringify({ object: { sha: 'a'.repeat(40) } }));
+    if (url === `${base}/git/refs` && init.method === 'POST') {
+      const body = JSON.parse(init.body); assert.equal(body.ref, 'refs/heads/codex/search-ledger');
+      assert.equal(body.sha, 'a'.repeat(40)); return new Response(JSON.stringify({ ref: body.ref }));
+    }
+    if (url === `${base}/contents/data/search-budget.json` && init.method === 'PUT') {
+      const body = JSON.parse(init.body); assert.equal(body.branch, 'codex/search-ledger'); assert.equal('sha' in body, false);
+      return new Response(JSON.stringify({ content: { sha: 'b'.repeat(40) } }));
+    }
+    return new Response('', { status: 404 });
+  } });
+  const state = await ledger.read({ initialize: true }); assert.deepEqual(state, emptySearchBudget());
+  await ledger.persist(reserveSearchRequest(state, { provider: 'zhipu', query: 'q', taskId: 'task', now: new Date(at), zhipuMonthlyLimit: 2000 }).state);
+  assert.equal(calls.at(-1).method, 'PUT'); assert.ok(calls.some(row => row.url === base));
+});
 test('密钥验证：先查免费账户，再远端预记账，仅调用一次Pro且不输出密钥', async () => {
   const events = [], outputs = [];
   const result = await searchPreflight({ env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily',
