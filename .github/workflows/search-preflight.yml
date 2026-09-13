@@ -1,0 +1,57 @@
+{
+  "name": "Search API preflight (no publication)",
+  "on": {
+    "workflow_dispatch": {}
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "concurrency": {
+    "group": "journal-production",
+    "cancel-in-progress": false
+  },
+  "jobs": {
+    "preflight": {
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 10,
+      "permissions": {
+        "contents": "write"
+      },
+      "steps": [
+        {
+          "name": "Checkout reviewed search code only",
+          "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "with": {
+            "ref": "d6f3c3daafb0d9383ad32912bc51d068dd599892",
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Set up Node.js 24",
+          "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "with": {
+            "node-version": "24",
+            "package-manager-cache": false
+          }
+        },
+        {
+          "name": "Install locked dependencies without lifecycle scripts",
+          "run": "npm ci --ignore-scripts"
+        },
+        {
+          "name": "Run offline tests before accessing credentials",
+          "run": "npm test"
+        },
+        {
+          "name": "Check free SerpAPI account and one budgeted Pro catalog query",
+          "env": {
+            "ZHIPU_API_KEY": "${{ secrets.ZHIPU_API_KEY }}",
+            "SERPAPI_API_KEY": "${{ secrets.SERPAPI_API_KEY }}",
+            "GITHUB_TOKEN": "${{ github.token }}"
+          },
+          "run": "node scripts/search-preflight.js --run"
+        }
+      ]
+    }
+  }
+}
