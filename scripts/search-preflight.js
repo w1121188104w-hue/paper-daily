@@ -8,12 +8,17 @@ import { makeBudgetedSearch, searchAllowance } from '../src/services/searchBudge
 import { assertLibrary } from '../src/services/libraryValidation.js';
 
 // Explicit manual GitHub-only smoke test: no paper writes, no translations, no deployment.
-export async function searchPreflight({ env = process.env, policyLoader = loadSearchPolicy,
+export async function searchPreflight({ env = process.env, accountOnly = false, policyLoader = loadSearchPolicy,
   sourceFactory = makeSearchSources, ledgerFactory = makeSearchBudgetGitHub, log = console.log } = {}) {
   assertLibrary(env.GITHUB_ACTIONS === 'true' && env.GITHUB_REPOSITORY === 'w1121188104w-hue/paper-daily' &&
     env.GITHUB_EVENT_NAME === 'workflow_dispatch', '搜索密钥验证只能由明确的GitHub手动任务执行');
   const policy = await policyLoader();
   const sources = sourceFactory({ zhipuKey: env.ZHIPU_API_KEY || '', serpapiKey: env.SERPAPI_API_KEY || '', zhipuEngine: policy.zhipu_engine });
+  if (accountOnly) {
+    const report = { mode: 'account_only', ...await sources.accountDiagnostics(), search_calls: 0, papers_changed: 0, website_deployed: false };
+    log(JSON.stringify(report, null, 2));
+    return 0; // Diagnostics completed; verified_free_account independently states validation outcome.
+  }
   // Read-only account request is free. Only the approved projection survives this boundary.
   const account = await sources.account();
   const ledger = ledgerFactory({ token: env.GITHUB_TOKEN, repositoryName: env.GITHUB_REPOSITORY });
@@ -35,6 +40,7 @@ export async function searchPreflight({ env = process.env, policyLoader = loadSe
   return report.status === 'success' ? 0 : 1;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  try { assertLibrary(process.argv.slice(2).join(' ') === '--run', '必须显式指定 --run'); process.exitCode = await searchPreflight(); }
-  catch { console.error('SEARCH_PREFLIGHT_FAILED：验证或记账未完成；没有输出密钥、账户信息或远端错误正文。'); process.exitCode = 1; }
+  try { const option = process.argv.slice(2).join(' '); assertLibrary(['--run', '--account-only'].includes(option), '必须显式指定验证模式');
+    process.exitCode = await searchPreflight({ accountOnly: option === '--account-only' }); }
+  catch (error) { console.error(`SEARCH_PREFLIGHT_FAILED：${/^[A-Z_]{3,50}$/.test(error.code || '') ? error.code : 'CHECK_FAILED'}；没有输出密钥、账户信息或远端错误正文。`); process.exitCode = 1; }
 }

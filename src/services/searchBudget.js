@@ -30,6 +30,20 @@ export function validateSearchBudget(state) {
 }
 
 // Only this allowlisted projection may be kept from /account.json: its raw response echoes the API key.
+export function safeSerpAccountDiagnostics(data, checkedAt) {
+  const number = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1000000 ? value : null;
+  const renewal = data?.plan_renewal_date;
+  let verified = false;
+  try { safeSerpAccount(data, checkedAt); verified = true; } catch { /* Report safe shape diagnostics, never raw account output. */ }
+  return { verified_free_account: verified,
+    account_status: ['Active', 'Inactive', 'Suspended', 'Disabled'].includes(data?.account_status) ? data.account_status : 'unknown',
+    plan_monthly_price: number(data?.plan_monthly_price), monthly_limit: number(data?.searches_per_month),
+    remaining: number(data?.plan_searches_left), used: number(data?.this_month_usage), extra_credits: number(data?.extra_credits),
+    renewal_format: renewal == null ? 'missing' : /^\d{4}-\d{2}-\d{2}$/.test(renewal) ? 'date_only' :
+      /^\d{4}-\d{2}-\d{2}T/.test(renewal) ? 'iso' : /^\d{4}-\d{2}-\d{2} /.test(renewal) ? 'space_separated' : 'unknown',
+    renewal_parseable: typeof renewal === 'string' && /^\d{4}-\d{2}-\d{2}/.test(renewal) && Number.isFinite(Date.parse(renewal)),
+    renewal_is_future: typeof renewal === 'string' && /^\d{4}-\d{2}-\d{2}/.test(renewal) && Date.parse(renewal) > Date.parse(checkedAt) };
+}
 export function safeSerpAccount(data, checkedAt) {
   assertLibrary(isIsoTime(checkedAt) && isObject(data) && data.account_status === 'Active' && data.plan_monthly_price === 0 &&
     isCount(data.searches_per_month) && data.searches_per_month > 0 && data.searches_per_month <= SERPAPI_MONTHLY_LIMIT &&

@@ -10,7 +10,7 @@ import { readSearchCatalog, searchJournalCatalog, catalogSearchQuery, catalogMon
 import { repairPaperMetadata, fillMissingMetadata } from '../src/services/searchMetadata.js';
 import { loadSearchPolicy, validateSearchPolicy } from '../src/services/searchPolicy.js';
 import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
-import { emptySearchBudget, reserveSearchRequest } from '../src/services/searchBudget.js';
+import { emptySearchBudget, reserveSearchRequest, safeSerpAccountDiagnostics } from '../src/services/searchBudget.js';
 import { searchPreflight } from '../scripts/search-preflight.js';
 const config = await loadJournalConfig(), journal = config.journals.find(row => row.key === 'AER');
 const at = '2026-09-13T02:00:00.000Z', window = { fromDate: '2026-07-16', toDate: '2026-09-13' };
@@ -125,4 +125,18 @@ test('密钥验证：先查免费账户，再远端预记账，仅调用一次Pr
     ledgerFactory: () => ({ read: async () => emptySearchBudget(), persist: async () => { events.push('checkpoint'); } }), log: row => outputs.push(row) });
   assert.equal(result, 0); assert.deepEqual(events, ['account', 'checkpoint', 'zhipu', 'checkpoint']);
   assert.ok(!outputs.join('').includes('private-')); assert.equal(JSON.parse(outputs[0]).papers_changed, 0);
+});
+
+test('账户只读诊断：仅允许枚举、数值和格式标记，禁止密钥邮箱及任意字符串', () => {
+  const result = safeSerpAccountDiagnostics({ api_key: 'private-secret', account_email: 'private@example.com', account_status: 'private-secret',
+    plan_monthly_price: 'private-secret', searches_per_month: 250, plan_searches_left: 250, this_month_usage: 0, extra_credits: 0,
+    plan_renewal_date: '2026-10-13 00:00:00 UTC' }, at);
+  assert.equal(result.verified_free_account, false); assert.equal(result.renewal_format, 'space_separated');
+  assert.equal(JSON.stringify(result).includes('private'), false);
+});
+test('账户只读诊断：不创建账本，不调用任何搜索接口', async () => {
+  const result = await searchPreflight({ env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily' },
+    accountOnly: true, sourceFactory: () => ({ accountDiagnostics: async () => ({ verified_free_account: false }), request: () => assert.fail('No search') }),
+    ledgerFactory: () => assert.fail('No ledger'), log: row => { assert.equal(JSON.parse(row).search_calls, 0); } });
+  assert.equal(result, 0);
 });

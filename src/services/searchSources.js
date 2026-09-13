@@ -1,5 +1,5 @@
 import { cleanText } from './paperModel.js';
-import { safeSerpAccount } from './searchBudget.js';
+import { safeSerpAccount, safeSerpAccountDiagnostics } from './searchBudget.js';
 import { EvidenceError } from './evidenceHttp.js';
 
 const fail = (condition, code) => { if (!condition) throw new EvidenceError(code); };
@@ -75,13 +75,16 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
       throw new EvidenceError(controller.signal.aborted ? 'TIMEOUT' : 'SEARCH_NETWORK_ERROR');
     } finally { clearTimeout(timer); }
   }
-  return {
-    async account() {
+  async function readAccount() {
       fail(credential(serpapiKey), 'MISSING_SERPAPI_KEY');
       const url = new URL('https://serpapi.com/account.json'); url.searchParams.set('api_key', serpapiKey);
-      const data = await json(url.href, { method: 'GET', headers: { Accept: 'application/json' } });
+      return json(url.href, { method: 'GET', headers: { Accept: 'application/json' } });
+  }
+  return {
+    async accountDiagnostics() { return safeSerpAccountDiagnostics(await readAccount(), now().toISOString()); },
+    async account() {
       // Do not log or persist data: /account.json includes the private API key.
-      return safeSerpAccount(data, now().toISOString());
+      return safeSerpAccount(await readAccount(), now().toISOString());
     },
     async request({ provider, query }) {
       fail(typeof query === 'string' && query.trim() && query.length <= 2000, 'INVALID_SEARCH_QUERY');
