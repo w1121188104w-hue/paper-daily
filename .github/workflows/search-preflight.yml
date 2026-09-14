@@ -3,8 +3,14 @@
   "on": {
     "workflow_dispatch": {
       "inputs": {
+        "journal": {
+          "description": "隔离试跑的单本期刊（不影响原账户检查模式）",
+          "type": "choice",
+          "options": ["AER", "QJE", "JAR"],
+          "default": "AER"
+        },
         "pilot": {
-          "description": "隔离AER联合试跑：最多6次Pro、4次免费Serp、3篇字段补全，不翻译不发布",
+          "description": "隔离单刊联合试跑：最多6次Pro、4次免费Serp、3篇字段补全，不翻译不发布",
           "type": "boolean",
           "default": false
         },
@@ -40,7 +46,7 @@
           "name": "Checkout reviewed search code only",
           "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
           "with": {
-            "ref": "33b627fbd1f0b1b8b07b65d1c9fe14cf9e98ee6a",
+            "ref": "344a3d1ac1a810e9866fc99661b46abd5b83a412",
             "persist-credentials": false
           }
         },
@@ -68,7 +74,8 @@
             "GITHUB_TOKEN": "${{ github.token }}",
             "ACCOUNT_ONLY": "${{ inputs.account_only }}",
             "RETRY_UNKNOWN": "${{ inputs.retry_unknown }}",
-            "PILOT": "${{ inputs.pilot }}"
+            "PILOT": "${{ inputs.pilot }}",
+            "PILOT_JOURNAL": "${{ inputs.journal }}"
           },
           "run": "if [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
         }
