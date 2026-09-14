@@ -3,6 +3,11 @@ import { normalizeDoi, normalizeSourceRecord, normalizeTitleForMatch, normalizeA
 import { authenticAbstract } from './publisherParsers.js';
 import { EvidenceError } from './evidenceHttp.js';
 const titleKey = value => normalizeTitleForMatch(value).replace(/\s/g, '');
+export function repecJournalUrl(doi, journal) {
+  const normalized = normalizeDoi(doi);
+  return journal.key === 'JPE' && /^10\.1086\/\d+$/.test(normalized)
+    ? `https://ideas.repec.org/a/ucp/jpolec/doi${normalized.replace('/', '-')}.html` : null;
+}
 export function supportedRepecUrl(value, journal) {
   try {
     const url = new URL(value);

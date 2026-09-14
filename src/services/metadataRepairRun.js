@@ -10,7 +10,7 @@ import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publis
 const fields = ['doi', 'authors', 'publication_month', 'abstract'];
 export const metadataRepairIssue = issue => (fields.includes(issue.field) && issue.reason === `missing_${issue.field}`) ||
   (issue.field === 'identity' && issue.reason === 'title_conflict');
-const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
+const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
 
 /** Second phase after discovery: explicit dependencies, no secret access, no LLM.
  * Only due missing fields and title conflicts are queried. Callers must provide the same budgeted

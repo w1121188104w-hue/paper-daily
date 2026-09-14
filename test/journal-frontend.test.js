@@ -270,6 +270,13 @@ test('作者来源差异可展开对照，保持来源顺序并将特殊文本�
   assert.ok(!elements.some(element => element.tagName === 'img'));
 });
 
+test('RePEc摘要来源使用原有页面样式显示并链接原记录', async t => {
+  const url = 'https://ideas.repec.org/a/ucp/jpolec/doi10.1086-740222.html';
+  const ui = await app(t, { data: payload({ papers: [paper({ sources: ['repec'], abstract_status: 'found', abstract_source: 'repec', abstract_source_url: url })] }) });
+  assert.ok(ui.get('paperList').textContent.includes('RePEc 期刊记录'));
+  assert.ok(descendants(ui.get('paperList')).some(e => e.href === url));
+});
+
 test('网页显示官网部分核对/受限与摘要真实来源，不把未知显示成零篇或生成摘要', async t => {
   const ui = await app(t,{ data: payload({ papers: [paper({ sources: ['publisher'],abstract_status: 'found',abstract_source: 'publisher',
     abstract_source_url: 'https://www.aeaweb.org/articles?id=10.1234/one' })],enrichment: {

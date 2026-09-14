@@ -2,7 +2,7 @@ import { assertLibrary, isObject, isIsoTime, isCount, stableJson } from './libra
 import { repairRequirements } from './masterList.js';
 
 export const REPAIR_STATUSES = ['pending', 'resolved', 'not_found', 'quota_exhausted', 'access_restricted', 'source_unavailable', 'identity_conflict'];
-const PROVIDERS = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
+const PROVIDERS = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
 export const emptyRepairState = () => ({ schema_version: 1, issues: {} });
 
 export function validateRepairState(state, papers) {

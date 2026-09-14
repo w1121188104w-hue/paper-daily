@@ -12,7 +12,7 @@ const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_categ
   'published_print_date', 'publication_date', 'volume', 'issue', 'pages'];
 const select = (value, fields) => Object.fromEntries(fields.map((key) => [key, value[key]]));
 const DATE_FIELDS = ['published_online_date', 'published_print_date', 'publication_date'];
-const publicSource = (source) => ['crossref', 'openalex', 'publisher', 'semanticscholar'].includes(source) ? source : null;
+const publicSource = (source) => ['crossref', 'openalex', 'publisher', 'semanticscholar', 'repec'].includes(source) ? source : null;
 function abstractInfo(paper, state) {
   const provenance = paper.provenance?.abstract_original;
   const record = paper.source_records.find(r => r.source === provenance?.source && r.source_id === provenance?.source_id && r.abstract === paper.abstract_original);

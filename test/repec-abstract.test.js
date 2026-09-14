@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadJournalConfig, findJournal } from '../src/services/journals.js';
-import { parseRepecAbstract, supportedRepecUrl } from '../src/services/repecAbstract.js';
+import { parseRepecAbstract, supportedRepecUrl, repecJournalUrl } from '../src/services/repecAbstract.js';
 import { evidenceHash } from '../src/services/evidenceHttp.js';
 import { mergePapers } from '../src/services/paperMerge.js';
 import { repairPaperMetadata } from '../src/services/searchMetadata.js';
@@ -20,6 +20,9 @@ function response(patch = {}) {
   return { body, url, fetched_at: at, sha256: evidenceHash(body) };
 }
 test('RePEc仅正式JPE记录，核对DOI标题期刊及双处原始摘要，不接受工作论文', () => {
+  assert.equal(repecJournalUrl(doi, journal), url);
+  assert.equal(repecJournalUrl('10.1234/other', journal), null);
+  assert.equal(repecJournalUrl(doi, { key: 'QJE' }), null);
   const record = parseRepecAbstract(response(), journal, expected);
   assert.equal(record.source, 'repec'); assert.equal(record.abstract, abstract); assert.equal(record.publication_date, '');
   for (const patch of [{ handle: 'RePEc:other:doi:10.1086/740222' }, { citation_title: 'Similar paper' },
@@ -28,7 +31,7 @@ test('RePEc仅正式JPE记录，核对DOI标题期刊及双处原始摘要，不
   for (const value of [url.replace('/a/', '/p/'), url + '?token=secret', url.replace('ideas.repec.org', 'example.com')]) assert.equal(supportedRepecUrl(value, journal), false);
   assert.throws(() => parseRepecAbstract(response(), journal, { ...expected, doi: '10.1086/999999' }));
 });
-test('搜索找到RePEc原文可补摘要并停止兜底，保留来源且不冒充独立发现', async () => {
+test('先直接核验RePEc原文补摘要，不消耗搜索，保留来源且不冒充独立发现', async () => {
   const record = parseRepecAbstract(response(), journal, expected);
   const old = mergePapers([{ ...record, source: 'crossref', source_id: doi, source_evidence: undefined, abstract: '', raw_abstract: '' }], { firstSeenDate: '2026-09-14', checkedAt: at }).papers[0];
   const absent = async () => { throw Object.assign(new Error(), { code: 'NOT_FOUND' }); };
@@ -38,10 +41,16 @@ test('搜索找到RePEc原文可补摘要并停止兜底，保留来源且不冒
       assert.equal(provider, 'zhipu'); calls++; return { called: true, result: { leads: [
         ...Array.from({ length: 11 }, () => ({ url: 'https://example.com/irrelevant' })), { url, snippet: 'Invented summary' }] } };
     } });
-  assert.equal(result.status, 'resolved'); assert.equal(calls, 1); assert.equal(result.paper.abstract_original, abstract);
+  assert.equal(result.status, 'resolved'); assert.equal(calls, 0); assert.equal(result.paper.abstract_original, abstract);
   assert.equal(result.paper.abstract_zh, ''); assert.equal(result.paper.abstract_translation_status, 'pending');
   validateMetadataRepairOnlyChange([old], [result.paper]);
   const entry = buildMasterList([result.paper], { generatedAt: at, policyVersion: 3 }).entries[0];
   assert.equal(entry.abstract_source, 'repec'); assert.equal(entry.abstract_source_url, url);
   assert.deepEqual(entry.discovery_sources, ['crossref']);
+  let repecCalls = 0;
+  const retried = await repairPaperMetadata(old, journal, { sources: { crossref: absent, openalex: absent, semanticscholar: absent,
+    publisherArticle: absent, repecArticle: async () => { if (++repecCalls === 1) return absent(); return record; } }, fields: ['abstract'],
+    search: async () => ({ called: true, result: { leads: [...Array.from({ length: 11 }, () => ({ url: 'https://example.com/irrelevant' })), { url }] } }) });
+  assert.equal(retried.status, 'resolved'); assert.equal(repecCalls, 2);
+  assert.equal(retried.attempts.find(a => a.source === 'zhipu').leads_checked, 12);
 });

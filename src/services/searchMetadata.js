@@ -7,7 +7,7 @@ import { paperSearchQuery, searchWithFallback, safeSearchLink } from './searchSo
 import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
-import { supportedRepecUrl } from './repecAbstract.js';
+import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -88,6 +88,18 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     } catch (error) {
       if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
       attempts.push({ source: 'publisher', status: safeCode(error) });
+    }
+  }
+  // A predictable URL is only a lookup candidate. The adapter still verifies
+  // journal, DOI, title, authors and matching original abstract fields.
+  const repecUrl = repecJournalUrl(current.doi, journal);
+  if (stillMissing().includes('abstract') && repecUrl && typeof sources.repecArticle === 'function') {
+    try {
+      const result = adopt(await sources.repecArticle({ ...current, url: repecUrl }, journal));
+      attempts.push({ source: 'repec', status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
+    } catch (error) {
+      if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
+      attempts.push({ source: 'repec', status: safeCode(error) });
     }
   }
   let searchResult = null;

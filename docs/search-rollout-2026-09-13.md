@@ -222,3 +222,15 @@ OUP 官方 RSS 发现并在临时副本新增 15 条有 DOI 和英文摘要、�
 本次搜索器是明确禁用联网的测试依赖，返回 `called:false`；报告中 zhipu/serpapi 的 source_unavailable 是兜底入口被跳过的状态，不代表实际 API 调用或额度消耗，也不能视为已搜索未找到。收费搜索 0、翻译 0。
 
 副本已实际保存并重读三条摘要待办，status=source_unavailable、attempt_count=1、next_retry_at=2026-09-15T08:34:51.857Z（北京时间次日 16:34）。当前到期任务 0，三篇摘要翻译任务 0，原库全部引用文件哈希及 current 指针核对未变。其他未处理论文可能仍到期，不能据此声称整库无需重试。已验证的是官网尝试接入与失败持久化，并非摘要真实补全成功；仍需另找可访问来源验证成功路径。
+
+## 真实搜索排查与首个旧缺摘要补全成功
+
+手动 GitHub 任务 34850616509 实际调用 Pro 3、SerpAPI 6；三篇仍缺摘要，累计账本 Pro 28/2000、SerpAPI 22/250。诊断任务 34851660086 使用新增安全阶段日志，实际调用 Pro 3、SerpAPI 4，累计 31/2000、26/250：智谱返回的线索均被旧出版社域名规则过滤，部分返回 49 条但当时只检查前 10 条；Scholar 找到出版社页面但 ACCESS_RESTRICTED，两个旧 Google 未知结果处在冷却期，没有重复请求。
+
+后续修复了线索检查上限（最多 50 条，仍有公共 HTTP 总预算）、智谱短标题查询和 Google 完整标题查询，并新增严格的 RePEc JPE 正式期刊记录解析。任务 34852544495 验证全线索检查生效，但搜索仍未返回可用 RePEc 记录；一次 Google TIMEOUT，其余官网访问受限。该轮 Pro 3、SerpAPI 6，最新已核实月累计 Pro 34/2000、SerpAPI 32/250。未伪造摘要，也未修改生产库。
+
+随后将已核实的 JPE DOI→RePEc 期刊 URL 规则接为搜索前的直接查询。推导 URL 只是候选，必须逐项核对 RePEc handle 中的 DOI、URL DOI、标题、期刊、出版社、redif-article 类型、作者，以及正文摘要与 citation_abstract 一致；工作论文和任意外站不能使用。来源单独标记 repec，不冒充出版社或第四个独立发现接口。直接查询失败仍进入原真实搜索兜底。
+
+真实临时副本 `paper-search-pilot-5duhol` 中，`10.1086/740222`（Do Mergers and Acquisitions Improve Efficiency? Evidence from Power Plants）补全成功：Crossref/OpenAlex 无摘要，Semantic Scholar NOT_FOUND，出版社 ACCESS_RESTRICTED，RePEc filled。原始英文摘要 744 字符，来源为 https://ideas.repec.org/a/ucp/jpolec/doi10.1086-740222.html 。已实际保存、重读，摘要翻译任务存在；立即复跑 skipped，原库全部文件哈希和指针不变。本次收费搜索 0、翻译调用 0。这里只验证一篇真实成功，不代表三篇或全库都补齐。
+
+网页沿用原布局增加 RePEc 来源名称和原始链接。回归覆盖直接补全成功不搜索、直接查询失败后搜索找到第 12 条有效线索、身份/版本/摘要矛盾拒绝、旧版本兼容和来源显示。下一步接入受总预算和持久化重试保护的每日统一流程，并在正式切换前进行隔离全刊验收；当前生产开关仍关闭。
