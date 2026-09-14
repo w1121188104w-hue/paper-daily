@@ -3,6 +3,11 @@
   "on": {
     "workflow_dispatch": {
       "inputs": {
+        "abstract_search": {
+          "description": "三篇JPE旧缺摘要真实搜索：最多6次Pro、6次免费Serp，不翻译不发布",
+          "type": "boolean",
+          "default": false
+        },
         "metadata_batch": {
           "description": "缺失字段试跑批量；不增加收费搜索上限",
           "type": "choice",
@@ -52,7 +57,7 @@
           "name": "Checkout reviewed search code only",
           "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
           "with": {
-            "ref": "1c97d177eeda35d9ce290e2b19818917d7b5b70d",
+            "ref": "446c7e18610bb3d2bcd1fbd1ba71314a56643e4b",
             "persist-credentials": false
           }
         },
@@ -75,6 +80,7 @@
         {
           "name": "Run explicitly selected bounded verification mode (no publication)",
           "env": {
+            "ABSTRACT_SEARCH": "${{ inputs.abstract_search }}",
             "ZHIPU_API_KEY": "${{ secrets.ZHIPU_API_KEY }}",
             "SERPAPI_API_KEY": "${{ secrets.SERPAPI_API_KEY }}",
             "GITHUB_TOKEN": "${{ github.token }}",
@@ -84,7 +90,7 @@
             "PILOT_JOURNAL": "${{ inputs.journal }}",
             "PILOT_METADATA_BATCH": "${{ inputs.metadata_batch }}"
           },
-          "run": "if [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
+          "run": "if [ \"$ABSTRACT_SEARCH\" = \"true\" ]; then\n  node scripts/abstract-search-pilot.js --run\nelif [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
         }
       ]
     }
