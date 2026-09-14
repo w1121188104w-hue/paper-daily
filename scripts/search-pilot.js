@@ -112,13 +112,21 @@ export async function runIsolatedPilot(config, { repositoryRoot, tempParent, htt
       collection: { status: collected.status, discovery: collected.discovery_summary || null, stats: collected.stats || null,
         sources: collected.run?.sources || [] },
       catalog: { status: catalogs.status, stats: catalogs.stats || null, queries: catalogs.report?.search_queries || [],
+        added_records: (catalogs.report?.journals || []).flatMap(j => (j.entries || []).filter(e => e.status === 'added').map(e => ({
+          journal: j.journal_key, title: e.title, doi: e.doi || null, authors: e.authors, original_date: e.date || null,
+          window_status: e.window_status, official_url: e.url, evidence: e.evidence, search_provider: e.search_provider }))),
         journals: (catalogs.report?.journals || []).map(j => ({ journal: j.journal_key, observed: j.official_observed_count,
           existing: j.matched_count, added: j.added_count, pending: j.pending_count,
           attempt_statuses: Object.fromEntries([...new Set(j.attempts.map(a => a.status))].map(s => [s, j.attempts.filter(a => a.status === s).length])) })) },
-      metadata: { status: repaired.status, stats: repaired.stats || null, repairs: repaired.report?.repairs || [] },
+      metadata: { status: repaired.status, stats: repaired.stats || null,
+        papers_with_fields_filled: (repaired.report?.repairs || []).filter(r => r.changed_fields.length).length,
+        repairs: repaired.report?.repairs || [] },
       selected_journal_master: after.masterList.journals.find(j => j.journal === PILOT_LIMITS.journal),
       selected_journal_unresolved: unresolved,
       new_english_abstracts: newAbstracts.length, new_abstracts_queued: newAbstracts.filter(p => allTasks.some(t => t.paper_id === p.id && t.field === 'abstract')).length,
+      new_abstract_records: newAbstracts.map(p => { const entry = after.masterList.entries.find(e => e.id === p.id);
+        return { doi: p.doi || null, title: p.title_original, source: entry.abstract_source, source_url: entry.abstract_source_url,
+          newly_discovered_paper: !oldById.has(p.id) }; }),
       selected_journal_translation_ready: eligible.ready.tasks.filter(t => journalIds.has(t.paper_id)).length };
   } finally { await copy.verifyOriginal(); }
 }

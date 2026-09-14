@@ -87,3 +87,26 @@ test('不得从本地或定时触发入口读取搜索密钥', async () => {
   await assert.rejects(searchPilot({ env: {} }));
   await assert.rejects(searchPilot({ env: { GITHUB_ACTIONS: 'true', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily', GITHUB_EVENT_NAME: 'schedule' } }));
 });
+
+test('真实原文新增记录保留可核对的目录证据与边界日期，摘要进入队列但不输出摘要正文', async t => {
+  const { config, repo, parent } = await seed(t);
+  const title = 'Trade and the allocation of economic resources', url = 'https://www.aeaweb.org/articles?id=10.1257/pilot.example';
+  const abstract = 'We study the allocation of economic resources across firms and sectors using a quantitative model and newly assembled microeconomic data.';
+  let directory;
+  const report = await runIsolatedPilot(config, { repositoryRoot: repo, tempParent: parent,
+    collect: async () => ({ status: 'partial_failure' }), repair: async () => ({ status: 'skipped' }),
+    catalog: async (cfg, options) => {
+      directory = path.resolve(options.root, '../..');
+      return runCatalogDiscovery(cfg, { ...options, now: () => new Date('2026-09-14T01:00:00Z'),
+        http: { request: () => assert.fail() }, search: async () => ({ called: false, reason: 'pilot_request_limit' }),
+        discover: async () => ({ leads: [{ title, doi: '10.1257/pilot.example', url, date: '2026-07', authors: ['Alice Smith'], abstract,
+          journal_confirmed: true, evidence: { url, scope_url: 'https://www.aeaweb.org/issues/123', fetched_at: '2026-09-14T01:00:00.000Z',
+            method: 'citation_meta_abstract', body_sha256: 'a'.repeat(64) } }], attempts: [] }) });
+    } });
+  t.after(async () => { assert.equal(path.dirname(directory), parent); assert.ok(path.basename(directory).startsWith('paper-search-pilot-')); await fs.rm(directory, { recursive: true, force: true }); });
+  assert.equal(report.catalog.added_records.length, 1); assert.equal(report.catalog.added_records[0].original_date, '2026-07');
+  assert.notEqual(report.catalog.added_records[0].window_status, 'inside');
+  assert.equal(report.new_english_abstracts, 1); assert.equal(report.new_abstracts_queued, 1);
+  assert.equal(report.new_abstract_records[0].source_url, url); assert.equal(report.new_abstract_records[0].newly_discovered_paper, true);
+  assert.ok(!JSON.stringify(report).includes(abstract)); assert.equal(report.metadata.papers_with_fields_filled, 0);
+});
