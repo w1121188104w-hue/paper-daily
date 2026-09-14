@@ -132,26 +132,34 @@ export async function searchWithFallback({ queryFor, search, verifyLead, maxLead
     let result;
     try { result = await search({ provider, query: queryFor(provider) }); }
     catch (error) { if (['EVIDENCE_STORAGE_ERROR', 'SEARCH_LEDGER_CHECKPOINT_FAILED'].includes(error?.code)) throw error;
-      incomplete = true; attempts.push({ provider, status: 'source_unavailable' }); continue; }
+      incomplete = true; attempts.push({ provider, status: 'source_unavailable', stage: 'search_request', diagnostic: safeSearchDiagnostic(error, provider) }); continue; }
     if (!result.called) {
       const status = result.reason === 'quota_exhausted' ? 'quota_exhausted' : 'source_unavailable';
       blockedQuota ||= provider.startsWith('serpapi_') && status === 'quota_exhausted'; incomplete = true;
-      attempts.push({ provider, status });
+      attempts.push({ provider, status, called: false, stage: 'search_not_called' });
       // Both SerpAPI engines use one balance; do not re-query an exhausted account.
       if (provider.startsWith('serpapi_') && status === 'quota_exhausted') break;
       continue;
     }
-    if (!Array.isArray(result.result?.leads)) { incomplete = true; attempts.push({ provider, status: 'source_unavailable' }); continue; }
+    if (!Array.isArray(result.result?.leads)) { incomplete = true; attempts.push({ provider, status: 'source_unavailable', called: true,
+      stage: 'search_response', diagnostic: safeSearchDiagnostic(result.diagnostic, provider) }); continue; }
     let confirmed = null, restricted = false;
+    const diagnostics = [];
     for (const lead of result.result.leads.slice(0, maxLeadsPerSource)) {
       try {
         const evidence = await verifyLead(lead);
+        diagnostics.push({ status: evidence?.resolved ? 'confirmed' : ['NOT_OFFICIAL_HOST', 'UNSAFE_LINK', 'UNRESOLVED_FIELDS'].includes(evidence?.reason) ? evidence.reason : 'not_verified' });
         if (evidence?.resolved === true && evidence.record?.source_evidence && evidence.record?.title &&
             !Object.hasOwn(evidence.record, 'snippet')) { confirmed = evidence; break; }
-      } catch (error) { if (error?.code === 'EVIDENCE_STORAGE_ERROR') throw error; restricted = true; }
+      } catch (error) { if (error?.code === 'EVIDENCE_STORAGE_ERROR') throw error; restricted = true;
+        const code = ['ACCESS_RESTRICTED', 'RATE_LIMITED', 'ROBOTS_UNAVAILABLE', 'ROBOTS_DISALLOWED', 'REDIRECT_RESTRICTED',
+          'UNVERIFIED_IDENTITY', 'NO_ABSTRACT', 'PUBLISHER_NO_ABSTRACT', 'JOURNAL_MISMATCH', 'REQUEST_LIMIT', 'TIMEOUT', 'NOT_FOUND', 'UNSAFE_URL'].includes(error?.code) ? error.code : 'PAGE_UNAVAILABLE';
+        diagnostics.push({ status: code }); }
     }
-    if (confirmed) { attempts.push({ provider, status: 'resolved' }); return { status: 'resolved', confirmed, attempts }; }
-    incomplete ||= restricted; attempts.push({ provider, status: restricted ? 'access_restricted' : 'not_found' });
+    const detail = { called: true, stage: 'original_page_verification', leads_returned: result.result.leads.length, leads_checked: diagnostics.length,
+      lead_statuses: Object.fromEntries([...new Set(diagnostics.map(row => row.status))].map(status => [status, diagnostics.filter(row => row.status === status).length])) };
+    if (confirmed) { attempts.push({ provider, status: 'resolved', ...detail }); return { status: 'resolved', confirmed, attempts }; }
+    incomplete ||= restricted; attempts.push({ provider, status: restricted ? 'access_restricted' : 'not_found', ...detail });
   }
   return { status: blockedQuota ? 'quota_exhausted' : incomplete ? 'source_unavailable' : 'not_found', confirmed: null, attempts };
 }

@@ -2,6 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { makeSearchSources, searchLeads, safeSearchLink, paperSearchQuery, journalSearchQuery, searchWithFallback } from '../src/services/searchSources.js';
 import { safeSearchDiagnostic, safeSearchCredentialCheck } from '../src/services/searchDiagnostics.js';
+test('搜索诊断区分接口、来源过滤和页面错误，禁止输出任意错误正文或链接', async () => {
+  const result = await searchWithFallback({ queryFor: () => 'test', search: async ({ provider }) => provider === 'zhipu' ?
+    { called: true, diagnostic: { code: 'TIMEOUT', http_status: null, message: 'secret' } } :
+    { called: true, result: { leads: [{ url: 'https://example.com/secret' }, { url: 'https://example.org/' }] } },
+    verifyLead: async lead => {
+      if (lead.url.includes('example.com')) return { resolved: false, reason: 'NOT_OFFICIAL_HOST' };
+      throw Object.assign(new Error('secret body'), { code: 'ROBOTS_DISALLOWED' });
+    } });
+  assert.equal(result.attempts[0].stage, 'search_response');
+  assert.equal(result.attempts[0].diagnostic.code, 'TIMEOUT');
+  assert.deepEqual(result.attempts[1].lead_statuses, { NOT_OFFICIAL_HOST: 1, ROBOTS_DISALLOWED: 1 });
+  assert.equal(result.attempts[1].leads_returned, 2);
+  assert.equal(JSON.stringify(result).includes('secret'), false);
+});
 const at = '2026-09-12T01:00:00.000Z';
 const response = data => new Response(JSON.stringify(data));
 const lead = { title: 'Published research paper', link: 'https://www.aeaweb.org/articles?id=10.1257/example', content: 'This is a search snippet, not an original abstract.' };

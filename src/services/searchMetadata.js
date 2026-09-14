@@ -95,13 +95,14 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
       verifyLead: async lead => {
         const url = safeSearchLink(lead.url);
-        if (!url || !publisherFor(journal).hosts.includes(new URL(url).hostname)) return null;
+        if (!url) return { resolved: false, reason: 'UNSAFE_LINK' };
+        if (!publisherFor(journal).hosts.includes(new URL(url).hostname)) return { resolved: false, reason: 'NOT_OFFICIAL_HOST' };
         // Only the fetched ORIGINAL official article is parsed. lead.snippet is deliberately unused.
         const record = await sources.publisherArticle({ ...current, url }, journal);
         adopt(record);
-        return { resolved: !stillMissing().length, record };
+        return { resolved: !stillMissing().length, reason: 'UNRESOLVED_FIELDS', record };
       } });
-    attempts.push(...searchResult.attempts.map(row => ({ source: row.provider, status: row.status })));
+    attempts.push(...searchResult.attempts.map(({ provider, ...row }) => ({ source: provider, ...row })));
   }
   return { paper: current, changed_fields: [...changed], missing_fields: stillMissing(), attempts,
     identity_resolution: titleConsensusFor(current)?.summary || null,
