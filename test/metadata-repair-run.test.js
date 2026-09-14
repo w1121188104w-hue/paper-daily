@@ -109,3 +109,40 @@ test('字段记账或存储失败：不绕过额度、不切换正式指针', as
     search: absent, beforePublish: () => { throw new Error('Simulated storage interruption'); } }));
   assert.equal((await readJournalLibrary({ ...dirs, config })).pointerText, before.pointerText);
 });
+
+test('跨日重启：24小时内不重试，到期后结构化来源补到真实摘要，成功后不再搜索', async t => {
+  const dirs = await seed(t); let clock = new Date(at), searches = 0, lookups = 0, available = false;
+  const options = () => ({ ...dirs, now: () => clock, sources: sources({ crossref: async () => {
+    lookups++; const row = record('crossref', { abstract: available ? abstract : '', last_checked_at: clock.toISOString() });
+    row.source_evidence.fetched_at = clock.toISOString(); return row;
+  } }), search: async () => { searches++; return { called: true, result: { leads: [] } }; } });
+  await runMetadataRepair(config, options());
+  const initial = await readJournalLibrary({ ...dirs, config });
+  assert.equal(searches, 3); assert.equal(initial.papers[0].abstract_original, '');
+  clock = new Date(Date.parse(at) + 86400000 - 1);
+  assert.equal((await runMetadataRepair(config, options())).status, 'skipped');
+  assert.equal(lookups, 1); assert.equal(searches, 3);
+  clock = new Date(Date.parse(at) + 86400000); available = true;
+  assert.equal((await runMetadataRepair(config, options())).stats.abstracts_filled, 1);
+  const filled = await readJournalLibrary({ ...dirs, config });
+  assert.equal(filled.papers[0].abstract_original, abstract); assert.equal(filled.papers[0].abstract_zh, '');
+  assert.equal(filled.papers[0].id, initial.papers[0].id); assert.equal(filled.papers[0].discovered_at, initial.papers[0].discovered_at);
+  assert.equal(filled.queue.tasks.filter(task => task.field === 'abstract').length, 1);
+  assert.equal(searches, 3); assert.equal(lookups, 2);
+  clock = new Date(Date.parse(at) + 5 * 86400000);
+  assert.equal((await runMetadataRepair(config, options())).status, 'skipped');
+  assert.equal(searches, 3); assert.equal(lookups, 2);
+});
+
+test('连续未找到退避：第一次1天、第二次3天，不因进程重启丢失冷却', async t => {
+  const dirs = await seed(t); let clock = new Date(at), calls = 0;
+  const options = () => ({ ...dirs, now: () => clock, sources: sources(), search: async () => { calls++; return { called: true, result: { leads: [] } }; } });
+  await runMetadataRepair(config, options());
+  clock = new Date(Date.parse(at) + 86400000);
+  await runMetadataRepair(config, options());
+  const saved = await readJournalLibrary({ ...dirs, config });
+  assert.ok(Object.values(saved.repairState.issues).every(issue => issue.attempt_count === 2 && Date.parse(issue.next_retry_at) === Date.parse(at) + 4 * 86400000));
+  clock = new Date(Date.parse(at) + 3 * 86400000);
+  assert.equal((await runMetadataRepair(config, options())).status, 'skipped');
+  assert.equal(calls, 6);
+});
