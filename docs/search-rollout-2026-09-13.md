@@ -115,3 +115,26 @@
 本次共新增 5 篇具有英文摘要的记录并产生 5 项摘要翻译待办；不等同于第二阶段修复了 5 篇。第二阶段选择的 3 篇仍缺摘要，Crossref/OpenAlex 未提供新字段、Semantic Scholar 限流、搜索未能解决且触达试跑 SerpAPI 上限。`papers_changed=3` 仅表示来源证据记录发生变化，`changed_fields` 全空，实际补齐字段的论文数为 0。继续保留缺失/重试状态，不生成摘要。
 
 真实调用：Pro 6 次、免费 SerpAPI 4 次。远端账本本月保守累计 Pro 10/2000（包含旧密钥 3 次计费不明），SerpAPI 4/250。正式库所有复制文件及指针哈希未变，DeepSeek 调用 0，网站部署 0。生产自动采集逻辑仍未切换。
+
+## 2026-09-14 新增记录明细复核
+
+第二轮任务 [34798085402](https://github.com/w1121188104w-hue/paper-daily/actions/runs/34798085402) 成功完成，固定代码 `33b627fbd1f0b1b8b07b65d1c9fe14cf9e98ee6a`。**354 项测试全部通过**。此次报告增加新增论文的标题、DOI、作者、原日期、窗口状态、官方页面及证据哈希；原摘要正文不写进控制台。报告另列实际有字段补齐的论文数，避免将仅追加来源证据当成补全成功。
+
+两轮均由同一只读开发库创建独立副本，不是在第一轮副本基础上追加。第二轮再次发现相同 8 条，因此两轮不能相加成 16 篇。逐条核对得到：
+
+| 标题 | DOI | 原始日期 | 官网可提取英文摘要 |
+| --- | --- | --- | --- |
+| A Welfare Analysis of Policies Impacting Climate Change | 10.1257/aer.20250166 | 2026-07 | 有 |
+| Monetary Policy without Commitment | 10.1257/aer.20241925 | 2026-07 | 有 |
+| Market Opacity and Fragility: Why Liquidity Evaporates When It Is Most Needed | 10.1257/aer.20231613 | 2026-07 | 有 |
+| Understanding High-Wage Firms: Monopoly, Monopsony, and Bargaining Power | 10.1257/aer.20230344 | 2026-07 | 有 |
+| Self-Fulfilling Fluctuations in HANK Economies | 10.1257/aer.20240642 | 2026-07 | 有 |
+| Nobel Lecture: The Past and Future of Innovation: Can Progress Be Sustained? | 10.1257/aer.116.7.2299 | 2026-07 | 未提取到 |
+| Nobel Lecture: The Economics of Creative Destruction | 10.1257/aer.116.7.2324 | 2026-07 | 未提取到 |
+| Nobel Lecture: Creative Destruction and Economic Growth | 10.1257/aer.116.7.2357 | 2026-07 | 未提取到 |
+
+全部新增条目的 `window_status` 都是 `boundary_date_uncertain`，不是能确定在 60 天内的漏收。官方论文证据可按 `https://www.aeaweb.org/articles?id=<DOI>` 追溯。5 个真实英文摘要全部来自官网原始正文，均进入原摘要翻译队列，本轮并未翻译。剩余 3 条实际是 Nobel Lecture；目前保守默认分类仍将其保留为候选，不能直接声称均为常规研究论文。未提取到摘要不等于已证明出版社永久不提供摘要，仍保留自动重试。
+
+两轮真实调用合计：Pro 12 次、SerpAPI 免费搜索 8 次。远端账本交叉核对：智谱成功 13 次、旧密钥结果不明 3 次（保守总计 16/2000）；SerpAPI Scholar 成功 4 次、Google 成功 4 次（共享总计 8/250）。没有付费升级、充值、重配密钥或调用 DeepSeek。
+
+已验收的是 AER 小批完整运行顺序、真实三源独立查询、官网新增记录写入副本、缺失字段失败保留、真实原文入翻译队列、远端额度保护。仍未验收全期刊完整覆盖、缺失摘要的真实补全成功样例、演讲等文章类型精分以及正式每日增量流程；本版本不据此切换生产。后续先完善边界日期/文章类型口径并扩展其他期刊小批测试，再接生产自动化。
