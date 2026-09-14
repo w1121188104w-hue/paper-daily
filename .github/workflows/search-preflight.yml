@@ -3,6 +3,11 @@
   "on": {
     "workflow_dispatch": {
       "inputs": {
+        "pilot": {
+          "description": "隔离AER联合试跑：最多6次Pro、4次免费Serp、3篇字段补全，不翻译不发布",
+          "type": "boolean",
+          "default": false
+        },
         "account_only": {
           "description": "只读检查免费账户，不消耗任何搜索次数",
           "type": "boolean",
@@ -26,7 +31,7 @@
   "jobs": {
     "preflight": {
       "runs-on": "ubuntu-latest",
-      "timeout-minutes": 10,
+      "timeout-minutes": 15,
       "permissions": {
         "contents": "write"
       },
@@ -35,7 +40,7 @@
           "name": "Checkout reviewed search code only",
           "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
           "with": {
-            "ref": "4bbf83c41c912e9f497ff6a20982f0c5a60c34c1",
+            "ref": "216a99fb6857c07755daa5338f89b401170f3dae",
             "persist-credentials": false
           }
         },
@@ -56,15 +61,16 @@
           "run": "npm test"
         },
         {
-          "name": "Check free SerpAPI account and one budgeted Pro catalog query",
+          "name": "Run explicitly selected bounded verification mode (no publication)",
           "env": {
             "ZHIPU_API_KEY": "${{ secrets.ZHIPU_API_KEY }}",
             "SERPAPI_API_KEY": "${{ secrets.SERPAPI_API_KEY }}",
             "GITHUB_TOKEN": "${{ github.token }}",
             "ACCOUNT_ONLY": "${{ inputs.account_only }}",
-            "RETRY_UNKNOWN": "${{ inputs.retry_unknown }}"
+            "RETRY_UNKNOWN": "${{ inputs.retry_unknown }}",
+            "PILOT": "${{ inputs.pilot }}"
           },
-          "run": "if [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
+          "run": "if [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
         }
       ]
     }
