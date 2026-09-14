@@ -66,6 +66,9 @@ test('搜索查询：长标题适配智谱70字上限，原始标题不被修改
   const before = paper.title;
   assert.ok(paperSearchQuery(paper, 'zhipu').length <= 70); assert.equal(paper.title, before);
   assert.equal(paperSearchQuery({ doi: '10.1234/test' }, 'zhipu'), '10.1234/test');
+  assert.equal(paperSearchQuery({ doi: '10.1234/test', title: 'A complete paper title' }, 'zhipu'), 'A complete paper title');
+  assert.equal(paperSearchQuery({ doi: '10.1234/test', title: 'A complete paper title' }, 'serpapi_scholar'), '10.1234/test');
+  assert.equal(paperSearchQuery({ doi: '10.1234/test', title: 'A complete paper title' }, 'serpapi_google'), '"A complete paper title"');
   assert.match(journalSearchQuery({ name: 'American Economic Review' }, '2026-09', 'zhipu'), /2026-09/);
 });
 

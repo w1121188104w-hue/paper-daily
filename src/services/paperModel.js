@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-export const PAPER_SOURCES = Object.freeze(['openalex', 'crossref', 'publisher', 'semanticscholar']);
+export const PAPER_SOURCES = Object.freeze(['openalex', 'crossref', 'publisher', 'semanticscholar', 'repec']);
 
 function normalizeSourceEvidence(value) {
   const keys = ['url', 'fetched_at', 'body_sha256', 'method', 'scope_url'];
@@ -186,7 +186,7 @@ export function normalizeSourceRecord(input) {
   if (!String(input?.source_id || '').trim()) throw new Error('来源记录缺少稳定 source_id');
   const doi = normalizeDoi(input?.doi);
   if (doi && !/^10\.\d{4,9}\/\S+$/.test(doi)) throw new Error('来源记录的 DOI 格式无效');
-  if (['publisher', 'semanticscholar'].includes(source) && !input?.source_evidence) throw new Error('补充来源必须保留可追溯证据');
+  if (['publisher', 'semanticscholar', 'repec'].includes(source) && !input?.source_evidence) throw new Error('补充来源必须保留可追溯证据');
 
   return {
     source,

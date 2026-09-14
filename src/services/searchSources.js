@@ -35,14 +35,16 @@ export function searchLeads(data, provider) {
 export function paperSearchQuery(paper, provider) {
   const title = cleanText(paper.title || paper.title_original), doi = String(paper.doi || '').trim();
   fail(Boolean(title || doi), 'MISSING_SEARCH_IDENTITY');
-  const full = doi || title;
+  // General web search often treats bare DOIs as noisy number tokens. Prefer
+  // the complete title where it fits; keep DOI for longer Zhipu queries/Scholar.
+  const full = provider === 'zhipu' && title && [...title].length <= 70 ? title : doi || title;
   if (provider === 'zhipu') {
     // API query maximum is 70 characters. Full title remains in the expected identity;
     // a truncated search query must NEVER weaken later original-page matching.
     const prefix = [...full].slice(0, 70).join('');
     return prefix.length < full.length ? prefix.replace(/\s+\S*$/, '') || prefix : prefix;
   }
-  return doi || `"${title.replaceAll('"', '')}"`;
+  return provider === 'serpapi_google' && title ? `"${title.replaceAll('"', '')}"` : doi || `"${title.replaceAll('"', '')}"`;
 }
 
 export function journalSearchQuery(journal, month, provider) {

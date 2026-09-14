@@ -7,6 +7,7 @@ import { paperSearchQuery, searchWithFallback, safeSearchLink } from './searchSo
 import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
+import { supportedRepecUrl } from './repecAbstract.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -91,14 +92,15 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   }
   let searchResult = null;
   if (stillMissing().length && search) {
-    searchResult = await searchWithFallback({ queryFor: provider => paperSearchQuery(current, provider),
+    searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => paperSearchQuery(current, provider),
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
       verifyLead: async lead => {
         const url = safeSearchLink(lead.url);
         if (!url) return { resolved: false, reason: 'UNSAFE_LINK' };
-        if (!publisherFor(journal).hosts.includes(new URL(url).hostname)) return { resolved: false, reason: 'NOT_OFFICIAL_HOST' };
+        const repec = supportedRepecUrl(url, journal) && typeof sources.repecArticle === 'function';
+        if (!repec && !publisherFor(journal).hosts.includes(new URL(url).hostname)) return { resolved: false, reason: 'NOT_OFFICIAL_HOST' };
         // Only the fetched ORIGINAL official article is parsed. lead.snippet is deliberately unused.
-        const record = await sources.publisherArticle({ ...current, url }, journal);
+        const record = await (repec ? sources.repecArticle : sources.publisherArticle)({ ...current, url }, journal);
         adopt(record);
         return { resolved: !stillMissing().length, reason: 'UNRESOLVED_FIELDS', record };
       } });

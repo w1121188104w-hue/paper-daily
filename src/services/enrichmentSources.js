@@ -1,6 +1,7 @@
 import { normalizeDoi, normalizeTitleForMatch, normalizeAuthorName, normalizeSourceRecord } from './paperModel.js';
 import { normalizeCrossrefWork, normalizeOpenAlexWork } from './sourceNormalizers.js';
 import { EvidenceError } from './evidenceHttp.js';
+import { supportedRepecUrl, parseRepecAbstract } from './repecAbstract.js';
 import { publisherFor } from './publisherCatalog.js';
 import { authenticAbstract, parsePublisherArticle, parsePublisherFeed, publisherRecord, dateBounds } from './publisherParsers.js';
 
@@ -118,5 +119,9 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
     if (!article.abstract) throw new EvidenceError('PUBLISHER_NO_ABSTRACT');
     return publisherRecord(article,journal);
   }
-  return { crossref, openalex, semanticscholar, publisher, publisherArticle };
+  async function repecArticle(expected, journal) {
+    if (!supportedRepecUrl(expected.url, journal)) throw new EvidenceError('UNSAFE_URL');
+    return parseRepecAbstract(await http.request(expected.url, ['ideas.repec.org']), journal, expected);
+  }
+  return { crossref, openalex, semanticscholar, publisher, publisherArticle, repecArticle };
 }
