@@ -1,6 +1,6 @@
 import { readJournalLibrary } from './journalLibrary.js';
 import { runCatalogDiscovery } from './catalogDiscoveryRun.js';
-import { runMetadataRepair } from './metadataRepairRun.js';
+import { runMetadataRepair, metadataRepairIssue } from './metadataRepairRun.js';
 import { catalogMonths } from './searchCatalog.js';
 import { catalogSearchDue } from './catalogSearchState.js';
 import { collectionWindow } from './journalRun.js';
@@ -15,7 +15,7 @@ export async function verifyPilotReuse(config, { root, journalKey, now = () => n
   const months = catalogMonths(collectionWindow({ now: checked, lookbackDays: 60 }));
   const catalogDue = months.filter(month => catalogSearchDue(before.enrichmentState.catalog_search || {}, journalKey, month, checked)).length;
   const metadataDue = dueRepairIssues(before.repairState, checked, { limit: 10000 }).filter(issue => issue.journal_key === journalKey &&
-    ['doi', 'authors', 'publication_month', 'abstract'].includes(issue.field) && issue.reason === `missing_${issue.field}`).length;
+    metadataRepairIssue(issue)).length;
   let calls = 0;
   const forbidden = async () => { calls++; throw Object.assign(new Error('Replay must not request network'), { code: 'EVIDENCE_STORAGE_ERROR' }); };
   const common = { root, journalKey, now: () => checked, search: forbidden };

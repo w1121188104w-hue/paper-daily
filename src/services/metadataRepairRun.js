@@ -8,10 +8,12 @@ import { validateEnrichmentReport } from './enrichmentValidation.js';
 import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publishLibrarySnapshot } from './journalLibrary.js';
 
 const fields = ['doi', 'authors', 'publication_month', 'abstract'];
+export const metadataRepairIssue = issue => (fields.includes(issue.field) && issue.reason === `missing_${issue.field}`) ||
+  (issue.field === 'identity' && issue.reason === 'title_conflict');
 const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
 
 /** Second phase after discovery: explicit dependencies, no secret access, no LLM.
- * Only due missing fields are queried. Callers must provide the same budgeted
+ * Only due missing fields and title conflicts are queried. Callers must provide the same budgeted
  * search service as discovery, and a real quota reset timestamp when exhausted. */
 export async function runMetadataRepair(config, { root, sources, search, now = () => new Date(), journalKey,
   maxPapers = 100, quotaResetsAt = null, beforePublish, onProgress = () => {} } = {}) {
@@ -22,7 +24,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
   return withLibraryLock(root, async () => {
     const previous = await readJournalLibrary({ root, config }), papers = [...previous.papers], byId = new Map(papers.map((p, i) => [p.id, i]));
     const due = dueRepairIssues(previous.repairState, started, { limit: 10000 }).filter(issue =>
-      fields.includes(issue.field) && issue.reason === `missing_${issue.field}` && (!journalKey || issue.journal_key === journalKey) && findJournal(config, issue.journal_key)?.enabled);
+      metadataRepairIssue(issue) && (!journalKey || issue.journal_key === journalKey) && findJournal(config, issue.journal_key)?.enabled);
     const selected = [...new Set(due.map(issue => issue.paper_id))].slice(0, maxPapers), repairs = [], abstracts = [];
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {
@@ -31,19 +33,20 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
       const result = await repairPaperMetadata(old, findJournal(config, old.journal_key), { sources, search, otherPapers: papers, fields: wanted });
       papers[byId.get(id)] = result.paper;
       repairs.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi, status: result.status,
-        changed_fields: result.changed_fields, missing_fields: result.missing_fields, requested_fields: wanted, attempts: result.attempts });
+        changed_fields: result.changed_fields, missing_fields: result.missing_fields, requested_fields: wanted, attempts: result.attempts,
+        identity_resolution: result.identity_resolution });
       if (!old.abstract_original && wanted.includes('abstract')) abstracts.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi,
         status: result.paper.abstract_original ? 'found' : result.status === 'not_found' ? 'not_found' : 'retry_later',
         abstract_source: result.paper.provenance.abstract_original?.source || '', attempts: result.attempts });
       onProgress({ phase: 'metadata_done', paper_id: id, status: result.status, filled: result.changed_fields });
     }
     const finished = now(), finishedAt = finished.toISOString();
-    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 2, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
+    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 3, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
       officialIds: officialDiscoveries(previous.enrichmentReports) });
     let state = reconcileRepairState(previous.repairState, master);
     for (const result of repairs) {
       for (const issue of Object.values(state.issues).filter(issue => issue.paper_id === result.paper_id && issue.status !== 'resolved' &&
-        issue.reason === `missing_${issue.field}` && result.requested_fields.includes(issue.field))) {
+        metadataRepairIssue(issue) && result.requested_fields.includes(issue.field))) {
         let status = ['not_found', 'quota_exhausted', 'access_restricted', 'source_unavailable'].includes(result.status) ? result.status : 'source_unavailable';
         if (status !== 'quota_exhausted' && result.attempts.some(a => /IDENTITY|MISMATCH|CONFLICT|DOI_ALREADY_ASSIGNED/.test(a.status))) status = 'identity_conflict';
         const source = [...result.attempts].reverse().find(a => providers.includes(a.source))?.source || 'publisher';

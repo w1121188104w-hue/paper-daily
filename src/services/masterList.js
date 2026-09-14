@@ -4,6 +4,7 @@ import { evidence } from './paperMerge.js';
 import { classifyPaper } from './paperClassification.js';
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
 import { paperDocumentType, evidenceWindowStatus } from './paperScope.js';
+import { titleConsensusFor } from './titleConsensus.js';
 
 export const DISCOVERY_SOURCES = ['crossref', 'openalex', 'semanticscholar', 'publisher'];
 const flag = { crossref: 'found_crossref', openalex: 'found_openalex', semanticscholar: 'found_semantic_scholar', publisher: 'found_official_site' };
@@ -78,12 +79,14 @@ function abstractProvenance(paper) {
 
 export function buildMasterList(papers, { generatedAt, fromDate = null, toDate = null, officialIds = new Set(), policyVersion = 1 } = {}) {
   assertLibrary(isIsoTime(generatedAt), '总名册生成时间无效');
-  assertLibrary([1, 2].includes(policyVersion), '不支持的总名册统计规则版本');
+  assertLibrary([1, 2, 3].includes(policyVersion), '不支持的总名册统计规则版本');
   const entries = [...papers].sort((a, b) => a.id.localeCompare(b.id)).map(paper => {
     const publication = publicationFor(paper), found = discoverySourcesFor(paper, officialIds);
     const titles = [...new Set(evidence(paper.source_records, 'title').map(record => identityTitle(record.title)))];
     const classification = classifyPaper(paper).kind;
-    const conflicts = [...(titles.length > 1 ? ['title_conflict'] : []), ...(publication.publication_conflict ? ['publication_month_conflict'] : [])];
+    const resolution = policyVersion >= 3 ? titleConsensusFor(paper)?.summary || null : null;
+    const titleConflict = titles.length > 1 && !resolution;
+    const conflicts = [...(titleConflict ? ['title_conflict'] : []), ...(publication.publication_conflict ? ['publication_month_conflict'] : [])];
     const missing = [...(!paper.doi ? ['doi'] : []), ...(!paper.authors.length ? ['authors'] : []),
       ...(!publication.publication_month ? ['publication_month'] : []), ...(!paper.abstract_original ? ['abstract'] : [])];
     return { id: paper.id, title: paper.title_original, doi: paper.doi || null, journal: paper.journal_key,
@@ -94,9 +97,10 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
       ...Object.fromEntries(DISCOVERY_SOURCES.map(source => [flag[source], found.includes(source)])),
       discovery_sources: found, available_sources: [...paper.sources],
       doi_status: paper.doi ? 'available' : 'no_doi_yet',
-      identity_status: titles.length > 1 ? 'conflict' : paper.doi || paper.authors.length ? 'confirmed' : 'candidate',
-      classification, ...(policyVersion === 2 ? paperDocumentType(paper) : {}),
-      window_status: policyVersion === 2 ? evidenceWindowStatus(publication, fromDate, toDate,
+      identity_status: titleConflict ? 'conflict' : paper.doi || paper.authors.length ? 'confirmed' : 'candidate',
+      ...(policyVersion >= 3 ? { identity_resolution: resolution } : {}),
+      classification, ...(policyVersion >= 2 ? paperDocumentType(paper) : {}),
+      window_status: policyVersion >= 2 ? evidenceWindowStatus(publication, fromDate, toDate,
         publicationWindowStatus(publication, fromDate, toDate)) : publicationWindowStatus(publication, fromDate, toDate),
       metadata_status: missing.length || conflicts.length ? 'incomplete' : 'complete', missing_fields: missing, conflicts };
   });
@@ -111,9 +115,9 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
       row.conflicts.push('possible_duplicate'); row.identity_status = 'conflict'; row.metadata_status = 'incomplete';
     }
   }
-  const isResearch = row => policyVersion === 2 ? row.research_candidate : row.classification === 'candidate';
+  const isResearch = row => policyVersion >= 2 ? row.research_candidate : row.classification === 'candidate';
   const counts = rows => ({ total: rows.length, research_candidates: rows.filter(isResearch).length,
-    ...(policyVersion === 2 ? {
+    ...(policyVersion >= 2 ? {
       lectures: rows.filter(row => row.document_type === 'lecture').length,
       research_confirmed_inside_window: rows.filter(row => isResearch(row) && row.window_status === 'inside').length,
       research_uncertain_window: rows.filter(row => isResearch(row) && ['unknown', 'boundary_uncertain'].includes(row.window_status)).length,
@@ -125,7 +129,7 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
     confirmed_inside_window: rows.filter(row => row.window_status === 'inside').length,
     uncertain_window: rows.filter(row => ['unknown', 'boundary_uncertain'].includes(row.window_status)).length,
     by_discovery_source: Object.fromEntries(DISCOVERY_SOURCES.map(source => [source, rows.filter(row => row.discovery_sources.includes(source)).length])) });
-  return { schema_version: 1, ...(policyVersion === 2 ? { policy_version: 2 } : {}), generated_at: generatedAt, from_date: fromDate, to_date: toDate,
+  return { schema_version: 1, ...(policyVersion >= 2 ? { policy_version: policyVersion } : {}), generated_at: generatedAt, from_date: fromDate, to_date: toDate,
     coverage: 'not_proven_complete', entries, statistics: counts(entries),
     journals: [...new Set(entries.map(row => row.journal))].sort().map(journal => ({ journal, ...counts(entries.filter(row => row.journal === journal)) })) };
 }

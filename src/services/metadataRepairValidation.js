@@ -13,7 +13,8 @@ export function validateMetadataRepairOnlyChange(previous, next) {
     assertLibrary(current.source_records.length >= old.source_records.length &&
       stableJson(current.source_records.slice(0, old.source_records.length)) === stableJson(old.source_records), '字段修复不能覆盖或重排历史来源');
     let replayed = old;
-    for (const record of current.source_records.slice(old.source_records.length)) replayed = fillMissingMetadata(replayed, record, { otherPapers: next }).paper;
+    for (const record of current.source_records.slice(old.source_records.length)) replayed = fillMissingMetadata(replayed, record,
+      { otherPapers: next, identityEvidence: current.source_records }).paper;
     assertLibrary(stableJson(replayed) === stableJson(current), '字段变化必须能够从新追加的原始证据重现');
   }
 }

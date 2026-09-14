@@ -6,6 +6,7 @@ import { publicationFor } from './masterList.js';
 import { paperSearchQuery, searchWithFallback, safeSearchLink } from './searchSources.js';
 import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
+import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -18,9 +19,9 @@ export function repairIdentityMatches(paper, record) {
 
 // Preserve existing canonical content, translations, first discovery time and paper ID.
 // Whole original source rows are retained; missing canonical fields alone may be adopted.
-export function fillMissingMetadata(paper, input, { otherPapers = [] } = {}) {
+export function fillMissingMetadata(paper, input, { otherPapers = [], identityEvidence = [] } = {}) {
   const record = normalizeSourceRecord(input);
-  if (!record.source_evidence || !repairIdentityMatches(paper, record)) throw new EvidenceError('UNVERIFIED_IDENTITY');
+  if (!record.source_evidence || (!repairIdentityMatches(paper, record) && !consensusAllowsRecord(paper, record, identityEvidence))) throw new EvidenceError('UNVERIFIED_IDENTITY');
   if (!paper.doi && record.doi && otherPapers.some(other => other.id !== paper.id && other.doi === record.doi)) throw new EvidenceError('DOI_ALREADY_ASSIGNED');
   const next = structuredClone(paper), changed = [];
   const previousPublication = publicationFor(paper);
@@ -56,15 +57,25 @@ const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code 
 /** Second phase: THREE structured lookups first; only then search known-paper missing fields.
  * One verified page can repair several fields. Neither search snippets nor LLM output are admissible. */
 export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper) } = {}) {
-  let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields);
-  const stillMissing = () => missingFields(current).filter(field => wanted.has(field));
-  function adopt(record) {
-    const result = fillMissingMetadata(current, record, { otherPapers });
+  let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [];
+  const stillMissing = () => [...missingFields(current).filter(field => wanted.has(field)),
+    ...(wanted.has('identity') && unresolvedTitleConflict(current) ? ['identity'] : [])];
+  function adopt(record, identityEvidence = []) {
+    const result = fillMissingMetadata(current, record, { otherPapers, identityEvidence });
     result.changed_fields.forEach(field => changed.add(field)); current = result.paper; return result;
   }
   for (const source of ['crossref', 'openalex', 'semanticscholar']) {
     if (!stillMissing().length) break;
-    try { const result = adopt(await sources[source](current, journal)); attempts.push({ source, status: result.changed_fields.length ? 'filled' : 'no_new_fields' }); }
+    try {
+      const record = await sources[source](current, journal); candidates.push(record);
+      try { const result = adopt(record); attempts.push({ source, status: result.changed_fields.length ? 'filled' : 'no_new_fields' }); }
+      catch (error) {
+        const proof = error.code === 'UNVERIFIED_IDENTITY' ? titleConsensusFor(current, candidates) : null;
+        if (!proof) throw error;
+        for (const row of proof.records) adopt(row, candidates);
+        attempts.push({ source, status: 'corroborated_minor_typo' });
+      }
+    }
     catch (error) { if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error; attempts.push({ source, status: safeCode(error) }); }
   }
   let searchResult = null;
@@ -82,5 +93,6 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     attempts.push(...searchResult.attempts.map(row => ({ source: row.provider, status: row.status })));
   }
   return { paper: current, changed_fields: [...changed], missing_fields: stillMissing(), attempts,
+    identity_resolution: titleConsensusFor(current)?.summary || null,
     status: !stillMissing().length ? 'resolved' : searchResult?.status || 'source_unavailable' };
 }
