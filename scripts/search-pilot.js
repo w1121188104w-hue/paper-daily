@@ -24,6 +24,7 @@ import { repairSummary } from '../src/services/repairState.js';
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const inside = (parent, child) => { const relative = path.relative(parent, child); return relative && !relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative); };
 export const PILOT_LIMITS = Object.freeze({ journal: 'AER', lookback_days: 60, metadata_papers: 3, zhipu: 6, serpapi: 4 });
+export const PILOT_JOURNALS = Object.freeze(['AER', 'QJE', 'JAR']);
 
 /** Copy only the validated, referenced history. Never copy locks, attempts or keys.
  * All later writers receive this freshly created root, not the source directory. */
@@ -84,10 +85,11 @@ export function pilotSearch({ budget, sources, policy, deadline = Infinity, now 
 
 /** No translation client/key is accepted here: only the existing queue is inspected. */
 export async function runIsolatedPilot(config, { repositoryRoot, tempParent, http, sources, search, quotaResetsAt,
-  collect = runJournalCollection, catalog = runCatalogDiscovery, repair = runMetadataRepair, onStage = () => {} } = {}) {
+  journalKey = PILOT_LIMITS.journal, collect = runJournalCollection, catalog = runCatalogDiscovery, repair = runMetadataRepair, onStage = () => {} } = {}) {
+  assertLibrary(PILOT_JOURNALS.includes(journalKey), '试跑仅允许已审核的单本期刊');
   const copy = await clonePilotLibrary(config, { repositoryRoot, tempParent });
   const before = await readJournalLibrary({ root: copy.root, config });
-  const common = { root: copy.root, journalKey: PILOT_LIMITS.journal };
+  const common = { root: copy.root, journalKey };
   try {
     onStage({ phase: 'three_source_collection_start' });
     const collected = await collect(config, { ...common, withSemanticScholar: true, lookbackDays: 60,
@@ -105,23 +107,27 @@ export async function runIsolatedPilot(config, { repositoryRoot, tempParent, htt
     const newAbstracts = after.papers.filter(p => p.abstract_original && !oldById.get(p.id)?.abstract_original);
     for (const paper of newAbstracts) assertLibrary(allTasks.some(t => t.paper_id === paper.id && t.field === 'abstract'), '新摘要未进入翻译队列');
     assertLibrary(allTasks.every(task => task.field !== 'abstract' || after.papers.find(p => p.id === task.paper_id)?.abstract_original), '缺英文摘要却产生了摘要翻译任务');
-    const journalIds = new Set(after.papers.filter(p => p.journal_key === PILOT_LIMITS.journal).map(p => p.id));
+    const journalIds = new Set(after.papers.filter(p => p.journal_key === journalKey).map(p => p.id));
     const unresolved = repairSummary({ issues: Object.fromEntries(Object.entries(after.repairState.issues).filter(([, issue]) => journalIds.has(issue.paper_id))) });
-    return { mode: 'isolated_pilot', limits: PILOT_LIMITS, coverage: 'not_proven_complete', production_unchanged: await copy.verifyOriginal(),
+    return { mode: 'isolated_pilot', limits: { ...PILOT_LIMITS, journal: journalKey }, coverage: 'not_proven_complete', production_unchanged: await copy.verifyOriginal(),
       website_deployed: false, translation_calls: 0, library_before: before.papers.length, library_after: after.papers.length,
       collection: { status: collected.status, discovery: collected.discovery_summary || null, stats: collected.stats || null,
         sources: collected.run?.sources || [] },
       catalog: { status: catalogs.status, stats: catalogs.stats || null, queries: catalogs.report?.search_queries || [],
         added_records: (catalogs.report?.journals || []).flatMap(j => (j.entries || []).filter(e => e.status === 'added').map(e => ({
           journal: j.journal_key, title: e.title, doi: e.doi || null, authors: e.authors, original_date: e.date || null,
-          window_status: e.window_status, official_url: e.url, evidence: e.evidence, search_provider: e.search_provider }))),
+          window_status: e.window_status, document_type: e.document_type, research_candidate: e.research_candidate,
+          official_url: e.url, evidence: e.evidence, search_provider: e.search_provider }))),
         journals: (catalogs.report?.journals || []).map(j => ({ journal: j.journal_key, observed: j.official_observed_count,
           existing: j.matched_count, added: j.added_count, pending: j.pending_count,
+          added_research_confirmed_in_window: j.added_research_confirmed_in_window,
+          added_research_uncertain_window: j.added_research_uncertain_window, added_lectures: j.added_lectures,
           attempt_statuses: Object.fromEntries([...new Set(j.attempts.map(a => a.status))].map(s => [s, j.attempts.filter(a => a.status === s).length])) })) },
       metadata: { status: repaired.status, stats: repaired.stats || null,
         papers_with_fields_filled: (repaired.report?.repairs || []).filter(r => r.changed_fields.length).length,
         repairs: repaired.report?.repairs || [] },
-      selected_journal_master: after.masterList.journals.find(j => j.journal === PILOT_LIMITS.journal),
+      master_policy_version: after.masterList.policy_version || 1,
+      selected_journal_master: after.masterList.journals.find(j => j.journal === journalKey),
       selected_journal_unresolved: unresolved,
       new_english_abstracts: newAbstracts.length, new_abstracts_queued: newAbstracts.filter(p => allTasks.some(t => t.paper_id === p.id && t.field === 'abstract')).length,
       new_abstract_records: newAbstracts.map(p => { const entry = after.masterList.entries.find(e => e.id === p.id);
@@ -134,6 +140,8 @@ export async function runIsolatedPilot(config, { repositoryRoot, tempParent, htt
 export async function searchPilot({ env = process.env, log = console.log } = {}) {
   assertLibrary(env.GITHUB_ACTIONS === 'true' && env.GITHUB_REPOSITORY === 'w1121188104w-hue/paper-daily' &&
     env.GITHUB_EVENT_NAME === 'workflow_dispatch', '联合试跑只能在明确手动触发的GitHub任务执行');
+  const journalKey = env.PILOT_JOURNAL || PILOT_LIMITS.journal;
+  assertLibrary(PILOT_JOURNALS.includes(journalKey), '试跑期刊未通过范围校验');
   const config = await loadJournalConfig(), policy = await loadSearchPolicy();
   const searchSources = makeSearchSources({ zhipuKey: env.ZHIPU_API_KEY || '', serpapiKey: env.SERPAPI_API_KEY || '', zhipuEngine: policy.zhipu_engine });
   const ledger = makeSearchBudgetGitHub({ token: env.GITHUB_TOKEN, repositoryName: env.GITHUB_REPOSITORY });
@@ -142,7 +150,7 @@ export async function searchPilot({ env = process.env, log = console.log } = {})
   const search = pilotSearch({ budget, sources: searchSources, policy, deadline });
   const publicHttp = makeEvidenceHttp({ timeoutMs: 12000, maxRequests: 90 });
   const http = { request: (...args) => { if (Date.now() >= deadline) throw new EvidenceError('REQUEST_LIMIT'); return publicHttp.request(...args); } };
-  const report = await runIsolatedPilot(config, { tempParent: env.RUNNER_TEMP || os.tmpdir(), http, sources: makeEnrichmentSources(http),
+  const report = await runIsolatedPilot(config, { journalKey, tempParent: env.RUNNER_TEMP || os.tmpdir(), http, sources: makeEnrichmentSources(http),
     search: search.run, quotaResetsAt: search.quotaResetsAt, onStage: row => log(`PILOT_PROGRESS ${JSON.stringify(row)}`) });
   report.search_calls = search.counts(); report.search_blocked = search.blocked();
   report.zhipu_local_used = searchAllowance(budget.state(), { provider: 'zhipu', zhipuMonthlyLimit: policy.zhipu_monthly_limit }).local_used;
@@ -150,7 +158,7 @@ export async function searchPilot({ env = process.env, log = console.log } = {})
   report.monthly_limits = { zhipu: policy.zhipu_monthly_limit, serpapi: policy.serpapi_monthly_limit };
   log(`PILOT_REPORT ${JSON.stringify(report)}`);
   if (path.isAbsolute(env.GITHUB_STEP_SUMMARY || '')) await fs.appendFile(env.GITHUB_STEP_SUMMARY,
-    `## AER 联合试跑（不发布）\n\n只在临时副本运行；最多 6 次 Pro、4 次共享免费 SerpAPI、3 篇缺字段论文。来源受限不等于论文没有发表；此次不证明完整收录。没有调用翻译，也没有发布网站。\n\n\`\`\`json\n${JSON.stringify(report, null, 2)}\n\`\`\`\n`, 'utf8');
+    `## ${journalKey} 联合试跑（不发布）\n\n只在临时副本运行；最多 6 次 Pro、4 次共享免费 SerpAPI、3 篇缺字段论文。来源受限不等于论文没有发表；此次不证明完整收录。没有调用翻译，也没有发布网站。\n\n\`\`\`json\n${JSON.stringify(report, null, 2)}\n\`\`\`\n`, 'utf8');
   return report;
 }
 

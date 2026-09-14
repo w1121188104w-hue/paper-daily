@@ -69,18 +69,19 @@ test('联合入口强制三源→官网清单→缺字段，原库不变，不�
   const original = await fs.readFile(path.join(root, 'current.json'), 'utf8');
   let pilotRoot;
   const stage = name => async (_, options) => {
-    phases.push(name); assert.notEqual(options.root, root); pilotRoot = options.root;
+    phases.push(name); assert.notEqual(options.root, root); pilotRoot = options.root; assert.equal(options.journalKey, 'QJE');
     if (name === 'collect') { assert.equal(options.withSemanticScholar, true); assert.equal(options.lookbackDays, 60); }
     if (name === 'repair') assert.equal(options.maxPapers, 3);
     return { status: 'partial_failure' };
   };
-  const report = await runIsolatedPilot(config, { repositoryRoot: repo, tempParent: parent, collect: stage('collect'), catalog: stage('catalog'), repair: stage('repair') });
+  const report = await runIsolatedPilot(config, { repositoryRoot: repo, tempParent: parent, journalKey: 'QJE', collect: stage('collect'), catalog: stage('catalog'), repair: stage('repair') });
   const directory = path.resolve(pilotRoot, '../..');
   t.after(async () => { assert.equal(path.dirname(directory), parent); assert.ok(path.basename(directory).startsWith('paper-search-pilot-')); await fs.rm(directory, { recursive: true, force: true }); });
   assert.deepEqual(phases, ['collect', 'catalog', 'repair']);
   assert.equal(await fs.readFile(path.join(root, 'current.json'), 'utf8'), original);
   assert.equal(report.production_unchanged, true); assert.equal(report.translation_calls, 0); assert.equal(report.website_deployed, false);
   assert.equal(report.coverage, 'not_proven_complete');
+  assert.equal(report.limits.journal, 'QJE');
 });
 
 test('不得从本地或定时触发入口读取搜索密钥', async () => {

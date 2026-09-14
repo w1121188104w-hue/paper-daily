@@ -46,6 +46,15 @@ export function validateEnrichmentReport(report, log) {
     keys.add(journal.journal_key);
     assertLibrary(journal.added_count === journal.entries.filter(e => e.status === 'added').length &&
       journal.pending_count === journal.entries.filter(e => e.status === 'pending').length, '核对报告计数不一致');
+    const scopeCounts = {
+      added_research_confirmed_in_window: e => e.research_candidate && e.window_status === 'inside',
+      added_research_uncertain_window: e => e.research_candidate && e.window_status !== 'inside',
+      added_lectures: e => e.document_type === 'lecture'
+    };
+    if (Object.keys(scopeCounts).some(k => Object.hasOwn(journal, k))) for (const [key, matches] of Object.entries(scopeCounts)) {
+      assertLibrary(isCount(journal[key]) && journal[key] === journal.entries.filter(e => e.status === 'added' && matches(e)).length,
+        '新增论文的研究类型或日期边界统计不一致');
+    }
   }
   assertLibrary(report.stats.added === report.journals.reduce((sum,j) => sum+j.added_count,0) &&
     report.stats.abstracts_filled === report.abstracts.filter(a => a.status === 'found').length &&

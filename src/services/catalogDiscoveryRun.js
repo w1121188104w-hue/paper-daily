@@ -13,6 +13,7 @@ import { buildMasterList, officialDiscoveries, publicationFor } from './masterLi
 import { emptyEnrichmentState, validateEnrichmentReport } from './enrichmentValidation.js';
 import { assertLibrary } from './libraryValidation.js';
 import { collectionWindow } from './journalRun.js';
+import { paperDocumentType } from './paperScope.js';
 import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publishLibrarySnapshot } from './journalLibrary.js';
 
 const titleKey = title => normalizeTitleForMatch(title).replace(/\s/g, '');
@@ -59,7 +60,8 @@ export function reconcileCatalogDiscovery(discovery, journal, input, window, { c
   for (const { lead, record } of prepared) {
     const key = leadKey(lead); if (seen.has(key)) continue; seen.add(key);
     const entry = { title: lead.title, doi: lead.doi, authors: lead.authors, date: lead.date,
-      url: lead.url, evidence: lead.evidence, search_provider: lead.search_provider || null };
+      url: lead.url, evidence: lead.evidence, search_provider: lead.search_provider || null,
+      ...paperDocumentType({ source_records: [record] }) };
     const classification = classifySourceRecord(record).kind;
     if (classification !== 'candidate' || /^report of the editor\b|^acknowledg(?:e)?ments? to (?:the )?(?:referees|reviewers)\b/i.test(lead.title)) {
       entries.push({ ...entry, status: classification === 'needs_review' ? 'pending' : 'excluded', reason: classification }); continue;
@@ -89,7 +91,11 @@ export function reconcileCatalogDiscovery(discovery, journal, input, window, { c
     official_observed_count: prepared.length || (discovery.official_observed_count === 0 ? 0 : null),
     existing_total_count: input.filter(p => p.journal_key === journal.key).length,
     official_in_window_count: inside, matched_count: matched, missing_count: missing,
-    added_count: entries.filter(e => e.status === 'added').length, pending_count: entries.filter(e => e.status === 'pending').length,
+    added_count: entries.filter(e => e.status === 'added').length,
+    added_research_confirmed_in_window: entries.filter(e => e.status === 'added' && e.research_candidate && e.window_status === 'inside').length,
+    added_research_uncertain_window: entries.filter(e => e.status === 'added' && e.research_candidate && e.window_status !== 'inside').length,
+    added_lectures: entries.filter(e => e.status === 'added' && e.document_type === 'lecture').length,
+    pending_count: entries.filter(e => e.status === 'pending').length,
     attempts: discovery.attempts || [], entries };
   return { papers, report };
 }
@@ -160,7 +166,7 @@ export async function runCatalogDiscovery(config, { root, http, search, now = ()
       abstracts_checked: 0, pending_candidates: reports.reduce((sum, r) => sum + r.pending_count, 0) };
     const report = { schema_version: 1, run_id: runId, status: 'partial', from_date: window.fromDate, to_date: window.toDate,
       stage: 'official_catalog_search', stats, journals: reports, abstracts: [], search_queries: queries, search_calls: callCounts };
-    report.library_statistics = buildMasterList(papers, { generatedAt: checkedAt, ...window,
+    report.library_statistics = buildMasterList(papers, { generatedAt: checkedAt, ...window, policyVersion: 2,
       officialIds: officialDiscoveries([...(previous.enrichmentReports || []), report]) }).statistics;
     const log = { schema_version: 1, run_id: runId, run_date: runDate, started_at: checkedAt, finished_at: now().toISOString(),
       from_date: window.fromDate, to_date: window.toDate, status: 'partial', stats, report: {} };

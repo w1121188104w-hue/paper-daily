@@ -118,7 +118,7 @@ async function readManifest(root, manifestRef, config) {
   if (manifest.master_window !== undefined) assertLibrary(isObject(manifest.master_window) &&
     isDay(manifest.master_window.fromDate) && isDay(manifest.master_window.toDate) && manifest.master_window.fromDate <= manifest.master_window.toDate &&
     Object.keys(manifest.master_window).every(k => ['fromDate', 'toDate'].includes(k)), '总名册时间窗口无效');
-  const masterList = buildMasterList(papers, { generatedAt: manifest.created_at,
+  const masterList = buildMasterList(papers, { generatedAt: manifest.created_at, policyVersion: manifest.master_policy_version ?? 1,
     fromDate: manifest.master_window?.fromDate ?? latestRun?.from_date, toDate: manifest.master_window?.toDate ?? latestRun?.to_date, officialIds: officialDiscoveries(enrichmentReports) });
   if (manifest.master_list) assertLibrary(stableJson(await readLibraryRef(root, manifest.master_list)) === stableJson(masterList), '总名册与论文及来源证据不一致');
   const repairState = manifest.repair_state ? await readLibraryRef(root, manifest.repair_state) : reconcileRepairState(emptyRepairState(), masterList);
@@ -192,7 +192,7 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   const prefix = `snapshots/${operationLog.run_id}`;
   const manifest = { schema_version: 1, run_id: operationLog.run_id, created_at: operationLog.finished_at,
     operation: run ? 'collection' : translationImport ? 'translation_import' : 'metadata_enrichment', parent: previous.pointer?.manifest || null,
-    papers: {}, runs: {}, translation_imports: {}, audit: null, raw };
+    papers: {}, runs: {}, translation_imports: {}, audit: null, raw, master_policy_version: 2 };
   const nextWindow = masterWindow || (run ? { fromDate: run.from_date, toDate: run.to_date } : previous.manifest?.master_window);
   if (nextWindow) manifest.master_window = nextWindow;
   for (const [kind, items, oldItems, key] of [
@@ -221,7 +221,7 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   const reports = [...(previous.enrichmentReports || [])];
   if (enrichment) reports.push(await readLibraryRef(root, enrichment.report));
   const latestRun = [...runs].sort((a, b) => a.started_at.localeCompare(b.started_at)).at(-1);
-  const master = buildMasterList(papers, { generatedAt: manifest.created_at, fromDate: manifest.master_window?.fromDate ?? latestRun?.from_date,
+  const master = buildMasterList(papers, { generatedAt: manifest.created_at, policyVersion: manifest.master_policy_version, fromDate: manifest.master_window?.fromDate ?? latestRun?.from_date,
     toDate: manifest.master_window?.toDate ?? latestRun?.to_date, officialIds: officialDiscoveries(reports) });
   if (repairState !== undefined) {
     assertLibrary(enrichment?.kind === 'missing_metadata_repair', '仅明确的字段修复操作可写入待办尝试记录');

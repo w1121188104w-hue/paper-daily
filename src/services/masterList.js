@@ -3,6 +3,7 @@ import { normalizePartialDate, normalizeTitleForMatch } from './paperModel.js';
 import { evidence } from './paperMerge.js';
 import { classifyPaper } from './paperClassification.js';
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
+import { paperDocumentType, evidenceWindowStatus } from './paperScope.js';
 
 export const DISCOVERY_SOURCES = ['crossref', 'openalex', 'semanticscholar', 'publisher'];
 const flag = { crossref: 'found_crossref', openalex: 'found_openalex', semanticscholar: 'found_semantic_scholar', publisher: 'found_official_site' };
@@ -75,8 +76,9 @@ function abstractProvenance(paper) {
   return { abstract_source: record?.source || null, abstract_source_url: url };
 }
 
-export function buildMasterList(papers, { generatedAt, fromDate = null, toDate = null, officialIds = new Set() } = {}) {
+export function buildMasterList(papers, { generatedAt, fromDate = null, toDate = null, officialIds = new Set(), policyVersion = 1 } = {}) {
   assertLibrary(isIsoTime(generatedAt), '总名册生成时间无效');
+  assertLibrary([1, 2].includes(policyVersion), '不支持的总名册统计规则版本');
   const entries = [...papers].sort((a, b) => a.id.localeCompare(b.id)).map(paper => {
     const publication = publicationFor(paper), found = discoverySourcesFor(paper, officialIds);
     const titles = [...new Set(evidence(paper.source_records, 'title').map(record => identityTitle(record.title)))];
@@ -93,7 +95,9 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
       discovery_sources: found, available_sources: [...paper.sources],
       doi_status: paper.doi ? 'available' : 'no_doi_yet',
       identity_status: titles.length > 1 ? 'conflict' : paper.doi || paper.authors.length ? 'confirmed' : 'candidate',
-      classification, window_status: publicationWindowStatus(publication, fromDate, toDate),
+      classification, ...(policyVersion === 2 ? paperDocumentType(paper) : {}),
+      window_status: policyVersion === 2 ? evidenceWindowStatus(publication, fromDate, toDate,
+        publicationWindowStatus(publication, fromDate, toDate)) : publicationWindowStatus(publication, fromDate, toDate),
       metadata_status: missing.length || conflicts.length ? 'incomplete' : 'complete', missing_fields: missing, conflicts };
   });
   // Keep both ambiguous identities, but make the cross-paper ambiguity an automatic task.
@@ -107,14 +111,21 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
       row.conflicts.push('possible_duplicate'); row.identity_status = 'conflict'; row.metadata_status = 'incomplete';
     }
   }
-  const counts = rows => ({ total: rows.length, research_candidates: rows.filter(row => row.classification === 'candidate').length,
+  const isResearch = row => policyVersion === 2 ? row.research_candidate : row.classification === 'candidate';
+  const counts = rows => ({ total: rows.length, research_candidates: rows.filter(isResearch).length,
+    ...(policyVersion === 2 ? {
+      lectures: rows.filter(row => row.document_type === 'lecture').length,
+      research_confirmed_inside_window: rows.filter(row => isResearch(row) && row.window_status === 'inside').length,
+      research_uncertain_window: rows.filter(row => isResearch(row) && ['unknown', 'boundary_uncertain'].includes(row.window_status)).length,
+      research_outside_window: rows.filter(row => isResearch(row) && row.window_status === 'outside').length
+    } : {}),
     ...Object.fromEntries(['doi', 'authors', 'publication_month', 'abstract'].map(field => [`missing_${field}`, rows.filter(row => row.missing_fields.includes(field)).length])),
     independent_source_union: rows.filter(row => row.discovery_sources.some(source => source !== 'publisher')).length,
     official_only: rows.filter(row => row.found_official_site && !row.discovery_sources.some(source => source !== 'publisher')).length,
     confirmed_inside_window: rows.filter(row => row.window_status === 'inside').length,
     uncertain_window: rows.filter(row => ['unknown', 'boundary_uncertain'].includes(row.window_status)).length,
     by_discovery_source: Object.fromEntries(DISCOVERY_SOURCES.map(source => [source, rows.filter(row => row.discovery_sources.includes(source)).length])) });
-  return { schema_version: 1, generated_at: generatedAt, from_date: fromDate, to_date: toDate,
+  return { schema_version: 1, ...(policyVersion === 2 ? { policy_version: 2 } : {}), generated_at: generatedAt, from_date: fromDate, to_date: toDate,
     coverage: 'not_proven_complete', entries, statistics: counts(entries),
     journals: [...new Set(entries.map(row => row.journal))].sort().map(journal => ({ journal, ...counts(entries.filter(row => row.journal === journal)) })) };
 }

@@ -38,7 +38,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
       onProgress({ phase: 'metadata_done', paper_id: id, status: result.status, filled: result.changed_fields });
     }
     const finished = now(), finishedAt = finished.toISOString();
-    const master = buildMasterList(papers, { generatedAt: finishedAt, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
+    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 2, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
       officialIds: officialDiscoveries(previous.enrichmentReports) });
     let state = reconcileRepairState(previous.repairState, master);
     for (const result of repairs) {
