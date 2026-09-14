@@ -29,6 +29,15 @@ function record(source = 'crossref', patch = {}) {
 }
 const absent = async () => { throw Object.assign(new Error('not found'), { code: 'NOT_FOUND' }); };
 const sources = patch => ({ crossref: absent, openalex: absent, semanticscholar: absent, publisherArticle: absent, ...patch });
+
+test('定向补全：无效、重复、未知ID在请求前拒绝，正常目标可以保存', async t => {
+  const dirs = await seed(t), library = await readJournalLibrary({ ...dirs, config }); let calls = 0;
+  const options = { ...dirs, now: () => new Date(at), sources: sources({ crossref: async () => { calls++; return record(); } }), search: () => assert.fail('No search') };
+  for (const paperIds of [[], ['unknown'], [library.papers[0].id, library.papers[0].id]]) await assert.rejects(runMetadataRepair(config, { ...options, paperIds }));
+  assert.equal(calls, 0);
+  assert.equal((await runMetadataRepair(config, { ...options, paperIds: [library.papers[0].id] })).status, 'success');
+  assert.equal(calls, 1);
+});
 async function seed(t) {
   const parent = path.resolve(os.tmpdir()), repositoryRoot = await fs.mkdtemp(path.join(parent, 'metadata-repair-test-'));
   t.after(async () => { assert.equal(path.dirname(path.resolve(repositoryRoot)), parent); assert.ok(path.basename(repositoryRoot).startsWith('metadata-repair-test-')); await fs.rm(repositoryRoot, { recursive: true, force: true }); });

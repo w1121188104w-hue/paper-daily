@@ -16,15 +16,18 @@ const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'zhip
  * Only due missing fields and title conflicts are queried. Callers must provide the same budgeted
  * search service as discovery, and a real quota reset timestamp when exhausted. */
 export async function runMetadataRepair(config, { root, sources, search, now = () => new Date(), journalKey,
-  maxPapers = 100, quotaResetsAt = null, beforePublish, onProgress = () => {} } = {}) {
+  maxPapers = 100, paperIds = null, quotaResetsAt = null, beforePublish, onProgress = () => {} } = {}) {
   assertLibrary(typeof root === 'string' && root && sources && ['crossref', 'openalex', 'semanticscholar', 'publisherArticle'].every(k => typeof sources[k] === 'function') &&
     typeof search === 'function' && Number.isInteger(maxPapers) && maxPapers >= 0 && maxPapers <= 1000, '必须显式提供开发库、元数据来源、带额度保护的搜索器及批量上限');
   if (journalKey) assertLibrary(findJournal(config, journalKey)?.enabled, '无匹配的启用期刊');
+  assertLibrary(paperIds === null || (Array.isArray(paperIds) && paperIds.length > 0 && paperIds.length <= 1000 &&
+    paperIds.every(id => typeof id === 'string') && new Set(paperIds).size === paperIds.length), '限定论文ID列表无效');
   const started = now(), runDate = dateInShanghai(started);
   return withLibraryLock(root, async () => {
     const previous = await readJournalLibrary({ root, config }), papers = [...previous.papers], byId = new Map(papers.map((p, i) => [p.id, i]));
+    if (paperIds) assertLibrary(paperIds.every(id => byId.has(id) && (!journalKey || papers[byId.get(id)].journal_key === journalKey)), '限定论文必须属于当前库和选定期刊');
     const due = dueRepairIssues(previous.repairState, started, { limit: 10000 }).filter(issue =>
-      metadataRepairIssue(issue) && (!journalKey || issue.journal_key === journalKey) && findJournal(config, issue.journal_key)?.enabled);
+      metadataRepairIssue(issue) && (!paperIds || paperIds.includes(issue.paper_id)) && (!journalKey || issue.journal_key === journalKey) && findJournal(config, issue.journal_key)?.enabled);
     const selected = [...new Set(due.map(issue => issue.paper_id))].slice(0, maxPapers), repairs = [], abstracts = [];
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {

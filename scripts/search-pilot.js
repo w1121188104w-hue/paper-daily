@@ -54,13 +54,14 @@ export async function clonePilotLibrary(config, { repositoryRoot = DEFAULT_REPOS
 
 /** A per-pilot cap IN ADDITION TO the durable monthly ledger, shared by both phases.
  * Failed/unknown requests still consume the pilot allowance; no silent retry/reset. */
-export function pilotSearch({ budget, sources, policy, deadline = Infinity, now = Date.now }) {
+export function pilotSearch({ budget, sources, policy, deadline = Infinity, now = Date.now, maxSerpapi = 4 }) {
+  assertLibrary([4, 6].includes(maxSerpapi), '仅允许审核过的免费搜索批量');
   const counts = { zhipu: 0, serpapi: 0 }, blocked = { pilot_request_limit: 0, account_unverified: 0 };
   let lastAccount = null, tail = Promise.resolve();
   const run = options => {
     const pending = tail.then(async () => {
       const group = options.provider === 'zhipu' ? 'zhipu' : 'serpapi';
-      if (counts[group] >= PILOT_LIMITS[group] || now() >= deadline) {
+      if (counts[group] >= (group === 'serpapi' ? maxSerpapi : PILOT_LIMITS[group]) || now() >= deadline) {
         blocked.pilot_request_limit++; return { called: false, reason: 'pilot_request_limit' };
       }
       if (group === 'serpapi') {
