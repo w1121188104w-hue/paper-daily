@@ -82,6 +82,38 @@ test('字段修复：先三源再搜索，真实摘要补齐后进入翻译队�
   assert.equal(result.paper.id, paper.id); assert.equal(result.paper.abstract_original, abstract); assert.equal(result.paper.abstract_zh, '');
   assert.equal(result.paper.abstract_translation_status, 'pending'); validatePapers([result.paper], config);
 });
+test('字段修复：三源之后先读已知官网，成功则不调用收费搜索', async () => {
+  const paper = seed({ authors: ['Alice Smith'] }), calls = [];
+  const sources = Object.fromEntries(['crossref', 'openalex', 'semanticscholar'].map(name => [name, async () => { calls.push(name); return source({ authors: ['Alice Smith'] }); }]));
+  sources.publisher = async () => { calls.push('publisher'); return source({ authors: ['Alice Smith'], abstract }); };
+  const result = await repairPaperMetadata(paper, journal, { sources, search: () => assert.fail('No paid search required') });
+  assert.deepEqual(calls, ['crossref', 'openalex', 'semanticscholar', 'publisher']);
+  assert.equal(result.status, 'resolved'); assert.equal(result.paper.abstract_original, abstract);
+  assert.equal(result.paper.abstract_translation_status, 'pending'); assert.equal(result.paper.abstract_zh, '');
+  assert.equal(result.paper.provenance.abstract_original.source, 'publisher');
+});
+
+test('字段修复：官网受限后继续搜索兜底，不能把搜索片段当摘要', async () => {
+  const paper = seed({ authors: ['Alice Smith'] }), calls = [];
+  const sources = Object.fromEntries(['crossref', 'openalex', 'semanticscholar'].map(name => [name, async () => source({ authors: ['Alice Smith'] })]));
+  sources.publisher = async () => { calls.push('publisher'); throw Object.assign(new Error(), { code: 'ACCESS_RESTRICTED' }); };
+  sources.publisherArticle = async () => source({ authors: ['Alice Smith'] });
+  const result = await repairPaperMetadata(paper, journal, { sources, search: async ({ provider }) => {
+    calls.push(provider); return { called: true, result: { leads: [{ url: paper.url, snippet: abstract }] } };
+  } });
+  assert.deepEqual(calls, ['publisher', 'zhipu', 'serpapi_scholar', 'serpapi_google']);
+  assert.equal(result.paper.abstract_original, ''); assert.equal(result.paper.abstract_zh, '');
+  assert.ok(result.attempts.some(a => a.source === 'publisher' && a.status === 'ACCESS_RESTRICTED'));
+});
+
+test('字段修复：官网证据存储失败必须停止，禁止搜索绕过；已有摘要不再读官网', async () => {
+  const sources = Object.fromEntries(['crossref', 'openalex', 'semanticscholar'].map(name => [name, async () => source({ authors: ['Alice Smith'] })]));
+  sources.publisher = async () => { throw Object.assign(new Error(), { code: 'EVIDENCE_STORAGE_ERROR' }); };
+  await assert.rejects(repairPaperMetadata(seed({ authors: ['Alice Smith'] }), journal, { sources, search: () => assert.fail('Must stop') }), { code: 'EVIDENCE_STORAGE_ERROR' });
+  const result = await repairPaperMetadata(seed({ authors: ['Alice Smith'], abstract }), journal, { sources, search: () => assert.fail('Complete') });
+  assert.equal(result.status, 'resolved'); assert.deepEqual(result.attempts, []);
+});
+
 test('字段修复：无原始摘要时不生成中英文摘要，完整论文不重复搜索', async () => {
   const paper = seed({ authors: ['Alice Smith'] }), sources = Object.fromEntries(['crossref', 'openalex', 'semanticscholar', 'publisherArticle'].map(name => [name, async () => source({ authors: ['Alice Smith'] })]));
   let count = 0;

@@ -78,6 +78,17 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     }
     catch (error) { if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error; attempts.push({ source, status: safeCode(error) }); }
   }
+  // Known official feeds/article URLs are evidence sources, not search results.
+  // Try them before spending search quota; never accept a snippet as an abstract.
+  if (stillMissing().includes('abstract') && typeof sources.publisher === 'function') {
+    try {
+      const result = adopt(await sources.publisher(current, journal));
+      attempts.push({ source: 'publisher', status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
+    } catch (error) {
+      if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
+      attempts.push({ source: 'publisher', status: safeCode(error) });
+    }
+  }
   let searchResult = null;
   if (stillMissing().length && search) {
     searchResult = await searchWithFallback({ queryFor: provider => paperSearchQuery(current, provider),
