@@ -3,6 +3,7 @@ import { normalizeCrossrefWork, normalizeOpenAlexWork } from './sourceNormalizer
 import { EvidenceError } from './evidenceHttp.js';
 import { supportedRepecUrl, parseRepecAbstract } from './repecAbstract.js';
 import { publisherFor } from './publisherCatalog.js';
+import { semanticScholarJournalMatches } from './semanticScholar.js';
 import { authenticAbstract, parsePublisherArticle, parsePublisherFeed, publisherRecord, dateBounds } from './publisherParsers.js';
 
 export const titleIdentity = value => normalizeTitleForMatch(value).replace(/\s/g, '');
@@ -71,7 +72,7 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
     if (!expected.doi) throw new EvidenceError('NO_DOI');
     const { response, data } = await api(`https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(normalizeDoi(expected.doi))}?fields=title,abstract,externalIds,authors,journal,publicationDate`,
       semanticScholarKey ? { 'x-api-key': semanticScholarKey } : {});
-    if (normalizeDoi(data.externalIds?.DOI) !== normalizeDoi(expected.doi) ||
+    if (!semanticScholarJournalMatches(data, journal) || normalizeDoi(data.externalIds?.DOI) !== normalizeDoi(expected.doi) ||
       titleIdentity(data.title) !== titleIdentity(expected.title || expected.title_original)) throw new EvidenceError('UNVERIFIED_IDENTITY');
     const record = { source: 'semanticscholar', source_id: data.paperId,
       doi: data.externalIds.DOI, title: data.title, abstract: data.abstract || '', authors: data.authors,

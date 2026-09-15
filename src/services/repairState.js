@@ -1,5 +1,6 @@
 import { assertLibrary, isObject, isIsoTime, isCount, stableJson } from './libraryValidation.js';
 import { repairRequirements } from './masterList.js';
+import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 
 export const REPAIR_STATUSES = ['pending', 'resolved', 'not_found', 'quota_exhausted', 'access_restricted', 'source_unavailable', 'identity_conflict'];
 const PROVIDERS = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
@@ -78,6 +79,18 @@ export function repairSummary(state) {
   const open = Object.values(state.issues).filter(issue => issue.status !== 'resolved');
   return { unresolved_papers: new Set(open.map(issue => issue.paper_id)).size, unresolved_issues: open.length,
     by_status: Object.fromEntries(REPAIR_STATUSES.filter(status => status !== 'resolved').map(status => [status, open.filter(issue => issue.status === status).length])) };
+}
+
+export function recordSourceConfirmation(state, id, paper, checkedAt) {
+  const issue = state.issues[id], proof = singleSourceConfirmationFor(paper);
+  assertLibrary(issue?.reason === 'single_source_confirmation' && issue.paper_id === paper.id && proof &&
+    isIsoTime(checkedAt) && Date.parse(checkedAt) >= Date.parse(issue.updated_at), '单源确认必须有可追溯的其他来源证据');
+  const next = structuredClone(state), row = next.issues[id];
+  row.attempt_count++;
+  row.attempts.push({ source: proof.source, status: 'resolved', checked_at: checkedAt, input_hash: row.input_hash });
+  row.attempts = row.attempts.slice(-50);
+  row.status = 'resolved'; row.updated_at = checkedAt; row.resolved_at = checkedAt; row.next_retry_at = null;
+  return next;
 }
 
 export function validateRepairProjection(state, master) {

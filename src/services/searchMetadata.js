@@ -8,6 +8,7 @@ import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
 import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
+import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -57,10 +58,10 @@ const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code 
 
 /** Second phase: THREE structured lookups first; only then search known-paper missing fields.
  * One verified page can repair several fields. Neither search snippets nor LLM output are admissible. */
-export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper) } = {}) {
+export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false } = {}) {
   let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [];
   const stillMissing = () => [...missingFields(current).filter(field => wanted.has(field)),
-    ...(wanted.has('identity') && unresolvedTitleConflict(current) ? ['identity'] : [])];
+    ...(wanted.has('identity') && (unresolvedTitleConflict(current) || (confirmSingleSource && !singleSourceConfirmationFor(current))) ? ['identity'] : [])];
   function adopt(record, identityEvidence = []) {
     const result = fillMissingMetadata(current, record, { otherPapers, identityEvidence });
     result.changed_fields.forEach(field => changed.add(field)); current = result.paper; return result;
@@ -119,6 +120,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     attempts.push(...searchResult.attempts.map(({ provider, ...row }) => ({ source: provider, ...row })));
   }
   return { paper: current, changed_fields: [...changed], missing_fields: stillMissing(), attempts,
+    single_source_confirmation: confirmSingleSource ? singleSourceConfirmationFor(current) : null,
     identity_resolution: titleConsensusFor(current)?.summary || null,
     status: !stillMissing().length ? 'resolved' : searchResult?.status || 'source_unavailable' };
 }

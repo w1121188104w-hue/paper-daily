@@ -2,18 +2,18 @@ import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
 import { findJournal } from './journals.js';
 import { dateInShanghai } from './paperMerge.js';
 import { buildMasterList, officialDiscoveries } from './masterList.js';
-import { dueRepairIssues, reconcileRepairState, recordRepairAttempt, repairSummary } from './repairState.js';
+import { dueRepairIssues, reconcileRepairState, recordRepairAttempt, recordSourceConfirmation, repairSummary } from './repairState.js';
 import { repairPaperMetadata } from './searchMetadata.js';
 import { validateEnrichmentReport } from './enrichmentValidation.js';
 import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publishLibrarySnapshot } from './journalLibrary.js';
 
 const fields = ['doi', 'authors', 'publication_month', 'abstract'];
 export const metadataRepairIssue = issue => (fields.includes(issue.field) && issue.reason === `missing_${issue.field}`) ||
-  (issue.field === 'identity' && issue.reason === 'title_conflict');
+  (issue.field === 'identity' && ['title_conflict', 'single_source_confirmation'].includes(issue.reason));
 const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
 
 /** Second phase after discovery: explicit dependencies, no secret access, no LLM.
- * Only due missing fields and title conflicts are queried. Callers must provide the same budgeted
+ * Due missing fields, title conflicts and single-source confirmations are queried. Callers must provide the same budgeted
  * search service as discovery, and a real quota reset timestamp when exhausted. */
 export async function runMetadataRepair(config, { root, sources, search, now = () => new Date(), journalKey,
   maxPapers = 100, paperIds = null, quotaResetsAt = null, beforePublish, onProgress = () => {} } = {}) {
@@ -31,13 +31,14 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     const selected = [...new Set(due.map(issue => issue.paper_id))].slice(0, maxPapers), repairs = [], abstracts = [];
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {
-      const old = papers[byId.get(id)], wanted = due.filter(issue => issue.paper_id === id).map(issue => issue.field);
+      const old = papers[byId.get(id)], issues = due.filter(issue => issue.paper_id === id), wanted = [...new Set(issues.map(issue => issue.field))];
       onProgress({ phase: 'metadata_start', paper_id: id });
-      const result = await repairPaperMetadata(old, findJournal(config, old.journal_key), { sources, search, otherPapers: papers, fields: wanted });
+      const result = await repairPaperMetadata(old, findJournal(config, old.journal_key), { sources, search, otherPapers: papers, fields: wanted,
+        confirmSingleSource: issues.some(issue => issue.reason === 'single_source_confirmation') });
       papers[byId.get(id)] = result.paper;
       repairs.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi, status: result.status,
         changed_fields: result.changed_fields, missing_fields: result.missing_fields, requested_fields: wanted, attempts: result.attempts,
-        identity_resolution: result.identity_resolution });
+        identity_resolution: result.identity_resolution, single_source_confirmation: result.single_source_confirmation });
       if (!old.abstract_original && wanted.includes('abstract')) abstracts.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi,
         status: result.paper.abstract_original ? 'found' : result.status === 'not_found' ? 'not_found' : 'retry_later',
         abstract_source: result.paper.provenance.abstract_original?.source || '', attempts: result.attempts });
@@ -50,6 +51,9 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     for (const result of repairs) {
       for (const issue of Object.values(state.issues).filter(issue => issue.paper_id === result.paper_id && issue.status !== 'resolved' &&
         metadataRepairIssue(issue) && result.requested_fields.includes(issue.field))) {
+        if (issue.reason === 'single_source_confirmation' && result.single_source_confirmation) {
+          state = recordSourceConfirmation(state, issue.id, papers[byId.get(result.paper_id)], finishedAt); continue;
+        }
         let status = ['not_found', 'quota_exhausted', 'access_restricted', 'source_unavailable'].includes(result.status) ? result.status : 'source_unavailable';
         if (status !== 'quota_exhausted' && result.attempts.some(a => /IDENTITY|MISMATCH|CONFLICT|DOI_ALREADY_ASSIGNED/.test(a.status))) status = 'identity_conflict';
         const source = [...result.attempts].reverse().find(a => providers.includes(a.source))?.source || 'publisher';
@@ -59,6 +63,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
       }
     }
     const stats = { added: 0, abstracts_filled: abstracts.filter(a => a.status === 'found').length, abstracts_checked: abstracts.length,
+      single_source_confirmed: repairs.filter(r => r.single_source_confirmation).length,
       pending_candidates: 0, papers_checked: repairs.length, papers_changed: papers.filter((p, i) => stableJson(p) !== stableJson(previous.papers[i])).length };
     const status = repairs.every(r => r.status === 'resolved') ? 'success' : 'partial', runId = newRunId(started);
     // An empty library cannot reach this point; its missing-field queue is empty.

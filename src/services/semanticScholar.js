@@ -20,14 +20,18 @@ export function buildSemanticScholarUrl(journal, { fromDate, toDate, cursor = '*
   return url;
 }
 
-export function normalizeSemanticScholarWork(work, journal, checkedAt, context) {
+export function semanticScholarJournalMatches(work, journal) {
   const venue = work?.publicationVenue || {};
   const issns = [venue.issn, ...(Array.isArray(venue.alternate_issns) ? venue.alternate_issns : [])]
     .filter(Boolean).map(value => String(value).toUpperCase());
   const matchesIssn = issns.some(value => [journal.print_issn, journal.electronic_issn].includes(value));
   const names = [work?.journal?.name, venue.name, work?.venue].filter(Boolean);
-  if ((issns.length && !matchesIssn) || (!matchesIssn && !names.some(name => venueName(name) === venueName(journal.name))) ||
-      (venue.type && venue.type.toLowerCase() !== 'journal')) throw new SourceError('INVALID_RECORD', 'Semantic Scholar期刊身份未核实');
+  return !((issns.length && !matchesIssn) || (!matchesIssn && !names.some(name => venueName(name) === venueName(journal.name))) ||
+      (venue.type && venue.type.toLowerCase() !== 'journal'));
+}
+
+export function normalizeSemanticScholarWork(work, journal, checkedAt, context) {
+  if (!semanticScholarJournalMatches(work, journal)) throw new SourceError('INVALID_RECORD', 'Semantic Scholar期刊身份未核实');
   if (typeof work?.paperId !== 'string' || !/^[a-f0-9]{40}$/i.test(work.paperId)) throw new SourceError('INVALID_RECORD', 'Semantic Scholar论文标识无效');
   const date = normalizePartialDate(work.publicationDate);
   const year = Number.isInteger(work.year) && work.year >= 1000 && work.year <= 9999 ? String(work.year) : '';

@@ -177,9 +177,13 @@ test('Crossref返回相似标题但错误DOI/期刊不采用；S2绝不使用tld
   const cr = { DOI: '10.1234/wrong',title: [lead().title],ISSN: [journal.print_issn],abstract };
   const s = makeEnrichmentSources({ request: async url => ({ ...response(JSON.stringify({ message: cr }),url),body: JSON.stringify({ message: cr }) }) });
   await assert.rejects(s.crossref(paper(),journal),/UNVERIFIED_IDENTITY/);
-  const data = { paperId: '123abc',title: lead().title,externalIds: { DOI: '10.1234/one' },abstract: null,tldr: { text: abstract },authors: [{ name: 'Alice Smith' }] };
+  const data = { paperId: '123abc',title: lead().title,journal: { name: journal.name },externalIds: { DOI: '10.1234/one' },abstract: null,tldr: { text: abstract },authors: [{ name: 'Alice Smith' }] };
   const ss = makeEnrichmentSources({ request: async url => response(JSON.stringify(data),url) });
   assert.equal((await ss.semanticscholar(paper(),journal)).abstract,'');
+  for (const venue of [null, { name: 'An unrelated journal' }]) {
+    const wrong = makeEnrichmentSources({ request: async url => response(JSON.stringify({ ...data, journal: venue }), url) });
+    await assert.rejects(wrong.semanticscholar(paper(), journal), /UNVERIFIED_IDENTITY/);
+  }
 });
 test('正式快照新增独立补全日志和重试状态，历史白名单可追溯，重复执行不重复入库', async t => {
   const f = await temp(t), discover = async () => discovery([lead({ abstract })]);
