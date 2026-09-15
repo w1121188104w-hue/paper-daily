@@ -13,6 +13,13 @@ export const metadataRepairIssue = issue => (fields.includes(issue.field) && iss
   (issue.field === 'publication_month' && issue.reason === 'publication_month_conflict');
 const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
 
+export function dueMetadataRepairIssues(config, state, now, { journalKey, paperIds = null } = {}) {
+  const enabled = new Set(config.journals.filter(journal => journal.enabled).map(journal => journal.key));
+  const selectedIds = paperIds === null ? null : new Set(paperIds);
+  return dueRepairIssues(state, now, { limit: null, filter: issue => metadataRepairIssue(issue) &&
+    (!selectedIds || selectedIds.has(issue.paper_id)) && (!journalKey || issue.journal_key === journalKey) && enabled.has(issue.journal_key) });
+}
+
 /** Second phase after discovery: explicit dependencies, no secret access, no LLM.
  * Due missing fields, title conflicts and single-source confirmations are queried. Callers must provide the same budgeted
  * search service as discovery, and a real quota reset timestamp when exhausted. */
@@ -27,8 +34,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
   return withLibraryLock(root, async () => {
     const previous = await readJournalLibrary({ root, config }), papers = [...previous.papers], byId = new Map(papers.map((p, i) => [p.id, i]));
     if (paperIds) assertLibrary(paperIds.every(id => byId.has(id) && (!journalKey || papers[byId.get(id)].journal_key === journalKey)), '限定论文必须属于当前库和选定期刊');
-    const due = dueRepairIssues(previous.repairState, started, { limit: 10000 }).filter(issue =>
-      metadataRepairIssue(issue) && (!paperIds || paperIds.includes(issue.paper_id)) && (!journalKey || issue.journal_key === journalKey) && findJournal(config, issue.journal_key)?.enabled);
+    const due = dueMetadataRepairIssues(config, previous.repairState, started, { paperIds, journalKey });
     const selected = [...new Set(due.map(issue => issue.paper_id))].slice(0, maxPapers), repairs = [], abstracts = [];
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {

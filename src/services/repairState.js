@@ -50,13 +50,16 @@ export function reconcileRepairState(previous, master) {
   return state;
 }
 
-export function dueRepairIssues(state, now = new Date(), { limit = 100 } = {}) {
-  assertLibrary(Number.isInteger(limit) && limit >= 0 && limit <= 10000 && Number.isFinite(now.getTime()), '自动待办查询参数无效');
+export function dueRepairIssues(state, now = new Date(), { limit = 100, filter = () => true } = {}) {
+  assertLibrary((limit === null || (Number.isInteger(limit) && limit >= 0 && limit <= 10000)) &&
+    typeof filter === 'function' && Number.isFinite(now.getTime()), '自动待办查询参数无效');
   const priority = issue => ['identity', 'doi', 'classification', 'authors', 'publication_month', 'abstract'].indexOf(issue.field);
-  return Object.values(state.issues).filter(issue => issue.status !== 'resolved' &&
-    (!issue.next_retry_at || Date.parse(issue.next_retry_at) <= now.getTime()))
+  const due = Object.values(state.issues).filter(issue => issue.status !== 'resolved' &&
+    (!issue.next_retry_at || Date.parse(issue.next_retry_at) <= now.getTime()) && filter(issue))
     .sort((a, b) => a.attempt_count - b.attempt_count || priority(a) - priority(b) ||
-      a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id)).slice(0, limit);
+      a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id));
+  // A paper batch must retain every due field for its selected papers.
+  return limit === null ? due : due.slice(0, limit);
 }
 
 export function recordRepairAttempt(state, id, { source, status, checkedAt, quotaResetsAt = null }) {

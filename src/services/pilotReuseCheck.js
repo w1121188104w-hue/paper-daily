@@ -1,10 +1,9 @@
 import { readJournalLibrary } from './journalLibrary.js';
 import { runCatalogDiscovery } from './catalogDiscoveryRun.js';
-import { runMetadataRepair, metadataRepairIssue } from './metadataRepairRun.js';
+import { runMetadataRepair, dueMetadataRepairIssues } from './metadataRepairRun.js';
 import { catalogMonths } from './searchCatalog.js';
 import { catalogSearchDue } from './catalogSearchState.js';
 import { collectionWindow } from './journalRun.js';
-import { dueRepairIssues } from './repairState.js';
 import { assertLibrary } from './libraryValidation.js';
 
 /** Reopen persisted state with fresh, deliberately offline clients. This verifies
@@ -14,8 +13,7 @@ export async function verifyPilotReuse(config, { root, journalKey, now = () => n
   const checked = now(), before = await readJournalLibrary({ root, config });
   const months = catalogMonths(collectionWindow({ now: checked, lookbackDays: 60 }));
   const catalogDue = months.filter(month => catalogSearchDue(before.enrichmentState.catalog_search || {}, journalKey, month, checked)).length;
-  const metadataDue = dueRepairIssues(before.repairState, checked, { limit: 10000 }).filter(issue => issue.journal_key === journalKey &&
-    metadataRepairIssue(issue)).length;
+  const metadataDue = dueMetadataRepairIssues(config, before.repairState, checked, { journalKey }).length;
   let calls = 0;
   const forbidden = async () => { calls++; throw Object.assign(new Error('Replay must not request network'), { code: 'EVIDENCE_STORAGE_ERROR' }); };
   const common = { root, journalKey, now: () => checked, search: forbidden };
