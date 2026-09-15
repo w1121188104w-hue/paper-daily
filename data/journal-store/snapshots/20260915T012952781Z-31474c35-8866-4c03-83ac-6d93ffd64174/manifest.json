@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "run_id": "20260915T012952781Z-31474c35-8866-4c03-83ac-6d93ffd64174",
+  "created_at": "2026-09-15T01:33:30.170Z",
+  "operation": "metadata_enrichment",
+  "parent": {
+    "path": "snapshots/20260915T012922742Z-3c11dd8d-8c97-4205-812f-aa2a33ed4de8/manifest.json",
+    "sha256": "89cfc43b074f94e2af5309694c9c3f32a7c812fbd7969ebf18d6e6d168fecb7d"
+  },
+  "papers": {
+    "2026": {
+      "path": "snapshots/20260915T012922742Z-3c11dd8d-8c97-4205-812f-aa2a33ed4de8/papers/2026.json",
+      "sha256": "246f12a5cde7eef37195af17266156dcc709aa9f36578dc092f736e3a599a0dc",
+      "count": 551
+    }
+  },
+  "runs": {
+    "2026-09": {
+      "path": "snapshots/20260915T012922742Z-3c11dd8d-8c97-4205-812f-aa2a33ed4de8/runs/2026-09.json",
+      "sha256": "5dca113cc1e9a678dcc7dfddd604b30d54a7761115952537000fcdf603a65a68",
+      "count": 12
+    }
+  },
+  "translation_imports": {
+    "2026-09": {
+      "path": "snapshots/20260914T103813771Z-6d1ce5bf-6d23-4cd7-adb7-f10593a988d9/translation_imports/2026-09.json",
+      "sha256": "8e498c78fd5130f424ce6c972ce084d552eff64e2faffb733829bd4fe973d6f9",
+      "count": 62
+    }
+  },
+  "audit": {
+    "path": "snapshots/20260915T012952781Z-31474c35-8866-4c03-83ac-6d93ffd64174/audit.json",
+    "sha256": "aebafdf9628904566d27bc613dfa744ff2ef91673c3244b635f2eadbfcac8275"
+  },
+  "raw": [],
+  "enrichment_runs": {
+    "2026-09": {
+      "path": "snapshots/20260915T012952781Z-31474c35-8866-4c03-83ac-6d93ffd64174/enrichment_runs/2026-09.json",
+      "sha256": "6526ba4ea887d400fde31c34b6edf62a4e3800207292649c647ea90691d23cb6",
+      "count": 7
+    }
+  },
+  "enrichment_state": {
+    "path": "snapshots/20260915T012952781Z-31474c35-8866-4c03-83ac-6d93ffd64174/enrichment-state.json",
+    "sha256": "55475c7fe78ed13163033bdaf812111aeccf4570812d32d433193d1095ba9d55"
+  },
+  "translation_queue": {
+    "path": "snapshots/20260915T012952781Z-31474c35-8866-4c03-83ac-6d93ffd64174/translation-queue.json",
+    "sha256": "b9bc3a7dd73de82448c9977fc2c1b3bcb38a562db8663583731591623fdc9869"
+  }
+}
