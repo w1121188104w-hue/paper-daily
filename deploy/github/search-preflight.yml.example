@@ -1,0 +1,152 @@
+{
+  "name": "Search API preflight (no publication)",
+  "on": {
+    "workflow_dispatch": {
+      "inputs": {
+        "resume_run_id": {
+          "description": "从本仓库此前隔离任务的pipeline-checkpoint存档续跑；留空则首次运行",
+          "type": "string",
+          "default": ""
+        },
+        "pipeline_all": {
+          "description": "19刊统一流程隔离验收，月额度硬上限保护，不翻译不发布",
+          "type": "boolean",
+          "default": false
+        },
+        "abstract_search": {
+          "description": "三篇JPE旧缺摘要真实搜索：最多6次Pro、6次免费Serp，不翻译不发布",
+          "type": "boolean",
+          "default": false
+        },
+        "metadata_batch": {
+          "description": "缺失字段试跑批量；不增加收费搜索上限",
+          "type": "choice",
+          "options": [
+            "3",
+            "20"
+          ],
+          "default": "3"
+        },
+        "journal": {
+          "description": "隔离试跑的单本期刊（不影响原账户检查模式）",
+          "type": "choice",
+          "options": [
+            "AER",
+            "QJE",
+            "JAR"
+          ],
+          "default": "AER"
+        },
+        "pilot": {
+          "description": "隔离单刊联合试跑：最多6次Pro、4次免费Serp，3或20篇字段补全，不翻译不发布",
+          "type": "boolean",
+          "default": false
+        },
+        "account_only": {
+          "description": "只读检查免费账户，不消耗任何搜索次数",
+          "type": "boolean",
+          "default": true
+        },
+        "retry_unknown": {
+          "description": "已获授权再次诊断；旧的未知计费仍保留，每次运行最多1次Pro请求",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "concurrency": {
+    "group": "journal-production",
+    "cancel-in-progress": false
+  },
+  "jobs": {
+    "preflight": {
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 60,
+      "permissions": {
+        "contents": "write",
+        "actions": "read"
+      },
+      "steps": [
+        {
+          "name": "Checkout reviewed search code only",
+          "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "with": {
+            "ref": "REPLACE_WITH_REVIEWED_COMMIT_SHA",
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Set up Node.js 24",
+          "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "with": {
+            "node-version": "24",
+            "package-manager-cache": false
+          }
+        },
+        {
+          "name": "Install locked dependencies without lifecycle scripts",
+          "run": "npm ci --ignore-scripts"
+        },
+        {
+          "name": "Run offline tests before accessing credentials",
+          "run": "npm test"
+        },
+        {
+          "name": "Validate checkpoint selection without reading API keys",
+          "env": {
+            "RESUME_RUN_ID": "${{ inputs.resume_run_id }}",
+            "PIPELINE_ALL": "${{ inputs.pipeline_all }}"
+          },
+          "run": "node --input-type=module -e \"const id=process.env.RESUME_RUN_ID; if(id && (process.env.PIPELINE_ALL!=='true' || !/^[1-9][0-9]{0,19}$/.test(id))) process.exit(1);\""
+        },
+        {
+          "name": "Download isolated data checkpoint only",
+          "if": "inputs.pipeline_all && inputs.resume_run_id != ''",
+          "uses": "actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0",
+          "with": {
+            "name": "pipeline-checkpoint",
+            "run-id": "${{ inputs.resume_run_id }}",
+            "repository": "${{ github.repository }}",
+            "github-token": "${{ github.token }}",
+            "path": "${{ runner.temp }}/pipeline-resume"
+          }
+        },
+        {
+          "name": "Run explicitly selected bounded verification mode (no publication)",
+          "id": "verification",
+          "env": {
+            "RESUME_RUN_ID": "${{ inputs.resume_run_id }}",
+            "PIPELINE_ALL": "${{ inputs.pipeline_all }}",
+            "ABSTRACT_SEARCH": "${{ inputs.abstract_search }}",
+            "ZHIPU_API_KEY": "${{ secrets.ZHIPU_API_KEY }}",
+            "SERPAPI_API_KEY": "${{ secrets.SERPAPI_API_KEY }}",
+            "GITHUB_TOKEN": "${{ github.token }}",
+            "ACCOUNT_ONLY": "${{ inputs.account_only }}",
+            "RETRY_UNKNOWN": "${{ inputs.retry_unknown }}",
+            "PILOT": "${{ inputs.pilot }}",
+            "PILOT_JOURNAL": "${{ inputs.journal }}",
+            "PILOT_METADATA_BATCH": "${{ inputs.metadata_batch }}"
+          },
+          "run": "if [ \"$PIPELINE_ALL\" = \"true\" ]; then\n  args=(--run --isolate --all --max-papers 100 --max-pages 10 --checkpoint)\n  if [ -n \"$RESUME_RUN_ID\" ]; then args+=(--resume-from \"$RUNNER_TEMP/pipeline-resume\"); fi\n  node scripts/journal-pipeline.js \"${args[@]}\"\nelif [ \"$ABSTRACT_SEARCH\" = \"true\" ]; then\n  node scripts/abstract-search-pilot.js --run\nelif [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
+        },
+        {
+          "name": "Keep validated isolated history even when sources partially fail",
+          "if": "always() && steps.verification.outputs.checkpoint_path != ''",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "pipeline-checkpoint",
+            "path": "${{ steps.verification.outputs.checkpoint_path }}",
+            "retention-days": 30,
+            "if-no-files-found": "error",
+            "include-hidden-files": false,
+            "overwrite": false
+          }
+        }
+      ]
+    }
+  }
+}

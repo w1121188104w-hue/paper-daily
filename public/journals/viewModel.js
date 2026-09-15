@@ -48,7 +48,8 @@ export function monthCells(month) {
 const normalized = (value) => String(value || '').normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
 export const sourceLabel = (source) => ({ crossref: 'Crossref', openalex: 'OpenAlex', publisher: '期刊／出版社官网', semanticscholar: 'Semantic Scholar', repec: 'RePEc 期刊记录' })[source] || '来源未标明';
 export const ABSTRACT_LABELS = { available: '已有原始摘要', found: '已从真实来源补全', missing: '待补全', not_found: '暂时未找到',
-  publisher_no_abstract: '本次官网页面未提供摘要', access_restricted: '部分来源访问受限', retry_later: '稍后自动重试', identity_unverified: '论文身份尚未核实' };
+  publisher_no_abstract: '本次官网页面未提供摘要', access_restricted: '部分来源访问受限', retry_later: '稍后自动重试', identity_unverified: '论文身份尚未核实',
+  source_unavailable: '部分来源暂不可用，等待重试', quota_exhausted: '免费搜索额度已耗尽，等待重置', identity_conflict: '摘要与论文身份尚未核实' };
 export function abstractSourceHref(value) {
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password && !url.port &&
     ['api.crossref.org','openalex.org','api.openalex.org','api.semanticscholar.org','www.semanticscholar.org','www.aeaweb.org','pubs.aeaweb.org',

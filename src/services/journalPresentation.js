@@ -13,10 +13,15 @@ const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_categ
 const select = (value, fields) => Object.fromEntries(fields.map((key) => [key, value[key]]));
 const DATE_FIELDS = ['published_online_date', 'published_print_date', 'publication_date'];
 const publicSource = (source) => ['crossref', 'openalex', 'publisher', 'semanticscholar', 'repec'].includes(source) ? source : null;
-function abstractInfo(paper, state) {
+function abstractInfo(paper, state, repairState) {
   const provenance = paper.provenance?.abstract_original;
   const record = paper.source_records.find(r => r.source === provenance?.source && r.source_id === provenance?.source_id && r.abstract === paper.abstract_original);
-  const retry = state?.abstracts?.[paper.id];
+  let retry = state?.abstracts?.[paper.id];
+  const issue = Object.values(repairState?.issues || {}).find(row => row.paper_id === paper.id && row.reason === 'missing_abstract' && row.status !== 'resolved');
+  if (issue && (!retry || issue.updated_at >= retry.last_checked_at)) retry = {
+    status: issue.status === 'pending' ? 'missing' : issue.status,
+    last_checked_at: issue.attempts.at(-1)?.checked_at || null, next_retry_at: issue.next_retry_at
+  };
   let url = record?.source_evidence?.url || '';
   if (!url && record?.source === 'crossref' && paper.doi) url = `https://api.crossref.org/works/${encodeURIComponent(paper.doi)}`;
   if (!url && record?.source === 'openalex' && /^W\d+$/.test(record.source_id)) url = `https://openalex.org/${record.source_id}`;
@@ -47,7 +52,7 @@ export function authorVariants(paper) {
 
 export function presentJournalLibrary(library, config) {
   const papers = library.papers.map((paper) => ({ ...select(paper, PAPER_FIELDS),
-    ...abstractInfo(paper,library.enrichmentState),
+    ...abstractInfo(paper,library.enrichmentState,library.repairState),
     sources: [...paper.sources], authors: paper.authors.map((author) => select(author, ['name', 'orcid'])),
     author_variants: authorVariants(paper),
     date_sources: Object.fromEntries(DATE_FIELDS.map((field) => [field, publicSource(paper.provenance?.[field]?.source)])),

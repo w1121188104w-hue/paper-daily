@@ -13,21 +13,25 @@ import { makeSearchSources } from '../src/services/searchSources.js';
 import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
 import { makeBudgetedSearch, searchAllowance } from '../src/services/searchBudget.js';
 import { clonePilotLibrary } from './search-pilot.js';
+import { savePipelineCheckpoint, restorePipelineCheckpoint, checkpointOutput } from './pipeline-checkpoint.js';
 
 export function parsePipelineArgs(args) {
   const { values: v } = parseArgs({ args, strict: true, allowPositionals: false, options: {
     help: { type: 'boolean' }, plan: { type: 'boolean' }, run: { type: 'boolean' }, save: { type: 'boolean' },
     isolate: { type: 'boolean' }, all: { type: 'boolean' }, journal: { type: 'string' },
-    'max-papers': { type: 'string' }, 'max-pages': { type: 'string' }
+    'max-papers': { type: 'string' }, 'max-pages': { type: 'string' },
+    checkpoint: { type: 'boolean' }, 'resume-from': { type: 'string' }
   } });
   if (!Object.keys(v).length || v.help) return { mode: 'help' };
   assertLibrary(Boolean(v.plan) !== Boolean(v.run), '请选择只读plan或明确run');
   assertLibrary(Boolean(v.all) !== Boolean(v.journal), '必须指定all或journal');
   assertLibrary(!v.plan || (!v.save && !v.isolate), '只读plan不能请求保存或复制');
   assertLibrary(!v.run || Boolean(v.save) !== Boolean(v.isolate), '运行必须选择save正式库或isolate副本');
+  assertLibrary(!(v.checkpoint || v['resume-from']) || (v.run && v.isolate), '存档和续跑仅允许隔离模式');
   const maxPapers = Number(v['max-papers'] ?? 100), maxPages = Number(v['max-pages'] ?? 1000);
   assertLibrary(Number.isInteger(maxPapers) && maxPapers >= 0 && maxPapers <= 1000 && Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 1000, '批量或页数上限无效');
-  return { mode: v.plan ? 'plan' : 'run', isolate: Boolean(v.isolate), journalKey: v.journal, maxPapers, maxPages };
+  return { mode: v.plan ? 'plan' : 'run', isolate: Boolean(v.isolate), journalKey: v.journal, maxPapers, maxPages,
+    checkpoint: Boolean(v.checkpoint), resumeFrom: v['resume-from'] };
 }
 
 /** No production secrets are accessed before the command/mode/library gates. */
@@ -63,9 +67,10 @@ export async function makePipelineRuntime({ env, policy }) {
 
 export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env = process.env, log = console.log,
   loadPolicy = loadSearchPolicy, loadConfig = loadJournalConfig, readLibrary = readJournalLibrary,
-  runtime = makePipelineRuntime, execute = runJournalPipeline, clone = clonePilotLibrary } = {}) {
+  runtime = makePipelineRuntime, execute = runJournalPipeline, clone = clonePilotLibrary,
+  saveCheckpoint = savePipelineCheckpoint, restoreCheckpoint = restorePipelineCheckpoint, outputCheckpoint = checkpointOutput } = {}) {
   const options = parsePipelineArgs(args);
-  if (options.mode === 'help') { log('只读：--plan --all；隔离运行：--run --isolate --all；正式运行：--run --save --all（需配置与GitHub开关同时开启）。可用--journal AER；本命令不翻译、不提交Git、不发布网站。'); return { status: 'help' }; }
+  if (options.mode === 'help') { log('只读：--plan --all；隔离运行：--run --isolate --all；可加--checkpoint导出存档，--resume-from <存档目录>续跑；正式运行：--run --save --all（需配置与GitHub开关同时开启）。可用--journal AER；本命令不翻译、不提交Git、不发布网站。'); return { status: 'help' }; }
   const config = await loadConfig(), policy = await loadPolicy();
   if (options.journalKey) assertLibrary(findJournal(config, options.journalKey)?.enabled, '期刊无效');
   const before = await readLibrary({ root, config });
@@ -79,16 +84,29 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
   assertLibrary(env.GITHUB_ACTIONS === 'true' && env.GITHUB_REPOSITORY === 'w1121188104w-hue/paper-daily' &&
     (options.isolate ? env.GITHUB_EVENT_NAME === 'workflow_dispatch' : ['schedule', 'workflow_dispatch'].includes(env.GITHUB_EVENT_NAME) &&
       env.DATA_BRANCH && env.GITHUB_REF === `refs/heads/${env.DATA_BRANCH}`), '仅允许受控GitHub运行，正式模式必须为默认分支');
-  let copy;
+  if (options.checkpoint) assertLibrary(env.GITHUB_OUTPUT && env.RUNNER_TEMP, '存档需要受控Runner输出与临时目录');
+  let copy, resumed, executionStarted = false;
   if (options.isolate) copy = await clone(config, { repositoryRoot: path.resolve(root, '../..'), tempParent: env.RUNNER_TEMP || os.tmpdir() });
   try {
+    // Keep the formal library guard even when continuing from an earlier artifact.
+    if (options.resumeFrom) resumed = await restoreCheckpoint(config, { directory: options.resumeFrom, tempParent: env.RUNNER_TEMP || os.tmpdir() });
     const services = await runtime({ env, policy });
-    const report = await execute(config, { ...services, root: copy?.root || root, journalKey: options.journalKey,
+    executionStarted = true;
+    const report = await execute(config, { ...services, root: resumed?.root || copy?.root || root, journalKey: options.journalKey,
       maxPapers: options.maxPapers, maxPages: options.maxPages, onProgress: row => log(`PIPELINE_PROGRESS ${JSON.stringify(row)}`) });
     const result = { ...report, ...services.summary(), isolated: options.isolate };
     if (copy) result.original_unchanged = await copy.verifyOriginal();
     log(`PIPELINE_REPORT ${JSON.stringify(result)}`); return result;
-  } finally { if (copy) await copy.verifyOriginal(); }
+  } finally {
+    if (copy) await copy.verifyOriginal();
+    if (resumed) await resumed.verifyOriginal();
+    if (options.checkpoint && copy && executionStarted) {
+      const checkpoint = await saveCheckpoint(config, { root: resumed?.root || copy.root, tempParent: env.RUNNER_TEMP,
+        secrets: [env.ZHIPU_API_KEY, env.SERPAPI_API_KEY, env.SEMANTIC_SCHOLAR_API_KEY, env.GITHUB_TOKEN] });
+      await outputCheckpoint(env.GITHUB_OUTPUT, checkpoint);
+      log(`PIPELINE_CHECKPOINT ${JSON.stringify({ files: checkpoint.files, versions: checkpoint.versions })}`);
+    }
+  }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try { const result = await pipelineCommand(process.argv.slice(2)); process.exitCode = result.status === 'partial' ? 1 : 0; }

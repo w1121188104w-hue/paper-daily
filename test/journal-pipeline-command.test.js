@@ -21,8 +21,33 @@ test('两个生产开关必须同时开启，关闭时不读取密钥或构造�
 });
 test('参数互斥和上限在IO之前拒绝；未授权宿主不能运行', async () => {
   for (const args of [['--run', '--all'], ['--plan', '--all', '--save'], ['--run', '--all', '--save', '--isolate'],
+    ['--plan', '--all', '--checkpoint'], ['--run', '--save', '--all', '--resume-from', 'archive'],
     ['--plan', '--all', '--journal', 'AER'], ['--plan', '--all', '--max-papers', '1001'], ['--plan', '--all', '--max-pages', '0']]) assert.throws(() => parsePipelineArgs(args));
   await assert.rejects(pipelineCommand(['--run', '--isolate', '--all'], options({ env: {} })));
+});
+
+test('隔离续跑先验证存档再读密钥；部分失败与执行异常仍导出已提交历史', async () => {
+  const events = [], base = options({ root: 'G:/test/data/journal-store', env: {
+    GITHUB_ACTIONS: 'true', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily', GITHUB_EVENT_NAME: 'workflow_dispatch',
+    RUNNER_TEMP: 'runner-temp', GITHUB_OUTPUT: 'runner-output' },
+    clone: async () => ({ root: 'original-copy', verifyOriginal: async () => { events.push('formal-verified'); return true; } }),
+    restoreCheckpoint: async () => { events.push('restored'); return { root: 'resumed-copy', verifyOriginal: async () => { events.push('artifact-verified'); } }; },
+    runtime: async () => { events.push('runtime'); return { summary: () => ({}) }; },
+    execute: async (_, o) => { assert.equal(o.root, 'resumed-copy'); events.push('executed'); return { status: 'partial' }; },
+    saveCheckpoint: async (_, o) => { assert.equal(o.root, 'resumed-copy'); events.push('saved'); return { directory: 'archive-copy', files: 1, versions: 1 }; },
+    outputCheckpoint: async (file, saved) => { assert.equal(file, 'runner-output'); assert.equal(saved.directory, 'archive-copy'); events.push('output'); } });
+  const args = ['--run', '--isolate', '--all', '--checkpoint', '--resume-from', 'artifact'];
+  assert.equal((await pipelineCommand(args, base)).status, 'partial');
+  assert.deepEqual(events, ['restored', 'runtime', 'executed', 'formal-verified', 'formal-verified', 'artifact-verified', 'saved', 'output']);
+  events.length = 0;
+  await assert.rejects(pipelineCommand(args, { ...base, execute: async () => { throw new Error('stage failed'); } }), /stage failed/);
+  assert.ok(events.includes('saved')); assert.ok(events.includes('output'));
+  events.length = 0;
+  await assert.rejects(pipelineCommand(args, { ...base, restoreCheckpoint: async () => { throw new Error('invalid artifact'); } }), /invalid artifact/);
+  assert.deepEqual(events, ['formal-verified']);
+  events.length = 0;
+  await assert.rejects(pipelineCommand(args, { ...base, clone: async () => ({ root: 'original-copy', verifyOriginal: async () => { throw new Error('formal changed'); } }) }), /formal changed/);
+  assert.ok(!events.includes('saved'));
 });
 test('隔离入口仅向副本写入，执行失败仍核对原库，不自动开启生产', async () => {
   let verified = 0, constructed = 0;
@@ -62,4 +87,28 @@ test('每日工作流真实门控：配置关闭即输出false，新旧路径互
     cwd: new URL('..', import.meta.url), encoding: 'utf8', env: { ...process.env, JOURNAL_SEARCH_ENABLED: 'true', GITHUB_OUTPUT: output } });
   assert.equal(child.status, 0, child.stderr);
   assert.equal(await fs.readFile(output, 'utf8'), 'enabled=false\n');
+});
+
+test('隔离工作流只上传明确输出的存档，部分失败仍保存；下载不覆盖代码和正式库', async () => {
+  const flow = JSON.parse(await fs.readFile(new URL('../deploy/github/search-preflight.yml.example', import.meta.url), 'utf8'));
+  const steps = flow.jobs.preflight.steps, upload = steps.find(s => s.uses?.startsWith('actions/upload-artifact@')),
+    download = steps.find(s => s.uses?.startsWith('actions/download-artifact@')), run = steps.find(s => s.id === 'verification');
+  assert.equal(upload.if, "always() && steps.verification.outputs.checkpoint_path != ''");
+  assert.equal(upload.with.path, '${{ steps.verification.outputs.checkpoint_path }}');
+  assert.equal(upload.with.overwrite, false); assert.equal(upload.with['include-hidden-files'], false);
+  assert.equal(download.with.path, '${{ runner.temp }}/pipeline-resume');
+  assert.equal(download.with.repository, '${{ github.repository }}');
+  assert.equal(download.with.name, upload.with.name); assert.equal(upload.with['retention-days'], 30);
+  assert.ok(steps.indexOf(download) < steps.indexOf(run));
+  assert.ok(run.run.includes('--checkpoint')); assert.ok(run.run.includes('--resume-from'));
+  assert.equal(run.env.DEEPSEEK_API_KEY, undefined);
+  assert.equal(flow.concurrency.group, 'journal-production');
+  for (const step of [upload, download]) assert.match(step.uses, /@[a-f0-9]{40}$/);
+  const validate = steps.find(s => s.name.startsWith('Validate checkpoint selection'));
+  assert.ok(!JSON.stringify(validate).includes('secrets.'));
+  const prefix = 'node --input-type=module -e "', code = validate.run.slice(prefix.length, -1);
+  for (const [id, mode, expected] of [['', 'false', 0], ['12345', 'true', 0], ['$(evil)', 'true', 1], ['123', 'false', 1]]) {
+    const child = spawnSync(process.execPath, ['--input-type=module', '-e', code], { env: { RESUME_RUN_ID: id, PIPELINE_ALL: mode } });
+    assert.equal(child.status, expected);
+  }
 });

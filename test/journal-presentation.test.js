@@ -32,6 +32,21 @@ function clients(records = [record()]) {
   })]));
 }
 const base = () => mergePapers([record()], { firstSeenDate: '2026-09-07', checkedAt }).papers;
+
+test('新字段重试状态传给原页面，选择较新记录且不暴露完整待办', async t => {
+  const { root } = await fixture(t), lib = await readJournalLibrary({ root, config });
+  const p = lib.papers[0]; p.abstract_original = ''; p.abstract_zh = '';
+  lib.enrichmentState.abstracts[p.id] = { status: 'not_found', last_checked_at: '2026-09-07T01:00:00.000Z', next_retry_at: '2026-09-08T01:00:00.000Z' };
+  const issue = { paper_id: p.id, reason: 'missing_abstract', status: 'quota_exhausted', updated_at: '2026-09-15T01:00:00.000Z',
+    next_retry_at: '2026-10-12T00:00:00.000Z', attempts: [{ checked_at: '2026-09-15T01:00:00.000Z' }], internal_marker: 'DO_NOT_PUBLISH_ISSUE' };
+  lib.repairState = { issues: { example: issue } };
+  const result = presentJournalLibrary(lib, config), row = result.papers[0];
+  assert.equal(row.abstract_status, 'quota_exhausted'); assert.equal(row.abstract_next_retry_at, issue.next_retry_at);
+  assert.equal(row.abstract_last_checked_at, issue.attempts[0].checked_at);
+  assert.equal(JSON.stringify(result).includes('DO_NOT_PUBLISH_ISSUE'), false);
+  issue.status = 'resolved';
+  assert.equal(presentJournalLibrary(lib, config).papers[0].abstract_status, 'not_found');
+});
 async function fixture(t, collect = true) {
   const parent = path.resolve(os.tmpdir()), temp = await fs.mkdtemp(path.join(parent, 'journal-preview-test-'));
   t.after(async () => {
