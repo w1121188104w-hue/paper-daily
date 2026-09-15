@@ -3,6 +3,11 @@
   "on": {
     "workflow_dispatch": {
       "inputs": {
+        "pipeline_all": {
+          "description": "19刊统一流程隔离验收，月额度硬上限保护，不翻译不发布",
+          "type": "boolean",
+          "default": false
+        },
         "abstract_search": {
           "description": "三篇JPE旧缺摘要真实搜索：最多6次Pro、6次免费Serp，不翻译不发布",
           "type": "boolean",
@@ -48,7 +53,7 @@
   "jobs": {
     "preflight": {
       "runs-on": "ubuntu-latest",
-      "timeout-minutes": 15,
+      "timeout-minutes": 60,
       "permissions": {
         "contents": "write"
       },
@@ -57,7 +62,7 @@
           "name": "Checkout reviewed search code only",
           "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
           "with": {
-            "ref": "e02aeb1df84b4ebefef78dcf54598ff3e348b6ce",
+            "ref": "b17172b820cb328f66acb9cca6b640779210565a",
             "persist-credentials": false
           }
         },
@@ -80,6 +85,7 @@
         {
           "name": "Run explicitly selected bounded verification mode (no publication)",
           "env": {
+            "PIPELINE_ALL": "${{ inputs.pipeline_all }}",
             "ABSTRACT_SEARCH": "${{ inputs.abstract_search }}",
             "ZHIPU_API_KEY": "${{ secrets.ZHIPU_API_KEY }}",
             "SERPAPI_API_KEY": "${{ secrets.SERPAPI_API_KEY }}",
@@ -90,7 +96,7 @@
             "PILOT_JOURNAL": "${{ inputs.journal }}",
             "PILOT_METADATA_BATCH": "${{ inputs.metadata_batch }}"
           },
-          "run": "if [ \"$ABSTRACT_SEARCH\" = \"true\" ]; then\n  node scripts/abstract-search-pilot.js --run\nelif [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
+          "run": "if [ \"$PIPELINE_ALL\" = \"true\" ]; then\n  node scripts/journal-pipeline.js --run --isolate --all --max-papers 100 --max-pages 10\nelif [ \"$ABSTRACT_SEARCH\" = \"true\" ]; then\n  node scripts/abstract-search-pilot.js --run\nelif [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
         }
       ]
     }
