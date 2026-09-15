@@ -4,6 +4,7 @@ import { isIsoTime } from './libraryValidation.js';
 import { classifyPaper, CLASSIFICATION_VERSION } from './paperClassification.js';
 import { translationEligibility } from './translationQueue.js';
 import { evidence } from './paperMerge.js';
+import { publicationFor } from './masterList.js';
 
 // Explicit public fields: never serialize a library snapshot or raw source response directly.
 const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_category', 'journal_category_zh',
@@ -13,6 +14,23 @@ const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_categ
 const select = (value, fields) => Object.fromEntries(fields.map((key) => [key, value[key]]));
 const DATE_FIELDS = ['published_online_date', 'published_print_date', 'publication_date'];
 const publicSource = (source) => ['crossref', 'openalex', 'publisher', 'semanticscholar', 'repec'].includes(source) ? source : null;
+function publicationInfo(paper) {
+  const publication = publicationFor(paper), dates = {}, sources = {}, conflicts = [];
+  for (const field of DATE_FIELDS) {
+    const rows = evidence(paper.source_records, field).filter(r => r[field]);
+    const years = new Set(rows.map(r => r[field].slice(0, 4)));
+    const months = new Set(rows.filter(r => r[field].length >= 7).map(r => r[field].slice(0, 7)));
+    const conflict = years.size > 1 || months.size > 1;
+    const chosen = [...rows].sort((a, b) => b[field].length - a[field].length || a.source.localeCompare(b.source))[0];
+    dates[field] = !conflict && chosen ? chosen[field].slice(0, 7) : '';
+    sources[field] = !conflict && chosen ? publicSource(chosen.source) : null;
+    if (conflict) conflicts.push(field);
+  }
+  return { ...dates, date_sources: sources, date_conflicts: conflicts,
+    publication_month: publication.publication_month, publication_year: publication.publication_year,
+    publication_basis: publication.publication_basis, publication_conflict: publication.publication_conflict,
+    publication_month_source: publicSource(publication.publication_source?.source) };
+}
 function abstractInfo(paper, state, repairState) {
   const provenance = paper.provenance?.abstract_original;
   const record = paper.source_records.find(r => r.source === provenance?.source && r.source_id === provenance?.source_id && r.abstract === paper.abstract_original);
@@ -55,7 +73,7 @@ export function presentJournalLibrary(library, config) {
     ...abstractInfo(paper,library.enrichmentState,library.repairState),
     sources: [...paper.sources], authors: paper.authors.map((author) => select(author, ['name', 'orcid'])),
     author_variants: authorVariants(paper),
-    date_sources: Object.fromEntries(DATE_FIELDS.map((field) => [field, publicSource(paper.provenance?.[field]?.source)])),
+    ...publicationInfo(paper),
     classification: classifyPaper(paper) }));
   const eligibility = translationEligibility(library.papers);
   return {

@@ -60,8 +60,17 @@ export function abstractSourceHref(value) {
 export function publicationDateText(value, source) {
   if (!value) return '未提供';
   const precision = /^\d{4}$/.test(value) && Number(value) > 0 ? '仅提供年份' : validMonth(value) ? '仅提供月份' :
-    validDay(value) ? '数据库标注日期，未逐篇核实到日' : null;
-  return precision ? `${value}（${sourceLabel(source)}；${precision}）` : '日期无效，需核查';
+    validDay(value) ? '按月展示' : null;
+  return precision ? `${value.slice(0, 7)}（${sourceLabel(source)}；${precision}）` : '日期无效，待自动核实';
+}
+export function publicationMonthText(paper) {
+  if (paper.publication_conflict) return '待自动核实（来源月份有冲突）';
+  if (validMonth(paper.publication_month)) {
+    const basis = { online: '在线发表', print: '纸刊发表', unspecified: '来源通用发表时间' }[paper.publication_basis] || '日期类型未提供';
+    return `${paper.publication_month}（${sourceLabel(paper.publication_month_source)}；${basis}）`;
+  }
+  return Number.isInteger(paper.publication_year) && paper.publication_year >= 1000 && paper.publication_year <= 9999
+    ? `${paper.publication_year}（月份待补全）` : '待补全';
 }
 export function filterPapers(papers, { journal = '', category = '', q = '', date = '', kind = 'all' } = {}) {
   const tokens = normalized(q).split(' ').filter(Boolean);
@@ -71,7 +80,7 @@ export function filterPapers(papers, { journal = '', category = '', q = '', date
     if (!tokens.length) return true;
     const haystack = normalized([paper.title_original, paper.title_zh, paper.abstract_original, paper.abstract_zh,
       paper.doi, paper.journal_key, paper.journal_name, paper.journal_category_zh, paper.first_seen_date,
-      paper.published_online_date, paper.published_print_date, paper.publication_date,
+      paper.published_online_date, paper.published_print_date, paper.publication_date, paper.publication_month, paper.publication_year,
       ...paper.authors.map((author) => author.name),
       ...(paper.author_variants || []).flatMap((variant) => variant.names)].join(' '));
     return tokens.every((token) => haystack.includes(token));

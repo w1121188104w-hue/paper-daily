@@ -9,7 +9,8 @@ import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publis
 
 const fields = ['doi', 'authors', 'publication_month', 'abstract'];
 export const metadataRepairIssue = issue => (fields.includes(issue.field) && issue.reason === `missing_${issue.field}`) ||
-  (issue.field === 'identity' && ['title_conflict', 'single_source_confirmation'].includes(issue.reason));
+  (issue.field === 'identity' && ['title_conflict', 'single_source_confirmation'].includes(issue.reason)) ||
+  (issue.field === 'publication_month' && issue.reason === 'publication_month_conflict');
 const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
 
 /** Second phase after discovery: explicit dependencies, no secret access, no LLM.
@@ -55,7 +56,8 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
           state = recordSourceConfirmation(state, issue.id, papers[byId.get(result.paper_id)], finishedAt); continue;
         }
         let status = ['not_found', 'quota_exhausted', 'access_restricted', 'source_unavailable'].includes(result.status) ? result.status : 'source_unavailable';
-        if (status !== 'quota_exhausted' && result.attempts.some(a => /IDENTITY|MISMATCH|CONFLICT|DOI_ALREADY_ASSIGNED/.test(a.status))) status = 'identity_conflict';
+        if (status !== 'quota_exhausted' && (result.attempts.some(a => /IDENTITY|MISMATCH|CONFLICT|DOI_ALREADY_ASSIGNED/.test(a.status)) ||
+          (issue.field === 'publication_month' && master.entries.some(row => row.id === result.paper_id && row.publication_conflict)))) status = 'identity_conflict';
         const source = [...result.attempts].reverse().find(a => providers.includes(a.source))?.source || 'publisher';
         const reset = status === 'quota_exhausted' ? (typeof quotaResetsAt === 'function' ? await quotaResetsAt(source, finishedAt) : quotaResetsAt) : null;
         if (status === 'quota_exhausted') assertLibrary(isIsoTime(reset) && Date.parse(reset) > finished.getTime(), '免费额度耗尽时必须提供已核实的未来重置时间');
