@@ -158,6 +158,7 @@ export function validateRuns(runs) {
       assertLibrary(['raw_count', 'accepted_count', 'excluded_count', 'rejected_count', 'pages'].every((key) => isCount(source[key])) &&
         Number.isFinite(source.duration_ms) && source.duration_ms >= 0 &&
         typeof source.ok === 'boolean' && typeof source.complete === 'boolean', '来源运行计数或状态无效');
+      if (source.metadata_warning_count !== undefined) assertLibrary(isCount(source.metadata_warning_count), '来源元数据警告计数无效');
     }
     if (['success', 'no_updates'].includes(run.status)) {
       assertLibrary(run.sources.length === run.journal_keys.length * requiredSources.length && run.sources.every((source) => source.ok && source.complete),

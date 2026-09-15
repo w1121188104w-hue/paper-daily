@@ -51,6 +51,7 @@ function summarizeSource(result) {
   return { source: result.source, journal_key: result.journal_key, ok: result.ok, complete: result.complete,
     raw_count: result.raw_count, accepted_count: filtered.accepted.length, excluded_count: filtered.excluded.length,
     rejected_count: result.rejected.length, pages: result.raw_pages.length, duration_ms: result.duration_ms,
+    metadata_warning_count: (result.warnings || []).length,
     error: result.error ? safeRunError(result.error) : null };
 }
 
@@ -85,7 +86,7 @@ export async function runJournalCollection(config, { root = DEFAULT_LIBRARY_ROOT
             }
             raw.push(await writeLibraryJson(root, `snapshots/${runId}/raw/${sourceResult.journal_key}-${sourceResult.source}.json`,
               { source: sourceResult.source, journal_key: sourceResult.journal_key,
-                pages: sourceResult.raw_pages, rejected: sourceResult.rejected }));
+                pages: sourceResult.raw_pages, rejected: sourceResult.rejected, warnings: sourceResult.warnings || [] }));
             stagedResults.push(sourceResult);
             if (onProgress) onProgress(summarizeSource(sourceResult));
           } });

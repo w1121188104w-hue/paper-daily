@@ -1,5 +1,5 @@
 import { normalizeDoi, normalizeTitleForMatch, normalizeAuthorName, normalizeSourceRecord } from './paperModel.js';
-import { normalizeCrossrefWork, normalizeOpenAlexWork } from './sourceNormalizers.js';
+import { normalizeCrossrefWork, normalizeOpenAlexWork, abstractFromInvertedIndex } from './sourceNormalizers.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { supportedRepecUrl, parseRepecAbstract } from './repecAbstract.js';
 import { publisherFor } from './publisherCatalog.js';
@@ -59,11 +59,8 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
   async function openalex(expected, journal) {
     if (!expected.doi) throw new EvidenceError('NO_DOI');
     const { response, data } = await api(`https://api.openalex.org/works/https://doi.org/${encodeURIComponent(normalizeDoi(expected.doi))}`);
-    if (data.abstract_inverted_index) {
-      const positions = Object.values(data.abstract_inverted_index).flat();
-      if (!positions.length || positions.length > 20000 || positions.some(p => !Number.isInteger(p) || p < 0) ||
-        new Set(positions).size !== positions.length || Math.max(...positions) !== positions.length - 1) throw new EvidenceError('INVALID_ABSTRACT_INDEX');
-    }
+    try { abstractFromInvertedIndex(data.abstract_inverted_index); }
+    catch { throw new EvidenceError('INVALID_ABSTRACT_INDEX'); }
     let record; try { record = normalizeOpenAlexWork(data,journal,response.fetched_at); } catch { throw new EvidenceError('UNVERIFIED_IDENTITY'); }
     if (!record.doi || !strongMatch(expected, record)) throw new EvidenceError('UNVERIFIED_IDENTITY');
     return withEvidence(record,response,'openalex_api');

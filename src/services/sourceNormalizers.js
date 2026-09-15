@@ -27,20 +27,24 @@ function journalFields(journal) {
 }
 
 export function abstractFromInvertedIndex(index) {
-  if (!index || typeof index !== 'object') return '';
+  if (index == null) return '';
+  const invalid = () => { throw Object.assign(new Error('OpenAlex 摘要位置或结构无效'), { code: 'INVALID_ABSTRACT_INDEX' }); };
+  if (typeof index !== 'object' || Array.isArray(index)) invalid();
   const positioned = new Map();
   for (const [token, positions] of Object.entries(index)) {
-    for (const position of Array.isArray(positions) ? positions : []) {
-      if (!Number.isInteger(position) || position < 0 || position > 100000) {
-        throw new Error('OpenAlex 摘要位置无效');
-      }
+    if (!token.trim() || !Array.isArray(positions) || !positions.length) invalid();
+    for (const position of positions) {
+      if (!Number.isInteger(position) || position < 0 || position >= 20000 || positioned.has(position)) invalid();
       positioned.set(position, token);
     }
   }
+  // Every original position must occur exactly once, starting at zero. A gap is
+  // not permission to concatenate the remaining words into a different abstract.
+  if (positioned.size && (Math.min(...positioned.keys()) !== 0 || Math.max(...positioned.keys()) !== positioned.size - 1)) invalid();
   return Array.from(positioned).sort(([a], [b]) => a - b).map(([, token]) => token).join(' ');
 }
 
-export function normalizeOpenAlexWork(work, journal, checkedAt = new Date().toISOString()) {
+export function normalizeOpenAlexWork(work, journal, checkedAt = new Date().toISOString(), { onWarning = () => {} } = {}) {
   const configuredSourceId = sourceId(journal?.openalex_source_id);
   const actualSource = work?.primary_location?.source || {};
   const actualSourceId = sourceId(actualSource?.id);
@@ -52,12 +56,19 @@ export function normalizeOpenAlexWork(work, journal, checkedAt = new Date().toIS
     );
   }
 
+  let abstract = '';
+  try { abstract = abstractFromInvertedIndex(work?.abstract_inverted_index); }
+  catch (error) {
+    if (error.code !== 'INVALID_ABSTRACT_INDEX') throw error;
+    // An unusable optional abstract must not discard an otherwise valid paper.
+    onWarning(error.code);
+  }
   return normalizeSourceRecord({
     source: 'openalex',
     source_id: sourceId(work?.id),
     doi: normalizeDoi(work?.doi || work?.ids?.doi),
     title: work?.title || work?.display_name,
-    abstract: abstractFromInvertedIndex(work?.abstract_inverted_index),
+    abstract,
     authors: (Array.isArray(work?.authorships) ? work.authorships : []).map((authorship) => ({
       name: authorship?.author?.display_name || authorship?.raw_author_name,
       orcid: authorship?.author?.orcid

@@ -21,7 +21,7 @@ export async function fetchPages(source, journal, options, adapter) {
   }
   const start = Date.now();
   const result = { source, journal_key: journal.key, ok: false, complete: false,
-    records: [], raw_pages: [], rejected: [], raw_count: 0, duration_ms: 0, error: null };
+    records: [], raw_pages: [], rejected: [], warnings: [], raw_count: 0, duration_ms: 0, error: null };
   let cursor = '*';
   const pageHashes = new Set();
   try {
@@ -38,7 +38,11 @@ export async function fetchPages(source, journal, options, adapter) {
       result.raw_count += items.length;
       for (const [index, item] of items.entries()) {
         try {
-          const record = adapter.normalize(item, journal, checkedAt, { url: String(url), payload });
+          const record = adapter.normalize(item, journal, checkedAt, { url: String(url), payload,
+            onWarning: code => {
+              if (code !== 'INVALID_ABSTRACT_INDEX') throw new SourceError('INVALID_RESPONSE', '未知元数据警告');
+              result.warnings.push({ index: result.raw_count - items.length + index, code, field: 'abstract' });
+            } });
           // An adapter may deliberately exclude an otherwise valid out-of-window record.
           if (record) result.records.push(record);
         }

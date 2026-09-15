@@ -238,7 +238,7 @@ test('每日流水线先双源、官网、补摘要再翻译，新手动流程�
 });
 
 test('OpenAlex断裂/重叠的摘要位置拒绝采用，不拼成疑似完整原文', async () => {
-  for (const index of [{ We: [0],study: [2] },{ We: [0],study: [0] }]) {
+  for (const index of [{ We: [0],study: [2] },{ We: [0],study: [0] }, { We: '0' }, [], { We: [0, 0] }]) {
     const s = makeEnrichmentSources({ request: async url => response(JSON.stringify({ abstract_inverted_index: index }),url) });
     await assert.rejects(s.openalex(paper(),journal),/INVALID_ABSTRACT_INDEX/);
   }
