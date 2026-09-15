@@ -1,0 +1,96 @@
+import path from 'node:path';
+import os from 'node:os';
+import { parseArgs } from 'node:util';
+import { pathToFileURL } from 'node:url';
+import { loadJournalConfig, findJournal } from '../src/services/journals.js';
+import { DEFAULT_LIBRARY_ROOT, readJournalLibrary } from '../src/services/journalLibrary.js';
+import { assertLibrary } from '../src/services/libraryValidation.js';
+import { loadSearchPolicy } from '../src/services/searchPolicy.js';
+import { runJournalPipeline } from '../src/services/journalPipeline.js';
+import { makeEvidenceHttp, EvidenceError } from '../src/services/evidenceHttp.js';
+import { makeEnrichmentSources } from '../src/services/enrichmentSources.js';
+import { makeSearchSources } from '../src/services/searchSources.js';
+import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
+import { makeBudgetedSearch, searchAllowance } from '../src/services/searchBudget.js';
+import { clonePilotLibrary } from './search-pilot.js';
+
+export function parsePipelineArgs(args) {
+  const { values: v } = parseArgs({ args, strict: true, allowPositionals: false, options: {
+    help: { type: 'boolean' }, plan: { type: 'boolean' }, run: { type: 'boolean' }, save: { type: 'boolean' },
+    isolate: { type: 'boolean' }, all: { type: 'boolean' }, journal: { type: 'string' },
+    'max-papers': { type: 'string' }, 'max-pages': { type: 'string' }
+  } });
+  if (!Object.keys(v).length || v.help) return { mode: 'help' };
+  assertLibrary(Boolean(v.plan) !== Boolean(v.run), '请选择只读plan或明确run');
+  assertLibrary(Boolean(v.all) !== Boolean(v.journal), '必须指定all或journal');
+  assertLibrary(!v.plan || (!v.save && !v.isolate), '只读plan不能请求保存或复制');
+  assertLibrary(!v.run || Boolean(v.save) !== Boolean(v.isolate), '运行必须选择save正式库或isolate副本');
+  const maxPapers = Number(v['max-papers'] ?? 100), maxPages = Number(v['max-pages'] ?? 1000);
+  assertLibrary(Number.isInteger(maxPapers) && maxPapers >= 0 && maxPapers <= 1000 && Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 1000, '批量或页数上限无效');
+  return { mode: v.plan ? 'plan' : 'run', isolate: Boolean(v.isolate), journalKey: v.journal, maxPapers, maxPages };
+}
+
+/** No production secrets are accessed before the command/mode/library gates. */
+export async function makePipelineRuntime({ env, policy }) {
+  const providers = makeSearchSources({ zhipuKey: env.ZHIPU_API_KEY || '', serpapiKey: env.SERPAPI_API_KEY || '', zhipuEngine: policy.zhipu_engine });
+  const ledger = makeSearchBudgetGitHub({ token: env.GITHUB_TOKEN, repositoryName: env.GITHUB_REPOSITORY });
+  const budget = makeBudgetedSearch({ initialState: await ledger.read({ initialize: true }), persist: s => ledger.persist(s), request: o => providers.request(o) });
+  const counts = { zhipu: 0, serpapi: 0 }, skipped = {}; let account = null, tail = Promise.resolve();
+  const deadline = Date.now() + 45 * 60 * 1000;
+  const search = options => {
+    const task = tail.then(async () => {
+      if (Date.now() >= deadline) return { called: false, reason: 'run_deadline' };
+      const serp = options.provider.startsWith('serpapi_');
+      if (serp) { try { account = await providers.account(); } catch { skipped.account_unverified = (skipped.account_unverified || 0) + 1; return { called: false, reason: 'account_unverified' }; } }
+      const result = await budget.run({ ...options, zhipuMonthlyLimit: policy.zhipu_monthly_limit, ...(serp ? { account } : {}) });
+      if (result.called) counts[serp ? 'serpapi' : 'zhipu']++;
+      else skipped[result.reason] = (skipped[result.reason] || 0) + 1;
+      return result;
+    }); tail = task.catch(() => {}); return task;
+  };
+  const publicHttp = makeEvidenceHttp({ timeoutMs: 12000, maxRequests: 1200 });
+  const http = { request: (...args) => { if (Date.now() >= deadline) throw new EvidenceError('REQUEST_LIMIT'); return publicHttp.request(...args); } };
+  return { http, search, sources: makeEnrichmentSources(http, { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '' }),
+    collectionOptions: { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '', maxAttempts: 2, timeoutMs: 12000 },
+    quotaResetsAt: () => {
+      const value = account?.renewal_date, reset = /^\d{4}-\d{2}-\d{2}$/.test(value || '') ? Date.parse(`${value}T00:00:00Z`) + 86400000 : Date.parse(value);
+      assertLibrary(Number.isFinite(reset) && reset > Date.now(), '缺少真实免费额度重置时间'); return new Date(reset).toISOString();
+    }, summary: () => ({ search_calls: counts, search_skipped: skipped,
+      zhipu_used: searchAllowance(budget.state(), { provider: 'zhipu', zhipuMonthlyLimit: policy.zhipu_monthly_limit }).local_used,
+      serpapi_used: searchAllowance(budget.state(), { provider: 'serpapi_google', account }).local_used,
+      monthly_limits: { zhipu: policy.zhipu_monthly_limit, serpapi: policy.serpapi_monthly_limit } }) };
+}
+
+export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env = process.env, log = console.log,
+  loadPolicy = loadSearchPolicy, loadConfig = loadJournalConfig, readLibrary = readJournalLibrary,
+  runtime = makePipelineRuntime, execute = runJournalPipeline, clone = clonePilotLibrary } = {}) {
+  const options = parsePipelineArgs(args);
+  if (options.mode === 'help') { log('只读：--plan --all；隔离运行：--run --isolate --all；正式运行：--run --save --all（需配置与GitHub开关同时开启）。可用--journal AER；本命令不翻译、不提交Git、不发布网站。'); return { status: 'help' }; }
+  const config = await loadConfig(), policy = await loadPolicy();
+  if (options.journalKey) assertLibrary(findJournal(config, options.journalKey)?.enabled, '期刊无效');
+  const before = await readLibrary({ root, config });
+  if (options.mode === 'plan') { const plan = { status: 'plan', production_enabled: policy.production_enabled, papers: before.papers.length,
+    journal: options.journalKey || 'all', lookback_days: 60, max_papers: options.maxPapers,
+    phases: ['three_source_discovery', 'official_catalog_search', 'metadata_repair', 'translation_queue'],
+    monthly_limits: { zhipu: policy.zhipu_monthly_limit, serpapi: policy.serpapi_monthly_limit } }; log(JSON.stringify(plan)); return plan; }
+  if (!options.isolate && (!policy.production_enabled || env.JOURNAL_SEARCH_ENABLED !== 'true')) {
+    log('PIPELINE_DISABLED：新生产流程未获启用，不读取密钥、不联网、不写库。'); return { status: 'disabled' };
+  }
+  assertLibrary(env.GITHUB_ACTIONS === 'true' && env.GITHUB_REPOSITORY === 'w1121188104w-hue/paper-daily' &&
+    (options.isolate ? env.GITHUB_EVENT_NAME === 'workflow_dispatch' : ['schedule', 'workflow_dispatch'].includes(env.GITHUB_EVENT_NAME) &&
+      env.DATA_BRANCH && env.GITHUB_REF === `refs/heads/${env.DATA_BRANCH}`), '仅允许受控GitHub运行，正式模式必须为默认分支');
+  let copy;
+  if (options.isolate) copy = await clone(config, { repositoryRoot: path.resolve(root, '../..'), tempParent: env.RUNNER_TEMP || os.tmpdir() });
+  try {
+    const services = await runtime({ env, policy });
+    const report = await execute(config, { ...services, root: copy?.root || root, journalKey: options.journalKey,
+      maxPapers: options.maxPapers, maxPages: options.maxPages, onProgress: row => log(`PIPELINE_PROGRESS ${JSON.stringify(row)}`) });
+    const result = { ...report, ...services.summary(), isolated: options.isolate };
+    if (copy) result.original_unchanged = await copy.verifyOriginal();
+    log(`PIPELINE_REPORT ${JSON.stringify(result)}`); return result;
+  } finally { if (copy) await copy.verifyOriginal(); }
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try { const result = await pipelineCommand(process.argv.slice(2)); process.exitCode = result.status === 'partial' ? 1 : 0; }
+  catch (error) { console.error(`PIPELINE_FAILED ${/^[A-Z_]{3,50}$/.test(error.code || '') ? error.code : 'CHECK_FAILED'}；未输出密钥或远程响应。`); process.exitCode = 1; }
+}
