@@ -20,7 +20,7 @@ export function parsePipelineArgs(args) {
     help: { type: 'boolean' }, plan: { type: 'boolean' }, run: { type: 'boolean' }, save: { type: 'boolean' },
     isolate: { type: 'boolean' }, all: { type: 'boolean' }, journal: { type: 'string' },
     'max-papers': { type: 'string' }, 'max-pages': { type: 'string' },
-    checkpoint: { type: 'boolean' }, 'resume-from': { type: 'string' }
+    checkpoint: { type: 'boolean' }, 'resume-from': { type: 'string' }, 'source-repository': { type: 'string' }
   } });
   if (!Object.keys(v).length || v.help) return { mode: 'help' };
   assertLibrary(Boolean(v.plan) !== Boolean(v.run), '请选择只读plan或明确run');
@@ -28,10 +28,12 @@ export function parsePipelineArgs(args) {
   assertLibrary(!v.plan || (!v.save && !v.isolate), '只读plan不能请求保存或复制');
   assertLibrary(!v.run || Boolean(v.save) !== Boolean(v.isolate), '运行必须选择save正式库或isolate副本');
   assertLibrary(!(v.checkpoint || v['resume-from']) || (v.run && v.isolate), '存档和续跑仅允许隔离模式');
+  if (v['source-repository'] !== undefined) assertLibrary(v.run && v.isolate && v['source-repository'].trim() &&
+    !/[\r\n\0]/.test(v['source-repository']), '外部数据基线仅允许隔离运行，路径不能为空');
   const maxPapers = Number(v['max-papers'] ?? 100), maxPages = Number(v['max-pages'] ?? 1000);
   assertLibrary(Number.isInteger(maxPapers) && maxPapers >= 0 && maxPapers <= 1000 && Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 1000, '批量或页数上限无效');
   return { mode: v.plan ? 'plan' : 'run', isolate: Boolean(v.isolate), journalKey: v.journal, maxPapers, maxPages,
-    checkpoint: Boolean(v.checkpoint), resumeFrom: v['resume-from'] };
+    checkpoint: Boolean(v.checkpoint), resumeFrom: v['resume-from'], sourceRepository: v['source-repository'] };
 }
 
 /** No production secrets are accessed before the command/mode/library gates. */
@@ -70,7 +72,10 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
   runtime = makePipelineRuntime, execute = runJournalPipeline, clone = clonePilotLibrary,
   saveCheckpoint = savePipelineCheckpoint, restoreCheckpoint = restorePipelineCheckpoint, outputCheckpoint = checkpointOutput } = {}) {
   const options = parsePipelineArgs(args);
-  if (options.mode === 'help') { log('只读：--plan --all；隔离运行：--run --isolate --all；可加--checkpoint导出存档，--resume-from <存档目录>续跑；正式运行：--run --save --all（需配置与GitHub开关同时开启）。可用--journal AER；本命令不翻译、不提交Git、不发布网站。'); return { status: 'help' }; }
+  if (options.mode === 'help') { log('只读：--plan --all；隔离运行：--run --isolate --all；可加--source-repository <数据基线仓库目录>使用最新生产数据副本，--checkpoint导出存档，--resume-from <存档目录>续跑；正式运行：--run --save --all（需配置与GitHub开关同时开启）。可用--journal AER；本命令不翻译、不提交Git、不发布网站。'); return { status: 'help' }; }
+  // Reviewed code and the current production data may come from different commits.
+  // The alternate baseline is read and cloned only; save mode cannot select it.
+  if (options.sourceRepository) root = path.resolve(options.sourceRepository, 'data', 'journal-store');
   const config = await loadConfig(), policy = await loadPolicy();
   if (options.journalKey) assertLibrary(findJournal(config, options.journalKey)?.enabled, '期刊无效');
   const before = await readLibrary({ root, config });
@@ -94,7 +99,8 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
     executionStarted = true;
     const report = await execute(config, { ...services, root: resumed?.root || copy?.root || root, journalKey: options.journalKey,
       maxPapers: options.maxPapers, maxPages: options.maxPages, onProgress: row => log(`PIPELINE_PROGRESS ${JSON.stringify(row)}`) });
-    const result = { ...report, ...services.summary(), isolated: options.isolate };
+    const result = { ...report, ...services.summary(), isolated: options.isolate,
+      baseline_papers: before.papers.length, baseline_snapshot_sha256: before.pointer?.manifest?.sha256 || null };
     if (copy) result.original_unchanged = await copy.verifyOriginal();
     log(`PIPELINE_REPORT ${JSON.stringify(result)}`); return result;
   } finally {

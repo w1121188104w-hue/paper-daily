@@ -96,6 +96,19 @@
           "run": "npm test"
         },
         {
+          "name": "Read current production data separately from reviewed code",
+          "if": "inputs.pipeline_all",
+          "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "with": {
+            "repository": "${{ github.repository }}",
+            "ref": "${{ github.event.repository.default_branch }}",
+            "path": "production-baseline",
+            "persist-credentials": false,
+            "sparse-checkout-cone-mode": false,
+            "sparse-checkout": "data/journal-store"
+          }
+        },
+        {
           "name": "Validate checkpoint selection without reading API keys",
           "env": {
             "RESUME_RUN_ID": "${{ inputs.resume_run_id }}",
@@ -131,7 +144,7 @@
             "PILOT_JOURNAL": "${{ inputs.journal }}",
             "PILOT_METADATA_BATCH": "${{ inputs.metadata_batch }}"
           },
-          "run": "if [ \"$PIPELINE_ALL\" = \"true\" ]; then\n  args=(--run --isolate --all --max-papers 100 --max-pages 10 --checkpoint)\n  if [ -n \"$RESUME_RUN_ID\" ]; then args+=(--resume-from \"$RUNNER_TEMP/pipeline-resume\"); fi\n  node scripts/journal-pipeline.js \"${args[@]}\"\nelif [ \"$ABSTRACT_SEARCH\" = \"true\" ]; then\n  node scripts/abstract-search-pilot.js --run\nelif [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
+          "run": "if [ \"$PIPELINE_ALL\" = \"true\" ]; then\n  args=(--run --isolate --all --max-papers 100 --max-pages 10 --checkpoint --source-repository \"$GITHUB_WORKSPACE/production-baseline\")\n  if [ -n \"$RESUME_RUN_ID\" ]; then args+=(--resume-from \"$RUNNER_TEMP/pipeline-resume\"); fi\n  node scripts/journal-pipeline.js \"${args[@]}\"\nelif [ \"$ABSTRACT_SEARCH\" = \"true\" ]; then\n  node scripts/abstract-search-pilot.js --run\nelif [ \"$PILOT\" = \"true\" ]; then\n  node scripts/search-pilot.js --run\nelif [ \"$ACCOUNT_ONLY\" = \"true\" ]; then\n  node scripts/search-preflight.js --account-only\nelif [ \"$RETRY_UNKNOWN\" = \"true\" ]; then\n  node scripts/search-preflight.js --run --retry-unknown\nelse\n  node scripts/search-preflight.js --run\nfi"
         },
         {
           "name": "Keep validated isolated history even when sources partially fail",

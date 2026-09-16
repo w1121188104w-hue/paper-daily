@@ -70,6 +70,38 @@ test('正式入口限定默认分支并且不自行提交Git或调用翻译', as
     runtime: async () => ({ summary: () => ({}) }), execute: async () => ({ status: 'success', translation_calls: 0 }) });
   assert.equal(result.isolated, false); assert.equal(result.translation_calls, 0);
 });
+
+test('隔离验收读取最新生产数据基线，不使用代码版本附带旧库，也不写基线', async () => {
+  const baseline = path.resolve('production-baseline'), baselineRoot = path.join(baseline, 'data', 'journal-store');
+  const events = [], sha = 'a'.repeat(64);
+  const result = await pipelineCommand(['--run', '--isolate', '--all', '--source-repository', baseline], options({
+    root: 'old-reviewed-code/data/journal-store',
+    env: { GITHUB_ACTIONS: 'true', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily', GITHUB_EVENT_NAME: 'workflow_dispatch' },
+    readLibrary: async ({ root }) => { assert.equal(root, baselineRoot); events.push('read-baseline');
+      return { papers: Array(555).fill({}), pointer: { manifest: { sha256: sha } } }; },
+    clone: async (_, o) => { assert.equal(o.repositoryRoot, baseline); events.push('clone-baseline');
+      return { root: 'isolated-current-data', verifyOriginal: async () => { events.push('verify'); return true; } }; },
+    runtime: async () => { events.push('runtime'); return { summary: () => ({}) }; },
+    execute: async (_, o) => { assert.equal(o.root, 'isolated-current-data'); events.push('execute'); return { status: 'success' }; }
+  }));
+  assert.equal(result.baseline_papers, 555); assert.equal(result.baseline_snapshot_sha256, sha);
+  assert.equal(result.original_unchanged, true);
+  assert.deepEqual(events, ['read-baseline', 'clone-baseline', 'runtime', 'execute', 'verify', 'verify']);
+  for (const args of [
+    ['--run', '--save', '--all', '--source-repository', baseline],
+    ['--plan', '--all', '--source-repository', baseline],
+    ['--run', '--isolate', '--all', '--source-repository', ''],
+    ['--run', '--isolate', '--all', '--source-repository', 'bad\npath']
+  ]) assert.throws(() => parsePipelineArgs(args));
+});
+
+test('最新基线损坏或不能复制时，不启动收费服务，不退回旧库', async () => {
+  const args = ['--run', '--isolate', '--all', '--source-repository', 'production-baseline'];
+  const env = { GITHUB_ACTIONS: 'true', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily', GITHUB_EVENT_NAME: 'workflow_dispatch' };
+  for (const failure of ['readLibrary', 'clone']) await assert.rejects(pipelineCommand(args, options({ env,
+    [failure]: async () => { throw new Error('invalid baseline'); }
+  })), /invalid baseline/);
+});
 test('每日工作流真实门控：配置关闭即输出false，新旧路径互斥，翻译密钥不混入', async t => {
   const flow = JSON.parse(await fs.readFile(new URL('../.github/workflows/daily-collect.yml', import.meta.url), 'utf8'));
   const steps = flow.jobs.collect.steps, gate = steps.find(s => s.id === 'search_gate'), pipeline = steps.find(s => s.id === 'pipeline');
@@ -104,6 +136,15 @@ test('隔离工作流只上传明确输出的存档，部分失败仍保存；�
   assert.ok(run.run.includes('--checkpoint')); assert.ok(run.run.includes('--resume-from'));
   assert.equal(run.env.DEEPSEEK_API_KEY, undefined);
   assert.equal(flow.concurrency.group, 'journal-production');
+  const baseline = steps.find(s => s.with?.path === 'production-baseline');
+  assert.equal(baseline.if, 'inputs.pipeline_all');
+  assert.equal(baseline.with.repository, '${{ github.repository }}');
+  assert.equal(baseline.with.ref, '${{ github.event.repository.default_branch }}');
+  assert.equal(baseline.with['persist-credentials'], false);
+  assert.equal(baseline.with['sparse-checkout'], 'data/journal-store');
+  assert.ok(steps.indexOf(baseline) < steps.indexOf(run));
+  assert.match(baseline.uses, /@[a-f0-9]{40}$/);
+  assert.ok(run.run.includes('--source-repository "$GITHUB_WORKSPACE/production-baseline"'));
   for (const step of [upload, download]) assert.match(step.uses, /@[a-f0-9]{40}$/);
   const validate = steps.find(s => s.name.startsWith('Validate checkpoint selection'));
   assert.ok(!JSON.stringify(validate).includes('secrets.'));
