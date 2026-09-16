@@ -13866,7 +13866,7 @@
       "batch_id": "batch-af6d396a9afddb225b98b2ce1856f2145412a0bd7f9354724dbc4d74d28bc0dc",
       "mode": "daily",
       "created_at": "2026-09-16T00:51:04.053Z",
-      "finished_at": null,
+      "finished_at": "2026-09-16T00:51:27.456Z",
       "items": [
         {
           "id": "doi:10.1016/j.respol.2026.105622",
@@ -13882,10 +13882,17 @@
               "task_id": "task:3ccd842a0aaa6a39c4a267c1f766769fe0796c2e17a0722128cc322818f4e8e0"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 543,
+            "completion_tokens": 331,
+            "total_tokens": 874
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1086/742725",
@@ -13901,10 +13908,17 @@
               "task_id": "task:d3c06dac2ddcfa29124bd8841fea564574c2647ef0bacfe675dcdad157ca6f27"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 640,
+            "completion_tokens": 423,
+            "total_tokens": 1063
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag099",
@@ -13920,10 +13934,17 @@
               "task_id": "task:e00168e8acd9d8a1b2911ed0ec6f39f840e68069054f712f8b34ec1253c26a61"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 411,
+            "completion_tokens": 191,
+            "total_tokens": 602
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag105",
@@ -13939,10 +13960,17 @@
               "task_id": "task:54db8572cb2e95951a087f4591fc901da57ac4002095b599f4488a4f93a1496b"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 399,
+            "completion_tokens": 183,
+            "total_tokens": 582
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
