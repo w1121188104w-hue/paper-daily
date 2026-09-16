@@ -48,6 +48,9 @@ function repairContexts(library) {
       const context = contexts.get(repair.paper_id); if (!context) continue;
       context.last_repair = { run_id: report.run_id, checked_at: logs.get(report.run_id)?.finished_at || null,
         ...select(repair, ['status', 'changed_fields', 'missing_fields', 'requested_fields']),
+        duplicate_candidates: (repair.duplicate_candidates || []).filter(row => contexts.has(row.paper_id))
+          .map(row => ({ paper_id: row.paper_id, ...select(contexts.get(row.paper_id),
+            ['title', 'doi', 'authors', 'journal_name', 'publication_year', 'publication_month']) })),
         attempts: (repair.attempts || []).map(attempt => select(attempt,
           ['source', 'status', 'stage', 'called', 'leads_returned', 'leads_checked', 'lead_statuses'])) };
     }

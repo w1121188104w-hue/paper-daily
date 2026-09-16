@@ -9,7 +9,7 @@ import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publis
 
 const fields = ['doi', 'authors', 'publication_month', 'abstract'];
 export const metadataRepairIssue = issue => (fields.includes(issue.field) && issue.reason === `missing_${issue.field}`) ||
-  (issue.field === 'identity' && ['title_conflict', 'single_source_confirmation'].includes(issue.reason)) ||
+  (issue.field === 'identity' && ['title_conflict', 'single_source_confirmation', 'possible_duplicate'].includes(issue.reason)) ||
   (issue.field === 'publication_month' && issue.reason === 'publication_month_conflict') ||
   (issue.field === 'classification' && issue.reason === 'document_type_uncertain');
 const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
@@ -37,16 +37,19 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     if (paperIds) assertLibrary(paperIds.every(id => byId.has(id) && (!journalKey || papers[byId.get(id)].journal_key === journalKey)), '限定论文必须属于当前库和选定期刊');
     const due = dueMetadataRepairIssues(config, previous.repairState, started, { paperIds, journalKey });
     const selected = [...new Set(due.map(issue => issue.paper_id))].slice(0, maxPapers), repairs = [], abstracts = [];
+    const attemptedIssueIds = new Set(due.filter(issue => selected.includes(issue.paper_id)).map(issue => issue.id));
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {
       const old = papers[byId.get(id)], issues = due.filter(issue => issue.paper_id === id), wanted = [...new Set(issues.map(issue => issue.field))];
       onProgress({ phase: 'metadata_start', paper_id: id });
       const result = await repairPaperMetadata(old, findJournal(config, old.journal_key), { sources, search, otherPapers: papers, fields: wanted,
-        confirmSingleSource: issues.some(issue => issue.reason === 'single_source_confirmation') });
+        confirmSingleSource: issues.some(issue => issue.reason === 'single_source_confirmation'),
+        checkPossibleDuplicate: issues.some(issue => issue.reason === 'possible_duplicate') });
       papers[byId.get(id)] = result.paper;
       repairs.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi, status: result.status,
         changed_fields: result.changed_fields, missing_fields: result.missing_fields, requested_fields: wanted, attempts: result.attempts,
-        identity_resolution: result.identity_resolution, single_source_confirmation: result.single_source_confirmation });
+        identity_resolution: result.identity_resolution, single_source_confirmation: result.single_source_confirmation,
+        duplicate_candidates: result.duplicate_candidates });
       if (!old.abstract_original && wanted.includes('abstract')) abstracts.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi,
         status: result.paper.abstract_original ? 'found' : result.status === 'not_found' ? 'not_found' : 'retry_later',
         abstract_source: result.paper.provenance.abstract_original?.source || '', attempts: result.attempts });
@@ -58,12 +61,12 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     let state = reconcileRepairState(previous.repairState, master);
     for (const result of repairs) {
       for (const issue of Object.values(state.issues).filter(issue => issue.paper_id === result.paper_id && issue.status !== 'resolved' &&
-        metadataRepairIssue(issue) && result.requested_fields.includes(issue.field))) {
+        attemptedIssueIds.has(issue.id) && metadataRepairIssue(issue) && result.requested_fields.includes(issue.field))) {
         if (issue.reason === 'single_source_confirmation' && result.single_source_confirmation) {
           state = recordSourceConfirmation(state, issue.id, papers[byId.get(result.paper_id)], finishedAt); continue;
         }
         let status = ['not_found', 'quota_exhausted', 'access_restricted', 'source_unavailable'].includes(result.status) ? result.status : 'source_unavailable';
-        if (status !== 'quota_exhausted' && (result.attempts.some(a => /IDENTITY|MISMATCH|CONFLICT|DOI_ALREADY_ASSIGNED/.test(a.status)) ||
+        if (status !== 'quota_exhausted' && (issue.reason === 'possible_duplicate' || result.attempts.some(a => /IDENTITY|MISMATCH|CONFLICT|DOI_ALREADY_ASSIGNED/.test(a.status)) ||
           (issue.field === 'publication_month' && master.entries.some(row => row.id === result.paper_id && row.publication_conflict)))) status = 'identity_conflict';
         const source = [...result.attempts].reverse().find(a => providers.includes(a.source))?.source || 'publisher';
         const reset = status === 'quota_exhausted' ? (typeof quotaResetsAt === 'function' ? await quotaResetsAt(source, finishedAt) : quotaResetsAt) : null;

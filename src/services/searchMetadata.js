@@ -2,7 +2,7 @@ import { buildSourceTextHash, doiUrl, normalizeSourceRecord } from './paperModel
 import { titleIdentity, authorOverlap, recordDate } from './enrichmentSources.js';
 import { authenticAbstract } from './publisherParsers.js';
 import { publisherFor } from './publisherCatalog.js';
-import { publicationFor } from './masterList.js';
+import { publicationFor, possibleDuplicatePeers } from './masterList.js';
 import { paperSearchQuery, searchWithFallback, safeSearchLink } from './searchSources.js';
 import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
@@ -59,10 +59,11 @@ const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code 
 
 /** Second phase: THREE structured lookups first; only then search known-paper missing fields.
  * One verified page can repair several fields. Neither search snippets nor LLM output are admissible. */
-export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false } = {}) {
+export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false, checkPossibleDuplicate = false } = {}) {
   let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [];
   const stillMissing = () => [...missingFields(current).filter(field => wanted.has(field)),
-    ...(wanted.has('identity') && (unresolvedTitleConflict(current) || (confirmSingleSource && !singleSourceConfirmationFor(current))) ? ['identity'] : []),
+    ...(wanted.has('identity') && (unresolvedTitleConflict(current) || (confirmSingleSource && !singleSourceConfirmationFor(current)) ||
+      (checkPossibleDuplicate && possibleDuplicatePeers(current, otherPapers).length)) ? ['identity'] : []),
     ...(wanted.has('classification') && classifyPaper(current).kind === 'needs_review' ? ['classification'] : [])];
   function adopt(record, identityEvidence = []) {
     const result = fillMissingMetadata(current, record, { otherPapers, identityEvidence });
@@ -123,6 +124,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   }
   return { paper: current, changed_fields: [...changed], missing_fields: stillMissing(), attempts,
     single_source_confirmation: confirmSingleSource ? singleSourceConfirmationFor(current) : null,
+    duplicate_candidates: checkPossibleDuplicate ? possibleDuplicatePeers(current, otherPapers).map(row => ({ paper_id: row.id, doi: row.doi || null })) : [],
     identity_resolution: titleConsensusFor(current)?.summary || null,
     status: !stillMissing().length ? 'resolved' : searchResult?.status || 'source_unavailable' };
 }

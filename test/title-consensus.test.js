@@ -82,10 +82,10 @@ test('端到端补齐作者月份而不改标题译文；保存两份原始证�
   }
 });
 
-test('自动队列处理标题冲突和单源确认，未实现的重复合并不能冒充字段补齐', () => {
+test('自动队列处理标题冲突、单源确认及疑似重复核实', () => {
   assert.ok(metadataRepairIssue({ field: 'identity', reason: 'title_conflict' }));
   assert.equal(metadataRepairIssue({ field: 'identity', reason: 'single_source_confirmation' }), true);
-  assert.equal(metadataRepairIssue({ field: 'identity', reason: 'possible_duplicate' }), false);
+  assert.equal(metadataRepairIssue({ field: 'identity', reason: 'possible_duplicate' }), true);
 });
 
 test('真实保存路径：证据可重读、标题冲突自动关闭、再次运行不联网', async t => {

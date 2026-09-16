@@ -35,7 +35,7 @@ test('自动执行与复用检查共同排除未到期、已解决、停用期�
   const typeDue = issue('type', { field: 'classification', reason: 'document_type_uncertain' });
   const queue = state([dueNow, issue('future', { next_retry_at: '2026-09-15T12:00:00.001Z' }),
     issue('resolved', { status: 'resolved' }), issue('disabled', { journal_key: 'OFF' }),
-    issue('unknown', { journal_key: 'UNKNOWN' }), issue('duplicate', { field: 'identity', reason: 'possible_duplicate' }),
+    issue('unknown', { journal_key: 'UNKNOWN' }), issue('duplicate', { field: 'identity', reason: 'possible_duplicate', next_retry_at: '2026-09-16T00:00:00.000Z' }),
     typeDue]);
   assert.deepEqual(dueMetadataRepairIssues(config, queue, now), [dueNow, typeDue]);
   assert.deepEqual(dueMetadataRepairIssues(config, queue, now, { journalKey: 'JAR' }), []);

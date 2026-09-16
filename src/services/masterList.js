@@ -54,6 +54,17 @@ export function publicationFor(paper) {
     publication_basis: 'unknown', publication_conflict: years.length > 1, publication_source: null, publication_evidence: [] };
 }
 
+// Use exactly the same title/journal/year boundary in execution and the Master
+// List. A missing year remains ambiguous; metadata repair may later separate it.
+export function possibleDuplicatePeers(paper, papers) {
+  const title = identityTitle(paper.title_original), year = publicationFor(paper).publication_year;
+  return papers.filter(other => {
+    if (other.id === paper.id || other.journal_key !== paper.journal_key || identityTitle(other.title_original) !== title) return false;
+    const otherYear = publicationFor(other).publication_year;
+    return !year || !otherYear || year === otherYear;
+  });
+}
+
 export function publicationWindowStatus(publication, fromDate, toDate) {
   if (!fromDate || !toDate || publication.publication_conflict) return 'unknown';
   const month = publication.publication_month;
