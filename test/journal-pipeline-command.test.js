@@ -102,7 +102,7 @@ test('最新基线损坏或不能复制时，不启动收费服务，不退回�
     [failure]: async () => { throw new Error('invalid baseline'); }
   })), /invalid baseline/);
 });
-test('每日工作流真实门控：配置关闭即输出false，新旧路径互斥，翻译密钥不混入', async t => {
+test('每日工作流真实门控：两个开关同时开启才启用，新旧路径互斥，翻译密钥不混入', async t => {
   const flow = JSON.parse(await fs.readFile(new URL('../.github/workflows/daily-collect.yml', import.meta.url), 'utf8'));
   const steps = flow.jobs.collect.steps, gate = steps.find(s => s.id === 'search_gate'), pipeline = steps.find(s => s.id === 'pipeline');
   assert.ok(!JSON.stringify(gate).includes('secrets.'));
@@ -116,10 +116,25 @@ test('每日工作流真实门控：配置关闭即输出false，新旧路径互
   t.after(async () => { assert.equal(path.dirname(path.resolve(dir)), parent); assert.ok(path.basename(dir).startsWith('pipeline-gate-test-')); await fs.rm(dir, { recursive: true, force: true }); });
   const output = path.join(dir, 'output'), prefix = 'node --input-type=module -e "';
   assert.ok(gate.run.startsWith(prefix) && gate.run.endsWith('"'));
-  const child = spawnSync(process.execPath, ['--input-type=module', '-e', gate.run.slice(prefix.length, -1)], {
+  const policy = JSON.parse(await fs.readFile(new URL('../config/search-policy.json', import.meta.url), 'utf8'));
+  const code = gate.run.slice(prefix.length, -1);
+  const child = spawnSync(process.execPath, ['--input-type=module', '-e', code], {
     cwd: new URL('..', import.meta.url), encoding: 'utf8', env: { ...process.env, JOURNAL_SEARCH_ENABLED: 'true', GITHUB_OUTPUT: output } });
   assert.equal(child.status, 0, child.stderr);
-  assert.equal(await fs.readFile(output, 'utf8'), 'enabled=false\n');
+  assert.equal(await fs.readFile(output, 'utf8'), `enabled=${policy.production_enabled}\n`);
+  // Exercise the exact workflow condition with a separate policy fixture;
+  // the real rollout setting must not be forced off merely to satisfy a test.
+  assert.ok(code.includes('loadSearchPolicy()'));
+  const fixtureCode = code.replace('loadSearchPolicy()', 'loadSearchPolicy(process.env.SEARCH_POLICY_TEST_FILE)');
+  for (const enabled of [false, true]) for (const variable of ['', 'false', 'true', 'TRUE']) {
+    const fixture = path.join(dir, `policy-${enabled}.json`), target = path.join(dir, `result-${enabled}-${['', 'false', 'true', 'TRUE'].indexOf(variable)}`);
+    await fs.writeFile(fixture, JSON.stringify({ ...policy, production_enabled: enabled }));
+    const result = spawnSync(process.execPath, ['--input-type=module', '-e', fixtureCode], {
+      cwd: new URL('..', import.meta.url), encoding: 'utf8',
+      env: { ...process.env, SEARCH_POLICY_TEST_FILE: fixture, JOURNAL_SEARCH_ENABLED: variable, GITHUB_OUTPUT: target } });
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(await fs.readFile(target, 'utf8'), `enabled=${enabled && variable === 'true'}\n`);
+  }
 });
 
 test('隔离工作流只上传明确输出的存档，部分失败仍保存；下载不覆盖代码和正式库', async () => {

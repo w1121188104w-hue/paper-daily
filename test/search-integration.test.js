@@ -26,7 +26,8 @@ function source(overrides = {}) { return normalizeSourceRecord({ source: 'publis
 const seed = overrides => mergePapers([source(overrides)], { firstSeenDate: '2026-09-13', checkedAt: at }).papers[0];
 
 test('用户搜索授权：Pro、2000次、免费250，拒绝升额和自动支付', async () => {
-  const policy = await loadSearchPolicy(); assert.equal(policy.zhipu_engine, 'search_pro'); assert.equal(policy.production_enabled, false);
+  const policy = await loadSearchPolicy(); assert.equal(policy.zhipu_engine, 'search_pro'); assert.equal(typeof policy.production_enabled, 'boolean');
+  for (const enabled of [false, true]) assert.equal(validateSearchPolicy({ ...policy, production_enabled: enabled }).production_enabled, enabled);
   for (const change of [{ zhipu_monthly_limit: 2001 }, { zhipu_engine: 'search_std' }, { automatic_payment: true }, { serpapi_monthly_limit: 251 }]) assert.throws(() => validateSearchPolicy({ ...policy, ...change }));
 });
 test('清单搜索：按期刊月份查询，不依赖已有论文标题，不丢失月份', () => {
