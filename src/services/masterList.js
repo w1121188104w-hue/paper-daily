@@ -79,11 +79,12 @@ function abstractProvenance(paper) {
 
 export function buildMasterList(papers, { generatedAt, fromDate = null, toDate = null, officialIds = new Set(), policyVersion = 1 } = {}) {
   assertLibrary(isIsoTime(generatedAt), '总名册生成时间无效');
-  assertLibrary([1, 2, 3].includes(policyVersion), '不支持的总名册统计规则版本');
+  assertLibrary([1, 2, 3, 4].includes(policyVersion), '不支持的总名册统计规则版本');
   const entries = [...papers].sort((a, b) => a.id.localeCompare(b.id)).map(paper => {
     const publication = publicationFor(paper), found = discoverySourcesFor(paper, officialIds);
     const titles = [...new Set(evidence(paper.source_records, 'title').map(record => identityTitle(record.title)))];
-    const classification = classifyPaper(paper).kind;
+    const classificationOptions = { historical: policyVersion < 4 };
+    const classification = classifyPaper(paper, classificationOptions).kind;
     const resolution = policyVersion >= 3 ? titleConsensusFor(paper)?.summary || null : null;
     const titleConflict = titles.length > 1 && !resolution;
     const conflicts = [...(titleConflict ? ['title_conflict'] : []), ...(publication.publication_conflict ? ['publication_month_conflict'] : [])];
@@ -99,7 +100,7 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
       doi_status: paper.doi ? 'available' : 'no_doi_yet',
       identity_status: titleConflict ? 'conflict' : paper.doi || paper.authors.length ? 'confirmed' : 'candidate',
       ...(policyVersion >= 3 ? { identity_resolution: resolution } : {}),
-      classification, ...(policyVersion >= 2 ? paperDocumentType(paper) : {}),
+      classification, ...(policyVersion >= 2 ? paperDocumentType(paper, classificationOptions) : {}),
       window_status: policyVersion >= 2 ? evidenceWindowStatus(publication, fromDate, toDate,
         publicationWindowStatus(publication, fromDate, toDate)) : publicationWindowStatus(publication, fromDate, toDate),
       metadata_status: missing.length || conflicts.length ? 'incomplete' : 'complete', missing_fields: missing, conflicts };

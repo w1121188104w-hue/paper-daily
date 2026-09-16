@@ -42,9 +42,40 @@ export function classifySourceRecord(record) {
   return result('candidate', 'retain_by_default');
 }
 
-// A read-time overlay: do not write classifications into immutable historical snapshots.
-export function classifyPaper(paper) {
-  const records = paper.source_records?.length ? paper.source_records :
+// Only an explicitly typed, later API record for the SAME identity may supersede
+// old type evidence. Publisher defaults and missing types cannot undo a warning.
+export function classificationRecords(paper) {
+  const records = paper.source_records || [], groups = new Map();
+  for (const row of records) {
+    const key = `${row.source}:${row.source_id}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  }
+  return [...groups.values()].flatMap(rows => {
+    const ordered = [...rows].sort((a, b) => Date.parse(b.last_checked_at) - Date.parse(a.last_checked_at)), newest = ordered[0];
+    if (rows.length < 2) return rows;
+    const proof = newest.source_evidence;
+    const hosts = { crossref: 'api.crossref.org', openalex: 'api.openalex.org', semanticscholar: 'api.semanticscholar.org' };
+    const methods = { crossref: 'crossref_api', openalex: 'openalex_api', semanticscholar: 'semanticscholar_abstract_api' };
+    let url; try { url = new URL(proof?.url); } catch { return rows; }
+    if (!hosts[newest.source] || proof.method !== methods[newest.source] || url.protocol !== 'https:' ||
+      url.hostname !== hosts[newest.source] || !/^[a-f0-9]{64}$/.test(proof.body_sha256 || '') ||
+      proof.fetched_at !== newest.last_checked_at || !Number.isFinite(Date.parse(proof.fetched_at)) ||
+      !['article', 'journal-article', 'review', 'editorial', 'book-review', 'paratext', 'retraction', 'erratum', 'correction'].includes(newest.type)) return rows;
+    const sameTitle = row => normalizeTitleForMatch(row.title) === normalizeTitleForMatch(newest.title);
+    if (!ordered.slice(1).every(row => Date.parse(row.last_checked_at) < Date.parse(newest.last_checked_at) &&
+      row.journal_key === newest.journal_key && row.doi === newest.doi && sameTitle(row) &&
+      (!row.source_updated_at || !Number.isFinite(Date.parse(row.source_updated_at)) ||
+        (Number.isFinite(Date.parse(newest.source_updated_at)) && Date.parse(newest.source_updated_at) >= Date.parse(row.source_updated_at))))) return rows;
+    // Retraction/correction notices remain visible even if a later API changes its type.
+    if (rows.some(row => ['possible_retraction', 'possible_correction'].includes(classifySourceRecord(row).kind))) return rows;
+    return [newest];
+  });
+}
+
+// A read-time overlay: historical Master List versions retain their original rules.
+export function classifyPaper(paper, { historical = false } = {}) {
+  const records = paper.source_records?.length ? (historical ? paper.source_records : classificationRecords(paper)) :
     [{ title: paper.title_original, journal_key: paper.journal_key }];
   const classes = records.map(classifySourceRecord), kinds = new Set(classes.map((item) => item.kind));
   if (kinds.size === 1) return { ...classes[0] };

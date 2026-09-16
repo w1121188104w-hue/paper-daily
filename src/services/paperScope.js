@@ -3,8 +3,8 @@ import { normalizeTitleForMatch } from './paperModel.js';
 
 /** Supplement, not replace, the existing UI classification. Retain named lectures
  * and never infer document type merely from the absence of an abstract. */
-export function paperDocumentType(paper) {
-  const classification = classifyPaper(paper).kind;
+export function paperDocumentType(paper, options) {
+  const classification = classifyPaper(paper, options).kind;
   if (classification !== 'candidate') return { document_type: classification, research_candidate: false };
   const titles = (paper.source_records?.length ? paper.source_records.map(r => r.title) : [paper.title_original])
     .map(normalizeTitleForMatch).filter(Boolean);

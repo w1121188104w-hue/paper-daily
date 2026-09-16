@@ -3,7 +3,7 @@ import { normalizeCrossrefWork, normalizeOpenAlexWork, abstractFromInvertedIndex
 import { EvidenceError } from './evidenceHttp.js';
 import { supportedRepecUrl, parseRepecAbstract } from './repecAbstract.js';
 import { publisherFor } from './publisherCatalog.js';
-import { semanticScholarJournalMatches } from './semanticScholar.js';
+import { semanticScholarJournalMatches, semanticScholarType } from './semanticScholar.js';
 import { authenticAbstract, parsePublisherArticle, parsePublisherFeed, publisherRecord, dateBounds } from './publisherParsers.js';
 
 export const titleIdentity = value => normalizeTitleForMatch(value).replace(/\s/g, '');
@@ -67,7 +67,7 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
   }
   async function semanticscholar(expected, journal) {
     if (!expected.doi) throw new EvidenceError('NO_DOI');
-    const { response, data } = await api(`https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(normalizeDoi(expected.doi))}?fields=title,abstract,externalIds,authors,journal,publicationDate`,
+    const { response, data } = await api(`https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(normalizeDoi(expected.doi))}?fields=title,abstract,externalIds,authors,journal,publicationDate,publicationTypes`,
       semanticScholarKey ? { 'x-api-key': semanticScholarKey } : {});
     if (!semanticScholarJournalMatches(data, journal) || normalizeDoi(data.externalIds?.DOI) !== normalizeDoi(expected.doi) ||
       titleIdentity(data.title) !== titleIdentity(expected.title || expected.title_original)) throw new EvidenceError('UNVERIFIED_IDENTITY');
@@ -75,7 +75,7 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
       doi: data.externalIds.DOI, title: data.title, abstract: data.abstract || '', authors: data.authors,
       journal_key: journal.key, journal_name: journal.name, journal_category: journal.category,
       journal_category_zh: journal.category_zh, print_issn: journal.print_issn, electronic_issn: journal.electronic_issn,
-      publication_date: data.publicationDate, last_checked_at: response.fetched_at, type: 'journal-article',
+      publication_date: data.publicationDate, last_checked_at: response.fetched_at, type: semanticScholarType(data),
       url: `https://www.semanticscholar.org/paper/${data.paperId}` };
     return withEvidence(record,response,'semanticscholar_abstract_api');
   }

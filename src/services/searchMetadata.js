@@ -9,6 +9,7 @@ import { EvidenceError } from './evidenceHttp.js';
 import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
 import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
 import { singleSourceConfirmationFor } from './sourceConfirmation.js';
+import { classifyPaper } from './paperClassification.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -61,7 +62,8 @@ const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code 
 export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false } = {}) {
   let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [];
   const stillMissing = () => [...missingFields(current).filter(field => wanted.has(field)),
-    ...(wanted.has('identity') && (unresolvedTitleConflict(current) || (confirmSingleSource && !singleSourceConfirmationFor(current))) ? ['identity'] : [])];
+    ...(wanted.has('identity') && (unresolvedTitleConflict(current) || (confirmSingleSource && !singleSourceConfirmationFor(current))) ? ['identity'] : []),
+    ...(wanted.has('classification') && classifyPaper(current).kind === 'needs_review' ? ['classification'] : [])];
   function adopt(record, identityEvidence = []) {
     const result = fillMissingMetadata(current, record, { otherPapers, identityEvidence });
     result.changed_fields.forEach(field => changed.add(field)); current = result.paper; return result;

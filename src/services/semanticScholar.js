@@ -30,13 +30,17 @@ export function semanticScholarJournalMatches(work, journal) {
       (venue.type && venue.type.toLowerCase() !== 'journal'));
 }
 
+export function semanticScholarType(work) {
+  const types = Array.isArray(work?.publicationTypes) ? work.publicationTypes : [];
+  return types.includes('Editorial') ? 'editorial' : types.includes('Review') ? 'review' : types.includes('JournalArticle') ? 'journal-article' : '';
+}
+
 export function normalizeSemanticScholarWork(work, journal, checkedAt, context) {
   if (!semanticScholarJournalMatches(work, journal)) throw new SourceError('INVALID_RECORD', 'Semantic Scholar期刊身份未核实');
   if (typeof work?.paperId !== 'string' || !/^[a-f0-9]{40}$/i.test(work.paperId)) throw new SourceError('INVALID_RECORD', 'Semantic Scholar论文标识无效');
   const date = normalizePartialDate(work.publicationDate);
   const year = Number.isInteger(work.year) && work.year >= 1000 && work.year <= 9999 ? String(work.year) : '';
   if (work.publicationDate && !date) throw new SourceError('INVALID_RECORD', 'Semantic Scholar出版日期无效');
-  const types = Array.isArray(work.publicationTypes) ? work.publicationTypes : [];
   const evidenceUrl = new URL(context.url);
   evidenceUrl.searchParams.delete('token'); // Opaque continuation tokens are not public source URLs.
   return normalizeSourceRecord({ source: 'semanticscholar', source_id: work.paperId,
@@ -47,7 +51,7 @@ export function normalizeSemanticScholarWork(work, journal, checkedAt, context) 
     raw_dates: { publication_date: work.publicationDate || null, publication_year: work.year ?? null },
     last_checked_at: checkedAt, url: `https://www.semanticscholar.org/paper/${work.paperId}`,
     volume: work.journal?.volume, pages: work.journal?.pages,
-    type: types.includes('Editorial') ? 'editorial' : types.includes('Review') ? 'review' : 'journal-article',
+    type: semanticScholarType(work),
     source_evidence: { url: String(evidenceUrl), scope_url: String(evidenceUrl), fetched_at: checkedAt,
       body_sha256: createHash('sha256').update(JSON.stringify(context.payload)).digest('hex'),
       method: 'semanticscholar_discovery_api' }

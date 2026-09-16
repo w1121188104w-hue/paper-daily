@@ -10,7 +10,8 @@ import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publis
 const fields = ['doi', 'authors', 'publication_month', 'abstract'];
 export const metadataRepairIssue = issue => (fields.includes(issue.field) && issue.reason === `missing_${issue.field}`) ||
   (issue.field === 'identity' && ['title_conflict', 'single_source_confirmation'].includes(issue.reason)) ||
-  (issue.field === 'publication_month' && issue.reason === 'publication_month_conflict');
+  (issue.field === 'publication_month' && issue.reason === 'publication_month_conflict') ||
+  (issue.field === 'classification' && issue.reason === 'document_type_uncertain');
 const providers = ['crossref', 'openalex', 'semanticscholar', 'publisher', 'repec', 'zhipu', 'serpapi_scholar', 'serpapi_google'];
 
 export function dueMetadataRepairIssues(config, state, now, { journalKey, paperIds = null } = {}) {
@@ -52,7 +53,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
       onProgress({ phase: 'metadata_done', paper_id: id, status: result.status, filled: result.changed_fields });
     }
     const finished = now(), finishedAt = finished.toISOString();
-    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 3, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
+    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 4, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
       officialIds: officialDiscoveries(previous.enrichmentReports) });
     let state = reconcileRepairState(previous.repairState, master);
     for (const result of repairs) {

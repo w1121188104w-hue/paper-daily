@@ -68,7 +68,7 @@ test('官网新发现统计：演讲、边界研究候选、确定窗口内研�
   assert.equal(result.report.added_research_uncertain_window, 1);
 });
 
-test('历史版本兼容：按v1读取旧总名册，新写入自动采用v3，不改旧论文或引用文件', async t => {
+test('历史版本兼容：按v1读取旧总名册，新写入自动采用v4，不改旧论文或引用文件', async t => {
   const parent = await fs.realpath(os.tmpdir()), root = await fs.mkdtemp(path.join(parent, 'scope-history-'));
   t.after(async () => { assert.equal(path.dirname(root), parent); assert.ok(path.basename(root).startsWith('scope-history-')); await fs.rm(root, { recursive: true, force: true }); });
   const rs = [record('Nobel Lecture: Growth', '2026-09-01')];
@@ -90,7 +90,7 @@ test('历史版本兼容：按v1读取旧总名册，新写入自动采用v3，�
   const legacyBytes = await fs.readFile(path.join(root, legacy.master_list.path), 'utf8');
   await runJournalCollection(config, { root, journalKey: 'AER', clients, now: () => new Date('2026-09-15T01:00:00Z') });
   const after = await readJournalLibrary({ root, config });
-  assert.equal(after.manifest.master_policy_version, 3); assert.equal(after.masterList.statistics.research_candidates, 0);
+  assert.equal(after.manifest.master_policy_version, 4); assert.equal(after.masterList.statistics.research_candidates, 0);
   assert.equal(after.masterList.statistics.lectures, 1); assert.equal(after.papers[0].discovered_at, before.papers[0].discovered_at);
   assert.equal(await fs.readFile(path.join(root, legacy.master_list.path), 'utf8'), legacyBytes);
 });
