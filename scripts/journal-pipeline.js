@@ -76,7 +76,7 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
   const before = await readLibrary({ root, config });
   if (options.mode === 'plan') { const plan = { status: 'plan', production_enabled: policy.production_enabled, papers: before.papers.length,
     journal: options.journalKey || 'all', lookback_days: 60, max_papers: options.maxPapers,
-    phases: ['three_source_discovery', 'official_catalog_search', 'metadata_repair', 'translation_queue'],
+    phases: ['three_source_discovery', 'official_catalog_search', 'saved_duplicate_resolution', 'metadata_repair', 'duplicate_resolution', 'translation_queue'],
     monthly_limits: { zhipu: policy.zhipu_monthly_limit, serpapi: policy.serpapi_monthly_limit } }; log(JSON.stringify(plan)); return plan; }
   if (!options.isolate && (!policy.production_enabled || env.JOURNAL_SEARCH_ENABLED !== 'true')) {
     log('PIPELINE_DISABLED：新生产流程未获启用，不读取密钥、不联网、不写库。'); return { status: 'disabled' };

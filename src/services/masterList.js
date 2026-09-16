@@ -17,6 +17,16 @@ export function officialDiscoveries(reports = []) {
   for (const report of reports) for (const journal of report.journals || []) {
     for (const entry of journal.entries || []) if (['existing', 'added'].includes(entry.status) && entry.paper_id) ids.add(entry.paper_id);
   }
+  const redirects = new Map(reports.flatMap(report => report.stage === 'duplicate_resolution'
+    ? (report.merges || []).map(merge => [merge.resolution.original_id, merge.resolution.target_id]) : []));
+  for (const id of [...ids]) {
+    let current = id; const visited = new Set();
+    while (redirects.has(current)) {
+      assertLibrary(!visited.has(current), '归并身份引用存在循环'); visited.add(current);
+      current = redirects.get(current);
+    }
+    ids.add(current);
+  }
   return ids;
 }
 

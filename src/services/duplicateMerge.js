@@ -5,6 +5,7 @@ import { classifyPaper, classifySourceRecord } from './paperClassification.js';
 import { publicationFor } from './masterList.js';
 import { unresolvedTitleConflict } from './titleConsensus.js';
 import { fillMissingMetadata } from './searchMetadata.js';
+import { dateInShanghai } from './paperMerge.js';
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
 
 const discoveryRecord = row => !row.source_evidence ||
@@ -30,9 +31,10 @@ export function duplicateMergeProof(original, target, input, checkedAt) {
   if (publications.some(p => p.publication_conflict) ||
     new Set(publications.map(p => p.publication_year).filter(Boolean)).size > 1 ||
     new Set(publications.map(p => p.publication_month).filter(Boolean)).size > 1) return null;
+  if (original.first_seen_date > dateInShanghai(new Date(record.source_evidence.fetched_at))) return null;
   const anchors = original.source_records.filter(row => discoveryRecord(row) && !row.doi &&
     row.journal_key === record.journal_key && titleIdentity(row.title) === title &&
-    isIsoTime(row.last_checked_at) && Date.parse(row.last_checked_at) <= Date.parse(record.source_evidence.fetched_at));
+    isIsoTime(row.last_checked_at));
   const anchor = anchors.find(row => compatibleAuthors(row, record) &&
     ((row.source === record.source && row.source_id === record.source_id) ||
       (row.authors.length && target.authors.length && record.authors.length &&

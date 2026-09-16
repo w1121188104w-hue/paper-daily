@@ -40,6 +40,9 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     const attemptedIssueIds = new Set(due.filter(issue => selected.includes(issue.paper_id)).map(issue => issue.id));
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {
+      // A verified original is already scheduled to merge into this target.
+      // Defer target queries until the archive transaction has combined evidence.
+      if (repairs.some(repair => repair.duplicate_claims?.some(claim => claim.target_id === id))) continue;
       const old = papers[byId.get(id)], issues = due.filter(issue => issue.paper_id === id), wanted = [...new Set(issues.map(issue => issue.field))];
       onProgress({ phase: 'metadata_start', paper_id: id });
       const result = await repairPaperMetadata(old, findJournal(config, old.journal_key), { sources, search, otherPapers: papers, fields: wanted,

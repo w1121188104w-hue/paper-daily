@@ -13,7 +13,8 @@ test('命令默认帮助和plan只读，不接触环境、密钥或网络', asyn
   assert.equal((await pipelineCommand([], options({ env }))).status, 'help');
   const result = await pipelineCommand(['--plan', '--all'], options({ env }));
   assert.equal(result.status, 'plan'); assert.equal(result.production_enabled, false);
-  assert.equal(result.lookback_days, 60); assert.equal(result.phases.length, 4);
+  assert.equal(result.lookback_days, 60); assert.deepEqual(result.phases,
+    ['three_source_discovery', 'official_catalog_search', 'saved_duplicate_resolution', 'metadata_repair', 'duplicate_resolution', 'translation_queue']);
 });
 test('两个生产开关必须同时开启，关闭时不读取密钥或构造运行服务', async () => {
   assert.equal((await pipelineCommand(['--run', '--save', '--all'], options({ env: new Proxy({}, { get: () => assert.fail('Policy is off') }) }))).status, 'disabled');

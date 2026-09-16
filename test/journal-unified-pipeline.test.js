@@ -16,15 +16,16 @@ function options(events, patch = {}) {
     collect: async (config, o) => { events.push('collect'); assert.equal(o.withSemanticScholar, true);
       assert.equal(o.lookbackDays, 60); assert.equal(o.onlyIfNeeded, true); assert.equal(o.root, 'explicit-test-root'); return { status: 'partial' }; },
     catalog: async (config, o) => { events.push('catalog'); assert.equal(o.search, search); return { status: 'partial' }; },
-    repair: async (config, o) => { events.push('repair'); assert.equal(o.search, search); return { status: 'success' }; }, ...patch };
+    repair: async (config, o) => { events.push('repair'); assert.equal(o.search, search); return { status: 'success' }; },
+    resolveDuplicates: async () => { events.push('merge'); return { status: 'skipped' }; }, ...patch };
 }
-test('每日顺序：三源→官网清单→字段→队列，阶段间校验，来源部分失败仍继续', async () => {
+test('每日顺序：三源→官网清单→复用归并→字段→新归并→队列，阶段间校验，来源部分失败仍继续', async () => {
   const events = [], result = await runJournalPipeline({}, options(events, { collectionOptions: { withSemanticScholar: false, root: 'wrong', lookbackDays: 1 } }));
-  assert.deepEqual(events, ['validate', 'collect', 'validate', 'catalog', 'validate', 'repair', 'validate', 'validate']);
+  assert.deepEqual(events, ['validate', 'collect', 'validate', 'catalog', 'validate', 'merge', 'validate', 'repair', 'validate', 'merge', 'validate', 'validate']);
   assert.equal(result.status, 'partial'); assert.equal(result.translation_calls, 0); assert.equal(result.coverage, 'not_proven_complete');
 });
 test('每日流程损坏预检、存储和账本错误必须停止，不能继续到翻译或后续阶段', async () => {
-  for (const failure of ['readLibrary', 'collect', 'catalog', 'repair']) {
+  for (const failure of ['readLibrary', 'collect', 'catalog', 'repair', 'resolveDuplicates']) {
     const events = [];
     await assert.rejects(runJournalPipeline({}, options(events, { [failure]: async () => { throw Object.assign(new Error('stop'), { code: 'EVIDENCE_STORAGE_ERROR' }); } })), { code: 'EVIDENCE_STORAGE_ERROR' });
     if (failure === 'readLibrary') assert.deepEqual(events, []);
@@ -64,6 +65,6 @@ test('统一入口真实保存路径：独立三源、官网故障隔离、元�
   const saved = await readJournalLibrary({ root, config });
   assert.equal(saved.papers.length, 1); assert.equal(saved.papers[0].abstract_original, abstract);
   assert.equal(result.translation_calls, 0); assert.equal(result.translation_ready.fields, 2);
-  assert.equal(result.status, 'partial'); assert.equal(result.stages.length, 3);
+  assert.equal(result.status, 'partial'); assert.equal(result.stages.length, 5);
   assert.equal(saved.papers[0].abstract_zh, ''); assert.equal(saved.masterList.statistics.missing_abstract, 0);
 });
