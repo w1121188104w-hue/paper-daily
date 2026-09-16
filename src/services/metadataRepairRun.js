@@ -49,7 +49,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
       repairs.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi, status: result.status,
         changed_fields: result.changed_fields, missing_fields: result.missing_fields, requested_fields: wanted, attempts: result.attempts,
         identity_resolution: result.identity_resolution, single_source_confirmation: result.single_source_confirmation,
-        duplicate_candidates: result.duplicate_candidates });
+        duplicate_candidates: result.duplicate_candidates, duplicate_claims: result.duplicate_claims });
       if (!old.abstract_original && wanted.includes('abstract')) abstracts.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi,
         status: result.paper.abstract_original ? 'found' : result.status === 'not_found' ? 'not_found' : 'retry_later',
         abstract_source: result.paper.provenance.abstract_original?.source || '', attempts: result.attempts });

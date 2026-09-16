@@ -33,15 +33,15 @@ function response(n = 2, date = '2025-08', patch = {}) {
   return record(n, 'crossref', date, { last_checked_at: later,
     source_evidence: { url, scope_url: url, fetched_at: later, body_sha256: 'a'.repeat(64), method: 'crossref_api' }, ...patch });
 }
-async function stored(t, secondDate = '2026-08') {
+async function stored(t, secondDate = '2026-08', secondPatch = {}) {
   const parent = await fs.realpath(os.tmpdir()), root = await fs.mkdtemp(path.join(parent, 'duplicate-repair-'));
   t.after(async () => { assert.equal(path.dirname(root), parent); assert.ok(path.basename(root).startsWith('duplicate-repair-')); await fs.rm(root, { recursive: true, force: true }); });
   const clients = Object.fromEntries(['crossref', 'openalex'].map((source, i) => [source, async () => ({ source, journal_key: 'AER',
-    records: [record(i + 1, source, i ? secondDate : '2026-08')], ok: true, complete: true, raw_count: 1,
+    records: [record(i + 1, source, i ? secondDate : '2026-08', i ? secondPatch : {})], ok: true, complete: true, raw_count: 1,
     raw_pages: [], rejected: [], duration_ms: 0, error: null })]));
   await runJournalCollection(config, { root, journalKey: 'AER', now: () => new Date(at), clients });
   const before = await readJournalLibrary({ root, config });
-  return { root, before, target: before.papers.find(p => p.doi.endsWith('duplicate2')) };
+  return { root, before, target: before.papers.find(p => p.source_records.some(r => r.source === 'openalex')) };
 }
 
 test('疑似重复的自动执行范围与总名册一致：同刊规范标题和相交年份，缺年份不武断排除', () => {
@@ -86,6 +86,21 @@ test('即使基础字段齐全，疑似重复仍查询三源和搜索，不会�
   const related = exported.issues.find(row => row.paper_id === target.id).last_repair.duplicate_candidates;
   assert.equal(related.length, 1); assert.equal(related[0].doi, '10.1257/duplicate1'); assert.equal(related[0].authors[0].name, 'Alice Smith');
   assert.equal(saved.papers.length, 2);
+});
+
+test('可合并证据持久化进报告，但未执行归并前不能关闭重复待办或删除旧记录', async t => {
+  const { root, before, target } = await stored(t, '2026-08', { doi: '', authors: [] });
+  const url = 'https://api.openalex.org/works/https://doi.org/10.1257%2Fduplicate1';
+  const evidence = record(2, 'openalex', '2026-08', { doi: '10.1257/duplicate1', authors: ['Alice Smith'], last_checked_at: later,
+    source_evidence: { url, scope_url: url, method: 'openalex_api', fetched_at: later, body_sha256: 'a'.repeat(64) } });
+  const result = await runMetadataRepair(config, { root, paperIds: [target.id], now: () => new Date(later),
+    sources: sources({ crossref: async () => response(1, '2026-08'), openalex: async () => evidence }), search: () => assert.fail('Merge evidence obtained') });
+  assert.equal(result.status, 'partial'); assert.equal(result.report.repairs[0].status, 'merge_ready');
+  const saved = await readJournalLibrary({ root, config });
+  assert.equal(saved.papers.length, 2); assert.deepEqual(saved.papers, before.papers);
+  assert.equal(saved.enrichmentReports.at(-1).repairs[0].duplicate_claims.length, 1);
+  assert.equal(saved.enrichmentReports.at(-1).repairs[0].duplicate_claims[0].record.source_id, 'W1002');
+  assert.notEqual(Object.values(saved.repairState.issues).find(row => row.paper_id === target.id && row.reason === 'possible_duplicate').status, 'resolved');
 });
 
 test('疑似重复遇免费额度耗尽保存真实重置时间，不冒充已查无结果', async t => {

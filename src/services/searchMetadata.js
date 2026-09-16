@@ -10,6 +10,7 @@ import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } fro
 import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
 import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 import { classifyPaper } from './paperClassification.js';
+import { duplicateMergeProof } from './duplicateMerge.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -60,19 +61,34 @@ const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code 
 /** Second phase: THREE structured lookups first; only then search known-paper missing fields.
  * One verified page can repair several fields. Neither search snippets nor LLM output are admissible. */
 export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false, checkPossibleDuplicate = false } = {}) {
-  let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [];
+  let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [], duplicateEvidence = [];
+  const mergeClaims = () => duplicateEvidence.flatMap(record => otherPapers.filter(target =>
+    target.id !== current.id && target.doi === record.doi && duplicateMergeProof(current, target, record, record.last_checked_at))
+    .map(target => ({ target_id: target.id, record })));
   const stillMissing = () => [...missingFields(current).filter(field => wanted.has(field)),
     ...(wanted.has('identity') && (unresolvedTitleConflict(current) || (confirmSingleSource && !singleSourceConfirmationFor(current)) ||
       (checkPossibleDuplicate && possibleDuplicatePeers(current, otherPapers).length)) ? ['identity'] : []),
     ...(wanted.has('classification') && classifyPaper(current).kind === 'needs_review' ? ['classification'] : [])];
   function adopt(record, identityEvidence = []) {
-    const result = fillMissingMetadata(current, record, { otherPapers, identityEvidence });
-    result.changed_fields.forEach(field => changed.add(field)); current = result.paper; return result;
+    try {
+      const result = fillMissingMetadata(current, record, { otherPapers, identityEvidence });
+      result.changed_fields.forEach(field => changed.add(field)); current = result.paper; return result;
+    } catch (error) {
+      if (checkPossibleDuplicate && error.code === 'DOI_ALREADY_ASSIGNED') {
+        const normalized = normalizeSourceRecord(record);
+        if (!duplicateEvidence.some(row => stableJson(row) === stableJson(normalized))) duplicateEvidence.push(normalized);
+      }
+      throw error;
+    }
   }
   for (const source of ['crossref', 'openalex', 'semanticscholar']) {
-    if (!stillMissing().length) break;
+    if (!stillMissing().length || mergeClaims().length) break;
     try {
-      const record = await sources[source](current, journal); candidates.push(record);
+      const proposedDois = [...new Set(duplicateEvidence.map(record => record.doi))];
+      // This is only a lookup hint. The DOI is never assigned to the DOI-less
+      // record until an independent merge operation verifies the connection.
+      const expected = !current.doi && proposedDois.length === 1 ? { ...current, doi: proposedDois[0] } : current;
+      const record = await sources[source](expected, journal); candidates.push(record);
       try { const result = adopt(record); attempts.push({ source, status: result.changed_fields.length ? 'filled' : 'no_new_fields' }); }
       catch (error) {
         const proof = error.code === 'UNVERIFIED_IDENTITY' ? titleConsensusFor(current, candidates) : null;
@@ -85,7 +101,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   }
   // Known official feeds/article URLs are evidence sources, not search results.
   // Try them before spending search quota; never accept a snippet as an abstract.
-  if (stillMissing().includes('abstract') && typeof sources.publisher === 'function') {
+  if (!mergeClaims().length && stillMissing().includes('abstract') && typeof sources.publisher === 'function') {
     try {
       const result = adopt(await sources.publisher(current, journal));
       attempts.push({ source: 'publisher', status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
@@ -97,7 +113,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   // A predictable URL is only a lookup candidate. The adapter still verifies
   // journal, DOI, title, authors and matching original abstract fields.
   const repecUrl = repecJournalUrl(current.doi, journal);
-  if (stillMissing().includes('abstract') && repecUrl && typeof sources.repecArticle === 'function') {
+  if (!mergeClaims().length && stillMissing().includes('abstract') && repecUrl && typeof sources.repecArticle === 'function') {
     try {
       const result = adopt(await sources.repecArticle({ ...current, url: repecUrl }, journal));
       attempts.push({ source: 'repec', status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
@@ -107,7 +123,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     }
   }
   let searchResult = null;
-  if (stillMissing().length && search) {
+  if (stillMissing().length && !mergeClaims().length && search) {
     searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => paperSearchQuery(current, provider),
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
       verifyLead: async lead => {
@@ -117,7 +133,10 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
         if (!repec && !publisherFor(journal).hosts.includes(new URL(url).hostname)) return { resolved: false, reason: 'NOT_OFFICIAL_HOST' };
         // Only the fetched ORIGINAL official article is parsed. lead.snippet is deliberately unused.
         const record = await (repec ? sources.repecArticle : sources.publisherArticle)({ ...current, url }, journal);
-        adopt(record);
+        try { adopt(record); } catch (error) {
+          if (!mergeClaims().length) throw error;
+          return { resolved: true, reason: 'VERIFIED_MERGE_CANDIDATE', record };
+        }
         return { resolved: !stillMissing().length, reason: 'UNRESOLVED_FIELDS', record };
       } });
     attempts.push(...searchResult.attempts.map(({ provider, ...row }) => ({ source: provider, ...row })));
@@ -125,6 +144,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   return { paper: current, changed_fields: [...changed], missing_fields: stillMissing(), attempts,
     single_source_confirmation: confirmSingleSource ? singleSourceConfirmationFor(current) : null,
     duplicate_candidates: checkPossibleDuplicate ? possibleDuplicatePeers(current, otherPapers).map(row => ({ paper_id: row.id, doi: row.doi || null })) : [],
+    duplicate_claims: mergeClaims(),
     identity_resolution: titleConsensusFor(current)?.summary || null,
-    status: !stillMissing().length ? 'resolved' : searchResult?.status || 'source_unavailable' };
+    status: mergeClaims().length ? 'merge_ready' : !stillMissing().length ? 'resolved' : searchResult?.status || 'source_unavailable' };
 }

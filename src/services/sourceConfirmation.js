@@ -4,7 +4,7 @@ import { publisherFor } from './publisherCatalog.js';
 import { supportedRepecUrl } from './repecAbstract.js';
 import { isIsoTime } from './libraryValidation.js';
 
-function evidenceAllowed(record) {
+export function evidenceAllowed(record) {
   try {
     const e = record.source_evidence, url = new URL(e.url), scope = new URL(e.scope_url);
     if (!isIsoTime(e.fetched_at) || !/^[a-f0-9]{64}$/.test(e.body_sha256) ||
