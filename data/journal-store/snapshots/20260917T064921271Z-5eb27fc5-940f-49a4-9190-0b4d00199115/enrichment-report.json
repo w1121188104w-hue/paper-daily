@@ -1,0 +1,5604 @@
+{
+  "schema_version": 1,
+  "run_id": "20260917T064921271Z-5eb27fc5-940f-49a4-9190-0b4d00199115",
+  "stage": "missing_metadata_repair",
+  "status": "partial",
+  "from_date": "2026-07-20",
+  "to_date": "2026-09-17",
+  "stats": {
+    "added": 0,
+    "abstracts_filled": 1,
+    "abstracts_checked": 32,
+    "single_source_confirmed": 74,
+    "pending_candidates": 0,
+    "papers_checked": 100,
+    "papers_changed": 90
+  },
+  "journals": [],
+  "abstracts": [
+    {
+      "paper_id": "doi:10.1016/j.jcorpfin.2026.103038",
+      "journal_key": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103038",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101873",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101873",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1086/741624",
+      "journal_key": "JPE",
+      "doi": "10.1086/741624",
+      "status": "found",
+      "abstract_source": "repec",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "filled"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104321",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104321",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jcorpfin.2026.103041",
+      "journal_key": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103041",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104347",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104347",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101865",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101865",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1086/742424",
+      "journal_key": "JPE",
+      "doi": "10.1086/742424",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 10,
+          "leads_checked": 10,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105586",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105586",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104350",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104350",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104355",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104355",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105602",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105602",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104351",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104351",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104328",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104328",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104325",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104325",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1086/742714",
+      "journal_key": "JPE",
+      "doi": "10.1086/742714",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105539",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105539",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105607",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105607",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104333",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104333",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105494",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105494",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105507",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105507",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104349",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104349",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101885",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101885",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105510",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105510",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104356",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104356",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105604",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105604",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104293",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104293",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "ROBOTS_UNAVAILABLE": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104323",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104323",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105580",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105580",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105537",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105537",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105583",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105583",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1086/742423",
+      "journal_key": "JPE",
+      "doi": "10.1086/742423",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "paper_id": "doi:10.2308/tar-2024-0289",
+      "journal_key": "TAR",
+      "doi": "10.2308/tar-2024-0289",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7164189469",
+        "url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0289",
+        "fetched_at": "2026-09-17T06:49:22.283Z",
+        "body_sha256": "ef0aea146a2d95c0818f95181d58a909f43c5c241ff3932762e0cda582e791b5",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0289"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105621",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105621",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2022.01745",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2022.01745",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416915542",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.01745",
+        "fetched_at": "2026-09-17T06:49:28.258Z",
+        "body_sha256": "9e91dd268363ef0495cbddaf98add5c8dee0be99e5d5260e10d2b0521e965f43",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.01745"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.01558",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.01558",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416332095",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.01558",
+        "fetched_at": "2026-09-17T06:49:29.337Z",
+        "body_sha256": "1f6a5eb7404ad017c768348e16a1f98e04ff5755aec4d74fc60aef6d3fa6e9be",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.01558"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2022.03031",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2022.03031",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416865518",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.03031",
+        "fetched_at": "2026-09-17T06:49:30.439Z",
+        "body_sha256": "616dc8835f5a6c0ef5510520881850f37f14bb9555c37acb5d0add944e613320",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.03031"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2025.00819",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2025.00819",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416764706",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.00819",
+        "fetched_at": "2026-09-17T06:49:31.546Z",
+        "body_sha256": "a04285ad92fe9311e626f596c8a5ea66a77d5d66cf23723192e21b4254abc4f2",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.00819"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jcorpfin.2026.103038",
+      "journal_key": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103038",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7166733250",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jcorpfin.2026.103038",
+        "fetched_at": "2026-09-17T06:49:32.718Z",
+        "body_sha256": "c67675140fd862cbe0444163d22eede0a498e56d6dc3dad083f120039c4b65f5",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jcorpfin.2026.103038"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.02789",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.02789",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416954037",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.02789",
+        "fetched_at": "2026-09-17T06:49:39.301Z",
+        "body_sha256": "3f7a746b62b6803cded61e741cd53537838b7097969054ca25e72e3d51ad4800",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.02789"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105575",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105575",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742435",
+      "journal_key": "JPE",
+      "doi": "10.1086/742435",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4387026613",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742435",
+        "fetched_at": "2026-09-11T06:58:52.492Z",
+        "body_sha256": "5118838efc6d2c9ce929c63474b67fce7fe40d859112a3a390eac1ff90bc94cc",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742435"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101873",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101873",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7128811723",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101873",
+        "fetched_at": "2026-09-17T06:49:44.928Z",
+        "body_sha256": "ac3f2912de75976781f2937b7b48df6459e68937d79359f2ea0e95e07494642f",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101873"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/743389",
+      "journal_key": "JPE",
+      "doi": "10.1086/743389",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4405717038",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F743389",
+        "fetched_at": "2026-09-11T06:59:04.778Z",
+        "body_sha256": "e9255d203e7c643d3ccd39fca450c402800af2ab5d298b15a205ee43728672b2",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F743389"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.06161",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.06161",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416186994",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06161",
+        "fetched_at": "2026-09-17T06:49:49.549Z",
+        "body_sha256": "d5bdcd13cd3ee8d230dd4f0f34bb1bb5b1de4d457497159b8173e806d596950d",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06161"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/741624",
+      "journal_key": "JPE",
+      "doi": "10.1086/741624",
+      "status": "resolved",
+      "changed_fields": [
+        "abstract"
+      ],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "filled"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W2949513575",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F741624",
+        "fetched_at": "2026-09-17T06:49:50.638Z",
+        "body_sha256": "b5cd7a227b0963c4bcb31d183fc2bbd0ad35dbdaf80c6c59cfa2a44784c60920",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F741624"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.06528",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.06528",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W3210138313",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06528",
+        "fetched_at": "2026-09-17T06:49:53.084Z",
+        "body_sha256": "bb8e90824c00111c4143d75091dce6267b8bd958fe510eed03b2e375f60979e8",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06528"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.05679",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.05679",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416322491",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.05679",
+        "fetched_at": "2026-09-17T06:49:54.189Z",
+        "body_sha256": "934f36e271d753c69eba28d59133d4b307904601b3310a9c2548bd711431c39b",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.05679"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/741274",
+      "journal_key": "JPE",
+      "doi": "10.1086/741274",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7134136666",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F741274",
+        "fetched_at": "2026-09-11T06:58:39.180Z",
+        "body_sha256": "3b8742d11089b2a8fd75c9e0ef0b5fe7210b818f9246d2ef66e5e8c55204575f",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F741274"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104321",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104321",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7165195977",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104321",
+        "fetched_at": "2026-09-17T06:49:55.282Z",
+        "body_sha256": "3d0f22c5f3b37252b84be0b67860e0027d0940f9dd186385e525cde05442a61c",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104321"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105608",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105608",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jcorpfin.2026.103041",
+      "journal_key": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103041",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7166353117",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jcorpfin.2026.103041",
+        "fetched_at": "2026-09-17T06:50:03.664Z",
+        "body_sha256": "5e78b45ab02ab9efe6f57e4dce82c5ea7f6163a8194a0617183b912a5caf3b84",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jcorpfin.2026.103041"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104347",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104347",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104354",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104354",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101865",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101865",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7127047168",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101865",
+        "fetched_at": "2026-09-17T06:50:17.719Z",
+        "body_sha256": "1937d73968e0399a069287aa6e3b11df77da0a6eff7f9b5ef1287a0ea9424836",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101865"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742424",
+      "journal_key": "JPE",
+      "doi": "10.1086/742424",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 10,
+          "leads_checked": 10,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7163144369",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742424",
+        "fetched_at": "2026-09-17T06:50:22.165Z",
+        "body_sha256": "04aacd9859f9949747bec8e83a1bde00f45f2eb8158b692df1523db866aecb53",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742424"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105586",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105586",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.04195",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.04195",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416203994",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.04195",
+        "fetched_at": "2026-09-17T06:50:30.057Z",
+        "body_sha256": "fa5421a31d6d087b3294175b95199b59e99d289b68c0d4c2f730db7dc1442fb9",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.04195"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104350",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104350",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104355",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104355",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105602",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105602",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104351",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104351",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742418",
+      "journal_key": "JPE",
+      "doi": "10.1086/742418",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4367694264",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742418",
+        "fetched_at": "2026-09-11T06:58:44.768Z",
+        "body_sha256": "939d2e5095593c4374db8d8c5b5ce681c2f520be4faef3fc320b3120d46fbf63",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742418"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.02636",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.02636",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416419617",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.02636",
+        "fetched_at": "2026-09-17T06:50:50.254Z",
+        "body_sha256": "d18a362d88d112917bd7fd25b75856e3d3bbdd2a5910236922154b5f0afcda58",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.02636"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.02189",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.02189",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416295416",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.02189",
+        "fetched_at": "2026-09-17T06:50:51.336Z",
+        "body_sha256": "5c6a83ffa07192e5e7573220abaaacd62117eebbe42f699691addc17887d109c",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.02189"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.2308/tar-2024-0472",
+      "journal_key": "TAR",
+      "doi": "10.2308/tar-2024-0472",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7160862811",
+        "url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0472",
+        "fetched_at": "2026-09-17T06:50:52.426Z",
+        "body_sha256": "5df7b836e391b7c908d276208fd5c55c42bfde24c3c0efddf29c46f2a13776ff",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0472"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104328",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104328",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4402559266",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104328",
+        "fetched_at": "2026-09-17T06:50:53.531Z",
+        "body_sha256": "2339aea06a8144244ad48185d8290a306ac186b3bd13aa06f1944acd547ab8c9",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104328"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.08151",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.08151",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416237392",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.08151",
+        "fetched_at": "2026-09-17T06:50:58.774Z",
+        "body_sha256": "aeb81328f97c31e4aaf2a597678588b57b9ffb65792b9b2d5975936f5ba8b4e1",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.08151"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105582",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105582",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104325",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104325",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1093/rfs/hhag025",
+      "journal_key": "RFS",
+      "doi": "10.1093/rfs/hhag025",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W3092613691",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1093%2Frfs%2Fhhag025",
+        "fetched_at": "2026-09-17T06:51:11.558Z",
+        "body_sha256": "405d460990fa128cc8d427dfb12bc7d39e9df202fc665c8476d3936a8220ec81",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1093%2Frfs%2Fhhag025"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2021.04075",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2021.04075",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7117304551",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2021.04075",
+        "fetched_at": "2026-09-17T06:51:12.649Z",
+        "body_sha256": "597ff2f33772aecb714a13058fb33775b04649c283fd66141f60c2642a8a97b2",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2021.04075"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2025.02150",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2025.02150",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416425723",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.02150",
+        "fetched_at": "2026-09-17T06:51:13.739Z",
+        "body_sha256": "c24888c9840a5223ae65b1ebfe8a59ae1d0160f35013faaff851190507767397",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.02150"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742714",
+      "journal_key": "JPE",
+      "doi": "10.1086/742714",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.2308/tar-2024-0369",
+      "journal_key": "TAR",
+      "doi": "10.2308/tar-2024-0369",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7166072233",
+        "url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0369",
+        "fetched_at": "2026-09-17T06:51:20.703Z",
+        "body_sha256": "c66e10f1171b65eca9669cbe250b239fddac698262b5172307ecc01208c978c9",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0369"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105539",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105539",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7163896557",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105539",
+        "fetched_at": "2026-09-17T06:51:21.791Z",
+        "body_sha256": "555a2ed2df0b64208dff0c92d74002fce6673649ffe63567053abe606b9f2583",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105539"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.06215",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.06215",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416211186",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06215",
+        "fetched_at": "2026-09-17T06:51:26.775Z",
+        "body_sha256": "808a8a6cbd1888ee318ceffd4def06091e196d199a5a98c8c496641a4c611182",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06215"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105607",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105607",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104333",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104333",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W3178515664",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104333",
+        "fetched_at": "2026-09-17T06:51:33.036Z",
+        "body_sha256": "7577e60aa4c465058f66e72f30520b1e403607dddb8c973e4edfb81c2cefba67",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104333"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105494",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105494",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7160914343",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105494",
+        "fetched_at": "2026-09-17T06:51:37.564Z",
+        "body_sha256": "45db25cbb813b575847333c4bf2907b7e22c13d883414b01a6c0ac42fbc901fd",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105494"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742422",
+      "journal_key": "JPE",
+      "doi": "10.1086/742422",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4393407744",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742422",
+        "fetched_at": "2026-09-11T06:58:48.075Z",
+        "body_sha256": "24fd03f28d3fbb7e278beb8f3124cea0e30efb91eea7bb8f8768b3dd281a86ce",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742422"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742420",
+      "journal_key": "JPE",
+      "doi": "10.1086/742420",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4402120853",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742420",
+        "fetched_at": "2026-09-11T06:58:45.815Z",
+        "body_sha256": "699e84e0b72c466d64c2883e4fb0cfab6b4c815678637f57753d53eeb52520de",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742420"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.03880",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.03880",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4417280151",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03880",
+        "fetched_at": "2026-09-17T06:51:42.235Z",
+        "body_sha256": "f53b68f97afa95b08060337aab3cb73df9482f5393e956ed3794ff1aef9d597c",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03880"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.05125",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.05125",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416109544",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.05125",
+        "fetched_at": "2026-09-17T06:51:43.371Z",
+        "body_sha256": "32567579c7a2c667f7f633864ee96083c8ca74b1a97ec64c6170e4d495de00c0",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.05125"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2022.03132",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2022.03132",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W3169684115",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.03132",
+        "fetched_at": "2026-09-17T06:51:44.413Z",
+        "body_sha256": "253d7d69a8b314ce026485b1e60b2e4719997b39f268a229c5f827119bf7304e",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.03132"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105507",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105507",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7160913370",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105507",
+        "fetched_at": "2026-09-17T06:51:45.495Z",
+        "body_sha256": "4d894a9c792693e5c5252f8b412d8afc89e0b8e0aae39c1523dcdd4f98f9c7bb",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105507"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2022.00465",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2022.00465",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416512584",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.00465",
+        "fetched_at": "2026-09-17T06:51:50.410Z",
+        "body_sha256": "2c61c68fbe80aa1b690db2305557d83217a334fb3db3f28b7a0e7e266520261f",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.00465"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104349",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104349",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101872",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101872",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7128443186",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101872",
+        "fetched_at": "2026-09-11T06:56:21.429Z",
+        "body_sha256": "d34dfbf070cae2e5cdeb4758bb077b6a9eee9afaad0d5636b32138e482fbb4ad",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101872"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1093/restud/rdag084",
+      "journal_key": "RES",
+      "doi": "10.1093/restud/rdag084",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4389686222",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1093%2Frestud%2Frdag084",
+        "fetched_at": "2026-09-17T06:51:56.445Z",
+        "body_sha256": "760d9da3f9b5eabdee1d6f52a8a775c70b3af05951dbe5925974f45670bed395",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1093%2Frestud%2Frdag084"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.2308/tar-2025-0276",
+      "journal_key": "TAR",
+      "doi": "10.2308/tar-2025-0276",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7167061576",
+        "url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2025-0276",
+        "fetched_at": "2026-09-17T06:51:57.494Z",
+        "body_sha256": "6b22109fe5e65fcd40e3bb1f5d030a621a80d3a93c50e34ed4b291ed652c322a",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2025-0276"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101885",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101885",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7139087197",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101885",
+        "fetched_at": "2026-09-17T06:51:58.583Z",
+        "body_sha256": "29ca3c7bf2f637dddf1c3a691300142fd7116d8fd01acad029a40cc05d0dac48",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jacceco.2026.101885"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105587",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105587",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105510",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105510",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4402926294",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105510",
+        "fetched_at": "2026-09-17T06:52:08.203Z",
+        "body_sha256": "4a53925aabefec13d7eea8fe974cc3e40c8deb2902ba9bd9a9515ff46d9e839f",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105510"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.05750",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.05750",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W3195338949",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.05750",
+        "fetched_at": "2026-09-17T06:52:12.799Z",
+        "body_sha256": "a568f700593eef5f6e11e5149bdfd03201fc41c2fa2b28a7af576039dcf55151",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.05750"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.2308/tar-2024-0328",
+      "journal_key": "TAR",
+      "doi": "10.2308/tar-2024-0328",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7160945461",
+        "url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0328",
+        "fetched_at": "2026-09-17T06:52:13.880Z",
+        "body_sha256": "630e74cedaffdc7c4f1cb648a61cbfbb192e4202feaad8a095d7e76e33cb900f",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0328"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.03771",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.03771",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416295394",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03771",
+        "fetched_at": "2026-09-17T06:52:14.992Z",
+        "body_sha256": "e57ad056d523b2b19bbe2ba47347041e27cde294ac23a55fd2d73afb363c50d0",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03771"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2022.01332",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2022.01332",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4417199429",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.01332",
+        "fetched_at": "2026-09-17T06:52:16.106Z",
+        "body_sha256": "dbde16b7f9fd95a16cf818e080ff0370766a99c27d214e3e67896a89a4cced69",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2022.01332"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104356",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104356",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105585",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105585",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105579",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105579",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105604",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105604",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.2308/tar-2024-0762",
+      "journal_key": "TAR",
+      "doi": "10.2308/tar-2024-0762",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7165033684",
+        "url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0762",
+        "fetched_at": "2026-09-17T06:52:36.289Z",
+        "body_sha256": "6b365b6af06851b482230d78f723497aca3b92556d4a9fc70b6d6105f22b200a",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2024-0762"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2026.02441",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2026.02441",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7167641122",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2026.02441",
+        "fetched_at": "2026-09-17T06:52:37.362Z",
+        "body_sha256": "581a6afd52f889632f81fe9f90068afdd96b3fc6764585eff48e7ab5cb1978fd",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2026.02441"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.00320",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.00320",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416124391",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.00320",
+        "fetched_at": "2026-09-17T06:52:38.477Z",
+        "body_sha256": "38d082f96482ce5e237b6409d3f0b816275de2ba861e1a5581f7a889a3af7aa2",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.00320"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104293",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104293",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "ROBOTS_UNAVAILABLE": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W3213849059",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104293",
+        "fetched_at": "2026-09-17T06:52:39.575Z",
+        "body_sha256": "7a352d3a7c25a0563671d19f3f00576761a386495fab6e3c062837829d853e41",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104293"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104323",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104323",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W2610153155",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104323",
+        "fetched_at": "2026-09-17T06:52:44.181Z",
+        "body_sha256": "d633e4924a335d59b84e2382bd2c1fffc41e31351706539b6fc1f28606161299",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104323"
+      },
+      "duplicate_candidates": [
+        {
+          "paper_id": "doi:10.2139/ssrn.2939994",
+          "doi": "10.2139/ssrn.2939994"
+        }
+      ],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2025.00300",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2025.00300",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416365655",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.00300",
+        "fetched_at": "2026-09-17T06:52:48.603Z",
+        "body_sha256": "8c2c1d4bda9b2785fac32e7be79bced189d71e75233f0cd16fb3a709167ff8cc",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.00300"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105580",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105580",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.2308/tar-2023-0727",
+      "journal_key": "TAR",
+      "doi": "10.2308/tar-2023-0727",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7162069747",
+        "url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2023-0727",
+        "fetched_at": "2026-09-17T06:52:54.416Z",
+        "body_sha256": "28fe3cf4b4446dbdde2f919fcab693d8d1131e8db7104a1914b49aae8bf78831",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.2308%2Ftar-2023-0727"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2025.00012",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2025.00012",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416322104",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.00012",
+        "fetched_at": "2026-09-17T06:52:55.697Z",
+        "body_sha256": "255cbf0251e3dac6f2c5fd644bb98d33aeb0e529ca4b57bbb322e6bd3aa8763f",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2025.00012"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105537",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105537",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7163913677",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105537",
+        "fetched_at": "2026-09-17T06:52:56.584Z",
+        "body_sha256": "f980d46c7a0a8b05e355e6729a309a4519be26aed01c7b8b62dfbd379773db32",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105537"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.04372",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.04372",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4417128446",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.04372",
+        "fetched_at": "2026-09-17T06:53:01.752Z",
+        "body_sha256": "4dd7d1e3403611c76870090cfb770b923f557f78783ae8725e62ea6df8036d68",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.04372"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105584",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105584",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.06893",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.06893",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4417280509",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06893",
+        "fetched_at": "2026-09-17T06:53:07.570Z",
+        "body_sha256": "5f1df4cbde1d0968456e969c24b89968e3916ac3d609e887b9b504003f57d2e9",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06893"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105583",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105583",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract",
+        "identity"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.04482",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.04482",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7117449630",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.04482",
+        "fetched_at": "2026-09-17T06:53:13.275Z",
+        "body_sha256": "96638efd89b300fe0202a3920da4e7ac94b76f3d10f57a9db4be1f76074f90a7",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.04482"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105501",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105501",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4415011336",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105501",
+        "fetched_at": "2026-09-11T06:58:00.471Z",
+        "body_sha256": "2d04840eb866c1fe9f05b71bd79e61e292d6389ce8b4a17ec53049714245a36e",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105501"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.03309",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.03309",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416283748",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03309",
+        "fetched_at": "2026-09-17T06:53:14.363Z",
+        "body_sha256": "b59318b36ab108f8521537487787819abb9dbcc7008e40a216bae44d52518a9e",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03309"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.06127",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.06127",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416283906",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06127",
+        "fetched_at": "2026-09-17T06:53:15.490Z",
+        "body_sha256": "6d7149e0c84149d207b4a0c6c7581650185e3e8ea08d6745251062e5f25152ce",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.06127"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105600",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105600",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104348",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104348",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104311",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104311",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7164049601",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104311",
+        "fetched_at": "2026-09-11T06:57:22.719Z",
+        "body_sha256": "29b4baade75f22bcd9f7c09ad1d3d854829c57e8203aa28a905a3b9c02f429c5",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.jfineco.2026.104311"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.07257",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.07257",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4417506322",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.07257",
+        "fetched_at": "2026-09-17T06:53:25.197Z",
+        "body_sha256": "b42cde7fc27b0b699cda2288335ed27263512eaae4d71bcb16e4b1f9c67b94dc",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.07257"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.09124",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.09124",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7118207705",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.09124",
+        "fetched_at": "2026-09-17T06:53:26.301Z",
+        "body_sha256": "d6f9f463467c79ab8ed109e0478416ec367eca7931b1c3c62a54ceedb3353e2e",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.09124"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.03917",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.03917",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416425919",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03917",
+        "fetched_at": "2026-09-17T06:53:27.387Z",
+        "body_sha256": "1ce993007fd3c73a090cd317e91cde1be7c7dff8e131b669014afea3fe503c41",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03917"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105577",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105577",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2024.08236",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2024.08236",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4416647243",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.08236",
+        "fetched_at": "2026-09-17T06:53:34.012Z",
+        "body_sha256": "9df03ea016b2ecb305786f87f03e71e771126123e53f8aece0fbfd15aef45c77",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2024.08236"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.03846",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.03846",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W3110831753",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03846",
+        "fetched_at": "2026-09-17T06:53:35.010Z",
+        "body_sha256": "9c254fe2c4bd52a5299588f33d90afeb5dcd36f7e15293db1567e99f0d460678",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.03846"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105497",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105497",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4322097274",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105497",
+        "fetched_at": "2026-09-11T06:57:55.997Z",
+        "body_sha256": "adebd9aa56e6766525ef5f54cb8f8dc982d4d4a5475c983099c93db772642eec",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.respol.2026.105497"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1287/mnsc.2023.04026",
+      "journal_key": "MS",
+      "doi": "10.1287/mnsc.2023.04026",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W4415309050",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.04026",
+        "fetched_at": "2026-09-17T06:53:36.122Z",
+        "body_sha256": "3aa4b9ff86c967be5bbca3e08a2fd982a33c5824e1385d1530c0de3159af2e5a",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1287%2Fmnsc.2023.04026"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742423",
+      "journal_key": "JPE",
+      "doi": "10.1086/742423",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7163238826",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742423",
+        "fetched_at": "2026-09-17T06:53:37.208Z",
+        "body_sha256": "59c9a088af0d2eb38772364a521d5510041ed1e34ee70c89434ea20989dd1f09",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742423"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    }
+  ],
+  "unresolved": {
+    "unresolved_papers": 403,
+    "unresolved_issues": 714,
+    "by_status": {
+      "pending": 620,
+      "not_found": 0,
+      "quota_exhausted": 94,
+      "access_restricted": 0,
+      "source_unavailable": 0,
+      "identity_conflict": 0
+    }
+  },
+  "library_statistics": {
+    "total": 803,
+    "research_candidates": 782,
+    "lectures": 4,
+    "research_confirmed_inside_window": 424,
+    "research_uncertain_window": 329,
+    "research_outside_window": 29,
+    "missing_doi": 0,
+    "missing_authors": 68,
+    "missing_publication_month": 217,
+    "missing_abstract": 232,
+    "independent_source_union": 667,
+    "official_only": 136,
+    "confirmed_inside_window": 438,
+    "uncertain_window": 333,
+    "by_discovery_source": {
+      "crossref": 506,
+      "openalex": 349,
+      "semanticscholar": 345,
+      "publisher": 214
+    }
+  }
+}
