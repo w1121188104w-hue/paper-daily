@@ -49,6 +49,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
       const old = papers[byId.get(id)], issues = due.filter(issue => issue.paper_id === id), wanted = [...new Set(issues.map(issue => issue.field))];
       onProgress({ phase: 'metadata_start', paper_id: id });
       const result = await repairPaperMetadata(old, findJournal(config, old.journal_key), { sources, search, otherPapers: papers, fields: wanted,
+        checkedAt: now().toISOString(),
         confirmSingleSource: issues.some(issue => issue.reason === 'single_source_confirmation'),
         checkPossibleDuplicate: issues.some(issue => issue.reason === 'possible_duplicate') });
       papers[byId.get(id)] = result.paper;

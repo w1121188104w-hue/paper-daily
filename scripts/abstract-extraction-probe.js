@@ -40,6 +40,7 @@ try {
       content: 'Synthetic API connectivity test DOI: 10.0000/fixture Abstract This is synthetic test evidence for an API connectivity check. It is not a real research paper and will never enter the database. Keywords: test' }] });
   console.log('ABSTRACT_EXTRACTION_PROBE ' + JSON.stringify({ records, extraction_api_responded: Boolean(fixture && Object.hasOwn(fixture, 'record')),
     ...runtime.summary(), production_writes: 0, translation_calls: 0 }));
+  assertLibrary(fixture && Object.hasOwn(fixture, 'record'), '智谱提取接口未通过真实验证');
 } catch (error) {
   console.error('PROBE_FAILED ' + (/^[A-Z_]{3,50}$/.test(error.code || '') ? error.code : 'CHECK_FAILED'));
   process.exitCode = 1;

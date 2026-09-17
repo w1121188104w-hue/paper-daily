@@ -156,3 +156,23 @@ test('连续未找到退避：第一次1天、第二次3天，不因进程重启
   assert.equal((await runMetadataRepair(config, options())).status, 'skipped');
   assert.equal(calls, 6);
 });
+
+test('摘要专用名额独立于一般待办，保存智谱逐字摘录并进入翻译队列', async t => {
+  const dirs = await seed(t); let searches = 0, extractions = 0;
+  const result = await runMetadataRepair(config, { ...dirs, maxPapers: 0, maxAbstracts: 1, now: () => new Date(at),
+    sources: sources({ crossref: async () => record('crossref', { abstract: '' }),
+      searchExtract: async input => { extractions++;
+        assert.equal(input.paper.doi, '10.1257/example');
+        return { record: { source_index: 0, title, doi: '10.1257/example', abstract } };
+      } }),
+    search: async ({ provider }) => { searches++; assert.equal(provider, 'zhipu');
+      return { called: true, result: { leads: [{ title, url: 'https://www.aeaweb.org/articles?id=10.1257/example',
+        content: `${title} DOI: 10.1257/example Abstract ${abstract} Keywords: trade` }] } };
+    } });
+  assert.equal(result.stats.abstracts_filled, 1); assert.equal(searches, 1); assert.equal(extractions, 1);
+  const saved = await readJournalLibrary({ ...dirs, config });
+  assert.equal(saved.papers[0].abstract_original, abstract);
+  assert.equal(saved.papers[0].source_records.at(-1).source_evidence.method, 'zhipu_search_verbatim_abstract');
+  assert.ok(saved.queue.tasks.some(row => row.field === 'abstract'));
+  assert.ok(Object.values(saved.repairState.issues).every(row => row.status === 'resolved'));
+});

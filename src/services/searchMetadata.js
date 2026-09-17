@@ -61,7 +61,7 @@ const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code 
 
 /** Second phase: THREE structured lookups first; only then search known-paper missing fields.
  * One verified page can repair several fields. Neither search snippets nor LLM output are admissible. */
-export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false, checkPossibleDuplicate = false } = {}) {
+export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false, checkPossibleDuplicate = false, checkedAt = new Date().toISOString() } = {}) {
   let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [], duplicateEvidence = [];
   const mergeClaims = () => duplicateEvidence.flatMap(record => otherPapers.filter(target =>
     target.id !== current.id && target.doi === record.doi && duplicateMergeProof(current, target, record, record.last_checked_at))
@@ -133,7 +133,8 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     },
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
       verifyResult: sources.searchExtract ? async leads => {
-        const record = await extractSearchRecord(leads, current, journal, sources.searchExtract, new Date().toISOString());
+        if (!stillMissing().includes('abstract')) return null;
+        const record = await extractSearchRecord(leads, current, journal, sources.searchExtract, checkedAt);
         if (!record) return null;
         adopt(record);
         // The abstract can be saved even if another field remains unresolved.
