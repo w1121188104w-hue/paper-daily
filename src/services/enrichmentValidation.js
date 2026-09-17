@@ -20,7 +20,7 @@ export function validateEnrichmentRuns(runs) {
   assertLibrary(Array.isArray(runs), '补全日志应为数组');
   const ids = new Set();
   for (const row of runs) {
-    if (row.kind !== undefined) assertLibrary(['missing_metadata_repair', 'duplicate_resolution'].includes(row.kind), '未知补全操作子类型');
+    if (row.kind !== undefined) assertLibrary(['missing_metadata_repair', 'duplicate_resolution', 'journal_identity_correction'].includes(row.kind), '未知补全操作子类型');
     assertLibrary(row.schema_version === 1 && /^[A-Za-z0-9-]{10,100}$/.test(row.run_id) && !ids.has(row.run_id) &&
       isDay(row.run_date) && isIsoTime(row.started_at) && isIsoTime(row.finished_at) && row.finished_at >= row.started_at &&
       isDay(row.from_date) && isDay(row.to_date) && row.from_date <= row.to_date &&
@@ -40,6 +40,10 @@ export function validateEnrichmentReport(report, log) {
     isIsoTime(report.checked_at) && report.checked_at === log.finished_at && Array.isArray(report.merges) && report.merges.length > 0 &&
     report.stats.merged === report.merges.length && report.stats.added === 0 && report.journals.length === 0 &&
     Array.isArray(report.archived_issues) && isObject(report.archived_abstract_state), '归并报告结构无效');
+  if (log.kind === 'journal_identity_correction') assertLibrary(report.stage === 'journal_identity_correction' &&
+    isIsoTime(report.checked_at) && report.checked_at === log.finished_at && Array.isArray(report.removed) &&
+    report.removed.length > 0 && report.stats.removed === report.removed.length && report.stats.added === 0 &&
+    report.journals.length === 0 && report.abstracts.length === 0, '错刊删除日志无效');
   const keys = new Set();
   for (const journal of report.journals) {
     assertLibrary(!keys.has(journal.journal_key) && /^[A-Z]{2,4}$/.test(journal.journal_key) &&

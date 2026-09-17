@@ -10,6 +10,7 @@ import { mergePapers } from '../src/services/paperMerge.js';
 import { collectJournals } from '../src/services/collectJournals.js';
 import { fetchOpenAlexJournal } from '../src/services/openalex.js';
 import { classifySourceRecord } from '../src/services/paperClassification.js';
+import { journalIdentityCorrection, validateJournalIdentityCorrection } from '../src/services/journalIdentityCorrection.js';
 import { validatePapers, validateRuns, validateHistoryPreserved } from '../src/services/libraryValidation.js';
 import { collectionWindow, runJournalCollection, alreadyCoveredToday, safeRunError } from '../src/services/journalRun.js';
 import { readJournalLibrary, readLibraryRef, withLibraryLock, libraryPath } from '../src/services/journalLibrary.js';
@@ -53,6 +54,33 @@ const run = (root, options = {}) => runJournalCollection(config, { root, journal
 const read = (root) => readJournalLibrary({ root, config });
 const pointerText = (root) => fs.readFile(path.join(root, 'current.json'), 'utf8');
 const basePapers = () => mergePapers([record(), record('crossref')], { firstSeenDate: '2026-09-07', checkedAt: at }).papers;
+
+test('用户确认的错刊从当前实体库和待办中删除，其他论文原样保留；父快照可恢复且重复执行幂等', async t => {
+  const { root } = await fixture(t), jar = findJournal(config, 'JAR');
+  const metadata = { journal_key: jar.key, journal_name: jar.name, journal_category: jar.category,
+    journal_category_zh: jar.category_zh, print_issn: jar.print_issn, electronic_issn: jar.electronic_issn };
+  const bad = record('openalex', { ...metadata, doi: '10.67983/journaldialectica.v1i2.100', source_id: 'W100' });
+  const good = record('openalex', { ...metadata, doi: '10.1111/1475-679x.12345', source_id: 'W200' });
+  await run(root, { journalKey: 'JAR', clients: clients([bad, good], []) });
+  const previous = await read(root), backup = previous.pointer.manifest, survivor = previous.papers.find(p => p.doi === good.doi);
+  const plan = journalIdentityCorrection(previous), report = { removed: plan.removed, stats: { removed: 1 } };
+  validateJournalIdentityCorrection(previous, plan.papers, report, plan.enrichmentState);
+  assert.throws(() => validateJournalIdentityCorrection(previous, [], report, plan.enrichmentState));
+  assert.throws(() => validateJournalIdentityCorrection(previous, [{ ...survivor, title_original: 'changed' }], report, plan.enrichmentState));
+  await assert.rejects(run(root, { clients: clients([], []), beforePublish: async () => { throw new Error('interrupted'); } }));
+  assert.equal((await read(root)).papers.length, 2);
+  await run(root, { clients: clients([], []) });
+  const after = await read(root);
+  assert.equal(after.papers.length, 1); assert.deepEqual(after.papers[0], survivor);
+  assert.ok(after.queue.tasks.every(task => task.paper_id === survivor.id));
+  assert.ok(Object.values(after.repairState.issues).every(issue => issue.paper_id === survivor.id));
+  const correction = after.enrichmentReports.find(r => r.stage === 'journal_identity_correction');
+  assert.equal(correction.stats.removed, 1); assert.equal(correction.removed[0].evidence.actual_issn, '3163-821X');
+  const oldManifest = await readLibraryRef(root, backup);
+  assert.equal(Object.values(oldManifest.papers).reduce((n, r) => n + r.count, 0), 2);
+  await run(root, { clients: clients([], []) });
+  assert.equal((await read(root)).enrichments.filter(r => r.kind === 'journal_identity_correction').length, 1);
+});
 
 test('损坏OpenAlex摘要仍保存论文与原始警告，待补全队列存在且不产生摘要翻译', async t => {
   const { root } = await fixture(t), index = { We: [0], study: [2] };

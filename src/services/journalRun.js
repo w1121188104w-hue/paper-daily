@@ -1,4 +1,5 @@
 import { collectJournals, collectionSources } from './collectJournals.js';
+import { removeApprovedWrongJournalPapers } from './journalIdentityCorrectionRun.js';
 import { enabledJournals, findJournal } from './journals.js';
 import { dateInShanghai } from './paperMerge.js';
 import { validateWindow } from './sourceClient.js';
@@ -71,7 +72,8 @@ export async function runJournalCollection(config, { root = DEFAULT_LIBRARY_ROOT
       started_at: startedAt, run_date: runDate, journal_keys: journalKeys,
       from_date: window.fromDate, to_date: window.toDate });
     try {
-      const previous = await readJournalLibrary({ root, config });
+      const previous = await removeApprovedWrongJournalPapers(config, { root,
+        previous: await readJournalLibrary({ root, config }), now, beforePublish });
       if (onlyIfNeeded && alreadyCoveredToday(previous.runs, { runDate, journalKeys, ...window, requiredSources })) {
         await writeLibraryJson(root, `${attemptPrefix}/skipped.json`, { reason: 'already_covered_today', finished_at: now().toISOString() });
         return { status: 'skipped', reason: 'already_covered_today', paper_count: previous.papers.length, committed: false, run_id: runId };
