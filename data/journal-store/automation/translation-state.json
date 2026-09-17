@@ -19772,7 +19772,7 @@
       "batch_id": "batch-3e1e2f7ab6d6d3fb47817a42b253354d3a0d9778196f756aa1c3d1d8a05c617f",
       "mode": "daily",
       "created_at": "2026-09-17T01:36:34.471Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T01:37:02.500Z",
       "items": [
         {
           "id": "doi:10.1287/mnsc.2023.03124",
@@ -19783,10 +19783,16 @@
               "task_id": "task:7f5d9f4426eea5d22b8393e0658cc6c53116517d1180cdca3878a814fa75ae36"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 217,
+            "completion_tokens": 14,
+            "total_tokens": 231
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2023.03313",
@@ -19797,10 +19803,16 @@
               "task_id": "task:2744b6a65bed4e3bb432ae60ca79748a025313d3cedb98196ff23b2efb3cdd48"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 216,
+            "completion_tokens": 13,
+            "total_tokens": 229
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2023.03627",
@@ -19811,10 +19823,16 @@
               "task_id": "task:efc4ff069a79c2c15692fa9895837cfb8bccfdaa1c2cd1fe2e3f54d75858db99"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 219,
+            "completion_tokens": 18,
+            "total_tokens": 237
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2024.04540",
@@ -19830,10 +19848,17 @@
               "task_id": "task:cfc4f0b36fbf161400754082aa1bbfc039a72b54020b5cdd82299092fb2425d3"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 544,
+            "completion_tokens": 337,
+            "total_tokens": 881
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2024.04649",
@@ -19844,10 +19869,16 @@
               "task_id": "task:e1a50e1908fa903974df0072db5b89618c99ed98e98ccdbe489cd95d990f32de"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 214,
+            "completion_tokens": 13,
+            "total_tokens": 227
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2024.05180",
@@ -19858,10 +19889,16 @@
               "task_id": "task:3f82de4575e6a717e50d7181942dd8efd5e3dd19bd9ab7393f942237efb13f5e"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 217,
+            "completion_tokens": 18,
+            "total_tokens": 235
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2024.05446",
@@ -19872,10 +19909,16 @@
               "task_id": "task:75fd116fb107466c42ae103818cbd2484c9681f13bbf049065bf5cce4064b9b3"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 212,
+            "completion_tokens": 13,
+            "total_tokens": 225
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2024.07171",
@@ -19891,10 +19934,17 @@
               "task_id": "task:9d3caaf38f815feb2f614fa1ca47be380d761738858b4100839eff17613d8477"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 608,
+            "completion_tokens": 381,
+            "total_tokens": 989
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2024.07298",
@@ -19905,10 +19955,16 @@
               "task_id": "task:ccef794c18f97a302ad7d4b3f9d847db71a26554e065eb0ac0d68875788fa9a3"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 210,
+            "completion_tokens": 8,
+            "total_tokens": 218
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2024.08186",
@@ -19919,10 +19975,16 @@
               "task_id": "task:0c9ecf595bcc851ef26cbda4bd470a5db5b6fc65494d56e0c8346812679a1442"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 217,
+            "completion_tokens": 15,
+            "total_tokens": 232
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
