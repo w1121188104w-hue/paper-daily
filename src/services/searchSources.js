@@ -157,7 +157,7 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
           ...(article ? { leads: searchLeads({ search_result: [
             ...(Array.isArray(data.web_search) ? data.web_search : []),
             ...(Array.isArray(data.search_result) ? data.search_result : [])
-          ] }, provider) } : {}) };
+          ] }, provider).map(lead => ({ ...lead, search_endpoint: 'chat_completions' })) } : {}) };
       }
       if (provider === 'zhipu') {
         fail(credential(zhipuKey), 'MISSING_ZHIPU_KEY'); fail([...query].length <= 70, 'SEARCH_QUERY_TOO_LONG');

@@ -34,7 +34,8 @@ export function extractionEvidence(leads, paper, journal) {
     if (!identity(text + ' ' + lead.title).includes(identity(paper.title_original)) ||
       !doi || !doiPattern.test(text + ' ' + decoded) ||
       (repec && !identity(text).includes(identity(journal.name)))) return [];
-    return [{ title: lead.title, url: lead.url, content, abstract: originalAbstractSection(content), publisher }];
+    return [{ title: lead.title, url: lead.url, content, abstract: originalAbstractSection(content), publisher,
+      searchEndpoint: lead.search_endpoint === 'chat_completions' ? 'chat/completions' : 'web_search' }];
   }).filter(row => row.abstract).slice(0, 8);
 }
 
@@ -54,7 +55,7 @@ export async function extractSearchRecord(leads, paper, journal, extract, checke
   // adapters. An LLM's extra keys cannot smuggle unsupported metadata in.
   const record = publisherRecord({ title: paper.title_original, doi: paper.doi, authors: [], date: '',
     url: source.url, abstract: source.abstract, raw_abstract: source.content,
-    evidence: { url: source.url, scope_url: 'https://open.bigmodel.cn/api/paas/v4/web_search',
+    evidence: { url: source.url, scope_url: `https://open.bigmodel.cn/api/paas/v4/${source.searchEndpoint}`,
       fetched_at: checkedAt, body_sha256: evidenceHash(source.content), method: 'zhipu_search_verbatim_abstract' } }, journal);
   if (!source.publisher) record.source = 'repec';
   return record;

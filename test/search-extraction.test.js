@@ -137,6 +137,7 @@ test('智谱Chat读取官方web_search字段，与旧字段去重；模型自行
     assert.equal(result.leads.length, placement === 'model_only' ? 0 : 1);
     const verified = await extractSearchRecord(result.leads, paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z');
     assert.equal(verified?.abstract || null, placement === 'model_only' ? null : abstract);
+    if (verified) assert.equal(verified.source_evidence.scope_url, 'https://open.bigmodel.cn/api/paas/v4/chat/completions');
   }
 });
 
