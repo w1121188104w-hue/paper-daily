@@ -14,6 +14,7 @@ export const AUTOMATION_LIMITS = Object.freeze({ batch: 10, backfill_requests: 1
 const STATUS = ['reserved', 'succeeded', 'partial', 'failed', 'unused'];
 const FIELDS = ['title', 'abstract'];
 export const TRANSLATION_RETRY = Object.freeze({ max_attempts: 3, cooldown_ms: 30 * 60000 });
+export const TRANSLATION_REQUEST_PROFILE = 'numeric_preservation_v1';
 const RETRYABLE_CODES = new Set(['MECHANICAL_CHECK_FAILED', 'INVALID_JSON', 'INVALID_TRANSLATION_SHAPE']);
 const FIELD_ERRORS = new Set(['EMPTY_TRANSLATION', 'NON_BODY_TEXT', 'NOT_CHINESE', 'TOO_SHORT', 'MISSING_NUMBERS']);
 const HARD_PAUSE_CODES = new Set(['AUTH_ERROR', 'ACCESS_DENIED', 'INSUFFICIENT_BALANCE', 'UNEXPECTED_MODEL',
@@ -23,9 +24,12 @@ const exact = (value, keys) => value && typeof value === 'object' && !Array.isAr
 const count = (value) => Number.isSafeInteger(value) && value >= 0;
 const code = (value) => value === null || (typeof value === 'string' && /^[A-Z][A-Z0-9_]{1,60}$/.test(value));
 
-function retryAllowed(history, field, at) {
+function retryAllowed(history, field, at, profile = null) {
   const last = history.at(-1);
-  return Boolean(last && history.length < TRANSLATION_RETRY.max_attempts &&
+  // A reviewed request improvement gets its own bounded recovery attempts;
+  // historical reservations remain intact and successful/uncertain calls stay held.
+  const sameProfile = history.filter(row => (row.item.request_profile || null) === profile);
+  return Boolean(last && history.length < TRANSLATION_RETRY.max_attempts * 2 && sameProfile.length < TRANSLATION_RETRY.max_attempts &&
     last.entry.finished_at && ['failed', 'partial'].includes(last.item.status) &&
     !last.item.completed_fields.includes(field) && last.item.usage && RETRYABLE_CODES.has(last.item.code) &&
     Date.parse(at) - Date.parse(last.entry.finished_at) >= TRANSLATION_RETRY.cooldown_ms);
@@ -54,20 +58,21 @@ export function validateTranslationState(state) {
       Array.isArray(entry.items) && entry.items.length >= 1 && entry.items.length <= 10, '自动翻译预登记无效');
     ids.add(entry.id); const paperIds = new Set();
     for (const item of entry.items) {
-      const optional = state.schema_version === 2 ? ['retry_of', 'field_errors'].filter(key => Object.hasOwn(item, key)) : [];
+      const optional = state.schema_version === 2 ? ['retry_of', 'field_errors', 'request_profile'].filter(key => Object.hasOwn(item, key)) : [];
       assertLibrary(exact(item, ['id', 'tasks', 'status', 'code', 'usage', 'completed_fields', ...optional]) && typeof item.id === 'string' &&
         item.id.length <= 512 && /^(doi:|fp:|openalex:|crossref:|publisher:|semanticscholar:|unknown:)/.test(item.id) && !/[\x00-\x1f\x7f]/.test(item.id) && !paperIds.has(item.id) && STATUS.includes(item.status) &&
         code(item.code) && Array.isArray(item.tasks) && item.tasks.length >= 1 && item.tasks.length <= 2 &&
         Array.isArray(item.completed_fields) && new Set(item.completed_fields).size === item.completed_fields.length, '自动翻译条目无效');
       paperIds.add(item.id); const fields = new Set(), retried = [];
-      for (const key of optional) assertLibrary(item[key] && typeof item[key] === 'object' && !Array.isArray(item[key]), '重试诊断结构无效');
+      for (const key of optional.filter(key => key !== 'request_profile')) assertLibrary(item[key] && typeof item[key] === 'object' && !Array.isArray(item[key]), '重试诊断结构无效');
+      if (Object.hasOwn(item, 'request_profile')) assertLibrary(item.request_profile === TRANSLATION_REQUEST_PROFILE, '未知翻译请求方案');
       for (const task of item.tasks) {
         assertLibrary(exact(task, ['field', 'source_hash', 'task_id']) && FIELDS.includes(task.field) && !fields.has(task.field) &&
           /^[a-f0-9]{64}$/.test(task.source_hash) && task.task_id === translationTaskId(item.id, task.field, task.source_hash), '自动翻译任务指纹无效');
         fields.add(task.field);
         const history = attempted.get(task.task_id) || [];
         if (history.length) {
-          assertLibrary(state.schema_version === 2 && retryAllowed(history, task.field, entry.created_at) &&
+          assertLibrary(state.schema_version === 2 && retryAllowed(history, task.field, entry.created_at, item.request_profile || null) &&
             item.retry_of?.[task.field] === history.at(-1).entry.id, '同一原文任务被重复登记或重试不安全');
           retried.push(task.field);
         }
@@ -112,7 +117,7 @@ export function automationQueue(library, state, now = new Date()) {
   assertLibrary(Number.isFinite(now.getTime()), '翻译队列时间无效');
   const attempted = taskHistory(state);
   const ready = translationEligibility(library.papers).ready.tasks;
-  const retryable = ready.filter(task => retryAllowed(attempted.get(task.task_id) || [], task.field, now.toISOString()));
+  const retryable = ready.filter(task => retryAllowed(attempted.get(task.task_id) || [], task.field, now.toISOString(), TRANSLATION_REQUEST_PROFILE));
   const available = [...ready.filter((task) => !attempted.has(task.task_id)), ...retryable];
   const availableIds = new Set(available.map(task => task.task_id));
   return { available, held: ready.filter((task) => !availableIds.has(task.task_id)),
@@ -195,7 +200,7 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
         ({ field, source_hash: item.source_text_hash[field], task_id: item.task_ids[field] })),
       retry_of: Object.fromEntries(item.requested_fields.filter(field => history.has(item.task_ids[field]))
         .map(field => [field, history.get(item.task_ids[field]).at(-1).entry.id])),
-      field_errors: {}, status: 'reserved', code: null, usage: null, completed_fields: [] })) };
+      field_errors: {}, request_profile: TRANSLATION_REQUEST_PROFILE, status: 'reserved', code: null, usage: null, completed_fields: [] })) };
     await withLibraryLock(root, async () => {
       assertLibrary(stableJson(await readTranslationState(root)) === stableJson(state), '翻译状态被并发修改');
       const current = await readJournalLibrary({ root, config });

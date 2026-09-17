@@ -175,7 +175,7 @@ test('自动翻译恢复：旧版失败记录不删改，升级账本后可安�
   const { root } = await fixture(t);
   await run(root, { fetchImpl: async () => response({ ...zh, abstract_zh: '待翻译' }) });
   const legacy = await readTranslationState(root); legacy.schema_version = 1;
-  for (const r of legacy.reservations) for (const item of r.items) { delete item.retry_of; delete item.field_errors; }
+  for (const r of legacy.reservations) for (const item of r.items) { delete item.retry_of; delete item.field_errors; delete item.request_profile; }
   await writeTranslationState(root, legacy);
   await run(root, { now: later(31), fetchImpl: async () => response({ abstract_zh: zh.abstract_zh }) });
   const state = await readTranslationState(root);
@@ -183,7 +183,7 @@ test('自动翻译恢复：旧版失败记录不删改，升级账本后可安�
   assert.equal(state.reservations[1].items[0].status, 'succeeded');
 });
 
-test('自动翻译恢复：同一字段总共最多3次，不靠清空账本无限重跑', async (t) => {
+test('自动翻译恢复：同一请求方案同一字段最多3次，不靠清空账本无限重跑', async (t) => {
   const { root } = await fixture(t); let calls = 0;
   const bad = async (url, options) => {
     calls++; const fields = JSON.parse(JSON.parse(options.body).messages[1].content).requested_fields;
@@ -205,6 +205,28 @@ test('自动翻译恢复：同一字段总共最多3次，不靠清空账本无�
   ]) {
     const badState = structuredClone(state); mutate(badState); assert.throws(() => validateTranslationState(badState));
   }
+});
+
+test('改进数字保留方案可恢复旧方案已结算失败，保留旧账本且最多新增3次', async (t) => {
+  const { root } = await fixture(t);
+  const bad = async (_, options) => {
+    const fields = JSON.parse(JSON.parse(options.body).messages[1].content).requested_fields;
+    return response(Object.fromEntries(fields.map(field => [`${field}_zh`, field === 'title' ? zh.title_zh : '待翻译'])));
+  };
+  for (const minutes of [0, 30, 60]) await run(root, { now: later(minutes), fetchImpl: bad });
+  const legacy = await readTranslationState(root);
+  for (const entry of legacy.reservations) for (const item of entry.items) delete item.request_profile;
+  await writeTranslationState(root, legacy);
+  assert.equal((await run(root, { now: later(89), fetchImpl: bad })).requested_this_run, 0);
+  for (const minutes of [90, 120, 150]) assert.equal((await run(root, { now: later(minutes), fetchImpl: bad })).requested_this_run, 1);
+  assert.equal((await run(root, { now: later(600), fetchImpl: bad })).requested_this_run, 0);
+  const state = await readTranslationState(root);
+  assert.equal(state.reservations.length, 6);
+  assert.deepEqual(state.reservations.slice(0, 3), legacy.reservations);
+  assert.deepEqual(state.reservations[3].items[0].tasks.map(t => t.field), ['abstract']);
+  assert.equal(state.reservations[3].items[0].retry_of.abstract, legacy.reservations[2].id);
+  const unknown = structuredClone(state); unknown.reservations.at(-1).items[0].request_profile = 'invented-reset';
+  assert.throws(() => validateTranslationState(unknown));
 });
 
 test('自动翻译恢复：远端预登记未结算、网络结果不确定、账户暂停都不自动重发', async (t) => {
