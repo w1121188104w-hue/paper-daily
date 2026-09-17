@@ -241,6 +241,29 @@ test('自动翻译恢复：远端预登记未结算、网络结果不确定、�
   assert.equal((await run(second.root, { now: later(600) })).requested_this_run, 0);
 });
 
+test('数字占位方案兼容旧数字请求账本，三种方案总共最多9次，不重译成功标题', async (t) => {
+  const { root } = await fixture(t);
+  const bad = async (_, options) => {
+    const fields = JSON.parse(JSON.parse(options.body).messages[1].content).requested_fields;
+    return response(Object.fromEntries(fields.map(field => [`${field}_zh`, field === 'title' ? zh.title_zh : '待翻译'])));
+  };
+  for (const minutes of [0, 30, 60]) await run(root, { now: later(minutes), fetchImpl: bad });
+  let state = await readTranslationState(root);
+  for (const r of state.reservations) for (const i of r.items) delete i.request_profile;
+  await writeTranslationState(root, state);
+  for (const minutes of [90, 120, 150]) await run(root, { now: later(minutes), fetchImpl: bad });
+  state = await readTranslationState(root);
+  for (const r of state.reservations.slice(3)) for (const i of r.items) i.request_profile = 'numeric_preservation_v1';
+  await writeTranslationState(root, state);
+  const legacy = structuredClone(state.reservations);
+  for (const minutes of [180, 210, 240]) assert.equal((await run(root, { now: later(minutes), fetchImpl: bad })).requested_this_run, 1);
+  assert.equal((await run(root, { now: later(600), fetchImpl: bad })).requested_this_run, 0);
+  const final = await readTranslationState(root);
+  assert.equal(final.reservations.length, TRANSLATION_RETRY.max_total_attempts);
+  assert.deepEqual(final.reservations.slice(0, 6), legacy);
+  assert.ok(final.reservations.slice(6).every(r => r.items.every(i => i.tasks.length === 1 && i.tasks[0].field === 'abstract')));
+});
+
 test('自动翻译恢复：完整但格式错误的返回可重试，未知用量和成功字段不能重试', async (t) => {
   const { root } = await fixture(t);
   await run(root, { fetchImpl: async () => response({ invalid: 'structure' }) });
