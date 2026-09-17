@@ -279,7 +279,7 @@ test('改进数字保留方案可恢复旧方案已结算失败，保留旧账�
   assert.throws(() => validateTranslationState(unknown));
 });
 
-test('自动翻译恢复：远端预登记未结算、网络结果不确定、账户暂停都不自动重发', async (t) => {
+test('自动翻译恢复：网络失败24小时内不重发，未结算预登记即使多日后也不能重发', async (t) => {
   const { root } = await fixture(t);
   await run(root, { fetchImpl: async () => { throw new Error('network'); } });
   assert.equal((await run(root, { now: later(600) })).requested_this_run, 0);
@@ -288,7 +288,48 @@ test('自动翻译恢复：远端预登记未结算、网络结果不确定、�
   await assert.rejects(run(second.root, { now: later(31), publishCheckpoint: async ({ phase }) => {
     if (phase === 'reserve') throw new Error('remote acknowledgement lost');
   }, fetchImpl: async () => { throw new Error('must not call'); } }), /acknowledgement lost/);
-  assert.equal((await run(second.root, { now: later(600) })).requested_this_run, 0);
+  assert.equal((await run(second.root, { now: later(10000) })).requested_this_run, 0);
+});
+
+test('已结束网络失败：24小时后有界重试，保留未知收费并在远端预登记后才调用', async t => {
+  const { root } = await fixture(t);
+  await run(root, { fetchImpl: async () => { throw new Error('network'); } });
+  const initial = await readTranslationState(root);
+  assert.equal((await run(root, { now: later(1439) })).requested_this_run, 0);
+  let reserved = false, calls = 0;
+  const result = await run(root, { now: later(1440), publishCheckpoint: async ({ phase }) => {
+    if (phase === 'reserve') {
+      const state = await readTranslationState(root);
+      assert.deepEqual(state.reservations[0], initial.reservations[0]);
+      assert.deepEqual(state.reservations[1].items[0].retry_of,
+        { title: initial.reservations[0].id, abstract: initial.reservations[0].id });
+      reserved = true;
+    }
+  }, fetchImpl: async () => { assert.ok(reserved); calls++; return response(); } });
+  assert.equal(calls, 1); assert.equal(result.held_fields, 0); assert.equal(result.unknown_usage_requests, 1);
+  assert.equal(result.completed_fields, 2);
+  const state = await readTranslationState(root);
+  assert.deepEqual(state.reservations[0], initial.reservations[0]);
+  assert.equal(state.reservations[0].items[0].usage, null);
+  assert.equal((await run(root, { now: later(3000) })).requested_this_run, 0);
+});
+
+test('网络重试不会因切换请求方案无限增加；未知模型、账户错误及缺用量响应仍不重试', async t => {
+  const { root } = await fixture(t), fail = async () => { throw new Error('network'); };
+  await run(root, { fetchImpl: fail });
+  const initial = await readTranslationState(root);
+  delete initial.reservations[0].items[0].request_profile;
+  await writeTranslationState(root, initial);
+  for (const minutes of [1440, 2880]) assert.equal((await run(root, { now: later(minutes), fetchImpl: fail })).requested_this_run, 1);
+  assert.equal((await run(root, { now: later(4320), fetchImpl: fail })).requested_this_run, 0);
+  const state = await readTranslationState(root);
+  assert.equal(state.reservations.length, 3); assert.deepEqual(state.reservations[0], initial.reservations[0]);
+  for (const code of ['USAGE_MISSING', 'AUTH_ERROR', 'INSUFFICIENT_BALANCE', 'ACCESS_DENIED', 'HTTP_ERROR', 'UNEXPECTED_MODEL']) {
+    const blocked = structuredClone(initial); blocked.reservations[0].items[0].code = code;
+    assert.equal(automationQueue(await readJournalLibrary({ root, config }), blocked, later(10000)()).available.length, 0);
+  }
+  const timeout = structuredClone(initial); timeout.reservations[0].items[0].code = 'TIMEOUT';
+  assert.equal(automationQueue(await readJournalLibrary({ root, config }), timeout, later(1440)()).available.length, 2);
 });
 
 test('数字占位方案兼容旧数字请求账本，三种方案总共最多9次，不重译成功标题', async (t) => {

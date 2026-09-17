@@ -15,9 +15,11 @@ export const AUTOMATION_LIMITS = Object.freeze({ batch: 10, backfill_requests: 1
 const STATUS = ['reserved', 'succeeded', 'partial', 'failed', 'unused'];
 const FIELDS = ['title', 'abstract'];
 export const TRANSLATION_RETRY = Object.freeze({ max_attempts: 3, max_total_attempts: 9, cooldown_ms: 30 * 60000 });
+export const TRANSLATION_TRANSPORT_RETRY = Object.freeze({ max_failures: 3, cooldown_ms: 24 * 60 * 60000 });
 export const TRANSLATION_REQUEST_PROFILE = 'numeric_placeholders_v2';
 const REQUEST_PROFILES = new Set(['numeric_preservation_v1', TRANSLATION_REQUEST_PROFILE]);
 const RETRYABLE_CODES = new Set(['MECHANICAL_CHECK_FAILED', 'INVALID_JSON', 'INVALID_TRANSLATION_SHAPE']);
+const TRANSPORT_CODES = new Set(['NETWORK_ERROR', 'TIMEOUT']);
 const FIELD_ERRORS = new Set(['EMPTY_TRANSLATION', 'NON_BODY_TEXT', 'NOT_CHINESE', 'TOO_SHORT', 'MISSING_NUMBERS', 'NUMERIC_MARKER_MISMATCH']);
 const HARD_PAUSE_CODES = new Set(['AUTH_ERROR', 'ACCESS_DENIED', 'INSUFFICIENT_BALANCE', 'UNEXPECTED_MODEL',
   'MODEL_CHANGED', 'SECRET_IN_RESPONSE', 'SECRET_IN_OUTPUT', 'REPEATED_INVALID_RESULTS', 'USAGE_MISSING']);
@@ -29,12 +31,19 @@ const code = (value) => value === null || (typeof value === 'string' && /^[A-Z][
 function retryAllowed(history, field, at, profile = null) {
   const last = history.at(-1);
   // A reviewed request improvement gets its own bounded recovery attempts;
-  // historical reservations remain intact and successful/uncertain calls stay held.
+  // Historical reservations remain intact. Unfinished requests and successful
+  // fields never retry. Finished transport failures may incur another charge:
+  // preserve their unknown usage and require a full day plus a cross-profile cap.
   const sameProfile = history.filter(row => (row.item.request_profile || null) === profile);
-  return Boolean(last && history.length < TRANSLATION_RETRY.max_total_attempts && sameProfile.length < TRANSLATION_RETRY.max_attempts &&
-    last.entry.finished_at && ['failed', 'partial'].includes(last.item.status) &&
-    !last.item.completed_fields.includes(field) && last.item.usage && RETRYABLE_CODES.has(last.item.code) &&
-    Date.parse(at) - Date.parse(last.entry.finished_at) >= TRANSLATION_RETRY.cooldown_ms);
+  if (!last || history.length >= TRANSLATION_RETRY.max_total_attempts || sameProfile.length >= TRANSLATION_RETRY.max_attempts ||
+    !last.entry.finished_at || !['failed', 'partial'].includes(last.item.status) ||
+    history.some(row => row.item.completed_fields.includes(field))) return false;
+  const elapsed = Date.parse(at) - Date.parse(last.entry.finished_at);
+  if (last.item.status === 'failed' && last.item.usage === null && TRANSPORT_CODES.has(last.item.code)) {
+    return history.filter(row => TRANSPORT_CODES.has(row.item.code)).length < TRANSLATION_TRANSPORT_RETRY.max_failures &&
+      elapsed >= TRANSLATION_TRANSPORT_RETRY.cooldown_ms;
+  }
+  return Boolean(last.item.usage && RETRYABLE_CODES.has(last.item.code) && elapsed >= TRANSLATION_RETRY.cooldown_ms);
 }
 
 function taskHistory(state) {

@@ -13,7 +13,7 @@ export async function runAutomaticTranslationCommand(args, { env = process.env, 
     help: { type: 'boolean' }, status: { type: 'boolean' }, run: { type: 'boolean' }, mode: { type: 'string' }, 'github-output': { type: 'boolean' }
   } });
   if (!Object.keys(values).length || values.help) {
-    log('node scripts/translate-library.js --status（只读，不联网）\n--run --mode daily|backfill --github-output 仅在已启用的GitHub后台执行。自动采用合格机器译文，不逐篇校对；先远端登记再调用。已结算的格式或机械检查失败最多尝试3次，间隔至少30分钟；不重复成功译文或结果未确定的请求。'); return 0;
+    log('node scripts/translate-library.js --status（只读，不联网）\n--run --mode daily|backfill --github-output 仅在已启用的GitHub后台执行。自动采用合格机器译文，不逐篇校对；先远端登记再调用。已结算的格式或机械检查失败最多尝试3次，间隔至少30分钟；已结束的网络失败至少隔24小时、累计3次失败后停止，旧未知用量保留，重试可能再次计费。成功译文和未结算请求不重发。'); return 0;
   }
   if (Number(Boolean(values.status)) + Number(Boolean(values.run)) !== 1 || (values.status && Object.keys(values).length !== 1)) throw new Error('参数组合无效');
   const config = await loadJournalConfig();
@@ -29,7 +29,7 @@ export async function runAutomaticTranslationCommand(args, { env = process.env, 
   const attention = Boolean(result.paused || result.held_fields || result.reserved_requests);
   await fs.appendFile(env.GITHUB_OUTPUT, `attention=${attention}\nrequested=${result.requested_this_run}\n`, 'utf8');
   if (env.GITHUB_STEP_SUMMARY && path.isAbsolute(env.GITHUB_STEP_SUMMARY)) await fs.appendFile(env.GITHUB_STEP_SUMMARY,
-    `## 自动翻译结果\n\n本轮请求：${result.requested_this_run}篇；当前可处理：${result.available_papers}篇；暂缓字段：${result.held_fields}。\n\n累计已知用量估算：${result.estimated_cny_known_usage.toFixed(4)}元（非账单）；无逐篇校对。已结算的格式或机械检查失败最多尝试3次、间隔至少30分钟；不重复成功字段或结果未确定的请求。\n\n停止原因：${result.stop_reason}。\n`, 'utf8');
+    `## 自动翻译结果\n\n本轮请求：${result.requested_this_run}篇；历史译文恢复：${result.recovered_fields || 0}字段；当前可处理：${result.available_papers}篇；暂缓字段：${result.held_fields}。\n\n累计已知用量估算：${result.estimated_cny_known_usage.toFixed(4)}元（非账单）；未知用量请求：${result.unknown_usage_requests}次。无逐篇校对。已结算的格式或机械检查失败最多尝试3次、间隔至少30分钟；已结束的网络失败至少隔24小时、累计3次失败后停止，保留旧未知用量，重试可能再次计费。成功字段和未结算请求不重发。\n\n停止原因：${result.stop_reason}。\n`, 'utf8');
   // Transport/account warnings were durably saved. A separate workflow job reports attention after Pages.
   return 0;
 }
