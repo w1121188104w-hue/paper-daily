@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadJournalConfig, findJournal } from '../src/services/journals.js';
-import { buildSemanticScholarUrl, fetchSemanticScholarJournal } from '../src/services/semanticScholar.js';
+import { buildSemanticScholarUrl, fetchSemanticScholarJournal, semanticScholarJournalMatches } from '../src/services/semanticScholar.js';
 import { requestSourceJson } from '../src/services/sourceHttp.js';
 
 const journal = findJournal(await loadJournalConfig(), 'AER'), at = '2026-09-12T01:00:00.000Z';
@@ -10,6 +10,17 @@ const item = (id = 'a', patch = {}) => ({ paperId: id.repeat(40), title: 'A scho
   venue: journal.name, publicationVenue: { type: 'journal', name: journal.name, issn: journal.print_issn },
   authors: [{ name: 'Alice Smith' }], year: 2026, publicationDate: '2026-08-21', externalIds: { DOI: `10.1234/${id}` }, ...patch });
 const response = data => new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } });
+
+test('JAR：正确ISSN不能覆盖文章自身的错刊名称；已核实印尼DOI始终拒收', async () => {
+  const jar = findJournal(await loadJournalConfig(), 'JAR');
+  const work = { journal: { name: jar.name }, venue: jar.name,
+    publicationVenue: { name: jar.name, issn: '00218456', type: 'journal' }, externalIds: { DOI: '10.1111/1475-679x.12345' } };
+  assert.equal(semanticScholarJournalMatches(work, jar), true);
+  assert.equal(semanticScholarJournalMatches({ ...work, journal: { name: 'Journal Dialectica (Journal of Accounting Research)' } }, jar), false);
+  assert.equal(semanticScholarJournalMatches({ ...work, externalIds: { DOI: '10.67983/journaldialectica.v1i2.100' } }, jar), false);
+  assert.equal(semanticScholarJournalMatches({ ...work, publicationVenue: { issn: '3163-821X' } }, jar), false);
+  assert.equal(semanticScholarJournalMatches({ ...work, publicationVenue: { issn: '1475-679x' } }, jar), true);
+});
 
 test('S2独立发现：按期刊与年份检索，不依赖已有DOI；跨年范围正确', () => {
   const url = buildSemanticScholarUrl(journal, options);
@@ -43,11 +54,11 @@ test('S2：错刊ISSN、会议、坏DOI、缺标题保留原始页但拒收，�
   assert.equal(result.rejected.length, 4); assert.equal(result.error.code, 'INVALID_RECORDS'); assert.equal(result.raw_pages[0].data.length, 4);
 });
 
-test('S2：无ISSN时必须匹配期刊全名，不能相信查询参数本身', async () => {
+test('S2：无ISSN即使刊名完全相同也保留待核实原始页，不进入正式名册', async () => {
   const result = await fetchSemanticScholarJournal(journal, { ...options, fetchImpl: async () => response({ total: 2, data: [
     item('a', { publicationVenue: null, journal: { name: 'The American Economic Review' } }),
     item('b', { publicationVenue: null, journal: { name: 'Wrong Journal' }, venue: 'Wrong Journal' })] }) });
-  assert.equal(result.records.length, 1); assert.equal(result.rejected.length, 1);
+  assert.equal(result.records.length, 0); assert.equal(result.rejected.length, 2); assert.equal(result.raw_pages.length, 1);
 });
 
 test('S2：页数上限、重复页、坏结构都明确报告不完整', async () => {

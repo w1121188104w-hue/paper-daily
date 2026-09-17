@@ -42,6 +42,13 @@ function renderStatus() {
     .map(([key, label]) => `${label} ${counts[key]} 条`).join('；');
   const eligibility = data.translation_eligibility;
   $('libraryMeta').textContent = `库中共 ${data.papers.length} 条文献记录${kinds ? `：${kinds}` : ''}。历史待翻译总计 ${data.pending.paper_count} 条、${data.pending.field_count} 个字段。${eligibility ? `默认可导出研究候选 ${eligibility.ready.paper_count} 条、${eligibility.ready.field_count} 个字段；其他 ${eligibility.held.paper_count} 条暂缓。` : ''}${data.snapshot_at ? ` 数据版本保存于 ${timeText(data.snapshot_at)}，翻译保存时间不等于采集时间。` : ''}`;
+  if (data.quarantined?.length) {
+    const details = node('details');
+    details.append(node('summary', `另有 ${data.quarantined.length} 条已确认错刊记录被隔离，不计入正常列表；原始记录仍保留。`));
+    for (const row of data.quarantined) details.append(node('p',
+      `${row.doi}：${row.title_original}。原归入 ${row.journal_key}，实际为 ${row.actual_journal}（ISSN ${row.actual_issn}）；目标 ISSN ${row.expected_issns.join(' / ')}。`, 'meta'));
+    $('libraryMeta').append(details);
+  }
   const warning = data.attempt_warning;
   $('attemptWarning').hidden = !warning;
   if (warning) {

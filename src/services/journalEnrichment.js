@@ -1,4 +1,5 @@
 import { buildSourceTextHash, normalizeDoi, normalizeSourceRecord } from './paperModel.js';
+import { knownJournalMismatch } from './journalIdentity.js';
 import { dateInShanghai, mergePapers } from './paperMerge.js';
 import { classifySourceRecord } from './paperClassification.js';
 import { enabledJournals, findJournal } from './journals.js';
@@ -116,7 +117,7 @@ export async function reconcileJournal(discovery, journal, inputPapers, window, 
     // Seed a new paper only. Existing papers never pass through the general metadata selection policy here.
     const seed = metadata || official;
     if (classifySourceRecord(seed).kind !== 'candidate') { report.entries.push({ ...entry, status: 'pending', reason: 'SOURCE_TYPE_CONFLICT' }); continue; }
-    const added = mergePapers([seed],{ firstSeenDate: runDate, checkedAt }).papers[0];
+    const added = mergePapers([seed],{ firstSeenDate: runDate, checkedAt, normalizeCar: true }).papers[0];
     if (metadata) {
       added.source_records.push(official); added.sources = [...new Set(added.source_records.map(r => r.source))].sort();
       if (!added.abstract_original && official.abstract) {
@@ -180,7 +181,7 @@ export async function runJournalEnrichment(config, { root = DEFAULT_LIBRARY_ROOT
     if (checkOfficial && !journalKey) state.official_last_run_date = runDate;
     if (abstracts) {
       const keys = new Map(selected.map(j => [j.key,j]));
-      const due = papers.filter(p => keys.has(p.journal_key) && abstractIsDue(p,state,started))
+      const due = papers.filter(p => !knownJournalMismatch(p) && keys.has(p.journal_key) && abstractIsDue(p,state,started))
         .sort((a,b) => (state.abstracts[a.id]?.last_checked_at || '').localeCompare(state.abstracts[b.id]?.last_checked_at || '') || a.id.localeCompare(b.id))
         .slice(0,maxAbstracts);
       const byId = new Map(papers.map((p,i) => [p.id,i]));

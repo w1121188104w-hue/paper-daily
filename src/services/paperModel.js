@@ -187,6 +187,14 @@ export function normalizeSourceRecord(input) {
   const doi = normalizeDoi(input?.doi);
   if (doi && !/^10\.\d{4,9}\/\S+$/.test(doi)) throw new Error('来源记录的 DOI 格式无效');
   if (['publisher', 'semanticscholar', 'repec'].includes(source) && !input?.source_evidence) throw new Error('补充来源必须保留可追溯证据');
+  if (input.text_selection) {
+    const selection = input.text_selection;
+    if (journalKey !== 'CAR' || selection.policy !== 'car_english_v1' ||
+        Object.keys(selection).sort().join(',') !== 'original_abstract,original_title,policy' ||
+        typeof selection.original_title !== 'string' || typeof selection.original_abstract !== 'string' ||
+        !selection.original_title.startsWith(title) || !cleanAbstract(input.abstract) ||
+        !selection.original_abstract.startsWith(cleanAbstract(input.abstract))) throw new Error('CAR英文选择必须是来源原文的完整前缀');
+  }
 
   return {
     source,
@@ -215,7 +223,8 @@ export function normalizeSourceRecord(input) {
     issue: cleanText(input?.issue),
     pages: cleanText(input?.pages),
     type: String(input?.type || '').trim(),
-    ...(input?.source_evidence !== undefined ? { source_evidence: normalizeSourceEvidence(input.source_evidence) } : {})
+    ...(input?.source_evidence !== undefined ? { source_evidence: normalizeSourceEvidence(input.source_evidence) } : {}),
+    ...(input.text_selection ? { text_selection: structuredClone(input.text_selection) } : {})
   };
 }
 

@@ -4,6 +4,7 @@ import {
   normalizeDoi,
   normalizeSourceRecord
 } from './paperModel.js';
+import { matchesJournalIssn, knownJournalMismatch } from './journalIdentity.js';
 
 function sourceId(value) {
   return String(value || '').replace(/^https:\/\/openalex\.org\//i, '').trim();
@@ -48,9 +49,9 @@ export function normalizeOpenAlexWork(work, journal, checkedAt = new Date().toIS
   const configuredSourceId = sourceId(journal?.openalex_source_id);
   const actualSource = work?.primary_location?.source || {};
   const actualSourceId = sourceId(actualSource?.id);
-  const issns = [journal.print_issn, journal.electronic_issn];
-  if (!actualSourceId || actualSourceId !== configuredSourceId ||
-      (actualSource.issn?.length && !actualSource.issn.some((issn) => issns.includes(issn)))) {
+  if (knownJournalMismatch({ journal_key: journal.key, doi: normalizeDoi(work?.doi || work?.ids?.doi) }) ||
+      !actualSourceId || actualSourceId !== configuredSourceId ||
+      (actualSource.issn?.length && !matchesJournalIssn(actualSource.issn, journal))) {
     throw new Error(
       `OpenAlex 期刊不匹配：期望 ${configuredSourceId}，实际 ${actualSourceId}`
     );
@@ -96,7 +97,7 @@ export function normalizeCrossrefWork(item, journal, checkedAt = new Date().toIS
   const configuredIssns = [journal?.print_issn, journal?.electronic_issn]
     .filter(Boolean)
     .map((value) => String(value).toUpperCase());
-  if (!configuredIssns.some((issn) => itemIssns.has(issn))) {
+  if (knownJournalMismatch({ journal_key: journal.key, doi: normalizeDoi(item?.DOI) }) || !matchesJournalIssn([...itemIssns], journal)) {
     throw new Error(
       `Crossref 期刊不匹配：期望 ${configuredIssns.join('/')}，实际 ${Array.from(itemIssns).join('/')}`
     );

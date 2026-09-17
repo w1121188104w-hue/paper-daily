@@ -3,6 +3,7 @@ import {
   normalizeAuthorName, normalizeDate, normalizeSourceRecord, normalizeTitleForMatch, yearFromRecord
 } from './paperModel.js';
 import { createHash } from 'node:crypto';
+import { selectCarEnglish } from './carEnglish.js';
 
 const FIELDS = ['title', 'abstract', 'authors', 'published_online_date', 'published_print_date',
   'publication_date', 'volume', 'issue', 'pages', 'url'];
@@ -52,7 +53,8 @@ export function evidence(records, field) {
   const latest = new Map();
   const sorted = [...records].sort((a, b) =>
     ordered(b.source_updated_at || b.last_checked_at, a.source_updated_at || a.last_checked_at) ||
-    ordered(b.last_checked_at, a.last_checked_at) || ordered(stableRecord(a), stableRecord(b)));
+    ordered(b.last_checked_at, a.last_checked_at) || Number(Boolean(b.text_selection)) - Number(Boolean(a.text_selection)) ||
+    ordered(stableRecord(a), stableRecord(b)));
   for (const record of sorted) {
     if (nonempty(record[field]) && !latest.has(sourceKey(record))) latest.set(sourceKey(record), record);
   }
@@ -132,7 +134,7 @@ function materialContent({ last_checked_at, source_records, ...paper }) {
 
 /** Pure merge: no files, HTTP, AI, or mutation of input arrays. */
 export function mergePapers(incoming, { existingPapers = [], firstSeenDate = dateInShanghai(),
-  checkedAt = new Date().toISOString() } = {}) {
+  checkedAt = new Date().toISOString(), normalizeCar = false } = {}) {
   if (normalizeDate(firstSeenDate) !== firstSeenDate || !firstSeenDate || !Number.isFinite(Date.parse(checkedAt))) {
     throw new Error('合并需要有效的首次发现日期和核对时间');
   }
@@ -191,6 +193,15 @@ export function mergePapers(incoming, { existingPapers = [], firstSeenDate = dat
   const ids = new Set();
   const stats = { added: 0, updated: 0, unchanged: 0, new_pending_fields: 0 };
   const papers = groups.map((group) => {
+    if (normalizeCar && group.records[0].journal_key === 'CAR') {
+      const latest = [...new Set([...evidence(group.records, 'title'), ...evidence(group.records, 'abstract')])];
+      for (const record of latest) {
+        const selected = selectCarEnglish(record, group.records);
+        if (!selected || group.records.some(r => stableRecord(r) === stableRecord(selected))) continue;
+        group.records.push(selected); group.touched = true;
+        addAudit('car_english_selection', record, selected);
+      }
+    }
     group.records.sort((a, b) => ordered(sourceKey(a), sourceKey(b)) || ordered(stableRecord(a), stableRecord(b)));
     const paper = group.touched ? materialize(group, firstSeenDate, checkedAt) : group.previous;
     if (ids.has(paper.id) && !group.previous) {

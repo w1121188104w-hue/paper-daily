@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { fetchPages, validateWindow } from './sourceClient.js';
 import { SourceError } from './sourceHttp.js';
 import { normalizeSourceRecord, normalizeTitleForMatch, normalizePartialDate } from './paperModel.js';
+import { matchesJournalIssn, knownJournalMismatch } from './journalIdentity.js';
 
 const FIELDS = 'title,abstract,externalIds,authors,journal,venue,publicationVenue,publicationDate,year,publicationTypes,url';
 const venueName = value => normalizeTitleForMatch(value).replace(/^the /, '');
@@ -24,9 +25,11 @@ export function semanticScholarJournalMatches(work, journal) {
   const venue = work?.publicationVenue || {};
   const issns = [venue.issn, ...(Array.isArray(venue.alternate_issns) ? venue.alternate_issns : [])]
     .filter(Boolean).map(value => String(value).toUpperCase());
-  const matchesIssn = issns.some(value => [journal.print_issn, journal.electronic_issn].includes(value));
+  const matchesIssn = matchesJournalIssn(issns, journal);
   const names = [work?.journal?.name, venue.name, work?.venue].filter(Boolean);
-  return !((issns.length && !matchesIssn) || (!matchesIssn && !names.some(name => venueName(name) === venueName(journal.name))) ||
+  // A fabricated/misassigned venue ISSN cannot override a conflicting article journal.
+  return !(!matchesIssn || knownJournalMismatch({ journal_key: journal.key, doi: work?.externalIds?.DOI }) ||
+      names.some(name => venueName(name) !== venueName(journal.name)) ||
       (venue.type && venue.type.toLowerCase() !== 'journal'));
 }
 

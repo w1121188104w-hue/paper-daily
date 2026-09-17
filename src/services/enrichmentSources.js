@@ -67,7 +67,7 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
   }
   async function semanticscholar(expected, journal) {
     if (!expected.doi) throw new EvidenceError('NO_DOI');
-    const { response, data } = await api(`https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(normalizeDoi(expected.doi))}?fields=title,abstract,externalIds,authors,journal,publicationDate,publicationTypes`,
+    const { response, data } = await api(`https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(normalizeDoi(expected.doi))}?fields=title,abstract,externalIds,authors,journal,venue,publicationVenue,publicationDate,publicationTypes`,
       semanticScholarKey ? { 'x-api-key': semanticScholarKey } : {});
     if (!semanticScholarJournalMatches(data, journal) || normalizeDoi(data.externalIds?.DOI) !== normalizeDoi(expected.doi) ||
       titleIdentity(data.title) !== titleIdentity(expected.title || expected.title_original)) throw new EvidenceError('UNVERIFIED_IDENTITY');

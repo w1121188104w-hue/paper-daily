@@ -33,6 +33,23 @@ function clients(records = [record()]) {
 }
 const base = () => mergePapers([record()], { firstSeenDate: '2026-09-07', checkedAt }).papers;
 
+test('错刊隔离有可追溯日志，保留历史原库，不进入页面、摘要缺失和自动翻译计数', async t => {
+  const { root } = await fixture(t), lib = await readJournalLibrary({ root, config });
+  const wrong = structuredClone(lib.papers[0]);
+  wrong.id = 'doi:10.67983/journaldialectica.v1i2.100'; wrong.doi = '10.67983/journaldialectica.v1i2.100';
+  wrong.journal_key = 'JAR'; wrong.abstract_original = '';
+  lib.papers.push(wrong);
+  const before = JSON.stringify(lib), result = presentJournalLibrary(lib, config);
+  assert.equal(JSON.stringify(lib), before); assert.equal(result.archive_paper_count, 2);
+  assert.equal(result.papers.length, 1); assert.equal(result.quarantined.length, 1);
+  assert.equal(result.quarantined[0].actual_issn, '3163-821X');
+  assert.ok(result.quarantined[0].evidence_url.startsWith('https://garuda.'));
+  assert.equal(result.enrichment.missing_abstracts, 0);
+  assert.equal(result.translation_eligibility.ready.paper_count, 1);
+  const jar = result.journals.find(j => j.key === 'JAR');
+  assert.equal(jar.id, 'issn:0021-8456'); assert.deepEqual(jar.issns, ['0021-8456', '1475-679X']);
+});
+
 test('新字段重试状态传给原页面，选择较新记录且不暴露完整待办', async t => {
   const { root } = await fixture(t), lib = await readJournalLibrary({ root, config });
   const p = lib.papers[0]; p.abstract_original = ''; p.abstract_zh = '';

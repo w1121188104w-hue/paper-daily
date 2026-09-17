@@ -104,7 +104,9 @@ test('Semantic Scholar补全读取实际文献类型，不把Editorial或未知�
     const client = makeEnrichmentSources({ request: async url => {
       assert.ok(new URL(url).searchParams.get('fields').split(',').includes('publicationTypes'));
       return { url, fetched_at: later, sha256: 'a'.repeat(64), body: JSON.stringify({ paperId: 'a'.repeat(40),
-        title, abstract, externalIds: { DOI: doi }, journal: { name: journal.name }, authors: [{ name: 'Alice Smith' }], publicationTypes }) };
+        title, abstract, externalIds: { DOI: doi }, journal: { name: journal.name },
+        publicationVenue: { name: journal.name, issn: journal.print_issn, type: 'journal' },
+        authors: [{ name: 'Alice Smith' }], publicationTypes }) };
     } });
     assert.equal((await client.semanticscholar(expected, journal)).type, type);
   }
