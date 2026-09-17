@@ -150,6 +150,12 @@ test('隔离工作流只上传明确输出的存档，部分失败仍保存；�
   assert.ok(steps.indexOf(download) < steps.indexOf(run));
   assert.ok(run.run.includes('--checkpoint')); assert.ok(run.run.includes('--resume-from'));
   assert.equal(run.env.DEEPSEEK_API_KEY, undefined);
+  const restore = steps.find(s => s.name.startsWith('Verify downloaded checkpoint'));
+  assert.equal(run.if, '!inputs.restore_only'); assert.equal(restore.if, 'inputs.restore_only');
+  assert.ok(!JSON.stringify(restore).includes('secrets.'));
+  assert.ok(restore.run.includes('NETWORK_FORBIDDEN_DURING_RESTORE'));
+  assert.ok(restore.run.includes('assert.deepEqual(saved[field],original[field])'));
+  assert.ok(steps.indexOf(download) < steps.indexOf(restore));
   assert.equal(flow.concurrency.group, 'journal-production');
   const baseline = steps.find(s => s.with?.path === 'production-baseline');
   assert.equal(baseline.if, 'inputs.pipeline_all');
@@ -166,6 +172,10 @@ test('隔离工作流只上传明确输出的存档，部分失败仍保存；�
   const prefix = 'node --input-type=module -e "', code = validate.run.slice(prefix.length, -1);
   for (const [id, mode, expected] of [['', 'false', 0], ['12345', 'true', 0], ['$(evil)', 'true', 1], ['123', 'false', 1]]) {
     const child = spawnSync(process.execPath, ['--input-type=module', '-e', code], { env: { RESUME_RUN_ID: id, PIPELINE_ALL: mode } });
+    assert.equal(child.status, expected);
+  }
+  for (const [id, expected] of [['', 1], ['12345', 0]]) {
+    const child = spawnSync(process.execPath, ['--input-type=module', '-e', code], { env: { RESUME_RUN_ID: id, PIPELINE_ALL: 'true', RESTORE_ONLY: 'true' } });
     assert.equal(child.status, expected);
   }
 });
