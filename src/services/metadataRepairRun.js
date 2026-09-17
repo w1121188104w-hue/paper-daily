@@ -25,10 +25,11 @@ export function dueMetadataRepairIssues(config, state, now, { journalKey, paperI
  * Due missing fields, title conflicts and single-source confirmations are queried. Callers must provide the same budgeted
  * search service as discovery, and a real quota reset timestamp when exhausted. */
 export async function runMetadataRepair(config, { root, sources, search, now = () => new Date(), journalKey,
-  maxPapers = 100, paperIds = null, quotaResetsAt = null, beforePublish, onProgress = () => {} } = {}) {
+  maxPapers = 100, maxAbstracts = 0, paperIds = null, quotaResetsAt = null, beforePublish, onProgress = () => {}, shouldContinue = () => true } = {}) {
   assertLibrary(typeof root === 'string' && root && sources && ['crossref', 'openalex', 'semanticscholar', 'publisherArticle'].every(k => typeof sources[k] === 'function') &&
     typeof search === 'function' && Number.isInteger(maxPapers) && maxPapers >= 0 && maxPapers <= 1000, '必须显式提供开发库、元数据来源、带额度保护的搜索器及批量上限');
   if (journalKey) assertLibrary(findJournal(config, journalKey)?.enabled, '无匹配的启用期刊');
+  assertLibrary(Number.isInteger(maxAbstracts) && maxAbstracts >= 0 && maxAbstracts <= 1000, '摘要专用批次上限无效');
   assertLibrary(paperIds === null || (Array.isArray(paperIds) && paperIds.length > 0 && paperIds.length <= 1000 &&
     paperIds.every(id => typeof id === 'string') && new Set(paperIds).size === paperIds.length), '限定论文ID列表无效');
   const started = now(), runDate = dateInShanghai(started);
@@ -36,16 +37,22 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     const previous = await readJournalLibrary({ root, config }), papers = [...previous.papers], byId = new Map(papers.map((p, i) => [p.id, i]));
     if (paperIds) assertLibrary(paperIds.every(id => byId.has(id) && (!journalKey || papers[byId.get(id)].journal_key === journalKey)), '限定论文必须属于当前库和选定期刊');
     const due = dueMetadataRepairIssues(config, previous.repairState, started, { paperIds, journalKey });
-    const selected = [...new Set(due.map(issue => issue.paper_id))].slice(0, maxPapers), repairs = [], abstracts = [];
+    const abstractIds = [...new Set(due.filter(issue => issue.field === 'abstract').map(issue => issue.paper_id))].slice(0, maxAbstracts);
+    const generalIds = [...new Set(due.map(issue => issue.paper_id))].filter(id => !abstractIds.includes(id)).slice(0, maxPapers);
+    const selected = [...abstractIds, ...generalIds], repairs = [], abstracts = [];
     const attemptedIssueIds = new Set(due.filter(issue => selected.includes(issue.paper_id)).map(issue => issue.id));
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {
+      // Do not mark unattempted papers as failed when the cloud run times out.
+      // They stay pending, while already obtained evidence is saved below.
+      if (!shouldContinue()) break;
       // A verified original is already scheduled to merge into this target.
       // Defer target queries until the archive transaction has combined evidence.
       if (repairs.some(repair => repair.duplicate_claims?.some(claim => claim.target_id === id))) continue;
       const old = papers[byId.get(id)], issues = due.filter(issue => issue.paper_id === id), wanted = [...new Set(issues.map(issue => issue.field))];
       onProgress({ phase: 'metadata_start', paper_id: id });
       const result = await repairPaperMetadata(old, findJournal(config, old.journal_key), { sources, search, otherPapers: papers, fields: wanted,
+        checkedAt: now().toISOString(),
         confirmSingleSource: issues.some(issue => issue.reason === 'single_source_confirmation'),
         checkPossibleDuplicate: issues.some(issue => issue.reason === 'possible_duplicate') });
       papers[byId.get(id)] = result.paper;
@@ -58,6 +65,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
         abstract_source: result.paper.provenance.abstract_original?.source || '', attempts: result.attempts });
       onProgress({ phase: 'metadata_done', paper_id: id, status: result.status, filled: result.changed_fields });
     }
+    if (!repairs.length) return { committed: false, status: 'skipped', reason: 'RUN_DEADLINE' };
     const finished = now(), finishedAt = finished.toISOString();
     const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 4, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
       officialIds: officialDiscoveries(previous.enrichmentReports) });

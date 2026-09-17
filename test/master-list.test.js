@@ -142,7 +142,8 @@ test('自动待办：not_found和quota_exhausted分别重试，额度重置不�
   assert.throws(() => recordRepairAttempt(state, id, { source: 'serpapi_google', status: 'quota_exhausted', checkedAt: at }));
   const exhausted = recordRepairAttempt(state, id, { source: 'serpapi_google', status: 'quota_exhausted', checkedAt: at, quotaResetsAt: '2026-10-12T00:00:00Z' });
   assert.equal(exhausted.issues[id].status, 'quota_exhausted');
-  assert.ok(!dueRepairIssues(exhausted, new Date('2026-10-01T00:00:00Z')).some(issue => issue.id === id));
+  assert.equal(exhausted.issues[id].next_retry_at, tomorrow);
+  assert.ok(dueRepairIssues(exhausted, new Date('2026-10-01T00:00:00Z')).some(issue => issue.id === id));
   validateRepairState(exhausted, rows); assert.deepEqual(state, initial(rows));
 });
 

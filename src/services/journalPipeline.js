@@ -11,8 +11,8 @@ import { translationEligibility } from './translationQueue.js';
  * deployment here. Caller owns the cross-process production concurrency gate
  * and supplies one durable budgeted search service to both search phases. */
 export async function runJournalPipeline(config, { root, http, sources, search, quotaResetsAt,
-  journalKey, now = () => new Date(), maxPapers = 100, maxPages = 1000,
-  collectionOptions = {}, onProgress = () => {},
+  journalKey, now = () => new Date(), maxPapers = 100, maxAbstracts = 0, maxPages = 1000,
+  collectionOptions = {}, onProgress = () => {}, shouldContinue = () => true,
   collect = runJournalCollection, catalog = runCatalogDiscovery, repair = runMetadataRepair, resolveDuplicates = runDuplicateResolution,
   readLibrary = readJournalLibrary } = {}) {
   assertLibrary(typeof root === 'string' && root && typeof http?.request === 'function' &&
@@ -37,7 +37,7 @@ export async function runJournalPipeline(config, { root, http, sources, search, 
     onProgress: row => onProgress({ phase: 'discovery_source', ...row }) }));
   const catalogs = await stage('official_catalog', () => catalog(config, { ...common, http, search, onProgress }));
   const resumed = await stage('saved_duplicate_resolution', () => resolveDuplicates(config, { ...common, maxPapers }));
-  const repaired = await stage('metadata', () => repair(config, { ...common, sources, search, quotaResetsAt, maxPapers, onProgress }));
+  const repaired = await stage('metadata', () => repair(config, { ...common, sources, search, quotaResetsAt, maxPapers, maxAbstracts, onProgress, shouldContinue }));
   const resolved = await stage('duplicate_resolution', () => resolveDuplicates(config, { ...common,
     maxPapers: Math.max(0, maxPapers - (resumed.stats?.merged || 0)) }));
   const library = await readLibrary({ root, config }), translation = translationEligibility(library.papers);

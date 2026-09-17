@@ -11,6 +11,7 @@ import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
 import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 import { classifyPaper } from './paperClassification.js';
 import { duplicateMergeProof } from './duplicateMerge.js';
+import { extractSearchRecord } from './searchExtraction.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -60,7 +61,7 @@ const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code 
 
 /** Second phase: THREE structured lookups first; only then search known-paper missing fields.
  * One verified page can repair several fields. Neither search snippets nor LLM output are admissible. */
-export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false, checkPossibleDuplicate = false } = {}) {
+export async function repairPaperMetadata(paper, journal, { sources, search, otherPapers = [], fields = missingFields(paper), confirmSingleSource = false, checkPossibleDuplicate = false, checkedAt = new Date().toISOString() } = {}) {
   let current = paper; const attempts = [], changed = new Set(), wanted = new Set(fields), candidates = [], duplicateEvidence = [];
   const mergeClaims = () => duplicateEvidence.flatMap(record => otherPapers.filter(target =>
     target.id !== current.id && target.doi === record.doi && duplicateMergeProof(current, target, record, record.last_checked_at))
@@ -123,9 +124,45 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     }
   }
   let searchResult = null;
+  if (stillMissing().includes('abstract') && !mergeClaims().length && sources.searchArticle) {
+    try {
+      const answer = await sources.searchArticle(current, journal);
+      let record = answer.called && answer.result ? await extractSearchRecord(answer.result.leads || [], current, journal,
+        async () => answer.result.extracted, checkedAt) : null;
+      // Some Chat API responses omit tool text. A model-suggested URL is only
+      // a lead: fetch it independently and use the verified page, not its answer.
+      const proposedUrl = safeSearchLink(answer.result?.extracted?.record?.source_url);
+      if (!record && proposedUrl) {
+        const repec = supportedRepecUrl(proposedUrl, journal) && sources.repecArticle;
+        if (repec || publisherFor(journal).hosts.includes(new URL(proposedUrl).hostname)) {
+          record = await (repec ? sources.repecArticle : sources.publisherArticle)({ ...current, url: proposedUrl }, journal);
+        }
+      }
+      if (record) adopt(record);
+      attempts.push({ source: 'zhipu', status: record ? 'filled' : 'no_verified_abstract',
+        called: Boolean(answer.called), stage: 'search_and_extract',
+        leads_returned: answer.result?.leads?.length || 0, ...(answer.diagnostic ? { diagnostic: answer.diagnostic } : {}) });
+    } catch (error) {
+      if (['EVIDENCE_STORAGE_ERROR', 'SEARCH_LEDGER_CHECKPOINT_FAILED'].includes(error.code)) throw error;
+      attempts.push({ source: 'zhipu', status: safeCode(error), stage: 'search_and_extract' });
+    }
+  }
   if (stillMissing().length && !mergeClaims().length && search) {
-    searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => paperSearchQuery(current, provider),
+    searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => {
+      const query = paperSearchQuery(current, provider);
+      return provider === 'zhipu' && sources.searchExtract ? [...new Set([query,
+        `${current.doi || query.slice(0, 58)} Abstract`.slice(0, 70),
+        `${current.doi || query.slice(0, 40)} site:ideas.repec.org`.slice(0, 70)])] : query;
+    },
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
+      verifyResult: sources.searchExtract ? async leads => {
+        if (!stillMissing().includes('abstract')) return null;
+        const record = await extractSearchRecord(leads, current, journal, sources.searchExtract, checkedAt);
+        if (!record) return null;
+        adopt(record);
+        // The abstract can be saved even if another field remains unresolved.
+        return stillMissing().length ? null : record;
+      } : undefined,
       verifyLead: async lead => {
         const url = safeSearchLink(lead.url);
         if (!url) return { resolved: false, reason: 'UNSAFE_LINK' };

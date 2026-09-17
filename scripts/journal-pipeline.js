@@ -19,7 +19,7 @@ export function parsePipelineArgs(args) {
   const { values: v } = parseArgs({ args, strict: true, allowPositionals: false, options: {
     help: { type: 'boolean' }, plan: { type: 'boolean' }, run: { type: 'boolean' }, save: { type: 'boolean' },
     isolate: { type: 'boolean' }, all: { type: 'boolean' }, journal: { type: 'string' },
-    'max-papers': { type: 'string' }, 'max-pages': { type: 'string' },
+    'max-papers': { type: 'string' }, 'max-pages': { type: 'string' }, 'max-abstracts': { type: 'string' },
     checkpoint: { type: 'boolean' }, 'resume-from': { type: 'string' }, 'source-repository': { type: 'string' }
   } });
   if (!Object.keys(v).length || v.help) return { mode: 'help' };
@@ -31,8 +31,10 @@ export function parsePipelineArgs(args) {
   if (v['source-repository'] !== undefined) assertLibrary(v.run && v.isolate && v['source-repository'].trim() &&
     !/[\r\n\0]/.test(v['source-repository']), '外部数据基线仅允许隔离运行，路径不能为空');
   const maxPapers = Number(v['max-papers'] ?? 100), maxPages = Number(v['max-pages'] ?? 1000);
+  const maxAbstracts = Number(v['max-abstracts'] ?? 300);
+  assertLibrary(Number.isInteger(maxAbstracts) && maxAbstracts >= 0 && maxAbstracts <= 1000, '摘要批次上限无效');
   assertLibrary(Number.isInteger(maxPapers) && maxPapers >= 0 && maxPapers <= 1000 && Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 1000, '批量或页数上限无效');
-  return { mode: v.plan ? 'plan' : 'run', isolate: Boolean(v.isolate), journalKey: v.journal, maxPapers, maxPages,
+  return { mode: v.plan ? 'plan' : 'run', isolate: Boolean(v.isolate), journalKey: v.journal, maxPapers, maxAbstracts, maxPages,
     checkpoint: Boolean(v.checkpoint), resumeFrom: v['resume-from'], sourceRepository: v['source-repository'] };
 }
 
@@ -47,7 +49,7 @@ export async function makePipelineRuntime({ env, policy }) {
     const task = tail.then(async () => {
       if (Date.now() >= deadline) return { called: false, reason: 'run_deadline' };
       const serp = options.provider.startsWith('serpapi_');
-      if (serp) { try { account = await providers.account(); } catch { skipped.account_unverified = (skipped.account_unverified || 0) + 1; return { called: false, reason: 'account_unverified' }; } }
+      if (serp && (!account || Date.now() - Date.parse(account.checked_at) >= 50000)) { try { account = await providers.account(); } catch { skipped.account_unverified = (skipped.account_unverified || 0) + 1; return { called: false, reason: 'account_unverified' }; } }
       const result = await budget.run({ ...options, zhipuMonthlyLimit: policy.zhipu_monthly_limit, ...(serp ? { account } : {}) });
       if (result.called) counts[serp ? 'serpapi' : 'zhipu']++;
       else skipped[result.reason] = (skipped[result.reason] || 0) + 1;
@@ -56,7 +58,18 @@ export async function makePipelineRuntime({ env, policy }) {
   };
   const publicHttp = makeEvidenceHttp({ timeoutMs: 12000, maxRequests: 1200 });
   const http = { request: (...args) => { if (Date.now() >= deadline) throw new EvidenceError('REQUEST_LIMIT'); return publicHttp.request(...args); } };
-  return { http, search, sources: makeEnrichmentSources(http, { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '' }),
+  const sources = makeEnrichmentSources(http, { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '' });
+  sources.searchExtract = async extraction => {
+    const result = await search({ provider: 'zhipu', query: `extract:${extraction.paper.doi}:${extraction.evidence.map(row => row.url).join('|')}`.slice(0, 2000),
+      taskId: `extract:${extraction.paper.doi}`, extraction });
+    return result.result?.extracted || null;
+  };
+  sources.searchArticle = async (paper, journal) => {
+    const article = { title: paper.title_original, doi: paper.doi, journal: journal.name };
+    return search({ provider: 'zhipu', query: `article:${JSON.stringify(article)}`.slice(0, 2000),
+      taskId: `article:${paper.id}`, article });
+  };
+  return { http, search, sources, shouldContinue: () => Date.now() < deadline,
     collectionOptions: { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '', maxAttempts: 2, timeoutMs: 12000 },
     quotaResetsAt: () => {
       const value = account?.renewal_date, reset = /^\d{4}-\d{2}-\d{2}$/.test(value || '') ? Date.parse(`${value}T00:00:00Z`) + 86400000 : Date.parse(value);
@@ -80,7 +93,7 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
   if (options.journalKey) assertLibrary(findJournal(config, options.journalKey)?.enabled, '期刊无效');
   const before = await readLibrary({ root, config });
   if (options.mode === 'plan') { const plan = { status: 'plan', production_enabled: policy.production_enabled, papers: before.papers.length,
-    journal: options.journalKey || 'all', lookback_days: 60, max_papers: options.maxPapers,
+    journal: options.journalKey || 'all', lookback_days: 60, max_papers: options.maxPapers, max_abstracts: options.maxAbstracts,
     phases: ['three_source_discovery', 'official_catalog_search', 'saved_duplicate_resolution', 'metadata_repair', 'duplicate_resolution', 'translation_queue'],
     monthly_limits: { zhipu: policy.zhipu_monthly_limit, serpapi: policy.serpapi_monthly_limit } }; log(JSON.stringify(plan)); return plan; }
   if (!options.isolate && (!policy.production_enabled || env.JOURNAL_SEARCH_ENABLED !== 'true')) {
@@ -98,7 +111,7 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
     const services = await runtime({ env, policy });
     executionStarted = true;
     const report = await execute(config, { ...services, root: resumed?.root || copy?.root || root, journalKey: options.journalKey,
-      maxPapers: options.maxPapers, maxPages: options.maxPages, onProgress: row => log(`PIPELINE_PROGRESS ${JSON.stringify(row)}`) });
+      maxPapers: options.maxPapers, maxAbstracts: options.maxAbstracts, maxPages: options.maxPages, onProgress: row => log(`PIPELINE_PROGRESS ${JSON.stringify(row)}`) });
     const result = { ...report, ...services.summary(), isolated: options.isolate,
       baseline_papers: before.papers.length, baseline_snapshot_sha256: before.pointer?.manifest?.sha256 || null };
     if (copy) result.original_unchanged = await copy.verifyOriginal();

@@ -11,9 +11,10 @@ export function repecJournalUrl(doi, journal) {
 export function supportedRepecUrl(value, journal) {
   try {
     const url = new URL(value);
-    return journal.key === 'JPE' && url.protocol === 'https:' && url.hostname === 'ideas.repec.org' &&
+    return Boolean(journal.key) && url.protocol === 'https:' && url.hostname === 'ideas.repec.org' &&
       !url.username && !url.password && !url.port && !url.search && !url.hash &&
-      /^\/a\/ucp\/jpolec\/doi10\.1086-\d+\.html$/.test(url.pathname);
+      (journal.key === 'JPE' ? /^\/a\/ucp\/jpolec\/doi10\.1086-\d+\.html$/.test(url.pathname) :
+        /^\/a\/[a-z0-9_-]+\/[a-z0-9_-]+\/[a-z0-9._:%-]+\.html$/i.test(url.pathname));
   } catch { return false; }
 }
 /** Narrow journal-article adapter. Working papers and arbitrary repositories are
@@ -23,14 +24,17 @@ export function parseRepecAbstract(response, journal, expected) {
   const $ = load(response.body), meta = name => $('meta').filter((i, e) => $(e).attr('name') === name).map((i, e) => $(e).attr('content')).get();
   const single = name => { const values = [...new Set(meta(name))]; if (values.length !== 1) throw new EvidenceError('UNVERIFIED_IDENTITY'); return values[0]; };
   const handle = single('handle'), title = single('citation_title');
-  const doi = normalizeDoi(handle.replace(/^RePEc:ucp:jpolec:doi:/, ''));
-  if (!/^RePEc:ucp:jpolec:doi:10\.1086\/\d+$/.test(handle) || doi !== normalizeDoi(expected.doi) ||
+  const doi = normalizeDoi(journal.key === 'JPE' ? handle.replace(/^RePEc:ucp:jpolec:doi:/, '') : single('DOI'));
+  const pathParts = new URL(response.url).pathname.split('/');
+  if (!(journal.key === 'JPE' ? /^RePEc:ucp:jpolec:doi:10\.1086\/\d+$/.test(handle) :
+      handle.startsWith(`RePEc:${pathParts[2]}:${pathParts[3]}:`)) || doi !== normalizeDoi(expected.doi) ||
     titleKey(title) !== titleKey(expected.title_original || expected.title) ||
     titleKey(single('citation_journal_title')) !== titleKey(journal.name) || single('citation_type') !== 'redif-article' ||
-    single('citation_publisher') !== 'University of Chicago Press' ||
-    new URL(response.url).pathname !== `/a/ucp/jpolec/doi${doi.replace('/', '-')}.html`) throw new EvidenceError('UNVERIFIED_IDENTITY');
+    (journal.key === 'JPE' && (single('citation_publisher') !== 'University of Chicago Press' ||
+      new URL(response.url).pathname !== `/a/ucp/jpolec/doi${doi.replace('/', '-')}.html`))) throw new EvidenceError('UNVERIFIED_IDENTITY');
   const authors = normalizeAuthors(single('citation_authors').split(';'));
-  if (!authors.length || (expected.authors?.length && !authors.some(a => expected.authors.some(b => normalizeAuthorName(a.name) === normalizeAuthorName(b.name))))) throw new EvidenceError('UNVERIFIED_IDENTITY');
+  const authorKey = name => normalizeAuthorName(name).split(' ').sort().join(' ');
+  if (!authors.length || (expected.authors?.length && !authors.some(a => expected.authors.some(b => authorKey(a.name) === authorKey(b.name))))) throw new EvidenceError('UNVERIFIED_IDENTITY');
   const nodes = $('#abstract-body');
   const abstract = nodes.length === 1 ? authenticAbstract(nodes.text()) : '';
   if (!abstract || abstract !== cleanAbstract(single('citation_abstract'))) throw new EvidenceError('PUBLISHER_NO_ABSTRACT');

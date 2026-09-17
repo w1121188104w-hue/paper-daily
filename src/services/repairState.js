@@ -55,7 +55,11 @@ export function dueRepairIssues(state, now = new Date(), { limit = 100, filter =
     typeof filter === 'function' && Number.isFinite(now.getTime()), '自动待办查询参数无效');
   const priority = issue => ['identity', 'doi', 'classification', 'authors', 'publication_month', 'abstract'].indexOf(issue.field);
   const due = Object.values(state.issues).filter(issue => issue.status !== 'resolved' &&
-    (!issue.next_retry_at || Date.parse(issue.next_retry_at) <= now.getTime()) && filter(issue))
+    (!issue.next_retry_at || Date.parse(issue.next_retry_at) <= now.getTime() ||
+      (issue.status === 'quota_exhausted' && issue.attempts.at(-1)?.source.startsWith('serpapi_') &&
+        now.getTime() >= Date.parse(issue.updated_at) &&
+        (now.getTime() - Date.parse(issue.updated_at) >= 86400000 ||
+          Date.parse(issue.next_retry_at) - Date.parse(issue.updated_at) > 86400000))) && filter(issue))
     .sort((a, b) => a.attempt_count - b.attempt_count || priority(a) - priority(b) ||
       a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id));
   // A paper batch must retain every due field for its selected papers.
@@ -73,7 +77,10 @@ export function recordRepairAttempt(state, id, { source, status, checkedAt, quot
   // Older attempts remain in immutable history; the current working queue keeps the latest 50.
   issue.attempts = issue.attempts.slice(-50);
   issue.status = status; issue.updated_at = checkedAt; issue.resolved_at = null;
-  issue.next_retry_at = status === 'quota_exhausted' ? quotaResetsAt :
+  // SerpAPI's monthly balance must not pause working structured/Zhipu sources.
+  // Its own ledger still prevents every billable call until free quota returns.
+  issue.next_retry_at = status === 'quota_exhausted' ? (source.startsWith('serpapi_') ?
+    new Date(Math.min(Date.parse(quotaResetsAt), Date.parse(checkedAt) + 86400000)).toISOString() : quotaResetsAt) :
     new Date(Date.parse(checkedAt) + [1, 3, 7, 14, 30][Math.min(issue.attempt_count - 1, 4)] * 86400000).toISOString();
   return next;
 }

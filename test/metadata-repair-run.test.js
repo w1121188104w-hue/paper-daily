@@ -99,13 +99,14 @@ test('字段重试：部分补齐保存，未找到的字段保存失败记录�
   assert.ok(dueRepairIssues(library.repairState, new Date('2026-09-15T00:00:00Z')).length > 0);
 });
 
-test('字段额度耗尽：记录真实重置时间，区别于已搜索未找到，到期后进入自动队列', async t => {
+test('SerpAPI额度耗尽：只暂停备用渠道，次日仍可重试智谱和结构化来源', async t => {
   const dirs = await seed(t), reset = '2026-10-13T00:00:00.000Z';
   await runMetadataRepair(config, { ...dirs, now: () => new Date(at), sources: sources(), quotaResetsAt: reset,
     search: async ({ provider }) => provider === 'zhipu' ? { called: true, result: { leads: [] } } : { called: false, reason: 'quota_exhausted' } });
   const library = await readJournalLibrary({ ...dirs, config });
-  assert.ok(Object.values(library.repairState.issues).every(issue => issue.status === 'quota_exhausted' && issue.next_retry_at === reset));
-  assert.equal(dueRepairIssues(library.repairState, new Date('2026-10-12T00:00:00Z')).length, 0);
+  assert.ok(Object.values(library.repairState.issues).every(issue => issue.status === 'quota_exhausted' && issue.next_retry_at === '2026-09-14T12:00:00.000Z'));
+  assert.equal(dueRepairIssues(library.repairState, new Date(at)).length, 0);
+  assert.equal(dueRepairIssues(library.repairState, new Date('2026-09-14T12:00:00Z')).length, 4);
   assert.equal(dueRepairIssues(library.repairState, new Date(reset)).length, 4);
 });
 
@@ -154,4 +155,34 @@ test('连续未找到退避：第一次1天、第二次3天，不因进程重启
   clock = new Date(Date.parse(at) + 3 * 86400000);
   assert.equal((await runMetadataRepair(config, options())).status, 'skipped');
   assert.equal(calls, 6);
+});
+
+test('摘要专用名额独立于一般待办，保存智谱逐字摘录并进入翻译队列', async t => {
+  const dirs = await seed(t); let searches = 0, extractions = 0;
+  const result = await runMetadataRepair(config, { ...dirs, maxPapers: 0, maxAbstracts: 1, now: () => new Date(at),
+    sources: sources({ crossref: async () => record('crossref', { abstract: '' }),
+      searchExtract: async input => { extractions++;
+        assert.equal(input.paper.doi, '10.1257/example');
+        return { record: { source_index: 0, title, doi: '10.1257/example', abstract } };
+      } }),
+    search: async ({ provider }) => { searches++; assert.equal(provider, 'zhipu');
+      return { called: true, result: { leads: [{ title, url: 'https://www.aeaweb.org/articles?id=10.1257/example',
+        content: `${title} DOI: 10.1257/example Abstract ${abstract} Keywords: trade` }] } };
+    } });
+  assert.equal(result.stats.abstracts_filled, 1); assert.equal(searches, 1); assert.equal(extractions, 1);
+  const saved = await readJournalLibrary({ ...dirs, config });
+  assert.equal(saved.papers[0].abstract_original, abstract);
+  assert.equal(saved.papers[0].source_records.at(-1).source_evidence.method, 'zhipu_search_verbatim_abstract');
+  assert.ok(saved.queue.tasks.some(row => row.field === 'abstract'));
+  assert.ok(Object.values(saved.repairState.issues).every(row => row.status === 'resolved'));
+});
+
+test('运行时限到达不把尚未查询的摘要记为失败或增加重试次数', async t => {
+  const dirs = await seed(t), before = await readJournalLibrary({ ...dirs, config });
+  const result = await runMetadataRepair(config, { ...dirs, now: () => new Date(at), sources: sources(),
+    search: () => assert.fail('Deadline reached'), shouldContinue: () => false, maxAbstracts: 300 });
+  assert.equal(result.reason, 'RUN_DEADLINE');
+  const after = await readJournalLibrary({ ...dirs, config });
+  assert.equal(after.pointerText, before.pointerText);
+  assert.deepEqual(after.repairState, before.repairState);
 });
