@@ -24244,7 +24244,7 @@
       "batch_id": "batch-ba5db4eff10a4540c16fd86675e002ce3498b01299239b0bd77570b325e29da0",
       "mode": "daily",
       "created_at": "2026-09-17T14:58:09.286Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T14:58:47.307Z",
       "items": [
         {
           "id": "doi:10.1111/1911-3846.70061",
@@ -24257,10 +24257,16 @@
           ],
           "retry_of": {},
           "field_errors": {},
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 416,
+            "completion_tokens": 128,
+            "total_tokens": 544
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70062",
@@ -24273,10 +24279,16 @@
           ],
           "retry_of": {},
           "field_errors": {},
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 459,
+            "completion_tokens": 137,
+            "total_tokens": 596
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70066",
@@ -24289,10 +24301,16 @@
           ],
           "retry_of": {},
           "field_errors": {},
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 476,
+            "completion_tokens": 165,
+            "total_tokens": 641
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/jofi.70042",
@@ -24306,10 +24324,16 @@
           "retry_of": {
             "abstract": "bcac1724-06f0-4d26-abc7-969a20a457b4"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 379,
+            "completion_tokens": 132,
+            "total_tokens": 511
+          },
           "completed_fields": []
         }
       ]
