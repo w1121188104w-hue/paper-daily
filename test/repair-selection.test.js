@@ -55,3 +55,17 @@ test('待办查询拒绝非法限量、筛选器和时钟', () => {
   for (const filter of [null, false, 'AER']) assert.throws(() => dueRepairIssues(state([]), now, { filter }));
   assert.throws(() => dueRepairIssues(state([]), new Date('invalid')));
 });
+
+test('集中补查只提前未解决摘要，不改队列、不提前其他字段、不恢复误收论文', () => {
+  const future = { status: 'quota_exhausted', updated_at: now.toISOString(), next_retry_at: '2026-09-16T12:00:00.000Z', attempts: [{ source: 'serpapi_google' }] };
+  const abstract = issue('abstract', { ...future, field: 'abstract', reason: 'missing_abstract' });
+  const queue = state([abstract, issue('doi', future), issue('resolved', { ...abstract, id: 'resolved', status: 'resolved' }),
+    issue('disabled', { ...abstract, id: 'disabled', journal_key: 'OFF' }),
+    issue('wrong', { ...abstract, id: 'wrong', journal_key: 'JAR', paper_id: 'doi:10.67983/journaldialectica.v1i2.100' })]);
+  const before = JSON.stringify(queue);
+  assert.deepEqual(dueMetadataRepairIssues(config, queue, now), []);
+  assert.deepEqual(dueMetadataRepairIssues(config, queue, now, { retryMissingAbstractsNow: true }), [abstract]);
+  assert.deepEqual(dueMetadataRepairIssues(config, queue, now, { retryMissingAbstractsNow: true, paperIds: ['absent'] }), []);
+  assert.equal(JSON.stringify(queue), before);
+  assert.throws(() => dueRepairIssues(queue, now, { retryMissingAbstractsNow: 'true' }));
+});

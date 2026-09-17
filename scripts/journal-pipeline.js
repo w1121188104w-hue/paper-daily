@@ -20,12 +20,14 @@ export function parsePipelineArgs(args) {
     help: { type: 'boolean' }, plan: { type: 'boolean' }, run: { type: 'boolean' }, save: { type: 'boolean' },
     isolate: { type: 'boolean' }, all: { type: 'boolean' }, journal: { type: 'string' },
     'max-papers': { type: 'string' }, 'max-pages': { type: 'string' }, 'max-abstracts': { type: 'string' },
-    checkpoint: { type: 'boolean' }, 'resume-from': { type: 'string' }, 'source-repository': { type: 'string' }
+    checkpoint: { type: 'boolean' }, 'resume-from': { type: 'string' }, 'source-repository': { type: 'string' },
+    'retry-missing-abstracts-now': { type: 'boolean' }
   } });
   if (!Object.keys(v).length || v.help) return { mode: 'help' };
   assertLibrary(Boolean(v.plan) !== Boolean(v.run), '请选择只读plan或明确run');
   assertLibrary(Boolean(v.all) !== Boolean(v.journal), '必须指定all或journal');
   assertLibrary(!v.plan || (!v.save && !v.isolate), '只读plan不能请求保存或复制');
+  assertLibrary(!v['retry-missing-abstracts-now'] || v.run, '立即补查只允许明确运行');
   assertLibrary(!v.run || Boolean(v.save) !== Boolean(v.isolate), '运行必须选择save正式库或isolate副本');
   assertLibrary(!(v.checkpoint || v['resume-from']) || (v.run && v.isolate), '存档和续跑仅允许隔离模式');
   if (v['source-repository'] !== undefined) assertLibrary(v.run && v.isolate && v['source-repository'].trim() &&
@@ -35,7 +37,8 @@ export function parsePipelineArgs(args) {
   assertLibrary(Number.isInteger(maxAbstracts) && maxAbstracts >= 0 && maxAbstracts <= 1000, '摘要批次上限无效');
   assertLibrary(Number.isInteger(maxPapers) && maxPapers >= 0 && maxPapers <= 1000 && Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 1000, '批量或页数上限无效');
   return { mode: v.plan ? 'plan' : 'run', isolate: Boolean(v.isolate), journalKey: v.journal, maxPapers, maxAbstracts, maxPages,
-    checkpoint: Boolean(v.checkpoint), resumeFrom: v['resume-from'], sourceRepository: v['source-repository'] };
+    checkpoint: Boolean(v.checkpoint), resumeFrom: v['resume-from'], sourceRepository: v['source-repository'],
+    retryMissingAbstractsNow: Boolean(v['retry-missing-abstracts-now']) };
 }
 
 /** No production secrets are accessed before the command/mode/library gates. */
@@ -102,6 +105,7 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
   assertLibrary(env.GITHUB_ACTIONS === 'true' && env.GITHUB_REPOSITORY === 'w1121188104w-hue/paper-daily' &&
     (options.isolate ? env.GITHUB_EVENT_NAME === 'workflow_dispatch' : ['schedule', 'workflow_dispatch'].includes(env.GITHUB_EVENT_NAME) &&
       env.DATA_BRANCH && env.GITHUB_REF === `refs/heads/${env.DATA_BRANCH}`), '仅允许受控GitHub运行，正式模式必须为默认分支');
+  assertLibrary(!options.retryMissingAbstractsNow || env.GITHUB_EVENT_NAME === 'workflow_dispatch', '立即补查仅限明确手动触发，定时任务不能绕过退避');
   if (options.checkpoint) assertLibrary(env.GITHUB_OUTPUT && env.RUNNER_TEMP, '存档需要受控Runner输出与临时目录');
   let copy, resumed, executionStarted = false;
   if (options.isolate) copy = await clone(config, { repositoryRoot: path.resolve(root, '../..'), tempParent: env.RUNNER_TEMP || os.tmpdir() });
@@ -111,8 +115,9 @@ export async function pipelineCommand(args, { root = DEFAULT_LIBRARY_ROOT, env =
     const services = await runtime({ env, policy });
     executionStarted = true;
     const report = await execute(config, { ...services, root: resumed?.root || copy?.root || root, journalKey: options.journalKey,
-      maxPapers: options.maxPapers, maxAbstracts: options.maxAbstracts, maxPages: options.maxPages, onProgress: row => log(`PIPELINE_PROGRESS ${JSON.stringify(row)}`) });
-    const result = { ...report, ...services.summary(), isolated: options.isolate,
+      maxPapers: options.maxPapers, maxAbstracts: options.maxAbstracts, maxPages: options.maxPages,
+      retryMissingAbstractsNow: options.retryMissingAbstractsNow, onProgress: row => log(`PIPELINE_PROGRESS ${JSON.stringify(row)}`) });
+    const result = { ...report, ...services.summary(), isolated: options.isolate, retry_missing_abstracts_now: options.retryMissingAbstractsNow,
       baseline_papers: before.papers.length, baseline_snapshot_sha256: before.pointer?.manifest?.sha256 || null };
     if (copy) result.original_unchanged = await copy.verifyOriginal();
     log(`PIPELINE_REPORT ${JSON.stringify(result)}`); return result;
