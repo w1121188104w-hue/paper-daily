@@ -1,4 +1,4 @@
-import { collectJournals } from './collectJournals.js';
+import { collectJournals, collectionSources } from './collectJournals.js';
 import { enabledJournals, findJournal } from './journals.js';
 import { dateInShanghai } from './paperMerge.js';
 import { validateWindow } from './sourceClient.js';
@@ -38,11 +38,11 @@ export function collectionWindow({ now = new Date(), lookbackDays = 60, fromDate
   return { fromDate: start.toISOString().slice(0, 10), toDate: end };
 }
 
-export function alreadyCoveredToday(runs, { runDate, journalKeys, fromDate, toDate }) {
+export function alreadyCoveredToday(runs, { runDate, journalKeys, fromDate, toDate, requiredSources = collectionSources() }) {
   // Each requested journal needs BOTH successful sources within the SAME successful run.
   return journalKeys.every((key) => runs.some((run) => run.run_date === runDate &&
     ['success', 'no_updates'].includes(run.status) && run.from_date <= fromDate && run.to_date >= toDate &&
-    ['openalex', 'crossref'].every((source) => run.sources.some((entry) => entry.journal_key === key &&
+    requiredSources.every((source) => run.sources.some((entry) => entry.journal_key === key &&
       entry.source === source && entry.ok && entry.complete))));
 }
 
@@ -51,6 +51,7 @@ function summarizeSource(result) {
   return { source: result.source, journal_key: result.journal_key, ok: result.ok, complete: result.complete,
     raw_count: result.raw_count, accepted_count: filtered.accepted.length, excluded_count: filtered.excluded.length,
     rejected_count: result.rejected.length, pages: result.raw_pages.length, duration_ms: result.duration_ms,
+    metadata_warning_count: (result.warnings || []).length,
     error: result.error ? safeRunError(result.error) : null };
 }
 
@@ -62,6 +63,7 @@ export async function runJournalCollection(config, { root = DEFAULT_LIBRARY_ROOT
   const selected = journalKey ? [findJournal(config, journalKey)].filter((journal) => journal?.enabled) : enabledJournals(config);
   if (!selected.length) throw new LibraryError('INVALID_JOURNAL', '没有匹配的启用期刊');
   const journalKeys = selected.map((journal) => journal.key);
+  const requiredSources = collectionSources(requestOptions.withSemanticScholar);
   return withLibraryLock(root, async () => {
     const runId = newRunId(started);
     const attemptPrefix = `attempts/${runId}`;
@@ -70,7 +72,7 @@ export async function runJournalCollection(config, { root = DEFAULT_LIBRARY_ROOT
       from_date: window.fromDate, to_date: window.toDate });
     try {
       const previous = await readJournalLibrary({ root, config });
-      if (onlyIfNeeded && alreadyCoveredToday(previous.runs, { runDate, journalKeys, ...window })) {
+      if (onlyIfNeeded && alreadyCoveredToday(previous.runs, { runDate, journalKeys, ...window, requiredSources })) {
         await writeLibraryJson(root, `${attemptPrefix}/skipped.json`, { reason: 'already_covered_today', finished_at: now().toISOString() });
         return { status: 'skipped', reason: 'already_covered_today', paper_count: previous.papers.length, committed: false, run_id: runId };
       }
@@ -79,18 +81,18 @@ export async function runJournalCollection(config, { root = DEFAULT_LIBRARY_ROOT
       try {
         result = await collect(config, { ...requestOptions, journalKey, ...window, existingPapers: previous.papers,
           checkedAt: startedAt, firstSeenDate: runDate, onSourceResult: async (sourceResult) => {
-            if (!journalKeys.includes(sourceResult.journal_key) || !['openalex', 'crossref'].includes(sourceResult.source)) {
+            if (!journalKeys.includes(sourceResult.journal_key) || !requiredSources.includes(sourceResult.source)) {
               throw new LibraryError('VALIDATION_ERROR', '来源身份无效');
             }
             raw.push(await writeLibraryJson(root, `snapshots/${runId}/raw/${sourceResult.journal_key}-${sourceResult.source}.json`,
               { source: sourceResult.source, journal_key: sourceResult.journal_key,
-                pages: sourceResult.raw_pages, rejected: sourceResult.rejected }));
+                pages: sourceResult.raw_pages, rejected: sourceResult.rejected, warnings: sourceResult.warnings || [] }));
             stagedResults.push(sourceResult);
             if (onProgress) onProgress(summarizeSource(sourceResult));
           } });
         validatePapers(result.papers, config); validateHistoryPreserved(previous.papers, result.papers);
-        if (result.source_results.length !== journalKeys.length * 2 || stagedResults.length !== result.source_results.length) {
-          throw new LibraryError('VALIDATION_ERROR', '缺少双源结果或原始暂存数据');
+        if (result.source_results.length !== journalKeys.length * requiredSources.length || stagedResults.length !== result.source_results.length) {
+          throw new LibraryError('VALIDATION_ERROR', '缺少独立来源结果或原始暂存数据');
         }
       } catch (caught) {
         error = safeRunError(caught);
@@ -102,6 +104,8 @@ export async function runJournalCollection(config, { root = DEFAULT_LIBRARY_ROOT
       if (!isDay(runDate) || !isIsoTime(finishedAt)) throw new LibraryError('VALIDATION_ERROR', '系统时间无效');
       const run = { schema_version: 1, run_id: runId, run_date: runDate, started_at: startedAt, finished_at: finishedAt,
         from_date: window.fromDate, to_date: window.toDate, journal_keys: journalKeys, status: result.status,
+        ...(requestOptions.withSemanticScholar ? { collection_sources: requiredSources } : {}),
+        ...(result.discovery_summary ? { discovery_summary: result.discovery_summary } : {}),
         stats: result.stats, sources: result.source_results.map(summarizeSource), error,
         excluded_count: (result.excluded || []).length, notice_count: (result.notices || []).length,
         duplicate_audit_count: result.audit.length, audit_path: `snapshots/${runId}/audit.json` };

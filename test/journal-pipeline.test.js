@@ -88,6 +88,27 @@ test('OpenAlex倒排摘要按单词位置恢复且异常位置被拒绝', () => 
   assert.equal(abstractFromInvertedIndex({ firms: [1, 3], We: [0], study: [2] }), 'We firms study firms');
   assert.equal(abstractFromInvertedIndex(null), '');
   assert.throws(() => abstractFromInvertedIndex({ bad: [1e9] }), /位置/);
+  for (const index of [{ We: [0], study: [2] }, { We: [0], study: [0] }, { We: [0, 0] },
+    { We: [] }, { We: '0' }, { ' ': [0] }, { We: [-1] }, { We: [0.5] }, [], 'not an index']) {
+    assert.throws(() => abstractFromInvertedIndex(index), { code: 'INVALID_ABSTRACT_INDEX' });
+  }
+  assert.equal(abstractFromInvertedIndex({}), '');
+});
+
+test('损坏摘要只留空并警告，不丢失已核实身份的论文；必需标题和期刊仍严格校验', async () => {
+  const index = { We: [0], study: [2] }, work = oaWork('W1', { abstract_inverted_index: index });
+  const source = await fetchOpenAlexJournal(journal, { ...requestOptions, fetchImpl: async () => jsonResponse(oaPage([work])) });
+  assert.equal(source.ok, true); assert.equal(source.complete, true); assert.equal(source.rejected.length, 0);
+  assert.equal(source.records.length, 1); assert.equal(source.records[0].doi, '10.1234/example');
+  assert.equal(source.records[0].abstract, '');
+  assert.deepEqual(source.warnings, [{ index: 0, code: 'INVALID_ABSTRACT_INDEX', field: 'abstract' }]);
+  assert.deepEqual(source.raw_pages[0].results[0].abstract_inverted_index, index);
+  const originalAbstract = 'We identify the effects of credit supply on investment using detailed firm records.';
+  const merged = mergePapers([...source.records, record('crossref', { abstract: originalAbstract })], mergeOptions);
+  assert.equal(merged.papers[0].abstract_original, originalAbstract);
+  assert.equal(merged.papers[0].provenance.abstract_original.source, 'crossref');
+  assert.throws(() => normalizeOpenAlexWork({ ...work, title: '' }, journal), /标题/);
+  assert.throws(() => normalizeOpenAlexWork({ ...work, primary_location: {} }, journal), /不匹配/);
 });
 
 test('T01/T02：双源同DOI合并，Crossref补摘要并记录来源，输入不被修改', () => {

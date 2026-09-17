@@ -1,7 +1,7 @@
 import { RUN_LABELS, TRANSLATION_LABELS, DOCUMENT_LABELS, CLASSIFICATION_REASONS, documentKind, normalizeDocumentFilter,
   beijingDay, validDay, validMonth, shiftMonth, monthCells,
   filterPapers, countsByDay, selectedJournalKeys, coverageForDay, paperTitle, doiHref, pageHref,
-  sourceLabel, publicationDateText, ABSTRACT_LABELS, abstractSourceHref } from './viewModel.js';
+  sourceLabel, publicationDateText, publicationMonthText, ABSTRACT_LABELS, abstractSourceHref } from './viewModel.js';
 
 const $ = (id) => document.getElementById(id);
 const node = (tag, text = '', className = '') => {
@@ -166,9 +166,10 @@ function renderPaper(paper) {
     card.append(abstract);
   } else card.append(node('p', '来源未提供摘要。暂不补写或推测论文内容。', 'empty-state'));
   const oldAbstract = oldTranslation('abstract', paper); if (oldAbstract) card.append(oldAbstract);
-  const date = (field) => publicationDateText(paper[field], paper.date_sources?.[field]);
+  const date = (field) => paper.date_conflicts?.includes(field) ? '来源月份有冲突，待自动核实' : publicationDateText(paper[field], paper.date_sources?.[field]);
   card.append(node('p', `首次发现：${paper.first_seen_date}（北京） · 在线发表：${date('published_online_date')} · 纸刊发表：${date('published_print_date')}`, 'meta'));
-  if (paper.publication_date) card.append(node('p', `来源通用发表日期：${date('publication_date')}（不等同于在线发表日期）`, 'meta'));
+  if (Object.hasOwn(paper, 'publication_month')) card.append(node('p', `发表月份：${publicationMonthText(paper)}`, 'meta'));
+  else if (paper.publication_date) card.append(node('p', `来源通用发表月份：${date('publication_date')}（不等同于在线发表时间）`, 'meta'));
   const bibliographic = [paper.volume ? `卷 ${paper.volume}` : '', paper.issue ? `期 ${paper.issue}` : '', paper.pages ? `页 ${paper.pages}` : ''].filter(Boolean);
   if (bibliographic.length) card.append(node('p', bibliographic.join(' · '), 'meta'));
   const actions = node('div', '', 'paper-actions'), href = doiHref(paper.doi);

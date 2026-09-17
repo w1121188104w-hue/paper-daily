@@ -18,8 +18,15 @@ export function retryAfterMs(value, now = Date.now()) {
 // No environment or secret loading. Error messages never include remote bodies or URLs.
 export async function requestSourceJson(url, {
   fetchImpl = globalThis.fetch, sleep = delay, maxAttempts = 3,
-  timeoutMs = 30000, now = Date.now
+  timeoutMs = 30000, now = Date.now, requestHeaders = {}
 } = {}) {
+  // The optional S2 key must never follow a redirect or reach another provider.
+  const authenticated = Object.keys(requestHeaders).length > 0;
+  if (authenticated && (new URL(url).origin !== 'https://api.semanticscholar.org' ||
+      Object.keys(requestHeaders).some(key => key !== 'x-api-key') ||
+      typeof requestHeaders['x-api-key'] !== 'string' || /[\r\n]/.test(requestHeaders['x-api-key']))) {
+    throw new SourceError('INVALID_OPTIONS', '来源认证参数无效');
+  }
   if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 3 ||
       !Number.isFinite(timeoutMs) || timeoutMs <= 0) {
     throw new SourceError('INVALID_OPTIONS', '请求次数应为1–3，超时必须为正数');
@@ -32,7 +39,8 @@ export async function requestSourceJson(url, {
     try {
       const response = await fetchImpl(url, {
         signal: controller.signal,
-        headers: { Accept: 'application/json', 'User-Agent': 'business-paper-daily/0.1' }
+        ...(authenticated ? { redirect: 'error' } : {}),
+        headers: { Accept: 'application/json', 'User-Agent': 'business-paper-daily/0.1', ...requestHeaders }
       });
       if (response.ok) {
         try { return await response.json(); }

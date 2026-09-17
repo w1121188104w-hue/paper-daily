@@ -32,6 +32,21 @@ function clients(records = [record()]) {
   })]));
 }
 const base = () => mergePapers([record()], { firstSeenDate: '2026-09-07', checkedAt }).papers;
+
+test('新字段重试状态传给原页面，选择较新记录且不暴露完整待办', async t => {
+  const { root } = await fixture(t), lib = await readJournalLibrary({ root, config });
+  const p = lib.papers[0]; p.abstract_original = ''; p.abstract_zh = '';
+  lib.enrichmentState.abstracts[p.id] = { status: 'not_found', last_checked_at: '2026-09-07T01:00:00.000Z', next_retry_at: '2026-09-08T01:00:00.000Z' };
+  const issue = { paper_id: p.id, reason: 'missing_abstract', status: 'quota_exhausted', updated_at: '2026-09-15T01:00:00.000Z',
+    next_retry_at: '2026-10-12T00:00:00.000Z', attempts: [{ checked_at: '2026-09-15T01:00:00.000Z' }], internal_marker: 'DO_NOT_PUBLISH_ISSUE' };
+  lib.repairState = { issues: { example: issue } };
+  const result = presentJournalLibrary(lib, config), row = result.papers[0];
+  assert.equal(row.abstract_status, 'quota_exhausted'); assert.equal(row.abstract_next_retry_at, issue.next_retry_at);
+  assert.equal(row.abstract_last_checked_at, issue.attempts[0].checked_at);
+  assert.equal(JSON.stringify(result).includes('DO_NOT_PUBLISH_ISSUE'), false);
+  issue.status = 'resolved';
+  assert.equal(presentJournalLibrary(lib, config).papers[0].abstract_status, 'not_found');
+});
 async function fixture(t, collect = true) {
   const parent = path.resolve(os.tmpdir()), temp = await fs.mkdtemp(path.join(parent, 'journal-preview-test-'));
   t.after(async () => {
@@ -206,13 +221,13 @@ test('正式论文文件校验失败确实阻止网页数据输出，未改动�
   assert.equal((await request(url, '/data.json')).status, 503); assert.equal(await fs.readFile(file, 'utf8'), content + ' ');
 });
 
-test('发表日期按来源字符串精度显示，不把月份补成1日，也不擅自截短真实1日', () => {
+test('发表时间按月份展示，年份缺月不编造，原始日字段只作旧数据兼容输入', () => {
   assert.equal(publicationDateText('', 'crossref'), '未提供');
   assert.equal(publicationDateText('2026', 'crossref'), '2026（Crossref；仅提供年份）');
   assert.equal(publicationDateText('2026-09', 'crossref'), '2026-09（Crossref；仅提供月份）');
-  assert.equal(publicationDateText('2026-09-01', 'crossref'), '2026-09-01（Crossref；数据库标注日期，未逐篇核实到日）');
-  assert.ok(publicationDateText('2024-02-29', 'openalex').startsWith('2024-02-29（OpenAlex'));
-  assert.equal(publicationDateText('2026-02-29', 'crossref'), '日期无效，需核查');
+  assert.equal(publicationDateText('2026-09-01', 'crossref'), '2026-09（Crossref；按月展示）');
+  assert.ok(publicationDateText('2024-02-29', 'openalex').startsWith('2024-02（OpenAlex'));
+  assert.equal(publicationDateText('2026-02-29', 'crossref'), '日期无效，待自动核实');
   assert.ok(publicationDateText('2026-09-01').includes('来源未标明'));
 });
 
@@ -220,7 +235,10 @@ test('日期来源只投影字段署名，不以采集来源列表猜测或泄�
   const { root } = await fixture(t), library = await readJournalLibrary({ root, config });
   const before = structuredClone(library), presented = presentJournalLibrary(library, config).papers[0];
   assert.deepEqual(presented.date_sources, { published_online_date: null, published_print_date: null, publication_date: 'crossref' });
-  assert.equal(presented.publication_date, '2026-08-01');
+  assert.equal(presented.publication_date, '2026-08');
+  assert.equal(presented.publication_month, '2026-08');
+  assert.equal(presented.publication_year, 2026);
+  assert.equal(library.papers[0].publication_date, '2026-08-01');
   assert.deepEqual(library, before);
   assert.equal(presented.source_records, undefined); assert.equal(presented.provenance, undefined);
 });

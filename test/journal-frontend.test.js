@@ -80,7 +80,7 @@ test('真实渲染函数生成日历、全部19刊、双语卡片及双源徽章
   assert.equal(ui.get('journal').children.length, 20); assert.equal(ui.get('category').children.length, 5);
   assert.equal(ui.get('quickFilters').children.length, 5); assert.equal(ui.get('paperList').children.length, 1);
   const text = ui.get('paperList').textContent;
-  for (const value of ['信贷市场与投资', 'Credit markets', 'OpenAlex', 'Crossref', 'Alice Smith', '在线发表：2026-08-01']) assert.ok(text.includes(value), value);
+  for (const value of ['信贷市场与投资', 'Credit markets', 'OpenAlex', 'Crossref', 'Alice Smith', '在线发表：2026-08']) assert.ok(text.includes(value), value);
   assert.equal(ui.get('calendarGrid').children.filter((element) => element.tagName === 'a').length, 30);
   assert.ok(ui.get('calendarGrid').children.some((element) => element.href?.includes('date=2026-09-07')));
 });
@@ -248,12 +248,28 @@ test('类型变化使分页回到第一页，总数用记录表述，不将资�
   assert.ok(ui.get('libraryMeta').textContent.includes('期刊资料 1 条'));
 });
 
-test('卡片展示日期来源和年月精度，不声称来源日期已经官网核实', async (t) => {
+test('卡片保留旧数据兼容，发表日期按月而首次发现仍按日显示', async (t) => {
   const ui = await app(t, { data: payload({ papers: [paper({ published_online_date: '2026-08',
     published_print_date: '2026-09-01', date_sources: { published_online_date: 'crossref', published_print_date: 'crossref' } })] }) });
   const text = ui.get('paperList').textContent;
   assert.ok(text.includes('在线发表：2026-08（Crossref；仅提供月份）'));
-  assert.ok(text.includes('纸刊发表：2026-09-01（Crossref；数据库标注日期，未逐篇核实到日）'));
+  assert.ok(text.includes('纸刊发表：2026-09（Crossref；按月展示）'));
+  assert.ok(text.includes('首次发现：2026-09-07（北京）'));
+});
+
+test('卡片显示总名册发表月份、年份待补和来源冲突，不把空月份展示成1月', async t => {
+  const ui = await app(t, { data: payload({ papers: [
+    paper({ id: 'month', publication_month: '2026-07', publication_year: 2026, publication_basis: 'online', publication_month_source: 'crossref' }),
+    paper({ id: 'year', publication_month: null, publication_year: 2026, published_online_date: '', publication_date: '2026' }),
+    paper({ id: 'conflict', publication_month: null, publication_year: 2026, publication_conflict: true,
+      date_conflicts: ['published_online_date'], published_online_date: '', publication_date: '' })
+  ] }) });
+  const text = ui.get('paperList').textContent;
+  assert.ok(text.includes('发表月份：2026-07（Crossref；在线发表）'));
+  assert.ok(text.includes('发表月份：2026（月份待补全）'));
+  assert.ok(text.includes('发表月份：待自动核实（来源月份有冲突）'));
+  assert.ok(text.includes('在线发表：来源月份有冲突，待自动核实'));
+  assert.ok(!text.includes('发表月份：2026-01'));
   assert.ok(text.includes('首次发现：2026-09-07（北京）'));
 });
 
@@ -268,6 +284,13 @@ test('作者来源差异可展开对照，保持来源顺序并将特殊文本�
   assert.ok(text.includes(`Crossref：Benjamin A. Olken；${name}`));
   assert.ok(text.includes('不据此自动合并作者'));
   assert.ok(!elements.some(element => element.tagName === 'img'));
+});
+
+test('RePEc摘要来源使用原有页面样式显示并链接原记录', async t => {
+  const url = 'https://ideas.repec.org/a/ucp/jpolec/doi10.1086-740222.html';
+  const ui = await app(t, { data: payload({ papers: [paper({ sources: ['repec'], abstract_status: 'found', abstract_source: 'repec', abstract_source_url: url })] }) });
+  assert.ok(ui.get('paperList').textContent.includes('RePEc 期刊记录'));
+  assert.ok(descendants(ui.get('paperList')).some(e => e.href === url));
 });
 
 test('网页显示官网部分核对/受限与摘要真实来源，不把未知显示成零篇或生成摘要', async t => {

@@ -8,6 +8,7 @@ import { loadJournalConfig, findJournal } from '../src/services/journals.js';
 import { normalizeSourceRecord } from '../src/services/paperModel.js';
 import { mergePapers } from '../src/services/paperMerge.js';
 import { collectJournals } from '../src/services/collectJournals.js';
+import { fetchOpenAlexJournal } from '../src/services/openalex.js';
 import { classifySourceRecord } from '../src/services/paperClassification.js';
 import { validatePapers, validateRuns, validateHistoryPreserved } from '../src/services/libraryValidation.js';
 import { collectionWindow, runJournalCollection, alreadyCoveredToday, safeRunError } from '../src/services/journalRun.js';
@@ -52,6 +53,26 @@ const run = (root, options = {}) => runJournalCollection(config, { root, journal
 const read = (root) => readJournalLibrary({ root, config });
 const pointerText = (root) => fs.readFile(path.join(root, 'current.json'), 'utf8');
 const basePapers = () => mergePapers([record(), record('crossref')], { firstSeenDate: '2026-09-07', checkedAt: at }).papers;
+
+test('损坏OpenAlex摘要仍保存论文与原始警告，待补全队列存在且不产生摘要翻译', async t => {
+  const { root } = await fixture(t), index = { We: [0], study: [2] };
+  const work = { id: 'https://openalex.org/W1', doi: 'https://doi.org/10.1234/test', title: 'Credit markets and firms',
+    publication_date: '2026-08-01', authorships: [{ author: { display_name: 'Alice Smith' } }], abstract_inverted_index: index,
+    primary_location: { source: { id: `https://openalex.org/${journal.openalex_source_id}`, issn: [journal.print_issn] } } };
+  const result = await run(root, { clients: { ...clients([], []), openalex: (j, options) => fetchOpenAlexJournal(j, { ...options,
+    fetchImpl: async () => new Response(JSON.stringify({ results: [work], meta: { count: 1, next_cursor: null } }), { headers: { 'Content-Type': 'application/json' } }) }) } });
+  assert.equal(result.status, 'success');
+  const saved = await read(root);
+  assert.equal(saved.papers.length, 1); assert.equal(saved.papers[0].abstract_original, ''); assert.equal(saved.papers[0].abstract_zh, '');
+  assert.ok(Object.values(saved.repairState.issues).some(i => i.reason === 'missing_abstract' && i.status === 'pending'));
+  assert.ok(!saved.queue.tasks.some(task => task.field === 'abstract'));
+  const summary = saved.runs[0].sources.find(s => s.source === 'openalex');
+  assert.equal(summary.metadata_warning_count, 1); assert.equal(summary.accepted_count, 1); assert.equal(summary.rejected_count, 0);
+  const ref = saved.manifest.raw.find(r => r.path.endsWith('AER-openalex.json'));
+  const raw = await readLibraryRef(root, ref);
+  assert.deepEqual(raw.warnings, [{ index: 0, code: 'INVALID_ABSTRACT_INDEX', field: 'abstract' }]);
+  assert.deepEqual(raw.pages[0].results[0].abstract_inverted_index, index);
+});
 
 test('行政资料精确排除，缺摘要研究候选和相似标题不误删', () => {
   for (const title of ['Front Matter', '<p>Table of Contents</p>', 'Cover', 'Editorial Board', 'Index to Volume 116']) {

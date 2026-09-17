@@ -2,11 +2,15 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
-import { LibraryError, assertLibrary, isObject, isCount, isIsoTime, stableJson,
+import { LibraryError, assertLibrary, isObject, isCount, isIsoTime, isDay, stableJson,
   validatePapers, validateRuns, validateHistoryPreserved, validateTranslationImports, validateTranslationOnlyChange } from './libraryValidation.js';
 import { buildTranslationQueue } from './translationQueue.js';
 import { emptyEnrichmentState, validateEnrichmentState, validateEnrichmentRuns, validateEnrichmentReport,
   validateEnrichmentOnlyChange } from './enrichmentValidation.js';
+import { buildMasterList, officialDiscoveries } from './masterList.js';
+import { emptyRepairState, reconcileRepairState, validateRepairState, validateRepairProjection } from './repairState.js';
+import { validateMetadataRepairOnlyChange } from './metadataRepairValidation.js';
+import { validateDuplicateTransition, validateDuplicateState } from './duplicateResolution.js';
 
 export const DEFAULT_LIBRARY_ROOT = fileURLToPath(new URL('../../data/journal-store/', import.meta.url));
 const sha256 = (text) => createHash('sha256').update(text).digest('hex');
@@ -57,7 +61,9 @@ export async function readLibraryRef(root, ref) {
   return parseJson(content);
 }
 
-async function readManifest(root, manifestRef, config) {
+async function readManifest(root, manifestRef, config, ancestry = new Set()) {
+  assertLibrary(!ancestry.has(manifestRef.path), '归并父版本存在循环');
+  ancestry = new Set([...ancestry, manifestRef.path]);
   assertLibrary(manifestRef.path.endsWith('/manifest.json'), '版本清单路径无效');
   const manifest = await readLibraryRef(root, manifestRef);
   assertLibrary(manifest.schema_version === 1 && /^[A-Za-z0-9-]{10,100}$/.test(manifest.run_id) &&
@@ -93,10 +99,21 @@ async function readManifest(root, manifestRef, config) {
   validatePapers(papers, config); validateRuns(runs); validateTranslationImports(imports); validateEnrichmentRuns(enrichments);
   const enrichmentState = manifest.enrichment_state ? await readLibraryRef(root, manifest.enrichment_state) : emptyEnrichmentState();
   validateEnrichmentState(enrichmentState, papers);
-  for (const log of enrichments) validateEnrichmentReport(await readLibraryRef(root, log.report), log);
+  const enrichmentReports = [];
+  for (const log of enrichments) {
+    const report = await readLibraryRef(root, log.report); validateEnrichmentReport(report, log); enrichmentReports.push(report);
+  }
   const operation = manifest.operation || 'collection';
   assertLibrary(['collection', 'translation_import', 'metadata_enrichment'].includes(operation), '版本操作类型无效');
   assertLibrary(({ collection: runs, translation_import: imports, metadata_enrichment: enrichments })[operation].some((entry) => entry.run_id === manifest.run_id), '版本缺少本轮日志');
+  const duplicateLog = operation === 'metadata_enrichment' && enrichments.find(entry => entry.run_id === manifest.run_id && entry.kind === 'duplicate_resolution');
+  if (duplicateLog) {
+    assertLibrary(manifest.parent, '归并必须保留父版本');
+    const parent = await readManifest(root, manifest.parent, config, ancestry);
+    const report = enrichmentReports.find(report => report.run_id === duplicateLog.run_id);
+    validateDuplicateTransition(parent.papers, papers, report);
+    validateDuplicateState(parent, papers, report, enrichmentState);
+  }
   if (operation === 'translation_import') {
     const log = imports.find((entry) => entry.run_id === manifest.run_id);
     const report = await readLibraryRef(root, log.report);
@@ -108,7 +125,17 @@ async function readManifest(root, manifestRef, config) {
   for (const ref of manifest.raw) await readLibraryRef(root, ref);
   const queue = buildTranslationQueue(papers);
   if (manifest.translation_queue) assertLibrary(stableJson(await readLibraryRef(root, manifest.translation_queue)) === stableJson(queue), '待翻译队列与论文状态不一致');
-  return { manifest, papers: papers.sort((a, b) => a.id.localeCompare(b.id)), runs, imports, enrichments, enrichmentState, queue, audit };
+  const latestRun = [...runs].sort((a, b) => a.started_at.localeCompare(b.started_at)).at(-1);
+  if (manifest.master_window !== undefined) assertLibrary(isObject(manifest.master_window) &&
+    isDay(manifest.master_window.fromDate) && isDay(manifest.master_window.toDate) && manifest.master_window.fromDate <= manifest.master_window.toDate &&
+    Object.keys(manifest.master_window).every(k => ['fromDate', 'toDate'].includes(k)), '总名册时间窗口无效');
+  const masterList = buildMasterList(papers, { generatedAt: manifest.created_at, policyVersion: manifest.master_policy_version ?? 1,
+    fromDate: manifest.master_window?.fromDate ?? latestRun?.from_date, toDate: manifest.master_window?.toDate ?? latestRun?.to_date, officialIds: officialDiscoveries(enrichmentReports) });
+  if (manifest.master_list) assertLibrary(stableJson(await readLibraryRef(root, manifest.master_list)) === stableJson(masterList), '总名册与论文及来源证据不一致');
+  const repairState = manifest.repair_state ? await readLibraryRef(root, manifest.repair_state) : reconcileRepairState(emptyRepairState(), masterList);
+  validateRepairState(repairState, papers); validateRepairProjection(repairState, masterList);
+  return { manifest, papers: papers.sort((a, b) => a.id.localeCompare(b.id)), runs, imports, enrichments, enrichmentReports,
+    enrichmentState, masterList, repairState, queue, audit };
 }
 
 export async function readJournalLibrary({ root = DEFAULT_LIBRARY_ROOT, config }) {
@@ -118,7 +145,8 @@ export async function readJournalLibrary({ root = DEFAULT_LIBRARY_ROOT, config }
     try { entries = await fs.readdir(await libraryPath(root, 'snapshots')); }
     catch (error) { if (error.code !== 'ENOENT') throw error; }
     if (entries.length) throw new LibraryError('MISSING_POINTER', '发现历史版本但缺少 current.json，请先人工检查恢复，不能当空库继续');
-    return { manifest: null, pointer: null, pointerText: null, papers: [], runs: [], imports: [], enrichments: [], enrichmentState: emptyEnrichmentState(), queue: buildTranslationQueue([]), audit: null };
+    return { manifest: null, pointer: null, pointerText: null, papers: [], runs: [], imports: [], enrichments: [], enrichmentReports: [],
+      enrichmentState: emptyEnrichmentState(), masterList: null, repairState: emptyRepairState(), queue: buildTranslationQueue([]), audit: null };
   }
   const pointer = parseJson(pointerText);
   assertLibrary(pointer.schema_version === 1 && isObject(pointer.manifest), '当前版本指针无效');
@@ -155,16 +183,25 @@ function groupBy(items, key) {
 }
 
 /** Caller must hold writer.lock. Immutable files first, one pointer replacement last. */
-export async function publishLibrarySnapshot({ root, config, previous, papers, run, translationImport, enrichment, enrichmentState, audit, raw = [], beforePublish }) {
-  validatePapers(papers, config); validateHistoryPreserved(previous.papers, papers);
+export async function publishLibrarySnapshot({ root, config, previous, papers, run, translationImport, enrichment, enrichmentState, repairState, masterWindow, audit, raw = [], beforePublish }) {
+  validatePapers(papers, config);
+  const duplicateOperation = enrichment?.kind === 'duplicate_resolution';
+  if (duplicateOperation) {
+    const report = await readLibraryRef(root, enrichment.report);
+    validateDuplicateTransition(previous.papers, papers, report);
+    validateDuplicateState(previous, papers, report, enrichmentState);
+  }
+  else validateHistoryPreserved(previous.papers, papers);
   assertLibrary([run, translationImport, enrichment].filter(Boolean).length === 1, '每个版本必须且只能有一种操作');
   const runs = run ? [...previous.runs, run] : previous.runs;
   const imports = translationImport ? [...(previous.imports || []), translationImport] : previous.imports || [];
   const enrichments = enrichment ? [...(previous.enrichments || []), enrichment] : previous.enrichments || [];
   validateEnrichmentRuns(enrichments);
   if (enrichment) {
-    validateEnrichmentOnlyChange(previous.papers, papers);
-    assertLibrary(enrichment.stats.added === papers.length - previous.papers.length, '补入数量与论文库不一致');
+    if (enrichment.kind === 'missing_metadata_repair') validateMetadataRepairOnlyChange(previous.papers, papers);
+    else if (!duplicateOperation) validateEnrichmentOnlyChange(previous.papers, papers);
+    assertLibrary(duplicateOperation ? enrichment.stats.added === 0 && enrichment.stats.merged === previous.papers.length - papers.length :
+      enrichment.stats.added === papers.length - previous.papers.length, '补入/归并数量与论文库不一致');
   }
   validateRuns(runs); validateTranslationImports(imports);
   if (run) assertLibrary(run.stats.added + run.stats.updated + run.stats.unchanged === papers.length &&
@@ -174,7 +211,9 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   const prefix = `snapshots/${operationLog.run_id}`;
   const manifest = { schema_version: 1, run_id: operationLog.run_id, created_at: operationLog.finished_at,
     operation: run ? 'collection' : translationImport ? 'translation_import' : 'metadata_enrichment', parent: previous.pointer?.manifest || null,
-    papers: {}, runs: {}, translation_imports: {}, audit: null, raw };
+    papers: {}, runs: {}, translation_imports: {}, audit: null, raw, master_policy_version: 4 };
+  const nextWindow = masterWindow || (run ? { fromDate: run.from_date, toDate: run.to_date } : previous.manifest?.master_window);
+  if (nextWindow) manifest.master_window = nextWindow;
   for (const [kind, items, oldItems, key] of [
     ['papers', papers, previous.papers, (paper) => paper.first_seen_date.slice(0, 4)],
     ['runs', runs, previous.runs, (entry) => entry.run_date.slice(0, 7)],
@@ -198,6 +237,22 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   } else if (previous.manifest?.enrichment_state) manifest.enrichment_state = previous.manifest.enrichment_state;
   manifest.audit = await writeLibraryJson(root, `${prefix}/audit.json`, audit);
   manifest.translation_queue = await writeLibraryJson(root, `${prefix}/translation-queue.json`, buildTranslationQueue(papers));
+  const reports = [...(previous.enrichmentReports || [])];
+  if (enrichment) reports.push(await readLibraryRef(root, enrichment.report));
+  const latestRun = [...runs].sort((a, b) => a.started_at.localeCompare(b.started_at)).at(-1);
+  const master = buildMasterList(papers, { generatedAt: manifest.created_at, policyVersion: manifest.master_policy_version, fromDate: manifest.master_window?.fromDate ?? latestRun?.from_date,
+    toDate: manifest.master_window?.toDate ?? latestRun?.to_date, officialIds: officialDiscoveries(reports) });
+  if (repairState !== undefined) {
+    assertLibrary(enrichment?.kind === 'missing_metadata_repair', '仅明确的字段修复操作可写入待办尝试记录');
+    validateRepairState(repairState, papers);
+  }
+  const activeIds = new Set(papers.map(paper => paper.id));
+  const previousRepairs = duplicateOperation ? { ...previous.repairState,
+    issues: Object.fromEntries(Object.entries(previous.repairState.issues).filter(([, issue]) => activeIds.has(issue.paper_id))) } : previous.repairState;
+  const repairs = reconcileRepairState(repairState ?? previousRepairs, master);
+  validateRepairState(repairs, papers); validateRepairProjection(repairs, master);
+  manifest.master_list = await writeLibraryJson(root, `${prefix}/master-list.json`, master);
+  manifest.repair_state = await writeLibraryJson(root, `${prefix}/repair-state.json`, repairs);
   const manifestRef = await writeLibraryJson(root, `${prefix}/manifest.json`, manifest);
   // Read from disk and revalidate the entire proposed formal library before exposing it.
   if (beforePublish) await beforePublish({ root, manifest, manifestRef });

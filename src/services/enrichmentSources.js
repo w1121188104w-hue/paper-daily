@@ -1,7 +1,9 @@
 import { normalizeDoi, normalizeTitleForMatch, normalizeAuthorName, normalizeSourceRecord } from './paperModel.js';
-import { normalizeCrossrefWork, normalizeOpenAlexWork } from './sourceNormalizers.js';
+import { normalizeCrossrefWork, normalizeOpenAlexWork, abstractFromInvertedIndex } from './sourceNormalizers.js';
 import { EvidenceError } from './evidenceHttp.js';
+import { supportedRepecUrl, parseRepecAbstract } from './repecAbstract.js';
 import { publisherFor } from './publisherCatalog.js';
+import { semanticScholarJournalMatches, semanticScholarType } from './semanticScholar.js';
 import { authenticAbstract, parsePublisherArticle, parsePublisherFeed, publisherRecord, dateBounds } from './publisherParsers.js';
 
 export const titleIdentity = value => normalizeTitleForMatch(value).replace(/\s/g, '');
@@ -57,26 +59,23 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
   async function openalex(expected, journal) {
     if (!expected.doi) throw new EvidenceError('NO_DOI');
     const { response, data } = await api(`https://api.openalex.org/works/https://doi.org/${encodeURIComponent(normalizeDoi(expected.doi))}`);
-    if (data.abstract_inverted_index) {
-      const positions = Object.values(data.abstract_inverted_index).flat();
-      if (!positions.length || positions.length > 20000 || positions.some(p => !Number.isInteger(p) || p < 0) ||
-        new Set(positions).size !== positions.length || Math.max(...positions) !== positions.length - 1) throw new EvidenceError('INVALID_ABSTRACT_INDEX');
-    }
+    try { abstractFromInvertedIndex(data.abstract_inverted_index); }
+    catch { throw new EvidenceError('INVALID_ABSTRACT_INDEX'); }
     let record; try { record = normalizeOpenAlexWork(data,journal,response.fetched_at); } catch { throw new EvidenceError('UNVERIFIED_IDENTITY'); }
     if (!record.doi || !strongMatch(expected, record)) throw new EvidenceError('UNVERIFIED_IDENTITY');
     return withEvidence(record,response,'openalex_api');
   }
   async function semanticscholar(expected, journal) {
     if (!expected.doi) throw new EvidenceError('NO_DOI');
-    const { response, data } = await api(`https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(normalizeDoi(expected.doi))}?fields=title,abstract,externalIds,authors,journal,publicationDate`,
+    const { response, data } = await api(`https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(normalizeDoi(expected.doi))}?fields=title,abstract,externalIds,authors,journal,publicationDate,publicationTypes`,
       semanticScholarKey ? { 'x-api-key': semanticScholarKey } : {});
-    if (normalizeDoi(data.externalIds?.DOI) !== normalizeDoi(expected.doi) ||
+    if (!semanticScholarJournalMatches(data, journal) || normalizeDoi(data.externalIds?.DOI) !== normalizeDoi(expected.doi) ||
       titleIdentity(data.title) !== titleIdentity(expected.title || expected.title_original)) throw new EvidenceError('UNVERIFIED_IDENTITY');
     const record = { source: 'semanticscholar', source_id: data.paperId,
       doi: data.externalIds.DOI, title: data.title, abstract: data.abstract || '', authors: data.authors,
       journal_key: journal.key, journal_name: journal.name, journal_category: journal.category,
       journal_category_zh: journal.category_zh, print_issn: journal.print_issn, electronic_issn: journal.electronic_issn,
-      publication_date: data.publicationDate, last_checked_at: response.fetched_at, type: 'journal-article',
+      publication_date: data.publicationDate, last_checked_at: response.fetched_at, type: semanticScholarType(data),
       url: `https://www.semanticscholar.org/paper/${data.paperId}` };
     return withEvidence(record,response,'semanticscholar_abstract_api');
   }
@@ -118,5 +117,9 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
     if (!article.abstract) throw new EvidenceError('PUBLISHER_NO_ABSTRACT');
     return publisherRecord(article,journal);
   }
-  return { crossref, openalex, semanticscholar, publisher, publisherArticle };
+  async function repecArticle(expected, journal) {
+    if (!supportedRepecUrl(expected.url, journal)) throw new EvidenceError('UNSAFE_URL');
+    return parseRepecAbstract(await http.request(expected.url, ['ideas.repec.org']), journal, expected);
+  }
+  return { crossref, openalex, semanticscholar, publisher, publisherArticle, repecArticle };
 }

@@ -46,21 +46,31 @@ export function monthCells(month) {
     ...Array.from({ length: last.getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)];
 }
 const normalized = (value) => String(value || '').normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
-export const sourceLabel = (source) => ({ crossref: 'Crossref', openalex: 'OpenAlex', publisher: '期刊／出版社官网', semanticscholar: 'Semantic Scholar' })[source] || '来源未标明';
+export const sourceLabel = (source) => ({ crossref: 'Crossref', openalex: 'OpenAlex', publisher: '期刊／出版社官网', semanticscholar: 'Semantic Scholar', repec: 'RePEc 期刊记录' })[source] || '来源未标明';
 export const ABSTRACT_LABELS = { available: '已有原始摘要', found: '已从真实来源补全', missing: '待补全', not_found: '暂时未找到',
-  publisher_no_abstract: '本次官网页面未提供摘要', access_restricted: '部分来源访问受限', retry_later: '稍后自动重试', identity_unverified: '论文身份尚未核实' };
+  publisher_no_abstract: '本次官网页面未提供摘要', access_restricted: '部分来源访问受限', retry_later: '稍后自动重试', identity_unverified: '论文身份尚未核实',
+  source_unavailable: '部分来源暂不可用，等待重试', quota_exhausted: '免费搜索额度已耗尽，等待重置', identity_conflict: '摘要与论文身份尚未核实' };
 export function abstractSourceHref(value) {
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password && !url.port &&
     ['api.crossref.org','openalex.org','api.openalex.org','api.semanticscholar.org','www.semanticscholar.org','www.aeaweb.org','pubs.aeaweb.org',
       'publications.aaahq.org','www.sciencedirect.com','rss.sciencedirect.com','api.elsevier.com','onlinelibrary.wiley.com','link.springer.com',
-      'api.springernature.com','www.journals.uchicago.edu','academic.oup.com','pubsonline.informs.org','journals.sagepub.com'].includes(url.hostname) ? url.href : ''; }
+      'api.springernature.com','www.journals.uchicago.edu','academic.oup.com','pubsonline.informs.org','journals.sagepub.com','ideas.repec.org'].includes(url.hostname) ? url.href : ''; }
   catch { return ''; }
 }
 export function publicationDateText(value, source) {
   if (!value) return '未提供';
   const precision = /^\d{4}$/.test(value) && Number(value) > 0 ? '仅提供年份' : validMonth(value) ? '仅提供月份' :
-    validDay(value) ? '数据库标注日期，未逐篇核实到日' : null;
-  return precision ? `${value}（${sourceLabel(source)}；${precision}）` : '日期无效，需核查';
+    validDay(value) ? '按月展示' : null;
+  return precision ? `${value.slice(0, 7)}（${sourceLabel(source)}；${precision}）` : '日期无效，待自动核实';
+}
+export function publicationMonthText(paper) {
+  if (paper.publication_conflict) return '待自动核实（来源月份有冲突）';
+  if (validMonth(paper.publication_month)) {
+    const basis = { online: '在线发表', print: '纸刊发表', unspecified: '来源通用发表时间' }[paper.publication_basis] || '日期类型未提供';
+    return `${paper.publication_month}（${sourceLabel(paper.publication_month_source)}；${basis}）`;
+  }
+  return Number.isInteger(paper.publication_year) && paper.publication_year >= 1000 && paper.publication_year <= 9999
+    ? `${paper.publication_year}（月份待补全）` : '待补全';
 }
 export function filterPapers(papers, { journal = '', category = '', q = '', date = '', kind = 'all' } = {}) {
   const tokens = normalized(q).split(' ').filter(Boolean);
@@ -70,7 +80,7 @@ export function filterPapers(papers, { journal = '', category = '', q = '', date
     if (!tokens.length) return true;
     const haystack = normalized([paper.title_original, paper.title_zh, paper.abstract_original, paper.abstract_zh,
       paper.doi, paper.journal_key, paper.journal_name, paper.journal_category_zh, paper.first_seen_date,
-      paper.published_online_date, paper.published_print_date, paper.publication_date,
+      paper.published_online_date, paper.published_print_date, paper.publication_date, paper.publication_month, paper.publication_year,
       ...paper.authors.map((author) => author.name),
       ...(paper.author_variants || []).flatMap((variant) => variant.names)].join(' '));
     return tokens.every((token) => haystack.includes(token));
