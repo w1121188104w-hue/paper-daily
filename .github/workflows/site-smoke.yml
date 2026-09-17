@@ -1,0 +1,23 @@
+{
+  "name": "Verify published journal site (read only)",
+  "on": { "workflow_dispatch": {} },
+  "permissions": { "contents": "read" },
+  "jobs": {
+    "verify": {
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 5,
+      "steps": [
+        {
+          "name": "Set up Node.js 24",
+          "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "with": { "node-version": "24", "package-manager-cache": false }
+        },
+        {
+          "name": "Verify public assets and exact production data version",
+          "env": { "GITHUB_TOKEN": "${{ github.token }}" },
+          "run": "node --input-type=module <<'NODE'\nimport assert from 'node:assert/strict';\nimport {createHash} from 'node:crypto';\nconst repo='w1121188104w-hue/paper-daily', base='https://w1121188104w-hue.github.io/paper-daily/';\nasync function api(p){const r=await fetch('https://api.github.com/repos/'+repo+'/'+p,{headers:{Authorization:'Bearer '+process.env.GITHUB_TOKEN,Accept:'application/vnd.github+json'},redirect:'error',signal:AbortSignal.timeout(15000)});assert.ok(r.ok,'REPOSITORY_READ_FAILED');return r.json();}\nasync function jsonFile(p,ref){const r=await api('contents/'+p+'?ref='+ref);return JSON.parse(Buffer.from(r.content,'base64').toString('utf8'));}\nconst commit=(await api('git/ref/heads/master')).object.sha;\nconst pointer=await jsonFile('data/journal-store/current.json',commit);\nconst manifest=await jsonFile('data/journal-store/'+pointer.manifest.path,commit);\nconst count=Object.values(manifest.papers).reduce((n,x)=>n+x.count,0);\nconst app=await api('contents/public/journals/app.js?ref='+commit);\nconst expectedApp=Buffer.from(app.content,'base64');\nasync function page(p){const r=await fetch(base+p+'?verify='+Date.now(),{signal:AbortSignal.timeout(15000)});assert.equal(r.status,200,'PUBLIC_HTTP_ERROR');return Buffer.from(await r.arrayBuffer());}\nfor(let attempt=1;attempt<=8;attempt++){try{\n const html=(await page('index.html')).toString('utf8');assert.ok(html.includes('monthTitle')&&html.includes('论文日历'),'HTML_NOT_READY');\n const script=await page('app.js');assert.equal(createHash('sha256').update(script).digest('hex'),createHash('sha256').update(expectedApp).digest('hex'),'STALE_SCRIPT');\n const data=JSON.parse((await page('data.json')).toString('utf8'));assert.equal(data.schema_version,1);assert.equal(data.delivery_mode,'static');assert.equal(data.snapshot_at,manifest.created_at,'STALE_DATA');assert.equal(data.papers.length,count);assert.equal(data.journals.length,19);assert.ok(data.papers.every(p=>p.abstract_original||!p.abstract_zh),'CHINESE_WITHOUT_ORIGINAL');\n console.log('LIVE_SITE_REPORT '+JSON.stringify({status:'verified',commit,papers:count,snapshot_at:data.snapshot_at,assets_match:true,public_http:200,search_calls:0,translation_calls:0}));break;\n}catch{if(attempt===8)throw new Error('PUBLIC_SITE_NOT_VERIFIED');console.log('Waiting for public site propagation: '+attempt);await new Promise(r=>setTimeout(r,10000));}}\nNODE"
+        }
+      ]
+    }
+  }
+}
