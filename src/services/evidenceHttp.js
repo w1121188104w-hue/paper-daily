@@ -8,6 +8,10 @@ export class EvidenceError extends Error {
 const fail = (condition, code) => { if (!condition) throw new EvidenceError(code); };
 export const evidenceHash = (value) => createHash('sha256').update(value).digest('hex');
 export const EVIDENCE_AGENT = 'paper-daily/0.2 (+https://github.com/w1121188104w-hue/paper-daily)';
+// Wait at least a minute; with no server hint use five minutes. Never shorten a
+// longer Retry-After, including values too large to represent as a finite delay.
+export const rateLimitCooldown = wait => wait == null || Number.isNaN(wait)
+  ? 300000 : Math.max(60000, wait);
 
 export function checkedEvidenceUrl(value, hosts) {
   let url; try { url = new URL(value); } catch { throw new EvidenceError('UNSAFE_URL'); }
@@ -42,13 +46,18 @@ export function robotsAllows(text, target, agent = 'paper-daily') {
 
 export function makeEvidenceHttp({ fetchImpl = fetch, sleep = delay, now = Date.now, timeoutMs = 20000,
   intervalMs = 1100, maxRequests = 1200, maxBytes = 2000000, respectRobots = true, onResponse = async () => {} } = {}) {
-  const last = new Map(), robots = new Map(), robotsErrors = new Set(), blocked = new Map(); let requests = 0;
+  const last = new Map(), robots = new Map(), robotsErrors = new Set(), blocked = new Map(), rateLimits = new Map(); let requests = 0;
   async function request(value, hosts, { headers = {}, checkRobots = true, redirectLimit = 4 } = {}) {
     let url = checkedEvidenceUrl(value, hosts), initial = url.href;
     // Keys supplied to an API must never be sent to a redirected endpoint.
     const authenticated = Object.keys(headers).some(k => /authorization|api.?key/i.test(k));
     for (let hop = 0; hop <= redirectLimit; hop++) {
-      if (blocked.has(url.origin)) throw new EvidenceError(blocked.get(url.origin));
+      const limited = blocked.get(url.origin);
+      if (limited) {
+        if (now() < limited.until) throw new EvidenceError('RATE_LIMITED',
+          { retry_after_ms: limited.until - now() });
+        blocked.delete(url.origin);
+      }
       if (respectRobots && checkRobots) {
         fail(!robotsErrors.has(url.origin), 'ROBOTS_UNAVAILABLE');
         if (!robots.has(url.origin)) {
@@ -80,9 +89,18 @@ export function makeEvidenceHttp({ fetchImpl = fetch, sleep = delay, now = Date.
         if (!response.ok) {
           await response.body?.cancel();
           const code = ({ 401: 'ACCESS_RESTRICTED', 403: 'ACCESS_RESTRICTED', 404: 'NOT_FOUND', 429: 'RATE_LIMITED' })[response.status] || 'HTTP_ERROR';
-          // 429 applies to the host. 403 may be page-specific: a separate public RSS is still legitimate.
-          if (response.status === 429) blocked.set(url.origin, code);
-          throw new EvidenceError(code, { retry_after_ms: retryAfterMs(response.headers.get('retry-after'), now()) });
+          const requestedWait = retryAfterMs(response.headers.get('retry-after'), now());
+          // 429 applies to the entire origin, not just the failed URL. Permit at
+          // most two later recoveries per run; do not sleep here or retry early.
+          // 403 remains page-specific: a separate public RSS is still legitimate.
+          if (response.status === 429) {
+            const count = (rateLimits.get(url.origin) || 0) + 1;
+            rateLimits.set(url.origin, count);
+            const cooldown = count >= 3 ? Infinity : rateLimitCooldown(requestedWait);
+            blocked.set(url.origin, { until: now() + cooldown });
+            throw new EvidenceError(code, { retry_after_ms: cooldown });
+          }
+          throw new EvidenceError(code, { retry_after_ms: requestedWait });
         }
         const reader = response.body?.getReader(); fail(reader, 'EMPTY_RESPONSE'); const chunks = []; let size = 0;
         try { for (;;) { const { done, value: chunk } = await reader.read(); if (done) break; size += chunk.byteLength;

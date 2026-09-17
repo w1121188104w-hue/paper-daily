@@ -1,6 +1,6 @@
 import { normalizeDoi, normalizeTitleForMatch, normalizeAuthorName, normalizeSourceRecord } from './paperModel.js';
 import { normalizeCrossrefWork, normalizeOpenAlexWork, abstractFromInvertedIndex } from './sourceNormalizers.js';
-import { EvidenceError } from './evidenceHttp.js';
+import { EvidenceError, rateLimitCooldown } from './evidenceHttp.js';
 import { supportedRepecUrl, parseRepecAbstract } from './repecAbstract.js';
 import { repecCatalogUrl, parseRepecCatalog, repecCatalogCandidates } from './repecCatalog.js';
 import { publisherFor } from './publisherCatalog.js';
@@ -27,21 +27,33 @@ function withEvidence(record, response, method) {
     fetched_at: response.fetched_at, body_sha256: response.sha256, method } });
 }
 
-export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
+export function makeEnrichmentSources(http, { semanticScholarKey = '', now = Date.now } = {}) {
   const cache = new Map(), unavailable = new Map(), feedCache = new Map();
   async function api(url, headers = {}) {
     const host = new URL(url).hostname;
-    if (unavailable.has(host)) throw new EvidenceError(unavailable.get(host));
-    if (!cache.has(url)) cache.set(url, (async () => {
+    const blocked = unavailable.get(host);
+    if (blocked) {
+      if (blocked.code === 'ACCESS_RESTRICTED' || now() < blocked.until) {
+        throw new EvidenceError(blocked.code, { retry_after_ms: blocked.until - now() });
+      }
+      unavailable.delete(host);
+    }
+    if (!cache.has(url)) cache.set(url, Promise.resolve().then(async () => {
       try {
         const response = await http.request(url, [host], { checkRobots: false, headers });
         let data; try { data = JSON.parse(response.body); } catch { throw new EvidenceError('INVALID_JSON'); }
         return { response, data };
       } catch (error) {
-        if (['ACCESS_RESTRICTED','RATE_LIMITED'].includes(error.code)) unavailable.set(host,error.code);
+        if (error.code === 'ACCESS_RESTRICTED') unavailable.set(host, { code: error.code, until: Infinity });
+        if (error.code === 'RATE_LIMITED') {
+          unavailable.set(host, { code: error.code, until: now() + rateLimitCooldown(error.retry_after_ms) });
+          // A rejected promise must not permanently shadow a permitted later
+          // recovery of this same URL. The origin-level HTTP cap still applies.
+          cache.delete(url);
+        }
         throw error;
       }
-    })());
+    }));
     return cache.get(url);
   }
   async function crossref(expected, journal) {
