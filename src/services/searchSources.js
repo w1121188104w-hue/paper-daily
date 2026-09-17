@@ -55,6 +55,27 @@ export function journalSearchQuery(journal, month, provider) {
   return provider === 'zhipu' ? [...query].slice(0, 70).join('') : query;
 }
 
+// The 70-character search limit must not make long titles disappear from all
+// queries. These shortened strings are discovery hints only; acceptance still
+// checks the complete title and DOI against original evidence.
+export function abstractSearchQueries(paper, journal) {
+  const title = cleanText(paper.title || paper.title_original);
+  const clip = (text, size) => {
+    const chars = [...text];
+    if (chars.length <= size) return text;
+    const prefix = chars.slice(0, size).join('');
+    return prefix.replace(/\s+\S*$/, '') || prefix;
+  };
+  const query = paperSearchQuery(paper, 'zhipu');
+  const doi = String(paper.doi || '').trim();
+  const repecSuffix = ' site:ideas.repec.org';
+  return [...new Set([query,
+    ...(title ? [clip(title, 70), clip(title, 61) + ' Abstract'] : []),
+    clip(doi || query, 61) + ' Abstract',
+    clip(doi || query, 70 - repecSuffix.length) + repecSuffix,
+    ...(title ? [clip(title, 70 - repecSuffix.length) + repecSuffix] : [])])];
+}
+
 /** No env access or IO on import. Production callers must wrap request in makeBudgetedSearch
  * with a durable remote checkpoint. Search snippets cannot enter the paper merger. */
 export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine = 'search_std',

@@ -8,6 +8,8 @@ import { evidenceHash } from '../src/services/evidenceHttp.js';
 import { canonicalPublisherUrl } from '../src/services/publisherCatalog.js';
 import { readSearchCatalog, searchJournalCatalog, catalogSearchQuery, catalogMonths } from '../src/services/searchCatalog.js';
 import { repairPaperMetadata, fillMissingMetadata } from '../src/services/searchMetadata.js';
+import { publicationFor } from '../src/services/masterList.js';
+import { validateMetadataRepairOnlyChange } from '../src/services/metadataRepairValidation.js';
 import { loadSearchPolicy, validateSearchPolicy } from '../src/services/searchPolicy.js';
 import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
 import { emptySearchBudget, reserveSearchRequest, settleSearchRequest, safeSerpAccountDiagnostics } from '../src/services/searchBudget.js';
@@ -123,6 +125,35 @@ test('字段修复：无原始摘要时不生成中英文摘要，完整论文�
   assert.equal(result.paper.abstract_original, ''); assert.equal(result.paper.abstract_zh, ''); assert.equal(result.status, 'not_found');
   assert.equal(count, 3); count = 0;
   await repairPaperMetadata(seed({ authors: ['Alice Smith'], abstract }), journal, { sources, search }); assert.equal(count, 0);
+});
+
+test('摘要修复不被月份分歧拖累：相同DOI标题可单独补原文，保留既有日期和冲突证据', async () => {
+  const paper = seed({ authors: ['Alice Smith'] });
+  const conflicting = source({ authors: ['Alice Smith'], abstract, publication_date: '2026-10', last_checked_at: '2026-09-14T02:00:00.000Z' });
+  const sources = { crossref: async () => conflicting };
+  const result = await repairPaperMetadata(paper, journal, { sources, fields: ['abstract'],
+    search: () => assert.fail('No search after original abstract obtained') });
+  assert.equal(result.status, 'resolved');
+  assert.deepEqual(result.changed_fields, ['abstract']);
+  assert.equal(result.paper.abstract_original, abstract);
+  assert.equal(publicationFor(result.paper).publication_month, publicationFor(paper).publication_month);
+  assert.equal(result.paper.publication_date, paper.publication_date);
+  assert.deepEqual(result.paper.authors, paper.authors);
+  const added = result.paper.source_records.at(-1);
+  assert.equal(added.raw_dates.metadata_repair_excluded_dates.publication_date, '2026-10');
+  assert.deepEqual(added.source_evidence, conflicting.source_evidence);
+  validatePapers([result.paper], config);
+  validateMetadataRepairOnlyChange([paper], [result.paper]);
+});
+
+test('月份分歧不能放宽身份：错误DOI或标题的摘要继续拒绝', async () => {
+  const paper = seed({ authors: ['Alice Smith'] });
+  for (const wrong of [{ doi: '10.1257/wrong' }, { title: title + ' Part Two' }]) {
+    const sources = Object.fromEntries(['crossref', 'openalex', 'semanticscholar'].map(name =>
+      [name, async () => source({ abstract, publication_date: '2026-10', ...wrong })]));
+    const result = await repairPaperMetadata(paper, journal, { sources, fields: ['abstract'] });
+    assert.equal(result.paper.abstract_original, '');
+  }
 });
 test('字段修复：可补无DOI记录，不覆盖既有摘要、月份、译文，不错绑相似论文', () => {
   const paper = seed({ doi: '', authors: ['Alice Smith'], abstract }); paper.title_zh = '既有中文标题'; paper.title_translation_status = 'done';
