@@ -109,7 +109,7 @@ test('疑似重复遇免费额度耗尽保存真实重置时间，不冒充已�
     search: async ({ provider }) => provider === 'zhipu' ? { called: true, result: { leads: [] } } : { called: false, reason: 'quota_exhausted' } });
   const saved = await readJournalLibrary({ root, config });
   const issue = Object.values(saved.repairState.issues).find(row => row.paper_id === target.id && row.reason === 'possible_duplicate');
-  assert.equal(issue.status, 'quota_exhausted'); assert.equal(issue.next_retry_at, reset);
+  assert.equal(issue.status, 'quota_exhausted'); assert.equal(issue.next_retry_at, new Date(Date.parse(later) + 86400000).toISOString());
 });
 
 test('同属identity字段的任务各自保留冷却：核实单源不能给未到期的重复任务增加失败次数', async t => {

@@ -11,6 +11,7 @@ import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
 import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 import { classifyPaper } from './paperClassification.js';
 import { duplicateMergeProof } from './duplicateMerge.js';
+import { extractSearchRecord } from './searchExtraction.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -124,8 +125,20 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   }
   let searchResult = null;
   if (stillMissing().length && !mergeClaims().length && search) {
-    searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => paperSearchQuery(current, provider),
+    searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => {
+      const query = paperSearchQuery(current, provider);
+      return provider === 'zhipu' && sources.searchExtract ? [...new Set([query,
+        `${current.doi || query.slice(0, 58)} Abstract`.slice(0, 70),
+        `${current.doi || query.slice(0, 40)} site:ideas.repec.org`.slice(0, 70)])] : query;
+    },
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
+      verifyResult: sources.searchExtract ? async leads => {
+        const record = await extractSearchRecord(leads, current, journal, sources.searchExtract, new Date().toISOString());
+        if (!record) return null;
+        adopt(record);
+        // The abstract can be saved even if another field remains unresolved.
+        return stillMissing().length ? null : record;
+      } : undefined,
       verifyLead: async lead => {
         const url = safeSearchLink(lead.url);
         if (!url) return { resolved: false, reason: 'UNSAFE_LINK' };

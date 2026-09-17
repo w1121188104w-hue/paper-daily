@@ -2,6 +2,7 @@ import { cleanText } from './paperModel.js';
 import { safeSerpAccount, safeSerpAccountDiagnostics } from './searchBudget.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { safeSearchDiagnostic } from './searchDiagnostics.js';
+import { extractionMessages } from './searchExtraction.js';
 
 const fail = (condition, code) => { if (!condition) throw new EvidenceError(code); };
 const credential = value => typeof value === 'string' && value.length >= 8 && value.length <= 1000 && !/\s/.test(value);
@@ -27,6 +28,7 @@ export function searchLeads(data, provider) {
     if (!url || !title || title.length > 1500 || seen.has(url)) continue;
     seen.add(url);
     leads.push({ title, url, snippet: cleanText(provider === 'zhipu' ? row.content : row.snippet).slice(0, 3000),
+      ...(provider === 'zhipu' ? { content: String(row.content || '').slice(0, 40000) } : {}),
       search_provider: provider, requires_original_page_verification: true });
   }
   return leads;
@@ -98,15 +100,27 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
       // Do not log or persist data: /account.json includes the private API key.
       return safeSerpAccount(await readAccount(), now().toISOString());
     },
-    async request({ provider, query }) {
+    async request({ provider, query, extraction }) {
       fail(typeof query === 'string' && query.trim() && query.length <= 2000, 'INVALID_SEARCH_QUERY');
       let data;
+      if (extraction) {
+        fail(provider === 'zhipu' && credential(zhipuKey), 'MISSING_ZHIPU_KEY');
+        data = await json('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+          method: 'POST', headers: { Authorization: `Bearer ${zhipuKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'glm-4-air', messages: extractionMessages(extraction),
+            temperature: 0, max_tokens: 4000, response_format: { type: 'json_object' } })
+        }, provider);
+        fail(data.choices?.[0]?.finish_reason === 'stop', 'INCOMPLETE_EXTRACTION');
+        let extracted;
+        try { extracted = JSON.parse(data.choices[0].message.content); } catch { throw new EvidenceError('INVALID_EXTRACTION'); }
+        return { provider, charged: 1, extracted };
+      }
       if (provider === 'zhipu') {
         fail(credential(zhipuKey), 'MISSING_ZHIPU_KEY'); fail([...query].length <= 70, 'SEARCH_QUERY_TOO_LONG');
         data = await json('https://open.bigmodel.cn/api/paas/v4/web_search', { method: 'POST',
           headers: { Authorization: `Bearer ${zhipuKey}`, 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ search_engine: zhipuEngine, search_query: query, search_intent: false,
-            count: 10, search_recency_filter: 'noLimit', content_size: 'medium' }) }, provider);
+            count: 10, search_recency_filter: 'noLimit', content_size: 'high' }) }, provider);
       } else {
         fail(['serpapi_scholar', 'serpapi_google'].includes(provider), 'INVALID_SEARCH_PROVIDER');
         fail(credential(serpapiKey), 'MISSING_SERPAPI_KEY');
@@ -126,13 +140,14 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
 
 // All engines share the same verification callback. Stop only after the requested issue
 // is actually resolved from original evidence, not merely after finding a plausible link.
-export async function searchWithFallback({ queryFor, search, verifyLead, maxLeadsPerSource = 10 }) {
+export async function searchWithFallback({ queryFor, search, verifyLead, verifyResult, maxLeadsPerSource = 10 }) {
   fail(typeof queryFor === 'function' && typeof search === 'function' && typeof verifyLead === 'function' &&
     Number.isInteger(maxLeadsPerSource) && maxLeadsPerSource >= 1 && maxLeadsPerSource <= 50, 'INVALID_SEARCH_OPTIONS');
   const attempts = []; let incomplete = false, blockedQuota = false;
   for (const provider of ['zhipu', 'serpapi_scholar', 'serpapi_google']) {
+    for (const query of [queryFor(provider)].flat()) {
     let result;
-    try { result = await search({ provider, query: queryFor(provider) }); }
+    try { result = await search({ provider, query }); }
     catch (error) { if (['EVIDENCE_STORAGE_ERROR', 'SEARCH_LEDGER_CHECKPOINT_FAILED'].includes(error?.code)) throw error;
       incomplete = true; attempts.push({ provider, status: 'source_unavailable', stage: 'search_request', diagnostic: safeSearchDiagnostic(error, provider) }); continue; }
     if (!result.called) {
@@ -140,13 +155,25 @@ export async function searchWithFallback({ queryFor, search, verifyLead, maxLead
       blockedQuota ||= provider.startsWith('serpapi_') && status === 'quota_exhausted'; incomplete = true;
       attempts.push({ provider, status, called: false, stage: 'search_not_called' });
       // Both SerpAPI engines use one balance; do not re-query an exhausted account.
-      if (provider.startsWith('serpapi_') && status === 'quota_exhausted') break;
+      if (provider.startsWith('serpapi_') && status === 'quota_exhausted') return { status: 'quota_exhausted', confirmed: null, attempts };
       continue;
     }
     if (!Array.isArray(result.result?.leads)) { incomplete = true; attempts.push({ provider, status: 'source_unavailable', called: true,
       stage: 'search_response', diagnostic: safeSearchDiagnostic(result.diagnostic, provider) }); continue; }
     let confirmed = null, restricted = false;
     const diagnostics = [];
+    if (provider === 'zhipu' && verifyResult) {
+      try {
+        const record = await verifyResult(result.result.leads);
+        if (record?.source_evidence && record.title) {
+          attempts.push({ provider, status: 'resolved', called: true, stage: 'grounded_extraction' });
+          return { status: 'resolved', confirmed: { record }, attempts };
+        }
+      } catch (error) {
+        if (['EVIDENCE_STORAGE_ERROR', 'SEARCH_LEDGER_CHECKPOINT_FAILED'].includes(error.code)) throw error;
+        diagnostics.push({ status: 'EXTRACTION_NOT_VERIFIED' });
+      }
+    }
     for (const lead of result.result.leads.slice(0, maxLeadsPerSource)) {
       try {
         const evidence = await verifyLead(lead);
@@ -162,6 +189,7 @@ export async function searchWithFallback({ queryFor, search, verifyLead, maxLead
       lead_statuses: Object.fromEntries([...new Set(diagnostics.map(row => row.status))].map(status => [status, diagnostics.filter(row => row.status === status).length])) };
     if (confirmed) { attempts.push({ provider, status: 'resolved', ...detail }); return { status: 'resolved', confirmed, attempts }; }
     incomplete ||= restricted; attempts.push({ provider, status: restricted ? 'access_restricted' : 'not_found', ...detail });
+    }
   }
   return { status: blockedQuota ? 'quota_exhausted' : incomplete ? 'source_unavailable' : 'not_found', confirmed: null, attempts };
 }

@@ -99,13 +99,14 @@ test('字段重试：部分补齐保存，未找到的字段保存失败记录�
   assert.ok(dueRepairIssues(library.repairState, new Date('2026-09-15T00:00:00Z')).length > 0);
 });
 
-test('字段额度耗尽：记录真实重置时间，区别于已搜索未找到，到期后进入自动队列', async t => {
+test('SerpAPI额度耗尽：只暂停备用渠道，次日仍可重试智谱和结构化来源', async t => {
   const dirs = await seed(t), reset = '2026-10-13T00:00:00.000Z';
   await runMetadataRepair(config, { ...dirs, now: () => new Date(at), sources: sources(), quotaResetsAt: reset,
     search: async ({ provider }) => provider === 'zhipu' ? { called: true, result: { leads: [] } } : { called: false, reason: 'quota_exhausted' } });
   const library = await readJournalLibrary({ ...dirs, config });
-  assert.ok(Object.values(library.repairState.issues).every(issue => issue.status === 'quota_exhausted' && issue.next_retry_at === reset));
-  assert.equal(dueRepairIssues(library.repairState, new Date('2026-10-12T00:00:00Z')).length, 0);
+  assert.ok(Object.values(library.repairState.issues).every(issue => issue.status === 'quota_exhausted' && issue.next_retry_at === '2026-09-14T12:00:00.000Z'));
+  assert.equal(dueRepairIssues(library.repairState, new Date(at)).length, 0);
+  assert.equal(dueRepairIssues(library.repairState, new Date('2026-09-14T12:00:00Z')).length, 4);
   assert.equal(dueRepairIssues(library.repairState, new Date(reset)).length, 4);
 });
 

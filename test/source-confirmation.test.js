@@ -135,7 +135,7 @@ test('单源确认耗尽额度也保留真实重置日，不能当成已查完�
   await runMetadataRepair(config, { root, now: () => new Date(at), sources: sources(), quotaResetsAt: reset,
     search: async ({ provider }) => provider === 'zhipu' ? { called: true, result: { leads: [] } } : { called: false, reason: 'quota_exhausted' } });
   const saved = await readJournalLibrary({ root, config }), issue = Object.values(saved.repairState.issues)[0];
-  assert.equal(issue.status, 'quota_exhausted'); assert.equal(issue.next_retry_at, reset); assert.equal(issue.resolved_at, null);
-  assert.equal(dueRepairIssues(saved.repairState, new Date('2026-10-14T00:00:00Z')).length, 0);
+  assert.equal(issue.status, 'quota_exhausted'); assert.equal(issue.next_retry_at, new Date(Date.parse(at) + 86400000).toISOString()); assert.equal(issue.resolved_at, null);
+  assert.equal(dueRepairIssues(saved.repairState, new Date(at)).length, 0);
   assert.equal(dueRepairIssues(saved.repairState, new Date(reset)).length, 1);
 });

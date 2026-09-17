@@ -58,11 +58,12 @@ export function safeSerpAccount(data, checkedAt) {
 
 export function searchAllowance(state, { provider, now = new Date(), account = null, zhipuMonthlyLimit = 0 } = {}) {
   validateSearchBudget(state);
-  assertLibrary(providers.includes(provider) && Number.isFinite(now.getTime()) && isCount(zhipuMonthlyLimit), '搜索额度查询参数无效');
+  assertLibrary(providers.includes(provider) && Number.isFinite(now.getTime()) && (zhipuMonthlyLimit === null || isCount(zhipuMonthlyLimit)), '搜索额度查询参数无效');
   const requests = state.requests.filter(request => serp(provider) ? serp(request.provider) : request.provider === provider);
   const counted = request => request.charged === 0 ? 0 : 1; // Uncertain billing always stays reserved.
   const localUsed = requests.filter(request => request.month === monthAt(now)).reduce((sum, request) => sum + counted(request), 0);
   const limit = serp(provider) ? SERPAPI_MONTHLY_LIMIT : zhipuMonthlyLimit;
+  if (!serp(provider) && limit === null) return { allowed: true, reason: null, remaining: null, local_used: localUsed, limit: null };
   if (!limit) return { allowed: false, reason: 'budget_not_configured', remaining: 0, local_used: localUsed, limit };
   if (serp(provider)) {
     if (!account || account.free_plan !== true || !isIsoTime(account.checked_at) ||
