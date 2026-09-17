@@ -3,7 +3,7 @@ import { titleIdentity, authorOverlap, recordDate } from './enrichmentSources.js
 import { authenticAbstract } from './publisherParsers.js';
 import { publisherFor } from './publisherCatalog.js';
 import { publicationFor, possibleDuplicatePeers } from './masterList.js';
-import { paperSearchQuery, searchWithFallback, safeSearchLink } from './searchSources.js';
+import { paperSearchQuery, abstractSearchQueries, searchWithFallback, safeSearchLink } from './searchSources.js';
 import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
@@ -72,7 +72,22 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     ...(wanted.has('classification') && classifyPaper(current).kind === 'needs_review' ? ['classification'] : [])];
   function adopt(record, identityEvidence = []) {
     try {
-      const result = fillMissingMetadata(current, record, { otherPapers, identityEvidence });
+      let result;
+      try { result = fillMissingMetadata(current, record, { otherPapers, identityEvidence }); }
+      catch (error) {
+        // A differing issue/online month is not evidence that an exact DOI +
+        // title match has a different abstract. Keep the established date and
+        // retain the conflicting dates as raw evidence, adopting ONLY abstract.
+        const original = normalizeSourceRecord(record);
+        if (error.code !== 'PUBLICATION_MONTH_CONFLICT' || !wanted.has('abstract') || current.abstract_original ||
+          !current.doi || original.doi !== current.doi || !repairIdentityMatches(current, original) ||
+          !authenticAbstract(original.abstract)) throw error;
+        const scoped = { ...original, authors: [], published_online_date: '', published_print_date: '', publication_date: '',
+          raw_dates: { ...original.raw_dates, metadata_repair_excluded_dates: {
+            reason: 'preserve_existing_publication_month', published_online_date: original.published_online_date,
+            published_print_date: original.published_print_date, publication_date: original.publication_date } } };
+        result = fillMissingMetadata(current, scoped, { otherPapers, identityEvidence });
+      }
       result.changed_fields.forEach(field => changed.add(field)); current = result.paper; return result;
     } catch (error) {
       if (checkPossibleDuplicate && error.code === 'DOI_ALREADY_ASSIGNED') {
@@ -150,9 +165,8 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   if (stillMissing().length && !mergeClaims().length && search) {
     searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => {
       const query = paperSearchQuery(current, provider);
-      return provider === 'zhipu' && sources.searchExtract ? [...new Set([query,
-        `${current.doi || query.slice(0, 58)} Abstract`.slice(0, 70),
-        `${current.doi || query.slice(0, 40)} site:ideas.repec.org`.slice(0, 70)])] : query;
+      return provider === 'zhipu' && sources.searchExtract && stillMissing().includes('abstract')
+        ? abstractSearchQueries(current, journal) : query;
     },
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
       verifyResult: sources.searchExtract ? async leads => {

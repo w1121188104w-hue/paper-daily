@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { originalAbstractSection, extractionEvidence, extractSearchRecord } from '../src/services/searchExtraction.js';
-import { makeSearchSources, searchWithFallback } from '../src/services/searchSources.js';
+import { makeSearchSources, searchWithFallback, abstractSearchQueries } from '../src/services/searchSources.js';
 import { searchAllowance, emptySearchBudget } from '../src/services/searchBudget.js';
 import { validateSearchPolicy } from '../src/services/searchPolicy.js';
 import { dueRepairIssues } from '../src/services/repairState.js';
@@ -13,6 +13,19 @@ const abstract = 'We study international trade using administrative firm data. W
 const lead = { title: paper.title_original, url: 'https://www.aeaweb.org/articles?id=10.1257/example',
   content: `${paper.title_original}\nDOI: ${paper.doi}\nAbstract\n${abstract}\nKeywords: trade, productivity` };
 const extracted = { record: { source_index: 0, title: paper.title_original, doi: paper.doi, abstract } };
+
+test('长标题摘要检索：保留标题检索路径，不全部退化为DOI，查询均符合70字限制', () => {
+  const item = { title_original: 'Can ChatGPT forecast stock price movements? Return predictability and large language models', doi: '10.1016/j.jfineco.2026.104335' };
+  const before = structuredClone(item), queries = abstractSearchQueries(item, journal);
+  assert.ok(queries.includes(item.doi));
+  assert.ok(queries.some(q => q.startsWith('Can ChatGPT forecast stock price movements?') && !q.includes('site:')));
+  assert.ok(queries.some(q => q.startsWith('Can ChatGPT') && q.endsWith('site:ideas.repec.org')));
+  assert.ok(queries.every(q => [...q].length <= 70));
+  assert.equal(queries.length, new Set(queries).size);
+  assert.deepEqual(item, before);
+  const unicode = abstractSearchQueries({ title: '😀研究'.repeat(50) }, journal);
+  assert.ok(unicode.every(q => [...q].length <= 70));
+});
 
 test('智谱原文提取：只接受有完整边界的Abstract，不采纳摘要片段', () => {
   assert.equal(originalAbstractSection(lead.content), abstract);

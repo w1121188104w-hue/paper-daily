@@ -86,6 +86,25 @@ test('字段端到端：三源无结果后才搜索，必须读取真实原始�
   assert.equal((await readJournalLibrary({ ...dirs, config })).papers[0].abstract_original, abstract);
 });
 
+test('月份不同的真实摘要可保存正式快照，重读后仍保留旧月份并关闭摘要待办', async t => {
+  const dirs = await seed(t);
+  await runMetadataRepair(config, { ...dirs, now: () => new Date(at),
+    sources: sources({ crossref: async () => record('crossref', { abstract: '' }) }),
+    search: async () => ({ called: true, result: { leads: [] } }) });
+  const before = await readJournalLibrary({ ...dirs, config });
+  const later = '2026-09-15T12:00:00.000Z';
+  const result = await runMetadataRepair(config, { ...dirs, now: () => new Date(later),
+    sources: sources({ crossref: async () => record('crossref', { publication_date: '2026-10', last_checked_at: later }) }),
+    search: () => assert.fail('No paid search after verified source') });
+  const after = await readJournalLibrary({ ...dirs, config });
+  assert.equal(result.stats.abstracts_filled, 1);
+  assert.equal(after.papers[0].abstract_original, abstract);
+  assert.equal(after.masterList.entries[0].publication_month, before.masterList.entries[0].publication_month);
+  assert.equal(after.papers[0].abstract_translation_status, 'pending');
+  assert.equal(Object.values(after.repairState.issues).find(x => x.field === 'abstract').status, 'resolved');
+  assert.equal(after.papers[0].source_records.at(-1).raw_dates.metadata_repair_excluded_dates.publication_date, '2026-10');
+});
+
 test('字段重试：部分补齐保存，未找到的字段保存失败记录，当天重跑不搜索', async t => {
   const dirs = await seed(t); let count = 0;
   const options = { ...dirs, now: () => new Date(at), sources: sources({ crossref: async () => record('crossref', { doi: '', publication_date: '', abstract: '' }) }),
