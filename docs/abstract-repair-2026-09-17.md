@@ -173,3 +173,13 @@ HTTP 429 作用于整个来源站点，不能换论文 URL 提前重试。
 只改变已获取原文的分段，不降低 DOI、标题、来源主机或完整性核验要求，不生成摘要。
 此修复不代表智谱已经返回该页面的完整原文，也不代表该篇已入库。
 来源：[JPE 官方摘要页面](https://www.journals.uchicago.edu/doi/abs/10.1086/742421)。
+
+### Springer 官方域名别名
+
+Springer Nature 官方帮助页面明确将 link.springernature.com 标为 Springer Nature Link。
+原主机清单仅包含 link.springer.com，导致指向新官方域名的搜索证据被当作外站拒绝。
+为 JIBS、RAS 增加这一精确主机名，保留原主机，仍核对论文 DOI、标题、期刊及完整原摘要。
+定向检索也覆盖新旧两个公开文章域名，不将 API 或登录服务作为搜索站点；保留普通标题及 DOI 检索。
+不接受相似域名、任意子域名或 idp.springer.com 登录服务，不更换浏览器身份、不绕过登录。
+只读检查两篇旧域名文章时实际遇到 303 转向登录服务，并未跟随；此别名修复不等于网站已能直读。
+来源：[Springer Nature 官方账户说明](https://support.nature.com/en/support/solutions/articles/6000275644-merging-author-accounts)。

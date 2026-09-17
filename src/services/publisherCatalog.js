@@ -30,7 +30,9 @@ export function publisherFor(journal) {
   if (p.family === 'wiley') Object.assign(p, { home: `https://onlinelibrary.wiley.com/toc/${issn}/0/0`,
     hosts: ['onlinelibrary.wiley.com'], feeds: [`https://onlinelibrary.wiley.com/feed/${issn}/most-recent`] });
   if (p.family === 'springer') Object.assign(p, { home: `https://link.springer.com/journal/${p.journal_id}/articles`,
-    hosts: ['link.springer.com', 'api.springernature.com'], feeds: [] });
+    // Springer Nature's public Link platform has both official domains. The
+    // authentication service (idp.springer.com) is deliberately not included.
+    hosts: ['link.springer.com', 'link.springernature.com', 'api.springernature.com'], feeds: [] });
   if (p.family === 'oup') Object.assign(p, { home: `https://academic.oup.com/${p.code}/advance-articles`, hosts: ['academic.oup.com'] });
   if (p.family === 'atypon') p.feeds = [`${new URL(p.home).origin}/action/showFeed?type=etoc&feed=rss&jc=${p.code}`];
   return { ...p, feeds: p.feeds || [], journal_key: journal.key };

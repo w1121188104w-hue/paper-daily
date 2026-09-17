@@ -72,12 +72,19 @@ export function abstractSearchQueries(paper, journal) {
   const repecSuffix = ' site:ideas.repec.org';
   // Restrict discovery to the journal's verified publisher first. A site:
   // operator is a search hint, not identity proof or permission to bypass a page.
-  const publisherHost = new URL(publisherFor(journal).home).hostname.replace(/^www\./, '');
-  const publisherSuffix = ` site:${publisherHost}`;
-  const publisherQueries = [
-    ...(doi && [...doi + publisherSuffix].length <= 70 ? [doi + publisherSuffix] : []),
-    ...(title ? [clip(title, 70 - publisherSuffix.length) + publisherSuffix] : [])
-  ];
+  const publisher = publisherFor(journal);
+  const publisherHost = new URL(publisher.home).hostname.replace(/^www\./, '');
+  // Only public article surfaces, not every allowed host (which can include an
+  // API endpoint). Keep both documented Springer Link domains discoverable.
+  const searchHosts = publisher.family === 'springer'
+    ? ['link.springernature.com', 'link.springer.com'] : [publisherHost];
+  const publisherQueries = searchHosts.flatMap(host => {
+    const publisherSuffix = ` site:${host}`;
+    return [
+      ...(doi && [...doi + publisherSuffix].length <= 70 ? [doi + publisherSuffix] : []),
+      ...(title ? [clip(title, 70 - publisherSuffix.length) + publisherSuffix] : [])
+    ];
+  });
   return [...new Set([...publisherQueries, query,
     ...(title ? [clip(title, 70), clip(title, 61) + ' Abstract'] : []),
     clip(doi || query, 61) + ' Abstract',
