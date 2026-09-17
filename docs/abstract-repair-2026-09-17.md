@@ -143,3 +143,24 @@ HTTP 429 作用于整个来源站点，不能换论文 URL 提前重试。
 成功译文不重译，失败字段每个请求方案最多三次、至少间隔三十分钟；
 原始方案、v1、v2 合计最多九次，保留全部历史登记，不重发未结算或网络结果不确定的请求。
 本地测试通过不代表实际 DeepSeek 已成功采用此格式，仍须发布后验证真实运行。
+
+### 四条额外错刊证据：隔离而非删除
+
+2026-09-18（北京时间）只读核对正式库及 Crossref DOI 登记，并查看出版社页面：
+三个 10.1007/978-3-032-11327-6、978-3-032-25831-1、978-3-032-29056-4
+是 Springer 的 Research for Policy 丛书，类型 book，ISSN 2662-3684 / 2662-3692，
+不是 Research Policy（0048-7333 / 1873-7625）论文。
+10.34218/jom_13_02_005 是 IAEME 的同名 Journal of Management，ISSN 2347-3940 / 2347-3959，
+不是目标 Sage Journal of Management（0149-2063 / 1557-1211）。
+四条现有入库记录均仅来自 Semantic Scholar。此处不能拿规范化后填入的目标 ISSN 当独立证据。
+
+为这四个精确 DOI 增加已核实错刊证据，复用现有隔离显示、翻译及补查队列保护，阻止再收。
+保留原始库及历史，不扩大此前五条 JAR 记录的实体删除名单；隔离不算“成功补齐摘要”。
+没有使用整个出版社或 DOI 前缀封禁，不以相似标题或摘要为空排除真实论文。
+后续应针对单一来源的期刊身份增加独立交叉核验，不能声称四条特例已经解决所有上游误配。
+
+来源：[Media Matters](https://link.springer.com/book/10.1007/978-3-032-11327-6)、
+[People and Climate](https://link.springer.com/book/10.1007/978-3-032-25831-1)、
+[European Ageing in Focus](https://link.springer.com/book/10.1007/978-3-032-29056-4)、
+[IAEME 论文](https://iaeme.com/Home/article_id/JOM_13_02_005)、
+[IAEME 期刊 ISSN](https://iaeme.com/Home/current_issue/JOM)、[目标 Sage 期刊](https://journals.sagepub.com/home/jom)。
