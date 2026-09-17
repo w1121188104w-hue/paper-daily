@@ -73,6 +73,23 @@ DeepSeek 请求中附带由待译原文机械提取的数字清单，与导入�
 本验证不修改正式库、不翻译、不发布；结果只报长度、核验状态及安全错误码。
 接口依据：[智谱网页阅读](https://zhipu-ef7018ed.mintlify.app/api-reference/工具-api/网页阅读)。
 
+## RePEc 期刊目录定位已知论文
+
+已核实 JFE、RP、JAE、JCF、AOS 的公开 RePEc 期刊目录地址。
+此目录只用于定位库内缺摘要论文，不列为第四个独立发现源，不改变 Master List 的来源统计。
+读取时核对目录的期刊全名和 ISSN；只取相同系列的正式文章链接，不读取工作论文或其他期刊路径。
+标题标准化匹配只产生线索，最多核验三个同名候选。文章页仍须通过现有 DOI、标题、期刊、作者及
+页面正文摘要与 citation_abstract 一致性检查；不从目录文字、搜索片段或模型回答生成摘要。
+
+每轮每刊目录只读一次，空结果及访问失败也缓存。遵循已有 robots、限速和请求次数上限。
+三源和官网未补齐后，在付费搜索之前尝试目录；没有可靠结果仍回到智谱优先的既有流程。
+2026-09-18 北京时间只读实测：77 篇待补记录中，16 篇通过原文核验
+（JFE 4、RP 6、JAE 4、JCF 1、AOS 1）；该实测未写正式库、未调用付费 API，不能视为已上线补齐数量。
+目录自身也可能滞后，不以目录未列出为删除论文依据。
+来源：[JFE](https://ideas.repec.org/s/eee/jfinec.html)、[RP](https://ideas.repec.org/s/eee/respol.html)、
+[JAE](https://ideas.repec.org/s/eee/jaecon.html)、[JCF](https://ideas.repec.org/s/eee/corfin.html)、
+[AOS](https://ideas.repec.org/s/eee/aosoci.html)。
+
 ## 验收边界
 
 代码测试通过不代表所有摘要已找到。必须继续核对正式库、运行报告与发布页面，

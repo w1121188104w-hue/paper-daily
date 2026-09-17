@@ -8,6 +8,7 @@ import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
 import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
+import { repecCatalogUrl } from './repecCatalog.js';
 import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 import { classifyPaper } from './paperClassification.js';
 import { duplicateMergeProof } from './duplicateMerge.js';
@@ -137,6 +138,18 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     } catch (error) {
       if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
       attempts.push({ source: 'repec', status: safeCode(error) });
+    }
+  }
+  // A journal's public RePEc index can locate known papers without a paid
+  // search. The list supplies URLs only, never an abstract or identity proof.
+  if (!mergeClaims().length && stillMissing().includes('abstract') && current.doi && repecCatalogUrl(journal) &&
+    typeof sources.repecCatalogArticle === 'function') {
+    try {
+      const result = adopt(await sources.repecCatalogArticle(current, journal));
+      attempts.push({ source: 'repec', stage: 'journal_catalog', status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
+    } catch (error) {
+      if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
+      attempts.push({ source: 'repec', stage: 'journal_catalog', status: safeCode(error) });
     }
   }
   let searchResult = null;
