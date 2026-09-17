@@ -16,6 +16,8 @@ const extracted = { record: { source_index: 0, title: paper.title_original, doi:
 
 test('智谱原文提取：只接受有完整边界的Abstract，不采纳摘要片段', () => {
   assert.equal(originalAbstractSection(lead.content), abstract);
+  assert.equal(originalAbstractSection(`## Abstract\n${abstract}\n## Keywords: trade`), abstract);
+  assert.equal(originalAbstractSection(`**Abstract**\n${abstract}\n**Keywords**: trade`), abstract);
   for (const text of [abstract, `Abstract ${abstract}`, `Abstract ${abstract}… Keywords: trade`,
     `Abstract We study... trade and resource allocation across firms and countries. Keywords: trade`]) assert.equal(originalAbstractSection(text), '');
 });

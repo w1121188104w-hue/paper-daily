@@ -127,8 +127,17 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   if (stillMissing().includes('abstract') && !mergeClaims().length && sources.searchArticle) {
     try {
       const answer = await sources.searchArticle(current, journal);
-      const record = answer.called && answer.result ? await extractSearchRecord(answer.result.leads || [], current, journal,
+      let record = answer.called && answer.result ? await extractSearchRecord(answer.result.leads || [], current, journal,
         async () => answer.result.extracted, checkedAt) : null;
+      // Some Chat API responses omit tool text. A model-suggested URL is only
+      // a lead: fetch it independently and use the verified page, not its answer.
+      const proposedUrl = safeSearchLink(answer.result?.extracted?.record?.source_url);
+      if (!record && proposedUrl) {
+        const repec = supportedRepecUrl(proposedUrl, journal) && sources.repecArticle;
+        if (repec || publisherFor(journal).hosts.includes(new URL(proposedUrl).hostname)) {
+          record = await (repec ? sources.repecArticle : sources.publisherArticle)({ ...current, url: proposedUrl }, journal);
+        }
+      }
       if (record) adopt(record);
       attempts.push({ source: 'zhipu', status: record ? 'filled' : 'no_verified_abstract',
         called: Boolean(answer.called), stage: 'search_and_extract',

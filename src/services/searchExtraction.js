@@ -7,8 +7,8 @@ const identity = value => normalizeTitleForMatch(value).replace(/\s/g, '');
 // Search summaries are not abstracts. Only a bounded, explicitly labelled
 // Abstract section can supply an original quote; trailing truncation is rejected.
 export function originalAbstractSection(content) {
-  const text = cleanText(content);
-  const match = text.match(/\bAbstract\s*[:.\-]?\s+([\s\S]+?)(?=\s+(?:Keywords?\s*[:：]|JEL (?:classification|codes?)\b|References\b|Copyright\b|©|Introduction\b|Recommended citation\b))/i);
+  const text = cleanText(String(content || '').replace(/^\s*#{1,6}\s+/gm, '').replace(/\*\*(Abstract|Keywords?|References|Introduction|JEL[^*\n]*)\*\*/gi, '$1'));
+  const match = text.match(/\bAbstract\s*[:.\-]?\s+([\s\S]+?)(?=\s+(?:Keywords?\s*[:：]|JEL (?:classification|codes?)\b|References\b|Copyright\b|©|Introduction\b|(?:Recommended|Suggested) citation\b))/i);
   if (!match) return '';
   const quote = match[1].trim();
   if (/\.\.\.|…|read more|show more|view full|\[\s*\.\s*\.\s*\.\s*\]/i.test(quote) || !/[.!?]["”']?$/.test(quote)) return '';

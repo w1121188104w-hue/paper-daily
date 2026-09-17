@@ -69,7 +69,7 @@ export async function makePipelineRuntime({ env, policy }) {
     return search({ provider: 'zhipu', query: `article:${JSON.stringify(article)}`.slice(0, 2000),
       taskId: `article:${paper.id}`, article });
   };
-  return { http, search, sources,
+  return { http, search, sources, shouldContinue: () => Date.now() < deadline,
     collectionOptions: { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '', maxAttempts: 2, timeoutMs: 12000 },
     quotaResetsAt: () => {
       const value = account?.renewal_date, reset = /^\d{4}-\d{2}-\d{2}$/.test(value || '') ? Date.parse(`${value}T00:00:00Z`) + 86400000 : Date.parse(value);

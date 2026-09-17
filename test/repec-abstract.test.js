@@ -54,3 +54,22 @@ test('先直接核验RePEc原文补摘要，不消耗搜索，保留来源且不
   assert.equal(retried.status, 'resolved'); assert.equal(repecCalls, 2);
   assert.equal(retried.attempts.find(a => a.source === 'zhipu').leads_checked, 12);
 });
+
+test('其他期刊RePEc原文：DOI、期刊、标题、作者及两处摘要一致才接收', async () => {
+  const rp = findJournal(await loadJournalConfig(), 'RP');
+  const rpUrl = 'https://ideas.repec.org/a/eee/respol/v55y2026i7s0048733326000995.html';
+  const rpDoi = '10.1016/j.respol.2026.105508';
+  const expected = { doi: rpDoi, title: 'Detecting crypto wash trades via machine learning', authors: [{ name: 'Brett Hemenway Falk' }] };
+  const html = (patch = {}) => {
+    const fields = { handle: 'RePEc:eee:respol:v:55:y:2026:i:7:s0048733326000995', DOI: rpDoi,
+      citation_title: expected.title, citation_journal_title: rp.name, citation_type: 'redif-article',
+      citation_authors: 'Falk, Brett Hemenway; Tsoukalas, Gerry', citation_abstract: abstract, ...patch };
+    const body = Object.entries(fields).map(([k,v]) => `<meta name="${k}" content="${v}">`).join('') + `<div id="abstract-body">${abstract}</div>`;
+    return { url: rpUrl, body, sha256: evidenceHash(body), fetched_at: at };
+  };
+  assert.equal(parseRepecAbstract(html(), rp, expected).abstract, abstract);
+  for (const patch of [{ DOI: '10.1016/other' }, { citation_journal_title: 'Other journal' },
+    { citation_title: 'Other paper' }, { citation_abstract: 'Unverified summary' }, { handle: 'RePEc:other:other:x' },
+    { citation_type: 'redif-paper' }]) assert.throws(() => parseRepecAbstract(html(patch), rp, expected));
+  assert.equal(supportedRepecUrl(rpUrl.replace('/a/', '/p/'), rp), false);
+});

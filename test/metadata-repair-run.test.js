@@ -176,3 +176,13 @@ test('摘要专用名额独立于一般待办，保存智谱逐字摘录并进�
   assert.ok(saved.queue.tasks.some(row => row.field === 'abstract'));
   assert.ok(Object.values(saved.repairState.issues).every(row => row.status === 'resolved'));
 });
+
+test('运行时限到达不把尚未查询的摘要记为失败或增加重试次数', async t => {
+  const dirs = await seed(t), before = await readJournalLibrary({ ...dirs, config });
+  const result = await runMetadataRepair(config, { ...dirs, now: () => new Date(at), sources: sources(),
+    search: () => assert.fail('Deadline reached'), shouldContinue: () => false, maxAbstracts: 300 });
+  assert.equal(result.reason, 'RUN_DEADLINE');
+  const after = await readJournalLibrary({ ...dirs, config });
+  assert.equal(after.pointerText, before.pointerText);
+  assert.deepEqual(after.repairState, before.repairState);
+});
