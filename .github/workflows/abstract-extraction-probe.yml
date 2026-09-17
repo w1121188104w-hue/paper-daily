@@ -1,0 +1,43 @@
+name: Abstract extraction verification (no publication)
+on:
+  workflow_dispatch:
+    inputs:
+      source_commit:
+        description: Reviewed code commit to verify
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: journal-production
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Validate immutable code reference
+        env:
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+        run: '[[ "$SOURCE_COMMIT" =~ ^[a-f0-9]{40}$ ]]'
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ inputs.source_commit }}
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - run: node --test --test-reporter=dot
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          path: production-baseline
+          persist-credentials: false
+      - name: Verify live retrieval and grounded extraction without changing the library
+        env:
+          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
+          SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/abstract-extraction-probe.js
