@@ -51,6 +51,15 @@ test('智谱原文提取：只接受有完整边界的Abstract，不采纳摘要
   for (const text of [abstract, `Abstract ${abstract}`, `Abstract ${abstract}… Keywords: trade`,
     `Abstract We study... trade and resource allocation across firms and countries. Keywords: trade`]) assert.equal(originalAbstractSection(text), '');
 });
+
+test('出版社明确的语言标签和编号章节不污染英文摘要，也不合并CAR法文摘要', () => {
+  const french = 'Les résultats de notre étude concernent les informations publiées et les décisions des investisseurs.';
+  assert.equal(originalAbstractSection(`## RÉSUMÉ\nfr\n${french}\n## ABSTRACT\nen\n${abstract}\n## 1 Introduction\nBody text`), abstract);
+  assert.equal(originalAbstractSection(`**Abstract**\nEnglish\n${abstract}\n1. Introduction\nBody text`), abstract);
+  assert.equal(originalAbstractSection(`Abstract\n${abstract}\nRÉSUMÉ\n${french}\n1 Introduction\nBody text`), abstract);
+  assert.equal(originalAbstractSection(`Abstract\n${abstract}…\n1 Introduction\nBody text`), '');
+  assert.equal(originalAbstractSection(`RÉSUMÉ\n${french}\n1 Introduction\nBody text`), '');
+});
 test('智谱原文提取：标题和DOI必须在检索证据中，不用模型自证', () => {
   assert.equal(extractionEvidence([lead], paper, journal).length, 1);
   for (const changed of [{ ...lead, url: 'https://evil.example/paper' },
