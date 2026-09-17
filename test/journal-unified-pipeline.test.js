@@ -24,6 +24,13 @@ test('每日顺序：三源→官网清单→复用归并→字段→新归并�
   assert.deepEqual(events, ['validate', 'collect', 'validate', 'catalog', 'validate', 'merge', 'validate', 'repair', 'validate', 'merge', 'validate', 'validate']);
   assert.equal(result.status, 'partial'); assert.equal(result.translation_calls, 0); assert.equal(result.coverage, 'not_proven_complete');
 });
+
+test('集中补查参数传到字段补全；默认每日流程不开启', async () => {
+  for (const enabled of [false, true]) await runJournalPipeline({}, options([], {
+    ...(enabled ? { retryMissingAbstractsNow: true } : {}),
+    repair: async (_, o) => { assert.equal(o.retryMissingAbstractsNow, enabled); return { status: 'skipped' }; }
+  }));
+});
 test('每日流程损坏预检、存储和账本错误必须停止，不能继续到翻译或后续阶段', async () => {
   for (const failure of ['readLibrary', 'collect', 'catalog', 'repair', 'resolveDuplicates']) {
     const events = [];

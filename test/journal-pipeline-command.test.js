@@ -8,6 +8,28 @@ import { spawnSync } from 'node:child_process';
 const policy = { production_enabled: false, zhipu_monthly_limit: 2000, serpapi_monthly_limit: 250 };
 const options = patch => ({ loadConfig: async () => ({}), loadPolicy: async () => policy,
   readLibrary: async () => ({ papers: [] }), log: () => {}, runtime: async () => assert.fail('No runtime before gate'), ...patch });
+
+test('集中补查必须明确手动请求，定时执行在读取密钥之前拒绝', async () => {
+  const args = ['--run', '--save', '--all', '--retry-missing-abstracts-now'];
+  assert.equal(parsePipelineArgs(args).retryMissingAbstractsNow, true);
+  assert.equal(parsePipelineArgs(args.slice(0, -1)).retryMissingAbstractsNow, false);
+  assert.throws(() => parsePipelineArgs(['--plan', '--all', '--retry-missing-abstracts-now']));
+  const env = { JOURNAL_SEARCH_ENABLED: 'true', GITHUB_ACTIONS: 'true', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily',
+    GITHUB_EVENT_NAME: 'schedule', DATA_BRANCH: 'master', GITHUB_REF: 'refs/heads/master' };
+  const base = options({ env, loadPolicy: async () => ({ ...policy, production_enabled: true }) });
+  await assert.rejects(pipelineCommand(args, base), /立即补查仅限/);
+  const result = await pipelineCommand(args, { ...base, env: { ...env, GITHUB_EVENT_NAME: 'workflow_dispatch' },
+    runtime: async () => ({ summary: () => ({}) }), execute: async (_, o) => {
+      assert.equal(o.retryMissingAbstractsNow, true); assert.equal(o.maxAbstracts, 300); return { status: 'success' };
+    } });
+  assert.equal(result.retry_missing_abstracts_now, true);
+  const flow = JSON.parse(await fs.readFile(new URL('../.github/workflows/daily-collect.yml', import.meta.url), 'utf8'));
+  assert.equal(flow.on.workflow_dispatch.inputs.retry_missing_abstracts_now.default, false);
+  const step = flow.jobs.collect.steps.find(s => s.id === 'pipeline');
+  assert.equal(step.env.RETRY_MISSING_ABSTRACTS_NOW, '${{ inputs.retry_missing_abstracts_now }}');
+  assert.ok(step.run.includes('"$GITHUB_EVENT_NAME" = "workflow_dispatch"'));
+  assert.ok(!step.run.includes('${{'));
+});
 test('命令默认帮助和plan只读，不接触环境、密钥或网络', async () => {
   const env = new Proxy({}, { get: () => assert.fail('Do not inspect env') });
   assert.equal((await pipelineCommand([], options({ env }))).status, 'help');

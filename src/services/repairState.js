@@ -50,12 +50,13 @@ export function reconcileRepairState(previous, master) {
   return state;
 }
 
-export function dueRepairIssues(state, now = new Date(), { limit = 100, filter = () => true } = {}) {
+export function dueRepairIssues(state, now = new Date(), { limit = 100, filter = () => true, retryMissingAbstractsNow = false } = {}) {
   assertLibrary((limit === null || (Number.isInteger(limit) && limit >= 0 && limit <= 10000)) &&
-    typeof filter === 'function' && Number.isFinite(now.getTime()), '自动待办查询参数无效');
+    typeof filter === 'function' && typeof retryMissingAbstractsNow === 'boolean' && Number.isFinite(now.getTime()), '自动待办查询参数无效');
   const priority = issue => ['identity', 'doi', 'classification', 'authors', 'publication_month', 'abstract'].indexOf(issue.field);
   const due = Object.values(state.issues).filter(issue => issue.status !== 'resolved' &&
     (!issue.next_retry_at || Date.parse(issue.next_retry_at) <= now.getTime() ||
+      (retryMissingAbstractsNow && issue.field === 'abstract' && issue.reason === 'missing_abstract') ||
       (issue.status === 'quota_exhausted' && issue.attempts.at(-1)?.source.startsWith('serpapi_') &&
         now.getTime() >= Date.parse(issue.updated_at) &&
         (now.getTime() - Date.parse(issue.updated_at) >= 86400000 ||
