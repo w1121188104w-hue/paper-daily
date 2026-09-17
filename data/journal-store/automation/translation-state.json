@@ -20220,6 +20220,91 @@
           ]
         }
       ]
+    },
+    {
+      "id": "6aa2c1a8-6605-44c4-861c-e3d37a81c9b1",
+      "batch_id": "batch-7269771acd06c05eaf9ac1d6e01ed4d22766db57321f18068308ca26bbd84d61",
+      "mode": "daily",
+      "created_at": "2026-09-17T01:38:01.709Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.67983/journaldialectica.v1i2.106",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "a17d579f97766e9c707345f34fed80197941014ce761dac7995005e6080becca",
+              "task_id": "task:adc91bfae1af3fe84948fa9efde24715762604e1120a4f9507508fa404080120"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "fc5efb075b852174ce05a0332d8817eb9ece225d623ce80ffdd83909907f82b8",
+              "task_id": "task:a9ab62d488007ea8365c1e22c609fbc99116c79187355c450deb0342c170bc59"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.67983/journaldialectica.v1i2.109",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "0e885e7a2c939be433928e06ab86d016570ba8a0225c8d6a9049cfcfd0892bb7",
+              "task_id": "task:7036a45971e4ddb254a6e574c4b8e3c72e4b4cafaf5356ec4b480a49720aeaeb"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "4abbca280bf6ebefd0bad1a1250e2b2349641f9eda47af691af8ae2d1a87727d",
+              "task_id": "task:129e3431b097671dc494902d233a7ee5b937cebb67aae19fb32135eb4cdd6d86"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.67983/journaldialectica.v1i2.64",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "19b46ca00a8809f4f0c7c38d93fb1d7c752cd495ac72cf6680273dd9a189dc20",
+              "task_id": "task:2395f612540afdaa54f02a30a6983d3b54becf07a9adbf021aed5241c690b8ba"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "56068cc00a4e33402587ba9c4929beb66c9c0ba47effa3da86834157c1b23a93",
+              "task_id": "task:892100a424a3b9b6952a24352538c62e5a77eaeab73f8c6a6b445986d1808d1e"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.67983/journaldialectica.v1i2.65",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "33348d1fe9fcd21f42ed740a0c56b5154b2266e501f63187b2e0823e79df8e67",
+              "task_id": "task:ef962385bac48b8e3ee1386373ce7a6e7fc97722bda95596fc356e601289d742"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "a3e62423863f0245d9eb11e0910cfbce0d55a58b338276ba367866412270524b",
+              "task_id": "task:269a22445b04b6ac2f0784c2410ccefab1211d653fd0aed0d55407ccb0f801c9"
+            }
+          ],
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
