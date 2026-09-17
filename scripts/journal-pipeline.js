@@ -10,6 +10,7 @@ import { runJournalPipeline } from '../src/services/journalPipeline.js';
 import { makeEvidenceHttp, EvidenceError } from '../src/services/evidenceHttp.js';
 import { makeEnrichmentSources } from '../src/services/enrichmentSources.js';
 import { makeSearchSources } from '../src/services/searchSources.js';
+import { publisherFor } from '../src/services/publisherCatalog.js';
 import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
 import { makeBudgetedSearch, searchAllowance } from '../src/services/searchBudget.js';
 import { clonePilotLibrary } from './search-pilot.js';
@@ -68,7 +69,8 @@ export async function makePipelineRuntime({ env, policy }) {
     return result.result?.extracted || null;
   };
   sources.searchArticle = async (paper, journal) => {
-    const article = { title: paper.title_original, doi: paper.doi, journal: journal.name };
+    const article = { title: paper.title_original, doi: paper.doi, journal: journal.name,
+      official_site: new URL(publisherFor(journal).home).origin };
     return search({ provider: 'zhipu', query: `article:${JSON.stringify(article)}`.slice(0, 2000),
       taskId: `article:${paper.id}`, article });
   };

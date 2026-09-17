@@ -27,6 +27,23 @@ test('长标题摘要检索：保留标题检索路径，不全部退化为DOI�
   assert.ok(unicode.every(q => [...q].length <= 70));
 });
 
+test('摘要优先定向对应出版社：ScienceDirect不串到Wiley，长DOI不截断冒充完整DOI', async () => {
+  const config = await loadJournalConfig();
+  const expected = { JFE: 'sciencedirect.com', CAR: 'onlinelibrary.wiley.com', JPE: 'journals.uchicago.edu', QJE: 'academic.oup.com' };
+  for (const [key, host] of Object.entries(expected)) {
+    const queries = abstractSearchQueries(paper, findJournal(config, key));
+    assert.equal(queries[0], `${paper.doi} site:${host}`);
+    assert.ok(queries[1].endsWith(` site:${host}`));
+    assert.ok(queries.some(q => !q.includes('site:')));
+    assert.ok(queries.every(q => [...q].length <= 70));
+    assert.equal(queries.length, new Set(queries).size);
+  }
+  const long = { ...paper, doi: '10.1234/' + 'x'.repeat(70) };
+  const queries = abstractSearchQueries(long, findJournal(config, 'JFE'));
+  assert.ok(queries[0].endsWith(' site:sciencedirect.com'));
+  assert.ok(!queries.filter(q => q.includes('site:sciencedirect.com')).some(q => q.startsWith('10.1234/')));
+});
+
 test('智谱原文提取：只接受有完整边界的Abstract，不采纳摘要片段', () => {
   assert.equal(originalAbstractSection(lead.content), abstract);
   assert.equal(originalAbstractSection(`## Abstract\n${abstract}\n## Keywords: trade`), abstract);

@@ -75,3 +75,30 @@ test('CAR按已知DOI查英文标题，返回DOI和ISSN必须同时匹配；原�
     assert.equal(result.raw_pages[1].purpose, 'car_existing_bilingual_title');
   }
 });
+
+test('CAR单篇404不阻断后续标题，主机429或403必须停止；保留部分失败状态', async () => {
+  for (const status of [404, 403, 429]) {
+    let calls = 0;
+    const nextDoi = '10.1111/1911-3846.70032';
+    const result = await fetchCrossrefJournal(journal, { fromDate: '2026-07-20', toDate: '2026-09-17', checkedAt: at,
+      carBilingualPapers: [{ doi, title_original: enTitle + frTitle }, { doi: nextDoi, title_original: enTitle + frTitle }],
+      fetchImpl: async () => {
+        calls++;
+        if (calls === 1) return new Response(JSON.stringify({ status: 'ok', message: { items: [], 'total-results': 0 } }));
+        if (calls === 2) return new Response('', { status });
+        return new Response(JSON.stringify({ status: 'ok', message: { DOI: nextDoi, ISSN: [journal.print_issn], title: [enTitle] } }));
+      } });
+    assert.equal(calls, status === 404 ? 3 : 2);
+    assert.equal(result.records.length, status === 404 ? 1 : 0);
+    assert.equal(result.ok, false);
+  }
+});
+
+test('CAR补查达到时间预算不能误报完成，也不提前访问剩余论文', async () => {
+  let calls = 0, ticks = 0;
+  const result = await fetchCrossrefJournal(journal, { fromDate: '2026-07-20', toDate: '2026-09-17', checkedAt: at,
+    now: () => ticks++ === 0 ? 0 : 120000,
+    carBilingualPapers: [{ doi, title_original: enTitle + frTitle }],
+    fetchImpl: async () => { calls++; return new Response(JSON.stringify({ status: 'ok', message: { items: [], 'total-results': 0 } })); } });
+  assert.equal(calls, 1); assert.equal(result.ok, false); assert.equal(result.error.code, 'CAR_TITLE_LOOKUP_FAILED');
+});
