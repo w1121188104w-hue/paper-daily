@@ -18249,7 +18249,7 @@
       "batch_id": "batch-f924fba6c15e5a44c723fe487394a9208bec0a154705d779ed9ed7a1988da4f5",
       "mode": "daily",
       "created_at": "2026-09-17T01:31:46.341Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T01:32:23.104Z",
       "items": [
         {
           "id": "doi:10.1111/1911-3846.70043",
@@ -18265,10 +18265,16 @@
               "task_id": "task:151efc891921503d33b49737a418aac5d50d9647cb3ffa8724334057e9e61357"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 874,
+            "completion_tokens": 428,
+            "total_tokens": 1302
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70044",
@@ -18284,10 +18290,16 @@
               "task_id": "task:ec29c04c583f4bfbc93c817c52ecad43431c4ea709908f128b34e4faac62e94e"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 721,
+            "completion_tokens": 158,
+            "total_tokens": 879
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70046",
@@ -18303,9 +18315,13 @@
               "task_id": "task:aa1a4b2cbfd508082d07aa8fa90d73442839bb3729d7aa8efeae80a0150f6aee"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 931,
+            "completion_tokens": 248,
+            "total_tokens": 1179
+          },
           "completed_fields": []
         },
         {
@@ -18322,10 +18338,16 @@
               "task_id": "task:9a9dc689c2c1ae0931b34714c6bf41291b050063646ff2cc2e5bb742789a662d"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 844,
+            "completion_tokens": 198,
+            "total_tokens": 1042
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70048",
@@ -18341,10 +18363,16 @@
               "task_id": "task:3453fe819e4a81f07a7544bc4335e5c537d4f6fc126d303e1cc6fffc84df518a"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 903,
+            "completion_tokens": 233,
+            "total_tokens": 1136
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70049",
@@ -18360,10 +18388,16 @@
               "task_id": "task:855018897004460657074c491f00b696e297dc988ae3118bdf337118ecb6aede"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 661,
+            "completion_tokens": 153,
+            "total_tokens": 814
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70050",
@@ -18379,10 +18413,16 @@
               "task_id": "task:e3aea51d5b171e5e9eea5bfbab4b74b0744eacadb48308bd9f2f2138292b3868"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 942,
+            "completion_tokens": 231,
+            "total_tokens": 1173
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70051",
@@ -18398,10 +18438,16 @@
               "task_id": "task:802621391a9f49727566893b820222c22a45781f21358d27d674645b6c920db0"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 848,
+            "completion_tokens": 210,
+            "total_tokens": 1058
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70052",
@@ -18417,10 +18463,17 @@
               "task_id": "task:19a1eee3c4e34bc7195dea021a609fad71d2075d5a2d1b9ce26c227a7dcd9b17"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 938,
+            "completion_tokens": 447,
+            "total_tokens": 1385
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70054",
@@ -18436,9 +18489,13 @@
               "task_id": "task:548cc7ff282268e5f5d5c90c8dfb19978851c8728cc480c40343f8b2bb3d2acf"
             }
           ],
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 730,
+            "completion_tokens": 161,
+            "total_tokens": 891
+          },
           "completed_fields": []
         }
       ]
