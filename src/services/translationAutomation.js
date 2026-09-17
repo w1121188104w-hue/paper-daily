@@ -13,6 +13,9 @@ export const AUTOMATION_LIMITS = Object.freeze({ batch: 10, backfill_requests: 1
   backfill_minutes: 60, daily_minutes: 30, consecutive_failures: 3 });
 const STATUS = ['reserved', 'succeeded', 'partial', 'failed', 'unused'];
 const FIELDS = ['title', 'abstract'];
+export const TRANSLATION_RETRY = Object.freeze({ max_attempts: 3, cooldown_ms: 30 * 60000 });
+const RETRYABLE_CODES = new Set(['MECHANICAL_CHECK_FAILED', 'INVALID_JSON', 'INVALID_TRANSLATION_SHAPE']);
+const FIELD_ERRORS = new Set(['EMPTY_TRANSLATION', 'NON_BODY_TEXT', 'NOT_CHINESE', 'TOO_SHORT', 'MISSING_NUMBERS']);
 const HARD_PAUSE_CODES = new Set(['AUTH_ERROR', 'ACCESS_DENIED', 'INSUFFICIENT_BALANCE', 'UNEXPECTED_MODEL',
   'MODEL_CHANGED', 'SECRET_IN_RESPONSE', 'SECRET_IN_OUTPUT', 'REPEATED_INVALID_RESULTS', 'USAGE_MISSING']);
 const exact = (value, keys) => value && typeof value === 'object' && !Array.isArray(value) &&
@@ -20,13 +23,29 @@ const exact = (value, keys) => value && typeof value === 'object' && !Array.isAr
 const count = (value) => Number.isSafeInteger(value) && value >= 0;
 const code = (value) => value === null || (typeof value === 'string' && /^[A-Z][A-Z0-9_]{1,60}$/.test(value));
 
+function retryAllowed(history, field, at) {
+  const last = history.at(-1);
+  return Boolean(last && history.length < TRANSLATION_RETRY.max_attempts &&
+    last.entry.finished_at && ['failed', 'partial'].includes(last.item.status) &&
+    !last.item.completed_fields.includes(field) && last.item.usage && RETRYABLE_CODES.has(last.item.code) &&
+    Date.parse(at) - Date.parse(last.entry.finished_at) >= TRANSLATION_RETRY.cooldown_ms);
+}
+
+function taskHistory(state) {
+  const history = new Map();
+  for (const entry of state.reservations) for (const item of entry.items) if (item.status !== 'unused') {
+    for (const task of item.tasks) history.set(task.task_id, [...(history.get(task.task_id) || []), { entry, item }]);
+  }
+  return history;
+}
+
 // Public operational metadata only: no source text, draft text, credentials or remote error messages.
 export function validateTranslationState(state) {
-  assertLibrary(exact(state, ['schema_version', 'paused', 'reservations']) && state.schema_version === 1 &&
+  assertLibrary(exact(state, ['schema_version', 'paused', 'reservations']) && [1, 2].includes(state.schema_version) &&
     Array.isArray(state.reservations) && state.reservations.length <= 100000, '自动翻译状态格式无效');
   assertLibrary(state.paused === null || (exact(state.paused, ['code', 'at']) && code(state.paused.code) &&
     state.paused.code && isIsoTime(state.paused.at)), '自动翻译暂停状态无效');
-  const ids = new Set(), attempted = new Set();
+  const ids = new Set(), attempted = new Map();
   for (const entry of state.reservations) {
     assertLibrary(exact(entry, ['id', 'batch_id', 'mode', 'created_at', 'finished_at', 'items']) &&
       /^[a-f0-9-]{36}$/.test(entry.id) && !ids.has(entry.id) && /^batch-[a-f0-9]{64}$/.test(entry.batch_id) &&
@@ -35,17 +54,29 @@ export function validateTranslationState(state) {
       Array.isArray(entry.items) && entry.items.length >= 1 && entry.items.length <= 10, '自动翻译预登记无效');
     ids.add(entry.id); const paperIds = new Set();
     for (const item of entry.items) {
-      assertLibrary(exact(item, ['id', 'tasks', 'status', 'code', 'usage', 'completed_fields']) && typeof item.id === 'string' &&
+      const optional = state.schema_version === 2 ? ['retry_of', 'field_errors'].filter(key => Object.hasOwn(item, key)) : [];
+      assertLibrary(exact(item, ['id', 'tasks', 'status', 'code', 'usage', 'completed_fields', ...optional]) && typeof item.id === 'string' &&
         item.id.length <= 512 && /^(doi:|fp:|openalex:|crossref:|publisher:|semanticscholar:|unknown:)/.test(item.id) && !/[\x00-\x1f\x7f]/.test(item.id) && !paperIds.has(item.id) && STATUS.includes(item.status) &&
         code(item.code) && Array.isArray(item.tasks) && item.tasks.length >= 1 && item.tasks.length <= 2 &&
         Array.isArray(item.completed_fields) && new Set(item.completed_fields).size === item.completed_fields.length, '自动翻译条目无效');
-      paperIds.add(item.id); const fields = new Set();
+      paperIds.add(item.id); const fields = new Set(), retried = [];
+      for (const key of optional) assertLibrary(item[key] && typeof item[key] === 'object' && !Array.isArray(item[key]), '重试诊断结构无效');
       for (const task of item.tasks) {
         assertLibrary(exact(task, ['field', 'source_hash', 'task_id']) && FIELDS.includes(task.field) && !fields.has(task.field) &&
           /^[a-f0-9]{64}$/.test(task.source_hash) && task.task_id === translationTaskId(item.id, task.field, task.source_hash), '自动翻译任务指纹无效');
         fields.add(task.field);
-        if (item.status !== 'unused') { assertLibrary(!attempted.has(task.task_id), '同一原文任务被重复登记'); attempted.add(task.task_id); }
+        const history = attempted.get(task.task_id) || [];
+        if (history.length) {
+          assertLibrary(state.schema_version === 2 && retryAllowed(history, task.field, entry.created_at) &&
+            item.retry_of?.[task.field] === history.at(-1).entry.id, '同一原文任务被重复登记或重试不安全');
+          retried.push(task.field);
+        }
+        if (item.status !== 'unused') attempted.set(task.task_id, [...history, { entry, item }]);
       }
+      assertLibrary(exact(item.retry_of || {}, retried), '重试必须准确关联上一笔失败登记');
+      assertLibrary(Object.entries(item.field_errors || {}).every(([field, error]) =>
+        fields.has(field) && !item.completed_fields.includes(field) && FIELD_ERRORS.has(error)) &&
+        (entry.finished_at !== null || !Object.keys(item.field_errors || {}).length), '字段诊断只能保留已结算的固定错误代码');
       assertLibrary(item.completed_fields.every((field) => fields.has(field)), '已完成字段不属于本任务');
       assertLibrary(item.usage === null || (exact(item.usage, ['prompt_tokens', 'completion_tokens', 'total_tokens']) &&
         Object.values(item.usage).every((n) => count(n) && n <= 2000000) && item.usage.total_tokens === item.usage.prompt_tokens + item.usage.completion_tokens), '翻译用量无效');
@@ -76,19 +107,21 @@ export async function writeTranslationState(root, state) {
   await fs.rename(temporary, file);
 }
 
-export function automationQueue(library, state) {
+export function automationQueue(library, state, now = new Date()) {
   validateTranslationState(state);
-  const attempted = new Set(state.reservations.flatMap((entry) => entry.items.filter((item) => item.status !== 'unused')
-    .flatMap((item) => item.tasks.map((task) => task.task_id))));
+  assertLibrary(Number.isFinite(now.getTime()), '翻译队列时间无效');
+  const attempted = taskHistory(state);
   const ready = translationEligibility(library.papers).ready.tasks;
-  const available = ready.filter((task) => !attempted.has(task.task_id));
-  return { available, held: ready.filter((task) => attempted.has(task.task_id)),
+  const retryable = ready.filter(task => retryAllowed(attempted.get(task.task_id) || [], task.field, now.toISOString()));
+  const available = [...ready.filter((task) => !attempted.has(task.task_id)), ...retryable];
+  const availableIds = new Set(available.map(task => task.task_id));
+  return { available, held: ready.filter((task) => !availableIds.has(task.task_id)),
     available_papers: new Set(available.map((task) => task.paper_id)).size };
 }
 
 export function nextAutomationBatch(library, state, { limit = 10, now = new Date() } = {}) {
   assertLibrary(Number.isInteger(limit) && limit >= 1 && limit <= 10, '自动翻译每批最多10篇');
-  const queue = automationQueue(library, state), ids = new Set(queue.available.map((task) => task.paper_id));
+  const queue = automationQueue(library, state, now), ids = new Set(queue.available.map((task) => task.paper_id));
   const tasks = new Set(queue.available.map((task) => task.task_id));
   const batch = createTranslationBatch(library.papers.filter((paper) => ids.has(paper.id)),
     { limit, now, sourceManifest: library.pointer?.manifest || null });
@@ -119,8 +152,8 @@ async function keepBatch(root, proposed) {
   await writeLibraryJson(root, relative, proposed); return proposed;
 }
 
-export function automationSummary(library, state) {
-  const queue = automationQueue(library, state), items = state.reservations.flatMap((entry) => entry.items);
+export function automationSummary(library, state, now = new Date()) {
+  const queue = automationQueue(library, state, now), items = state.reservations.flatMap((entry) => entry.items);
   const usage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
   for (const item of items) if (item.usage) for (const key of Object.keys(usage)) usage[key] += item.usage[key];
   return { available_papers: queue.available_papers, available_fields: queue.available.length,
@@ -139,7 +172,7 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
   publishCheckpoint, fetchImpl = fetch, now = () => new Date(), log = () => {} } = {}) {
   assertLibrary(['daily', 'backfill'].includes(mode) && typeof publishCheckpoint === 'function', '自动翻译需要明确模式及持久保存步骤');
   let library = await readJournalLibrary({ root, config }), state = await readTranslationState(root);
-  const initial = automationSummary(library, state);
+  const initial = automationSummary(library, state, now());
   if (state.paused || !initial.available_papers) return { ...initial, requested_this_run: 0, stop_reason: state.paused ? 'PAUSED' : 'NO_UNATTEMPTED_TASKS' };
   requireDeepSeekKey(apiKey);
   assertLibrary(!JSON.stringify(state).includes(apiKey), '状态文件不能包含密钥');
@@ -156,14 +189,18 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
     if (!proposed.items.length) break;
     assertLibrary(!JSON.stringify(proposed).includes(apiKey), '原文清单不能包含密钥');
     const batch = await keepBatch(root, proposed), reservedAt = now().toISOString();
+    const history = taskHistory(state);
     const reservation = { id: randomUUID(), batch_id: batch.batch_id, mode, created_at: reservedAt, finished_at: null,
       items: batch.items.map((item) => ({ id: item.id, tasks: item.requested_fields.map((field) =>
         ({ field, source_hash: item.source_text_hash[field], task_id: item.task_ids[field] })),
-      status: 'reserved', code: null, usage: null, completed_fields: [] })) };
+      retry_of: Object.fromEntries(item.requested_fields.filter(field => history.has(item.task_ids[field]))
+        .map(field => [field, history.get(item.task_ids[field]).at(-1).entry.id])),
+      field_errors: {}, status: 'reserved', code: null, usage: null, completed_fields: [] })) };
     await withLibraryLock(root, async () => {
       assertLibrary(stableJson(await readTranslationState(root)) === stableJson(state), '翻译状态被并发修改');
       const current = await readJournalLibrary({ root, config });
       assertLibrary(current.pointerText === library.pointerText, '登记前正式论文版本已改变');
+      state.schema_version = 2;
       state.reservations.push(reservation); await writeTranslationState(root, state);
     });
     // If push fails or is ambiguous, throw now and NEVER issue a paid request.
@@ -198,6 +235,8 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
       item.completed_fields = accepted.get(item.id); item.usage = report.usage;
       item.status = item.completed_fields.length === item.tasks.length ? 'succeeded' : item.completed_fields.length ? 'partial' : 'failed';
       item.code = report.code || (item.status === 'succeeded' ? null : 'MECHANICAL_CHECK_FAILED');
+      item.field_errors = Object.fromEntries(Object.entries(report.fields).filter(([field, error]) =>
+        !item.completed_fields.includes(field) && FIELD_ERRORS.has(error)));
     }
     reservation.finished_at = now().toISOString();
     const stoppedCode = output.report.status === 'stopped' ? output.report.stop_reason || output.report.rows.at(-1)?.code || 'TRANSLATION_STOPPED' : null;
@@ -212,6 +251,6 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
     if (stoppedCode) { stopReason = stoppedCode; break; }
   }
   if (requested >= cap) stopReason = 'REQUEST_LIMIT';
-  return { ...automationSummary(await readJournalLibrary({ root, config }), await readTranslationState(root)),
+  return { ...automationSummary(await readJournalLibrary({ root, config }), await readTranslationState(root), now()),
     requested_this_run: requested, stop_reason: stopReason };
 }

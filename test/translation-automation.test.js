@@ -12,7 +12,7 @@ import { translationTaskId } from '../src/services/translationQueue.js';
 import { readJournalLibrary } from '../src/services/journalLibrary.js';
 import { journalGitFiles } from '../src/services/journalGitFiles.js';
 import { DEEPSEEK_MODEL } from '../src/services/deepseekTranslation.js';
-import { AUTOMATION_LIMITS, readTranslationState, writeTranslationState, validateTranslationState,
+import { AUTOMATION_LIMITS, TRANSLATION_RETRY, readTranslationState, writeTranslationState, validateTranslationState,
   automationQueue, runTranslationAutomation } from '../src/services/translationAutomation.js';
 import { makeTranslationPublisher, STATE_GIT_PATH } from '../src/services/translationAutomationGit.js';
 import { runAutomaticTranslationCommand } from '../scripts/translate-library.js';
@@ -142,6 +142,92 @@ test('自动翻译：机械检查只拒绝失败字段，不改写、不重复�
   const paper = (await readJournalLibrary({ root, config })).papers[0];
   assert.equal(paper.title_zh, zh.title_zh); assert.equal(paper.abstract_zh, '');
   assert.equal((await run(root)).requested_this_run, 0);
+});
+
+const later = minutes => () => new Date(Date.parse(time) + minutes * 60000);
+
+test('自动翻译恢复：30分钟后只重试失败摘要，保留成功标题和历史账本', async (t) => {
+  const { root } = await fixture(t);
+  await run(root, { fetchImpl: async () => response({ ...zh, abstract_zh: zh.abstract_zh.replace('2.5', '很多') }) });
+  const initial = await readTranslationState(root);
+  assert.equal(initial.schema_version, 2);
+  assert.deepEqual(initial.reservations[0].items[0].field_errors, { abstract: 'MISSING_NUMBERS' });
+  assert.equal((await run(root, { now: later(29) })).requested_this_run, 0);
+  let calls = 0;
+  const recovered = await run(root, { now: later(30), fetchImpl: async (url, options) => {
+    calls++;
+    const input = JSON.parse(JSON.parse(options.body).messages[1].content);
+    assert.deepEqual(input.requested_fields, ['abstract']);
+    const ledger = await readTranslationState(root);
+    assert.equal(ledger.reservations.at(-1).items[0].status, 'reserved');
+    assert.deepEqual(ledger.reservations.at(-1).items[0].retry_of, { abstract: initial.reservations[0].id });
+    return response({ abstract_zh: zh.abstract_zh });
+  } });
+  assert.equal(calls, 1); assert.equal(recovered.held_fields, 0);
+  const state = await readTranslationState(root);
+  assert.deepEqual(state.reservations[0], initial.reservations[0]);
+  const paper = (await readJournalLibrary({ root, config })).papers[0];
+  assert.equal(paper.title_zh, zh.title_zh); assert.equal(paper.abstract_zh, zh.abstract_zh);
+  assert.equal((await run(root, { now: later(90) })).requested_this_run, 0);
+});
+
+test('自动翻译恢复：旧版失败记录不删改，升级账本后可安全重试', async (t) => {
+  const { root } = await fixture(t);
+  await run(root, { fetchImpl: async () => response({ ...zh, abstract_zh: '待翻译' }) });
+  const legacy = await readTranslationState(root); legacy.schema_version = 1;
+  for (const r of legacy.reservations) for (const item of r.items) { delete item.retry_of; delete item.field_errors; }
+  await writeTranslationState(root, legacy);
+  await run(root, { now: later(31), fetchImpl: async () => response({ abstract_zh: zh.abstract_zh }) });
+  const state = await readTranslationState(root);
+  assert.equal(state.schema_version, 2); assert.deepEqual(state.reservations[0], legacy.reservations[0]);
+  assert.equal(state.reservations[1].items[0].status, 'succeeded');
+});
+
+test('自动翻译恢复：同一字段总共最多3次，不靠清空账本无限重跑', async (t) => {
+  const { root } = await fixture(t); let calls = 0;
+  const bad = async (url, options) => {
+    calls++; const fields = JSON.parse(JSON.parse(options.body).messages[1].content).requested_fields;
+    return response(Object.fromEntries(fields.map(field => [`${field}_zh`, field === 'title' ? zh.title_zh : '待翻译'])));
+  };
+  for (const minutes of [0, 30, 60]) assert.equal((await run(root, { now: later(minutes), fetchImpl: bad })).requested_this_run, 1);
+  assert.equal((await run(root, { now: later(600), fetchImpl: bad })).requested_this_run, 0);
+  assert.equal(calls, TRANSLATION_RETRY.max_attempts);
+  const state = await readTranslationState(root); assert.equal(state.reservations.length, 3);
+  assert.equal(state.reservations[2].items[0].retry_of.abstract, state.reservations[1].id);
+  assert.equal(automationQueue(await readJournalLibrary({ root, config }), state, later(600)()).held.length, 1);
+  for (const mutate of [
+    s => { s.reservations[1].items[0].retry_of.abstract = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'; },
+    s => { s.reservations[1].created_at = time; },
+    s => { s.reservations[0].items[0].usage = null; },
+    s => { s.reservations[0].items[0].code = 'NETWORK_ERROR'; },
+    s => { s.reservations[0].items[0].field_errors.abstract = 'secret response body'; },
+    s => { const r = structuredClone(s.reservations[2]); r.id = randomUUID(); r.created_at = later(90)().toISOString(); r.finished_at = r.created_at; r.items[0].retry_of.abstract = s.reservations[2].id; s.reservations.push(r); }
+  ]) {
+    const badState = structuredClone(state); mutate(badState); assert.throws(() => validateTranslationState(badState));
+  }
+});
+
+test('自动翻译恢复：远端预登记未结算、网络结果不确定、账户暂停都不自动重发', async (t) => {
+  const { root } = await fixture(t);
+  await run(root, { fetchImpl: async () => { throw new Error('network'); } });
+  assert.equal((await run(root, { now: later(600) })).requested_this_run, 0);
+  const second = await fixture(t);
+  await run(second.root, { fetchImpl: async () => response({ ...zh, abstract_zh: '待翻译' }) });
+  await assert.rejects(run(second.root, { now: later(31), publishCheckpoint: async ({ phase }) => {
+    if (phase === 'reserve') throw new Error('remote acknowledgement lost');
+  }, fetchImpl: async () => { throw new Error('must not call'); } }), /acknowledgement lost/);
+  assert.equal((await run(second.root, { now: later(600) })).requested_this_run, 0);
+});
+
+test('自动翻译恢复：完整但格式错误的返回可重试，未知用量和成功字段不能重试', async (t) => {
+  const { root } = await fixture(t);
+  await run(root, { fetchImpl: async () => response({ invalid: 'structure' }) });
+  const result = await run(root, { now: later(31) });
+  assert.equal(result.requested_this_run, 1); assert.equal(result.completed_fields, 2);
+  const state = await readTranslationState(root), duplicate = structuredClone(state.reservations.at(-1));
+  duplicate.id = randomUUID(); duplicate.created_at = later(90)().toISOString(); duplicate.finished_at = duplicate.created_at;
+  duplicate.items[0].retry_of = { title: state.reservations.at(-1).id, abstract: state.reservations.at(-1).id };
+  state.reservations.push(duplicate); assert.throws(() => validateTranslationState(state));
 });
 
 test('自动翻译：状态缺失、损坏、重复指纹、混入正文一律拒绝', async (t) => {
