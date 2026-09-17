@@ -14188,7 +14188,7 @@
       "batch_id": "batch-4070a6a66fb632b8ac64bed428236310c476aab9f74b37a7f9418f6e7a0751d4",
       "mode": "daily",
       "created_at": "2026-09-17T01:19:51.151Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T01:20:19.297Z",
       "items": [
         {
           "id": "doi:10.1093/rfs/hhag068",
@@ -14199,10 +14199,16 @@
               "task_id": "task:e977fdf836119df090f78fe3d07d164060aaa38d82059219d474ed45c331e4c0"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 347,
+            "completion_tokens": 123,
+            "total_tokens": 470
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/rfs/hhag070",
@@ -14213,10 +14219,16 @@
               "task_id": "task:c97faef27650acb99ae250817e8a764b0867dd56f4293d8fa1a9f67673e9c202"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 350,
+            "completion_tokens": 114,
+            "total_tokens": 464
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2025.00611",
@@ -14227,10 +14239,16 @@
               "task_id": "task:3f29dc42796b17cef1b667879ffd1e5c74776f8919c172cee55eb25631d26ffd"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 386,
+            "completion_tokens": 161,
+            "total_tokens": 547
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2026.00184",
@@ -14241,10 +14259,16 @@
               "task_id": "task:f08afb3ee97afc061c084a38ad58703d21d07b289c96abfa0965a3316ded5933"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 561,
+            "completion_tokens": 336,
+            "total_tokens": 897
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1086/744012",
@@ -14255,10 +14279,16 @@
               "task_id": "task:f013a11d993dff1dee5617bd5e72fe77a747b15ff5b46ea66ec9b387f2160d79"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 455,
+            "completion_tokens": 198,
+            "total_tokens": 653
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag102",
@@ -14269,10 +14299,16 @@
               "task_id": "task:c9a535d8072faace0bd99f2449db3a3a0e3f302f01c634cbb85d83614b628723"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 219,
+            "completion_tokens": 14,
+            "total_tokens": 233
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1002/joom.70053",
@@ -14283,10 +14319,16 @@
               "task_id": "task:823c2ff511cd208c8ff4982b3d63760e2179beb5b25fb2c32c57b952ba6b325e"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 227,
+            "completion_tokens": 20,
+            "total_tokens": 247
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1002/joom.70055",
@@ -14302,10 +14344,17 @@
               "task_id": "task:4771c9d6b09e5f94fe9870b5dc0ed9414dad236eb2a3f3883ebd6b829e02d1f2"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 451,
+            "completion_tokens": 213,
+            "total_tokens": 664
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1007/978-3-032-11327-6",
@@ -14316,10 +14365,16 @@
               "task_id": "task:a0a336dde18fe122474d54c80ad6f4d306c426e6933f273bdc58b5754dbe81c1"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 218,
+            "completion_tokens": 15,
+            "total_tokens": 233
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1007/978-3-032-25831-1",
@@ -14330,10 +14385,16 @@
               "task_id": "task:7f2b72feeae395aa37f87586c1b3bca22c358771d2cb43532850acbc33759d50"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 209,
+            "completion_tokens": 8,
+            "total_tokens": 217
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
