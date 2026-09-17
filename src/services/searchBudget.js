@@ -123,10 +123,17 @@ export function settleSearchRequest(state, id, { status, charged, now = new Date
 export function makeBudgetedSearch({ initialState = emptySearchBudget(), persist, request, now = () => new Date() }) {
   assertLibrary(typeof persist === 'function' && typeof request === 'function', '收费搜索必须提供持久化检查点');
   let state = structuredClone(validateSearchBudget(initialState)), tail = Promise.resolve();
+  let zhipuPaymentDiagnostic = null;
   return {
     state: () => structuredClone(state),
     run(options) {
       const perform = async () => {
+        // 1113 is account payment failure, NOT a transient rate limit. Stop
+        // new Zhipu queries in this run without erasing uncertain reservations
+        // or blocking independent providers. A new run may check again after
+        // the account is funded; never recharge or change a plan automatically.
+        if (options.provider === 'zhipu' && zhipuPaymentDiagnostic)
+          return { called: false, reason: 'provider_payment_required', diagnostic: { ...zhipuPaymentDiagnostic } };
         const reserved = reserveSearchRequest(state, { ...options, now: now() });
         if (!reserved.reservation) return { called: false, reason: reserved.reason };
         await persist(reserved.state); state = reserved.state; // Before ANY billable network request.
@@ -135,8 +142,10 @@ export function makeBudgetedSearch({ initialState = emptySearchBudget(), persist
         catch (error) {
           const uncertain = settleSearchRequest(state, reserved.reservation.id, { status: 'unknown', charged: null, now: now() });
           await persist(uncertain); state = uncertain;
+          const diagnostic = safeSearchDiagnostic(error, options.provider);
+          if (options.provider === 'zhipu' && diagnostic.provider_error_code === '1113') zhipuPaymentDiagnostic = diagnostic;
           return { called: true, status: 'source_unavailable', reason: 'request_outcome_unknown',
-            diagnostic: safeSearchDiagnostic(error, options.provider) };
+            diagnostic };
         }
         assertLibrary(result && [null, 0, 1].includes(result.charged), '搜索计费结果无法核实');
         const settled = settleSearchRequest(state, reserved.reservation.id, { status: 'succeeded', charged: result.charged, now: now() });

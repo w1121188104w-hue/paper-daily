@@ -166,7 +166,7 @@ export async function runCatalogDiscovery(config, { root, http, search, now = ()
       abstracts_checked: 0, pending_candidates: reports.reduce((sum, r) => sum + r.pending_count, 0) };
     const report = { schema_version: 1, run_id: runId, status: 'partial', from_date: window.fromDate, to_date: window.toDate,
       stage: 'official_catalog_search', stats, journals: reports, abstracts: [], search_queries: queries, search_calls: callCounts };
-    report.library_statistics = buildMasterList(papers, { generatedAt: checkedAt, ...window, policyVersion: 5,
+    report.library_statistics = buildMasterList(papers, { generatedAt: checkedAt, ...window, policyVersion: 6,
       officialIds: officialDiscoveries([...(previous.enrichmentReports || []), report]) }).statistics;
     const log = { schema_version: 1, run_id: runId, run_date: runDate, started_at: checkedAt, finished_at: now().toISOString(),
       from_date: window.fromDate, to_date: window.toDate, status: 'partial', stats, report: {} };

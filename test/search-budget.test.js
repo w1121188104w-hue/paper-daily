@@ -102,3 +102,37 @@ test('搜索额度：智谱单独计数与硬上限，不消耗SerpAPI名额', a
   assert.equal((await search.run(options({ provider: 'zhipu', zhipuMonthlyLimit: 1, taskId: 'next' }))).reason, 'quota_exhausted');
   assert.equal(searchAllowance(search.state(), options()).local_used, 0);
 });
+
+test('智谱1113欠费后同轮新查询及排队请求都停止，未知占额不释放，SerpAPI仍按原免费规则', async () => {
+  const calls = [], persisted = [];
+  const search = makeBudgetedSearch({ now, persist: async state => persisted.push(structuredClone(state)), request: async o => {
+    calls.push(o.provider);
+    if (o.provider === 'zhipu') throw Object.assign(new Error('redacted'), { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' });
+    return { charged: 1, leads: [] };
+  } });
+  const opts = options({ provider: 'zhipu', zhipuMonthlyLimit: null });
+  const results = await Promise.all([0, 1, 2].map(i => search.run({ ...opts, query: `Different query ${i}`, taskId: `different-${i}` })));
+  assert.equal(results[0].called, true);
+  for (const row of results.slice(1)) { assert.equal(row.called, false); assert.equal(row.reason, 'provider_payment_required'); }
+  assert.deepEqual(calls, ['zhipu']); assert.equal(search.state().requests.length, 1);
+  assert.equal(search.state().requests[0].charged, null); assert.equal(persisted.length, 2);
+  assert.equal((await search.run(options())).called, true);
+  assert.deepEqual(calls, ['zhipu', 'serpapi_scholar']);
+  assert.equal((await search.run(options({ provider: 'serpapi_google', taskId: 'free-exhausted', account: account({ plan_searches_left: 0, this_month_usage: 250 }) }))).reason, 'quota_exhausted');
+  let recoveredCalls = 0;
+  const recovered = makeBudgetedSearch({ now, initialState: search.state(), persist: async () => {}, request: async () => { recoveredCalls++; return { charged: 1 }; } });
+  assert.equal((await recovered.run({ ...opts, query: 'New query after account recovery', taskId: 'recovered' })).called, true);
+  assert.equal(recoveredCalls, 1); assert.equal(recovered.state().requests[0].charged, null);
+});
+
+test('普通智谱429不是欠费，不错误禁止本轮其他查询', async () => {
+  let calls = 0;
+  const search = makeBudgetedSearch({ now, persist: async () => {}, request: async () => {
+    if (++calls === 1) throw Object.assign(new Error('rate'), { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1302' });
+    return { charged: 1 };
+  } });
+  const opts = options({ provider: 'zhipu', zhipuMonthlyLimit: 2000 });
+  await search.run(opts);
+  assert.equal((await search.run({ ...opts, query: 'Another query', taskId: 'another' })).called, true);
+  assert.equal(calls, 2);
+});

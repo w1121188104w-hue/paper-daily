@@ -101,11 +101,11 @@ function abstractProvenance(paper) {
 
 export function buildMasterList(papers, { generatedAt, fromDate = null, toDate = null, officialIds = new Set(), policyVersion = 1 } = {}) {
   assertLibrary(isIsoTime(generatedAt), '总名册生成时间无效');
-  assertLibrary([1, 2, 3, 4, 5].includes(policyVersion), '不支持的总名册统计规则版本');
+  assertLibrary([1, 2, 3, 4, 5, 6].includes(policyVersion), '不支持的总名册统计规则版本');
   const entries = [...papers].sort((a, b) => a.id.localeCompare(b.id)).map(paper => {
     const publication = publicationFor(paper), found = discoverySourcesFor(paper, officialIds);
     const titles = [...new Set(evidence(paper.source_records, 'title').map(record => identityTitle(record.title)))];
-    const classificationOptions = { historical: policyVersion < 4 };
+    const classificationOptions = { historical: policyVersion < 4, includePrefixedBoards: policyVersion >= 6 };
     const classification = classifyPaper(paper, classificationOptions).kind;
     const resolution = policyVersion >= 3 ? titleConsensusFor(paper)?.summary || null : null;
     const titleConflict = titles.length > 1 && !resolution;

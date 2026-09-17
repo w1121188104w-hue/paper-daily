@@ -25,7 +25,7 @@ test('期刊信息及已见征稿附页精确识别，兼容大小写和连字�
     'Issue Information ‐ Request for Papers', 'Issue Information — Standing Call for Proposals for',
     'Issue Information: Call for Papers']) {
     assert.equal(classification(title).kind, 'administrative', title);
-    assert.equal(classification(title).version, 2);
+    assert.equal(classification(title).version, 3);
   }
 });
 
@@ -50,7 +50,7 @@ test('不凭作者、摘要缺失或综述类型排除研究候选', () => {
 test('未知附属资料、编者文字、书评及缺标题只待核查，不直接删除', () => {
   for (const type of ['paratext', 'editorial', 'book-review']) {
     assert.deepEqual(classification('An ambiguous item', { type }),
-      { version: 2, kind: 'needs_review', excluded: false, rule: 'source_type_needs_review' });
+      { version: 3, kind: 'needs_review', excluded: false, rule: 'source_type_needs_review' });
   }
   assert.equal(classification(null, { type: 'paratext' }).kind, 'needs_review');
 });
@@ -76,7 +76,7 @@ test('采集仍排除明确资料但保留通知、待核查和正常候选，�
   const result = filterSourceRecords([record(1, 'Issue Information'), record(2, 'Correction to: Research'),
     record(3, 'Ambiguous item', { type: 'editorial' }), record(4)]);
   assert.equal(result.excluded.length, 1); assert.equal(result.accepted.length, 3);
-  assert.equal(result.notices.length, 2); assert.equal(result.excluded[0].classification.version, 2);
+  assert.equal(result.notices.length, 2); assert.equal(result.excluded[0].classification.version, 3);
 });
 
 test('翻译完整队列不变，默认导出剔除资料、通知和待核查，数量限制在筛选后计算', () => {
