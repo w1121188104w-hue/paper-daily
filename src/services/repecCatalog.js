@@ -36,3 +36,18 @@ export function repecCatalogCandidates(rows, paper) {
   const title = titleKey(paper.title_original || paper.title || '');
   return rows.filter(row => titleKey(row.title) === title).slice(0, 3);
 }
+
+// A bounded ordering hint, never an acceptance decision. The normal per-paper
+// three-source lookups and strict article verification remain unchanged.
+export async function prioritizeRepecCatalogPapers(papers, { sources, journalFor, shouldContinue = () => true }) {
+  if (typeof sources.repecCatalogHasMatch !== 'function') return [...papers];
+  const matches = new Set();
+  for (const paper of papers) {
+    if (!shouldContinue()) break;
+    const journal = journalFor(paper.journal_key);
+    if (!paper.doi || !repecCatalogUrl(journal)) continue;
+    try { if (await sources.repecCatalogHasMatch(paper, journal)) matches.add(paper.id); }
+    catch (error) { if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error; }
+  }
+  return [...papers.filter(p => matches.has(p.id)), ...papers.filter(p => !matches.has(p.id))];
+}

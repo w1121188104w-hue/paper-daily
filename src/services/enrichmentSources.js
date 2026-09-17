@@ -123,14 +123,21 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
     return parseRepecAbstract(await http.request(expected.url, ['ideas.repec.org']), journal, expected);
   }
   const repecCatalogCache = new Map();
-  async function repecCatalogArticle(expected, journal) {
+  async function knownRepecCandidates(expected, journal) {
     const url = repecCatalogUrl(journal);
     if (!url || !expected.doi) throw new EvidenceError('NO_REPEC_CATALOG');
     // Successful, empty and failed list reads are all cached for this run.
     // One bad/limited host cannot cause repeated list requests for every paper.
     if (!repecCatalogCache.has(journal.key)) repecCatalogCache.set(journal.key,
       http.request(url, ['ideas.repec.org']).then(response => parseRepecCatalog(response, journal)));
-    const candidates = repecCatalogCandidates(await repecCatalogCache.get(journal.key), expected);
+    return repecCatalogCandidates(await repecCatalogCache.get(journal.key), expected);
+  }
+  async function repecCatalogHasMatch(expected, journal) {
+    if (!repecCatalogUrl(journal) || !expected.doi) return false;
+    return (await knownRepecCandidates(expected, journal)).length > 0;
+  }
+  async function repecCatalogArticle(expected, journal) {
+    const candidates = await knownRepecCandidates(expected, journal);
     let last = new EvidenceError('NOT_FOUND');
     for (const lead of candidates) {
       try { return await repecArticle({ ...expected, url: lead.url }, journal); }
@@ -141,5 +148,5 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
     }
     throw last;
   }
-  return { crossref, openalex, semanticscholar, publisher, publisherArticle, repecArticle, repecCatalogArticle };
+  return { crossref, openalex, semanticscholar, publisher, publisherArticle, repecArticle, repecCatalogArticle, repecCatalogHasMatch };
 }

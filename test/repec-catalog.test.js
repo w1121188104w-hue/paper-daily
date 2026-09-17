@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadJournalConfig, findJournal } from '../src/services/journals.js';
-import { repecCatalogUrl, parseRepecCatalog, repecCatalogCandidates } from '../src/services/repecCatalog.js';
+import { repecCatalogUrl, parseRepecCatalog, repecCatalogCandidates, prioritizeRepecCatalogPapers } from '../src/services/repecCatalog.js';
 import { makeEnrichmentSources } from '../src/services/enrichmentSources.js';
 import { parseRepecAbstract } from '../src/services/repecAbstract.js';
 import { evidenceHash, EvidenceError } from '../src/services/evidenceHttp.js';
@@ -56,6 +56,7 @@ test('目录每轮每刊只读一次，文章必须独立通过DOI、标题、�
     assert.deepEqual(hosts, ['ideas.repec.org']); calls.push(url);
     return url === repecCatalogUrl(journal) ? catalog() : article();
   } });
+  assert.equal(await source.repecCatalogHasMatch(expected, journal), true);
   for (let i = 0; i < 2; i++) {
     const record = await source.repecCatalogArticle(expected, journal);
     assert.equal(record.abstract, abstract); assert.equal(record.source, 'repec');
@@ -63,6 +64,29 @@ test('目录每轮每刊只读一次，文章必须独立通过DOI、标题、�
   }
   assert.equal(calls.filter(url => url === repecCatalogUrl(journal)).length, 1);
   assert.equal(calls.filter(url => url === articleUrl).length, 2);
+});
+
+test('目录线索仅调整缺摘要批次顺序，不删除任何论文、不修改原始字段', async () => {
+  const papers = ['absent', 'available', 'limited'].map(id => ({ ...expected, id, journal_key: 'JFE' }));
+  papers.push({ ...papers[0], id: 'no-doi', doi: '' }, { ...papers[0], id: 'unsupported', journal_key: 'CAR' });
+  const original = structuredClone(papers), calls = [];
+  const result = await prioritizeRepecCatalogPapers(papers, { journalFor: key => ({ ...journal, key }), sources: {
+    repecCatalogHasMatch: async p => { calls.push(p.id); if (p.id === 'limited') throw new EvidenceError('RATE_LIMITED'); return p.id === 'available'; }
+  } });
+  assert.deepEqual(result.map(p => p.id), ['available', 'absent', 'limited', 'no-doi', 'unsupported']);
+  assert.deepEqual(calls, ['absent', 'available', 'limited']); assert.deepEqual(papers, original);
+  assert.deepEqual(await prioritizeRepecCatalogPapers(papers, { sources: {}, journalFor: () => assert.fail() }), papers);
+});
+
+test('目录优先排队遵守截止时间；存储失败不掩盖，未尝试记录不丢失', async () => {
+  const papers = ['one', 'two'].map(id => ({ ...expected, id, journal_key: 'JFE' }));
+  let calls = 0;
+  const options = { journalFor: () => journal, sources: { repecCatalogHasMatch: async () => { calls++; return true; } } };
+  assert.deepEqual(await prioritizeRepecCatalogPapers(papers, { ...options, shouldContinue: () => calls === 0 }), papers);
+  assert.equal(calls, 1);
+  await assert.rejects(prioritizeRepecCatalogPapers(papers, { ...options, sources: {
+    repecCatalogHasMatch: async () => { throw new EvidenceError('EVIDENCE_STORAGE_ERROR'); }
+  } }), /EVIDENCE_STORAGE_ERROR/);
 });
 
 test('同名但DOI错误的文章不收，继续核验下一个；最多读取三条候选', async () => {

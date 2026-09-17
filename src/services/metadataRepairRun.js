@@ -6,6 +6,7 @@ import { dateInShanghai } from './paperMerge.js';
 import { buildMasterList, officialDiscoveries } from './masterList.js';
 import { dueRepairIssues, reconcileRepairState, recordRepairAttempt, recordSourceConfirmation, repairSummary } from './repairState.js';
 import { repairPaperMetadata } from './searchMetadata.js';
+import { prioritizeRepecCatalogPapers } from './repecCatalog.js';
 import { validateEnrichmentReport } from './enrichmentValidation.js';
 import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publishLibrarySnapshot } from './journalLibrary.js';
 
@@ -42,7 +43,9 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     const due = dueMetadataRepairIssues(config, previous.repairState, started, { paperIds, journalKey, retryMissingAbstractsNow });
     const abstractIds = [...new Set(due.filter(issue => issue.field === 'abstract').map(issue => issue.paper_id))].slice(0, maxAbstracts);
     const generalIds = [...new Set(due.map(issue => issue.paper_id))].filter(id => !abstractIds.includes(id)).slice(0, maxPapers);
-    const selected = [...abstractIds, ...generalIds], repairs = [], abstracts = [];
+    const prioritized = await prioritizeRepecCatalogPapers(abstractIds.map(id => papers[byId.get(id)]), {
+      sources, journalFor: key => findJournal(config, key), shouldContinue });
+    const selected = [...prioritized.map(p => p.id), ...generalIds], repairs = [], abstracts = [];
     const attemptedIssueIds = new Set(due.filter(issue => selected.includes(issue.paper_id)).map(issue => issue.id));
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {
