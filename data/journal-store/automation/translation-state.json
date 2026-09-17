@@ -27023,7 +27023,7 @@
       "batch_id": "batch-995404976e1b6efd2c40e44fdde9becec0681e3463d094c22613a35b35852d6b",
       "mode": "daily",
       "created_at": "2026-09-17T18:52:22.847Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T18:53:17.438Z",
       "items": [
         {
           "id": "doi:10.1016/j.respol.2026.105544",
@@ -27037,10 +27037,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 580,
+            "completion_tokens": 205,
+            "total_tokens": 785
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70037",
@@ -27054,11 +27060,17 @@
           "retry_of": {
             "abstract": "4065b0e3-5290-42ba-9bd3-7e474c286721"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 705,
+            "completion_tokens": 293,
+            "total_tokens": 998
+          },
           "completed_fields": []
         }
       ]
