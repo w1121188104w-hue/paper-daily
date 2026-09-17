@@ -24590,7 +24590,7 @@
       "batch_id": "batch-cc62a582a45be8e39fd11322f723115124709557d5ceaf41ca9546fe252b23f6",
       "mode": "daily",
       "created_at": "2026-09-17T15:54:56.260Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T15:55:55.297Z",
       "items": [
         {
           "id": "doi:10.1287/mnsc.2023.03810",
@@ -24604,10 +24604,16 @@
           "retry_of": {
             "abstract": "2038c4f4-55f8-4f5b-8a62-cd347ac99e31"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 715,
+            "completion_tokens": 413,
+            "total_tokens": 1128
+          },
           "completed_fields": []
         },
         {
@@ -24622,10 +24628,16 @@
           "retry_of": {
             "abstract": "2038c4f4-55f8-4f5b-8a62-cd347ac99e31"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 507,
+            "completion_tokens": 233,
+            "total_tokens": 740
+          },
           "completed_fields": []
         },
         {
@@ -24640,10 +24652,16 @@
           "retry_of": {
             "abstract": "2038c4f4-55f8-4f5b-8a62-cd347ac99e31"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 495,
+            "completion_tokens": 244,
+            "total_tokens": 739
+          },
           "completed_fields": []
         },
         {
@@ -24658,10 +24676,16 @@
           "retry_of": {
             "abstract": "2038c4f4-55f8-4f5b-8a62-cd347ac99e31"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 623,
+            "completion_tokens": 292,
+            "total_tokens": 915
+          },
           "completed_fields": []
         },
         {
@@ -24676,10 +24700,16 @@
           "retry_of": {
             "abstract": "2038c4f4-55f8-4f5b-8a62-cd347ac99e31"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 427,
+            "completion_tokens": 178,
+            "total_tokens": 605
+          },
           "completed_fields": []
         },
         {
@@ -24694,10 +24724,16 @@
           "retry_of": {
             "abstract": "37f032d3-fb0a-42c0-9624-971aaa20078a"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 628,
+            "completion_tokens": 327,
+            "total_tokens": 955
+          },
           "completed_fields": []
         },
         {
@@ -24712,10 +24748,16 @@
           "retry_of": {
             "abstract": "37f032d3-fb0a-42c0-9624-971aaa20078a"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 533,
+            "completion_tokens": 256,
+            "total_tokens": 789
+          },
           "completed_fields": []
         },
         {
@@ -24730,10 +24772,16 @@
           "retry_of": {
             "abstract": "37f032d3-fb0a-42c0-9624-971aaa20078a"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 481,
+            "completion_tokens": 205,
+            "total_tokens": 686
+          },
           "completed_fields": []
         },
         {
@@ -24748,10 +24796,16 @@
           "retry_of": {
             "abstract": "37f032d3-fb0a-42c0-9624-971aaa20078a"
           },
-          "field_errors": {},
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 418,
+            "completion_tokens": 143,
+            "total_tokens": 561
+          },
           "completed_fields": []
         },
         {
@@ -24767,10 +24821,16 @@
             "abstract": "37f032d3-fb0a-42c0-9624-971aaa20078a"
           },
           "field_errors": {},
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 612,
+            "completion_tokens": 320,
+            "total_tokens": 932
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }
