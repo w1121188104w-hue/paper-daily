@@ -2,6 +2,7 @@ import { normalizeDoi, normalizeTitleForMatch, normalizeAuthorName, normalizeSou
 import { normalizeCrossrefWork, normalizeOpenAlexWork, abstractFromInvertedIndex } from './sourceNormalizers.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { supportedRepecUrl, parseRepecAbstract } from './repecAbstract.js';
+import { repecCatalogUrl, parseRepecCatalog, repecCatalogCandidates } from './repecCatalog.js';
 import { publisherFor } from './publisherCatalog.js';
 import { semanticScholarJournalMatches, semanticScholarType } from './semanticScholar.js';
 import { authenticAbstract, parsePublisherArticle, parsePublisherFeed, publisherRecord, dateBounds } from './publisherParsers.js';
@@ -121,5 +122,31 @@ export function makeEnrichmentSources(http, { semanticScholarKey = '' } = {}) {
     if (!supportedRepecUrl(expected.url, journal)) throw new EvidenceError('UNSAFE_URL');
     return parseRepecAbstract(await http.request(expected.url, ['ideas.repec.org']), journal, expected);
   }
-  return { crossref, openalex, semanticscholar, publisher, publisherArticle, repecArticle };
+  const repecCatalogCache = new Map();
+  async function knownRepecCandidates(expected, journal) {
+    const url = repecCatalogUrl(journal);
+    if (!url || !expected.doi) throw new EvidenceError('NO_REPEC_CATALOG');
+    // Successful, empty and failed list reads are all cached for this run.
+    // One bad/limited host cannot cause repeated list requests for every paper.
+    if (!repecCatalogCache.has(journal.key)) repecCatalogCache.set(journal.key,
+      http.request(url, ['ideas.repec.org']).then(response => parseRepecCatalog(response, journal)));
+    return repecCatalogCandidates(await repecCatalogCache.get(journal.key), expected);
+  }
+  async function repecCatalogHasMatch(expected, journal) {
+    if (!repecCatalogUrl(journal) || !expected.doi) return false;
+    return (await knownRepecCandidates(expected, journal)).length > 0;
+  }
+  async function repecCatalogArticle(expected, journal) {
+    const candidates = await knownRepecCandidates(expected, journal);
+    let last = new EvidenceError('NOT_FOUND');
+    for (const lead of candidates) {
+      try { return await repecArticle({ ...expected, url: lead.url }, journal); }
+      catch (error) {
+        if (!['UNVERIFIED_IDENTITY', 'PUBLISHER_NO_ABSTRACT', 'NOT_FOUND'].includes(error.code)) throw error;
+        last = error;
+      }
+    }
+    throw last;
+  }
+  return { crossref, openalex, semanticscholar, publisher, publisherArticle, repecArticle, repecCatalogArticle, repecCatalogHasMatch };
 }

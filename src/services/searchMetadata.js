@@ -8,11 +8,13 @@ import { stableJson } from './libraryValidation.js';
 import { EvidenceError } from './evidenceHttp.js';
 import { titleConsensusFor, consensusAllowsRecord, unresolvedTitleConflict } from './titleConsensus.js';
 import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
+import { repecCatalogUrl } from './repecCatalog.js';
 import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 import { classifyPaper } from './paperClassification.js';
 import { duplicateMergeProof } from './duplicateMerge.js';
 import { verifiedSearchRecord } from './searchExtraction.js';
 import { missingOriginalAbstract, needsCarEnglishAbstract, verifiedCarEnglishRecord } from './carAbstractLanguage.js';
+import { publisherCaptureRecord } from './publisherCaptures.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -98,6 +100,16 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
       throw error;
     }
   }
+  // Reuse a previously verified original before spending more API calls. This
+  // only supplies an abstract; other missing fields still follow the usual chain.
+  if (wanted.has('abstract') && missingOriginalAbstract(current)) {
+    const cached = publisherCaptureRecord(current, journal, checkedAt);
+    if (cached) {
+      const result = adopt(cached);
+      attempts.push({ source: 'publisher', stage: 'verified_browser_excerpt',
+        status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
+    }
+  }
   for (const source of ['crossref', 'openalex', 'semanticscholar']) {
     if (!stillMissing().length || mergeClaims().length) break;
     try {
@@ -137,6 +149,18 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     } catch (error) {
       if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
       attempts.push({ source: 'repec', status: safeCode(error) });
+    }
+  }
+  // A journal's public RePEc index can locate known papers without a paid
+  // search. The list supplies URLs only, never an abstract or identity proof.
+  if (!mergeClaims().length && stillMissing().includes('abstract') && current.doi && repecCatalogUrl(journal) &&
+    typeof sources.repecCatalogArticle === 'function') {
+    try {
+      const result = adopt(await sources.repecCatalogArticle(current, journal));
+      attempts.push({ source: 'repec', stage: 'journal_catalog', status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
+    } catch (error) {
+      if (error.code === 'EVIDENCE_STORAGE_ERROR') throw error;
+      attempts.push({ source: 'repec', stage: 'journal_catalog', status: safeCode(error) });
     }
   }
   let searchResult = null;
