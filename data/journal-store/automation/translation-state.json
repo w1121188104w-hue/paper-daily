@@ -20226,7 +20226,7 @@
       "batch_id": "batch-7269771acd06c05eaf9ac1d6e01ed4d22766db57321f18068308ca26bbd84d61",
       "mode": "daily",
       "created_at": "2026-09-17T01:38:01.709Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T01:38:26.592Z",
       "items": [
         {
           "id": "doi:10.67983/journaldialectica.v1i2.106",
@@ -20242,10 +20242,17 @@
               "task_id": "task:a9ab62d488007ea8365c1e22c609fbc99116c79187355c450deb0342c170bc59"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 665,
+            "completion_tokens": 372,
+            "total_tokens": 1037
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.67983/journaldialectica.v1i2.109",
@@ -20261,10 +20268,17 @@
               "task_id": "task:129e3431b097671dc494902d233a7ee5b937cebb67aae19fb32135eb4cdd6d86"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 632,
+            "completion_tokens": 353,
+            "total_tokens": 985
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.67983/journaldialectica.v1i2.64",
@@ -20280,10 +20294,17 @@
               "task_id": "task:892100a424a3b9b6952a24352538c62e5a77eaeab73f8c6a6b445986d1808d1e"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 530,
+            "completion_tokens": 253,
+            "total_tokens": 783
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.67983/journaldialectica.v1i2.65",
@@ -20299,10 +20320,17 @@
               "task_id": "task:269a22445b04b6ac2f0784c2410ccefab1211d653fd0aed0d55407ccb0f801c9"
             }
           ],
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 471,
+            "completion_tokens": 236,
+            "total_tokens": 707
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
