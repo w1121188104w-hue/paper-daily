@@ -118,7 +118,7 @@ test('新采集规则排除明确期刊信息，原始页与排除理由仍持�
   const result = await run(root, { clients: clients([record('openalex', { title: 'Issue Information' })], []) });
   assert.equal(result.committed, true); assert.equal(result.papers.length, 0);
   const saved = await read(root);
-  assert.equal(saved.audit.excluded.length, 1); assert.equal(saved.audit.excluded[0].classification.version, 2);
+  assert.equal(saved.audit.excluded.length, 1); assert.equal(saved.audit.excluded[0].classification.version, 3);
   assert.ok(saved.manifest.raw.length === 2);
   assert.equal((await readLibraryRef(root, saved.manifest.raw[0])).pages[0].items[0].title, 'Issue Information');
 });

@@ -183,3 +183,29 @@ Springer Nature 官方帮助页面明确将 link.springernature.com 标为 Sprin
 不接受相似域名、任意子域名或 idp.springer.com 登录服务，不更换浏览器身份、不绕过登录。
 只读检查两篇旧域名文章时实际遇到 303 转向登录服务，并未跟随；此别名修复不等于网站已能直读。
 来源：[Springer Nature 官方账户说明](https://support.nature.com/en/support/solutions/articles/6000275644-merging-author-accounts)。
+
+### 期刊名前缀编委名单：分类修复，不算摘要补齐
+
+2026-09-17 19:15:31–19:15:36 UTC，对正式主分支 7449b273 的 17 条
+“期刊名: Editorial Board”逐 DOI 查询 Crossref：原始标题全部是 Editorial Board，
+期刊及 ISSN 分别对应 RP 4、JAE 2、JFE 5、JCF 3、MS 3 条。
+Crossref 的通用类型仍是 journal-article，因此不能只靠 type 排除编务页。
+现有来源标题带期刊名前缀，未命中旧版只接受 Editorial Board 的精确规则。
+
+仅补充这五本期刊的完整编委名单标题；普通包含 editorial board 的研究题目、
+不同期刊、补充后缀、来源意见不一致、更正和撤稿仍保留原有保护。
+分类版本升至 3，总名册策略升至 6；旧版 1–5 明确使用旧规则重建，避免改写历史。
+完整翻译队列及原始论文不变，只在实际搜索/翻译资格层跳过确定的编务页。
+当前旧队列也在补查执行前过滤，下次写入按新名册关闭编务待办。
+
+只读正式库预检（19:20:38 UTC）：803 条保留，17 条仅改变分类，
+实际空摘要仍为 103，旧总名册和翻译队列完全一致，原始论文序列化内容未变，
+正式写入 0 次、付费调用 0 次。此统计包含四条已隔离错刊，不是网站研究论文缺失数。
+新增回归测试覆盖旧库读取、新版写入、只补真实研究、编务关闭待办且补齐数量为 0。
+
+来源示例（完整检查逐 DOI 执行）：
+[RP Crossref](https://api.crossref.org/works/10.1016%2Fs0048-7333(26)00059-4)、
+[JAE Crossref](https://api.crossref.org/works/10.1016%2Fs0165-4101(26)00023-6)、
+[JFE Crossref](https://api.crossref.org/works/10.1016%2Fs0304-405x(26)00041-3)、
+[JCF Crossref](https://api.crossref.org/works/10.1016%2Fs0929-1199(26)00042-8)、
+[MS Crossref](https://api.crossref.org/works/10.1287%2Fmnsc.2026.eb.v72n3)。

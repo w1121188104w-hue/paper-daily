@@ -90,7 +90,7 @@ test('历史版本兼容：按v1读取旧总名册，新写入采用当前规则
   const legacyBytes = await fs.readFile(path.join(root, legacy.master_list.path), 'utf8');
   await runJournalCollection(config, { root, journalKey: 'AER', clients, now: () => new Date('2026-09-15T01:00:00Z') });
   const after = await readJournalLibrary({ root, config });
-  assert.equal(after.manifest.master_policy_version, 5); assert.equal(after.masterList.statistics.research_candidates, 0);
+  assert.equal(after.manifest.master_policy_version, 6); assert.equal(after.masterList.statistics.research_candidates, 0);
   assert.equal(after.masterList.statistics.lectures, 1); assert.equal(after.papers[0].discovered_at, before.papers[0].discovered_at);
   assert.equal(await fs.readFile(path.join(root, legacy.master_list.path), 'utf8'), legacyBytes);
 });

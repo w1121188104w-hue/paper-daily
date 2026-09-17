@@ -1,5 +1,6 @@
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
 import { knownJournalMismatch } from './journalIdentity.js';
+import { classifyPaper } from './paperClassification.js';
 import { missingOriginalAbstract } from './carAbstractLanguage.js';
 import { findJournal } from './journals.js';
 import { dateInShanghai } from './paperMerge.js';
@@ -41,7 +42,8 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
   return withLibraryLock(root, async () => {
     const previous = await readJournalLibrary({ root, config }), papers = [...previous.papers], byId = new Map(papers.map((p, i) => [p.id, i]));
     if (paperIds) assertLibrary(paperIds.every(id => byId.has(id) && (!journalKey || papers[byId.get(id)].journal_key === journalKey)), '限定论文必须属于当前库和选定期刊');
-    const due = dueMetadataRepairIssues(config, previous.repairState, started, { paperIds, journalKey, retryMissingAbstractsNow });
+    const due = dueMetadataRepairIssues(config, previous.repairState, started, { paperIds, journalKey, retryMissingAbstractsNow })
+      .filter(issue => classifyPaper(papers[byId.get(issue.paper_id)]).kind !== 'administrative');
     const abstractIds = [...new Set(due.filter(issue => issue.field === 'abstract').map(issue => issue.paper_id))].slice(0, maxAbstracts);
     const generalIds = [...new Set(due.map(issue => issue.paper_id))].filter(id => !abstractIds.includes(id)).slice(0, maxPapers);
     const prioritized = await prioritizeRepecCatalogPapers(abstractIds.map(id => papers[byId.get(id)]), {
@@ -76,7 +78,7 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     }
     if (!repairs.length) return { committed: false, status: 'skipped', reason: 'RUN_DEADLINE' };
     const finished = now(), finishedAt = finished.toISOString();
-    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 5, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
+    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 6, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
       officialIds: officialDiscoveries(previous.enrichmentReports) });
     let state = reconcileRepairState(previous.repairState, master);
     for (const result of repairs) {
