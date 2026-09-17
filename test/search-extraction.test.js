@@ -27,12 +27,38 @@ test('长标题摘要检索：保留标题检索路径，不全部退化为DOI�
   assert.ok(unicode.every(q => [...q].length <= 70));
 });
 
+test('摘要优先定向对应出版社：ScienceDirect不串到Wiley，长DOI不截断冒充完整DOI', async () => {
+  const config = await loadJournalConfig();
+  const expected = { JFE: 'sciencedirect.com', CAR: 'onlinelibrary.wiley.com', JPE: 'journals.uchicago.edu', QJE: 'academic.oup.com' };
+  for (const [key, host] of Object.entries(expected)) {
+    const queries = abstractSearchQueries(paper, findJournal(config, key));
+    assert.equal(queries[0], `${paper.doi} site:${host}`);
+    assert.ok(queries[1].endsWith(` site:${host}`));
+    assert.ok(queries.some(q => !q.includes('site:')));
+    assert.ok(queries.every(q => [...q].length <= 70));
+    assert.equal(queries.length, new Set(queries).size);
+  }
+  const long = { ...paper, doi: '10.1234/' + 'x'.repeat(70) };
+  const queries = abstractSearchQueries(long, findJournal(config, 'JFE'));
+  assert.ok(queries[0].endsWith(' site:sciencedirect.com'));
+  assert.ok(!queries.filter(q => q.includes('site:sciencedirect.com')).some(q => q.startsWith('10.1234/')));
+});
+
 test('智谱原文提取：只接受有完整边界的Abstract，不采纳摘要片段', () => {
   assert.equal(originalAbstractSection(lead.content), abstract);
   assert.equal(originalAbstractSection(`## Abstract\n${abstract}\n## Keywords: trade`), abstract);
   assert.equal(originalAbstractSection(`**Abstract**\n${abstract}\n**Keywords**: trade`), abstract);
   for (const text of [abstract, `Abstract ${abstract}`, `Abstract ${abstract}… Keywords: trade`,
     `Abstract We study... trade and resource allocation across firms and countries. Keywords: trade`]) assert.equal(originalAbstractSection(text), '');
+});
+
+test('出版社明确的语言标签和编号章节不污染英文摘要，也不合并CAR法文摘要', () => {
+  const french = 'Les résultats de notre étude concernent les informations publiées et les décisions des investisseurs.';
+  assert.equal(originalAbstractSection(`## RÉSUMÉ\nfr\n${french}\n## ABSTRACT\nen\n${abstract}\n## 1 Introduction\nBody text`), abstract);
+  assert.equal(originalAbstractSection(`**Abstract**\nEnglish\n${abstract}\n1. Introduction\nBody text`), abstract);
+  assert.equal(originalAbstractSection(`Abstract\n${abstract}\nRÉSUMÉ\n${french}\n1 Introduction\nBody text`), abstract);
+  assert.equal(originalAbstractSection(`Abstract\n${abstract}…\n1 Introduction\nBody text`), '');
+  assert.equal(originalAbstractSection(`RÉSUMÉ\n${french}\n1 Introduction\nBody text`), '');
 });
 test('智谱原文提取：标题和DOI必须在检索证据中，不用模型自证', () => {
   assert.equal(extractionEvidence([lead], paper, journal).length, 1);
@@ -92,6 +118,40 @@ test('智谱联网整理请求完整标题和Pro搜索，模型回答须有返�
   const verified = await extractSearchRecord(result.leads, paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z');
   assert.equal(verified.abstract, abstract);
   assert.equal(await extractSearchRecord([], paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z'), null);
+});
+
+test('智谱Chat读取官方web_search字段，与旧字段去重；模型自行填写的证据字段不采纳', async () => {
+  const row = { ...extracted.record, source_url: lead.url }; delete row.source_index;
+  const evidence = [{ title: lead.title, link: lead.url, content: lead.content }];
+  for (const placement of ['web_search', 'both', 'model_only']) {
+    let request;
+    const api = makeSearchSources({ zhipuKey: 'test-key-not-real', fetchImpl: async (_, init) => {
+      request = JSON.parse(init.body);
+      return new Response(JSON.stringify({ choices: [{ finish_reason: 'stop', message: {
+        content: JSON.stringify({ record: row, web_search: evidence }) } }],
+        ...(placement !== 'model_only' ? { web_search: evidence } : {}),
+        ...(placement === 'both' ? { search_result: evidence } : {}) }));
+    } });
+    const result = await api.request({ provider: 'zhipu', query: 'article:test', article: { ...paper, official_site: 'https://www.aeaweb.org' } });
+    assert.equal(request.tools[0].web_search.search_domain_filter, 'www.aeaweb.org');
+    assert.equal(result.leads.length, placement === 'model_only' ? 0 : 1);
+    const verified = await extractSearchRecord(result.leads, paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z');
+    assert.equal(verified?.abstract || null, placement === 'model_only' ? null : abstract);
+    if (verified) assert.equal(verified.source_evidence.scope_url, 'https://open.bigmodel.cn/api/paas/v4/chat/completions');
+  }
+});
+
+test('智谱定向搜索使用官方域名参数，普通检索不继承前一次域名限制', async () => {
+  const requests = [];
+  const api = makeSearchSources({ zhipuKey: 'test-key-not-real', fetchImpl: async (_, init) => {
+    requests.push(JSON.parse(init.body)); return new Response(JSON.stringify({ search_result: [] }));
+  } });
+  await api.request({ provider: 'zhipu', query: '10.1016/example site:sciencedirect.com' });
+  await api.request({ provider: 'zhipu', query: paper.title_original });
+  assert.equal(requests[0].search_domain_filter, 'sciencedirect.com');
+  assert.equal(requests[0].search_query, '10.1016/example');
+  assert.equal(requests[1].search_domain_filter, undefined);
+  assert.equal(requests[1].search_query, paper.title_original);
 });
 test('放开智谱额度只接受新授权，SerpAPI仍严格保护免费额度', () => {
   const policy = { schema_version: 1, approved_on: '2026-09-17', zhipu_engine: 'search_pro', zhipu_monthly_limit: null,

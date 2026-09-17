@@ -53,9 +53,9 @@ export async function requestSourceJson(url, {
       waitMs = Math.max(waitMs, retryAfterMs(response.headers.get('retry-after'), now()) ?? 0);
       // Respect long Retry-After by stopping; do not retry earlier than requested.
       if (waitMs > 60000) {
-        throw new SourceError('RETRY_LATER', '数据源要求稍后重试', { retry_after_ms: waitMs });
+        throw new SourceError('RETRY_LATER', '数据源要求稍后重试', { retry_after_ms: waitMs, http_status: response.status });
       }
-      error = new SourceError('HTTP_ERROR', `数据源请求失败（HTTP ${response.status}）`, { retryable });
+      error = new SourceError('HTTP_ERROR', `数据源请求失败（HTTP ${response.status}）`, { retryable, http_status: response.status });
       await response.body?.cancel();
     } catch (caught) {
       error = caught instanceof SourceError

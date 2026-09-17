@@ -63,13 +63,24 @@ test('DeepSeek：固定官方地址、非思考JSON、输出上限；原文只�
     assert.deepEqual(body.thinking, { type: 'disabled' }); assert.equal(body.max_tokens, 4096);
     assert.equal(body.stream, false); assert.deepEqual(body.response_format, { type: 'json_object' });
     assert.equal(body.tools, undefined); assert.ok(!options.body.includes(apiKey));
-    assert.deepEqual(Object.keys(JSON.parse(body.messages[1].content)).sort(), ['abstract_original', 'journal', 'requested_fields', 'title_original']);
+    assert.deepEqual(Object.keys(JSON.parse(body.messages[1].content)).sort(), ['abstract_original', 'journal', 'numeric_tokens_to_preserve', 'requested_fields', 'title_original']);
+    assert.deepEqual(JSON.parse(body.messages[1].content).numeric_tokens_to_preserve, { title: [], abstract: ['2001', '2020', '2.5'] });
     return response();
   } });
   assert.equal(calls, 1); assert.equal(output.report.successful_fields, 2);
   assert.equal(output.report.estimated_cny_known_usage, 0.00116);
   assert.equal(output.result.model, DEEPSEEK_MODEL); assert.ok(!JSON.stringify(output).includes(apiKey));
   assert.equal(applyTranslationResult(papers(), output.request, output.result, { config, importedAt: time }).report.stats.completed_fields, 2);
+});
+
+test('DeepSeek数字清单只来自本次待译原文，不携带未请求摘要或改写原文年份', () => {
+  const b = batch([record({ title: 'Big 4 and audit quality', abstract: 'From 2015 to 2010, we observe 200,000 workers and 10.4 billion in costs. These values describe the original sample without changing its published figures.' })]);
+  const item = b.items[0], request = deepseekRequest(item), input = JSON.parse(request.messages[1].content);
+  assert.deepEqual(input.numeric_tokens_to_preserve, { title: ['4'], abstract: ['2015', '2010', '200000', '10.4'] });
+  assert.equal(input.abstract_original, item.abstract_original);
+  const titleOnly = JSON.parse(deepseekRequest({ ...item, requested_fields: ['title'] }).messages[1].content);
+  assert.deepEqual(titleOnly.numeric_tokens_to_preserve, { title: ['4'] });
+  assert.equal(titleOnly.abstract_original, undefined);
 });
 
 test('DeepSeek：缺少密钥、超过10篇、过大原文均在请求前拒绝，原文不被截短', async () => {

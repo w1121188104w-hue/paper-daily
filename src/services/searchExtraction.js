@@ -7,8 +7,12 @@ const identity = value => normalizeTitleForMatch(value).replace(/\s/g, '');
 // Search summaries are not abstracts. Only a bounded, explicitly labelled
 // Abstract section can supply an original quote; trailing truncation is rejected.
 export function originalAbstractSection(content) {
-  const text = cleanText(String(content || '').replace(/^\s*#{1,6}\s+/gm, '').replace(/\*\*(Abstract|Keywords?|References|Introduction|JEL[^*\n]*)\*\*/gi, '$1'));
-  const match = text.match(/\bAbstract\s*[:.\-]?\s+([\s\S]+?)(?=\s+(?:Keywords?\s*[:：]|JEL (?:classification|codes?)\b|References\b|Copyright\b|©|Introduction\b|(?:Recommended|Suggested) citation\b))/i);
+  const text = cleanText(String(content || '').replace(/^\s*#{1,6}\s+/gm, '')
+    .replace(/\*\*(Abstract|Keywords?|References|Introduction|JEL[^*\n]*)\*\*/gi, '$1')
+    // Wiley may put an explicit language marker on a separate line. It is a
+    // UI label, not part of the author's abstract; never remove prose words.
+    .replace(/(\bAbstract\s*[:.]?\s*\r?\n)\s*(?:en|English)\s*\r?\n/gi, '$1'));
+  const match = text.match(/\bAbstract\s*[:.\-]?\s+([\s\S]+?)(?=\s+(?:Keywords?\s*[:：]|JEL (?:classification|codes?)\b|References\b|Copyright\b|©|(?:\d+(?:\.\d+)*[.)]?\s+)?Introduction\b|RÉSUMÉ(?=\s|:)|(?:Recommended|Suggested) citation\b))/i);
   if (!match) return '';
   const quote = match[1].trim();
   if (/\.\.\.|…|read more|show more|view full|\[\s*\.\s*\.\s*\.\s*\]/i.test(quote) || !/[.!?]["”']?$/.test(quote)) return '';
@@ -30,7 +34,8 @@ export function extractionEvidence(leads, paper, journal) {
     if (!identity(text + ' ' + lead.title).includes(identity(paper.title_original)) ||
       !doi || !doiPattern.test(text + ' ' + decoded) ||
       (repec && !identity(text).includes(identity(journal.name)))) return [];
-    return [{ title: lead.title, url: lead.url, content, abstract: originalAbstractSection(content), publisher }];
+    return [{ title: lead.title, url: lead.url, content, abstract: originalAbstractSection(content), publisher,
+      searchEndpoint: lead.search_endpoint === 'chat_completions' ? 'chat/completions' : 'web_search' }];
   }).filter(row => row.abstract).slice(0, 8);
 }
 
@@ -50,7 +55,7 @@ export async function extractSearchRecord(leads, paper, journal, extract, checke
   // adapters. An LLM's extra keys cannot smuggle unsupported metadata in.
   const record = publisherRecord({ title: paper.title_original, doi: paper.doi, authors: [], date: '',
     url: source.url, abstract: source.abstract, raw_abstract: source.content,
-    evidence: { url: source.url, scope_url: 'https://open.bigmodel.cn/api/paas/v4/web_search',
+    evidence: { url: source.url, scope_url: `https://open.bigmodel.cn/api/paas/v4/${source.searchEndpoint}`,
       fetched_at: checkedAt, body_sha256: evidenceHash(source.content), method: 'zhipu_search_verbatim_abstract' } }, journal);
   if (!source.publisher) record.source = 'repec';
   return record;

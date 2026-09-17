@@ -1,5 +1,6 @@
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
 import { knownJournalMismatch } from './journalIdentity.js';
+import { missingOriginalAbstract } from './carAbstractLanguage.js';
 import { findJournal } from './journals.js';
 import { dateInShanghai } from './paperMerge.js';
 import { buildMasterList, officialDiscoveries } from './masterList.js';
@@ -62,14 +63,14 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
         changed_fields: result.changed_fields, missing_fields: result.missing_fields, requested_fields: wanted, attempts: result.attempts,
         identity_resolution: result.identity_resolution, single_source_confirmation: result.single_source_confirmation,
         duplicate_candidates: result.duplicate_candidates, duplicate_claims: result.duplicate_claims });
-      if (!old.abstract_original && wanted.includes('abstract')) abstracts.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi,
-        status: result.paper.abstract_original ? 'found' : result.status === 'not_found' ? 'not_found' : 'retry_later',
+      if (missingOriginalAbstract(old) && wanted.includes('abstract')) abstracts.push({ paper_id: id, journal_key: old.journal_key, doi: result.paper.doi,
+        status: !missingOriginalAbstract(result.paper) ? 'found' : result.status === 'not_found' ? 'not_found' : 'retry_later',
         abstract_source: result.paper.provenance.abstract_original?.source || '', attempts: result.attempts });
       onProgress({ phase: 'metadata_done', paper_id: id, status: result.status, filled: result.changed_fields });
     }
     if (!repairs.length) return { committed: false, status: 'skipped', reason: 'RUN_DEADLINE' };
     const finished = now(), finishedAt = finished.toISOString();
-    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 4, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
+    const master = buildMasterList(papers, { generatedAt: finishedAt, policyVersion: 5, fromDate: previous.masterList.from_date, toDate: previous.masterList.to_date,
       officialIds: officialDiscoveries(previous.enrichmentReports) });
     let state = reconcileRepairState(previous.repairState, master);
     for (const result of repairs) {

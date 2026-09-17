@@ -28,28 +28,37 @@ export async function fetchCrossrefJournal(journal, options) {
   });
   // Repair known CAR identities only; this is not an expansion of discovery's
   // rolling window. DOI and actual ISSN must both agree before accepting a title.
-  const deadline = Date.now() + 45000;
+  const clock = options.now || Date.now, deadline = clock() + 120000;
+  const markIncomplete = () => {
+    result.ok = false;
+    result.error ||= { code: 'CAR_TITLE_LOOKUP_FAILED', message: 'CAR英文标题核实暂未完成，将保留原文重试' };
+  };
   for (const paper of (journal.key === 'CAR' ? options.carBilingualPapers || [] : []).slice(0, 50)) {
-    if (Date.now() >= deadline) break;
-    if (result.records.some(r => r.doi === paper.doi && carTitlePrefix(paper.title_original, r.title))) continue;
+    const remaining = deadline - clock();
+    if (remaining <= 0) { markIncomplete(); break; }
+    if (result.records.some(r => {
+      const prefix = r.doi === paper.doi && carTitlePrefix(paper.title_original, r.title);
+      return prefix && prefix.length < paper.title_original.length;
+    })) continue;
     try {
       const payload = await requestSourceJson(new URL(`https://api.crossref.org/works/${encodeURIComponent(paper.doi)}`),
-        { ...options, maxAttempts: 1, timeoutMs: 8000 });
+        { ...options, maxAttempts: 1, timeoutMs: Math.min(8000, remaining) });
       const index = result.raw_count++;
       result.raw_pages.push({ purpose: 'car_existing_bilingual_title', doi: paper.doi, response: payload });
       const record = normalizeCrossrefWork(payload?.message, journal, options.checkedAt);
-      if (record.doi !== paper.doi || !carTitlePrefix(paper.title_original, record.title)) {
+      const prefix = carTitlePrefix(paper.title_original, record.title);
+      if (record.doi !== paper.doi || !prefix || prefix.length === paper.title_original.length) {
         result.rejected.push({ index, code: 'CAR_TITLE_UNVERIFIED', message: 'CAR英文标题边界尚未得到DOI与ISSN共同核实' });
         result.ok = false;
         result.error ||= { code: 'CAR_TITLE_UNVERIFIED', message: 'CAR标题核实返回不一致，保留原文重试' };
         continue;
       }
       result.records.push(record);
-    } catch {
-      // Leave the source text intact and retry next collection. No guessed title.
-      result.ok = false;
-      result.error ||= { code: 'CAR_TITLE_LOOKUP_FAILED', message: 'CAR英文标题核实暂未完成，将保留原文重试' };
-      break;
+    } catch (error) {
+      // One missing DOI or timeout must not starve the remaining known papers.
+      // Respect host-level rate/access limits and retain the original text.
+      markIncomplete();
+      if (error.code === 'RETRY_LATER' || [401, 403, 429].includes(error.http_status)) break;
     }
   }
   return result;

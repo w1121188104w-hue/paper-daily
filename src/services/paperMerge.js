@@ -4,6 +4,7 @@ import {
 } from './paperModel.js';
 import { createHash } from 'node:crypto';
 import { selectCarEnglish } from './carEnglish.js';
+import { verifiedCarEnglishRecord } from './carAbstractLanguage.js';
 
 const FIELDS = ['title', 'abstract', 'authors', 'published_online_date', 'published_print_date',
   'publication_date', 'volume', 'issue', 'pages', 'url'];
@@ -69,7 +70,9 @@ function quality(value) {
 }
 
 function choose(records, field) {
-  return evidence(records, field).sort((a, b) => quality(b[field]) - quality(a[field]) ||
+  const candidates = evidence(records, field);
+  const english = field === 'abstract' && records[0]?.journal_key === 'CAR' ? candidates.filter(verifiedCarEnglishRecord) : [];
+  return (english.length ? english : candidates).sort((a, b) => quality(b[field]) - quality(a[field]) ||
     ordered(sourceKey(a), sourceKey(b)))[0] || null;
 }
 

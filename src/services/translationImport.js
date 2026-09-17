@@ -17,6 +17,9 @@ function numbers(text) {
   return new Set(text.normalize('NFKC').replace(/\b\d{1,3}(?:,\d{3})+\b/g, (value) => value.replaceAll(',', '')).match(/\d+(?:\.\d+)?/g) || []);
 }
 
+// The request and the import guard must agree on the numeric tokens to retain.
+export const translationNumericTokens = text => [...numbers(text)];
+
 // A mechanical guardrail, NOT a judgment of semantic fidelity. Never silently shorten or rewrite translations.
 export function translationQualityError(source, value, field) {
   if (typeof value !== 'string' || !value.trim()) return 'EMPTY_TRANSLATION';
