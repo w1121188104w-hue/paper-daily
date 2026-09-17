@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-b1dca9040c550ca211f75f1ffb53ef25930cf7a68b9c249da9cf8f28f31f39e5",
+  "stats": {
+    "completed_fields": 4,
+    "failed_fields": 3,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 3
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1287/mnsc.2024.06477",
+      "field": "abstract",
+      "action": "failed",
+      "code": "EXPLICIT_FAILURE",
+      "message": "该字段被主动标记为翻译失败"
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1287/mnsc.2025.02515",
+      "field": "abstract",
+      "action": "failed",
+      "code": "EXPLICIT_FAILURE",
+      "message": "该字段被主动标记为翻译失败"
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1111/1911-3846.70037",
+      "field": "abstract",
+      "action": "failed",
+      "code": "EXPLICIT_FAILURE",
+      "message": "该字段被主动标记为翻译失败"
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1111/1911-3846.70043",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1057/s41267-026-00896-1",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1057/s41267-026-00896-1",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "doi:10.1057/s41267-026-00906-2",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "partial_failure"
+}
