@@ -164,3 +164,12 @@ HTTP 429 作用于整个来源站点，不能换论文 URL 提前重试。
 [European Ageing in Focus](https://link.springer.com/book/10.1007/978-3-032-29056-4)、
 [IAEME 论文](https://iaeme.com/Home/article_id/JOM_13_02_005)、
 [IAEME 期刊 ISSN](https://iaeme.com/Home/current_issue/JOM)、[目标 Sage 期刊](https://journals.sagepub.com/home/jom)。
+
+### JPE 搜索原文的结束边界
+
+官方 10.1086/742421 页面明确使用独立标题 “Get full access to this article” 结束 Abstract。
+旧提取器仅寻找 Introduction、References、Copyright 等标题，可能混入后续订阅和作者信息而拒收。
+新增在空白归一化之前识别这一整行标题，正文中同样的短语不算边界。
+只改变已获取原文的分段，不降低 DOI、标题、来源主机或完整性核验要求，不生成摘要。
+此修复不代表智谱已经返回该页面的完整原文，也不代表该篇已入库。
+来源：[JPE 官方摘要页面](https://www.journals.uchicago.edu/doi/abs/10.1086/742421)。
