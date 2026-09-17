@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "stage": "journal_identity_correction",
+  "run_id": "20260917T144413687Z-f449797f-c6a1-4eb7-be16-95e314dd6e0e",
+  "status": "success",
+  "from_date": "2026-07-20",
+  "to_date": "2026-09-17",
+  "stats": {
+    "added": 0,
+    "removed": 5,
+    "abstracts_filled": 0,
+    "abstracts_checked": 0,
+    "pending_candidates": 0
+  },
+  "journals": [],
+  "abstracts": [],
+  "removed": [
+    {
+      "paper_id": "doi:10.67983/journaldialectica.v1i2.100",
+      "doi": "10.67983/journaldialectica.v1i2.100",
+      "journal_key": "JAR",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Journal Dialectica (Journal of Accounting Research)",
+        "actual_issn": "3163-821X",
+        "expected_issns": [
+          "0021-8456",
+          "1475-679X"
+        ],
+        "evidence_url": "https://garuda.kemdiktisaintek.go.id/journal/view/47732",
+        "target_url": "https://onlinelibrary.wiley.com/journal/1475679x"
+      }
+    },
+    {
+      "paper_id": "doi:10.67983/journaldialectica.v1i2.106",
+      "doi": "10.67983/journaldialectica.v1i2.106",
+      "journal_key": "JAR",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Journal Dialectica (Journal of Accounting Research)",
+        "actual_issn": "3163-821X",
+        "expected_issns": [
+          "0021-8456",
+          "1475-679X"
+        ],
+        "evidence_url": "https://garuda.kemdiktisaintek.go.id/journal/view/47732",
+        "target_url": "https://onlinelibrary.wiley.com/journal/1475679x"
+      }
+    },
+    {
+      "paper_id": "doi:10.67983/journaldialectica.v1i2.109",
+      "doi": "10.67983/journaldialectica.v1i2.109",
+      "journal_key": "JAR",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Journal Dialectica (Journal of Accounting Research)",
+        "actual_issn": "3163-821X",
+        "expected_issns": [
+          "0021-8456",
+          "1475-679X"
+        ],
+        "evidence_url": "https://garuda.kemdiktisaintek.go.id/journal/view/47732",
+        "target_url": "https://onlinelibrary.wiley.com/journal/1475679x"
+      }
+    },
+    {
+      "paper_id": "doi:10.67983/journaldialectica.v1i2.64",
+      "doi": "10.67983/journaldialectica.v1i2.64",
+      "journal_key": "JAR",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Journal Dialectica (Journal of Accounting Research)",
+        "actual_issn": "3163-821X",
+        "expected_issns": [
+          "0021-8456",
+          "1475-679X"
+        ],
+        "evidence_url": "https://garuda.kemdiktisaintek.go.id/journal/view/47732",
+        "target_url": "https://onlinelibrary.wiley.com/journal/1475679x"
+      }
+    },
+    {
+      "paper_id": "doi:10.67983/journaldialectica.v1i2.65",
+      "doi": "10.67983/journaldialectica.v1i2.65",
+      "journal_key": "JAR",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Journal Dialectica (Journal of Accounting Research)",
+        "actual_issn": "3163-821X",
+        "expected_issns": [
+          "0021-8456",
+          "1475-679X"
+        ],
+        "evidence_url": "https://garuda.kemdiktisaintek.go.id/journal/view/47732",
+        "target_url": "https://onlinelibrary.wiley.com/journal/1475679x"
+      }
+    }
+  ],
+  "checked_at": "2026-09-17T14:44:13.687Z"
+}
