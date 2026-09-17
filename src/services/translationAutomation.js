@@ -13,10 +13,11 @@ export const AUTOMATION_LIMITS = Object.freeze({ batch: 10, backfill_requests: 1
   backfill_minutes: 60, daily_minutes: 30, consecutive_failures: 3 });
 const STATUS = ['reserved', 'succeeded', 'partial', 'failed', 'unused'];
 const FIELDS = ['title', 'abstract'];
-export const TRANSLATION_RETRY = Object.freeze({ max_attempts: 3, cooldown_ms: 30 * 60000 });
-export const TRANSLATION_REQUEST_PROFILE = 'numeric_preservation_v1';
+export const TRANSLATION_RETRY = Object.freeze({ max_attempts: 3, max_total_attempts: 9, cooldown_ms: 30 * 60000 });
+export const TRANSLATION_REQUEST_PROFILE = 'numeric_placeholders_v2';
+const REQUEST_PROFILES = new Set(['numeric_preservation_v1', TRANSLATION_REQUEST_PROFILE]);
 const RETRYABLE_CODES = new Set(['MECHANICAL_CHECK_FAILED', 'INVALID_JSON', 'INVALID_TRANSLATION_SHAPE']);
-const FIELD_ERRORS = new Set(['EMPTY_TRANSLATION', 'NON_BODY_TEXT', 'NOT_CHINESE', 'TOO_SHORT', 'MISSING_NUMBERS']);
+const FIELD_ERRORS = new Set(['EMPTY_TRANSLATION', 'NON_BODY_TEXT', 'NOT_CHINESE', 'TOO_SHORT', 'MISSING_NUMBERS', 'NUMERIC_MARKER_MISMATCH']);
 const HARD_PAUSE_CODES = new Set(['AUTH_ERROR', 'ACCESS_DENIED', 'INSUFFICIENT_BALANCE', 'UNEXPECTED_MODEL',
   'MODEL_CHANGED', 'SECRET_IN_RESPONSE', 'SECRET_IN_OUTPUT', 'REPEATED_INVALID_RESULTS', 'USAGE_MISSING']);
 const exact = (value, keys) => value && typeof value === 'object' && !Array.isArray(value) &&
@@ -29,7 +30,7 @@ function retryAllowed(history, field, at, profile = null) {
   // A reviewed request improvement gets its own bounded recovery attempts;
   // historical reservations remain intact and successful/uncertain calls stay held.
   const sameProfile = history.filter(row => (row.item.request_profile || null) === profile);
-  return Boolean(last && history.length < TRANSLATION_RETRY.max_attempts * 2 && sameProfile.length < TRANSLATION_RETRY.max_attempts &&
+  return Boolean(last && history.length < TRANSLATION_RETRY.max_total_attempts && sameProfile.length < TRANSLATION_RETRY.max_attempts &&
     last.entry.finished_at && ['failed', 'partial'].includes(last.item.status) &&
     !last.item.completed_fields.includes(field) && last.item.usage && RETRYABLE_CODES.has(last.item.code) &&
     Date.parse(at) - Date.parse(last.entry.finished_at) >= TRANSLATION_RETRY.cooldown_ms);
@@ -65,7 +66,7 @@ export function validateTranslationState(state) {
         Array.isArray(item.completed_fields) && new Set(item.completed_fields).size === item.completed_fields.length, '自动翻译条目无效');
       paperIds.add(item.id); const fields = new Set(), retried = [];
       for (const key of optional.filter(key => key !== 'request_profile')) assertLibrary(item[key] && typeof item[key] === 'object' && !Array.isArray(item[key]), '重试诊断结构无效');
-      if (Object.hasOwn(item, 'request_profile')) assertLibrary(item.request_profile === TRANSLATION_REQUEST_PROFILE, '未知翻译请求方案');
+      if (Object.hasOwn(item, 'request_profile')) assertLibrary(REQUEST_PROFILES.has(item.request_profile), '未知翻译请求方案');
       for (const task of item.tasks) {
         assertLibrary(exact(task, ['field', 'source_hash', 'task_id']) && FIELDS.includes(task.field) && !fields.has(task.field) &&
           /^[a-f0-9]{64}$/.test(task.source_hash) && task.task_id === translationTaskId(item.id, task.field, task.source_hash), '自动翻译任务指纹无效');

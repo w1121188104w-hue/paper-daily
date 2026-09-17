@@ -107,5 +107,69 @@ CC BY-NC 4.0 许可链接。证据保存在 data/publisher-captures/car-70065.js
 
 ## 验收边界
 
+### 同名勘误不能借用原论文摘要
+
+Crossref 对 10.1016/j.respol.2026.105588 明确提供 update-to / erratum，
+指向 10.1016/j.respol.2026.105542；标题和作者相同并不意味着同一篇论文。
+新增规范化保留 crossref_notice：原始 type、更新类型及关联 DOI。
+只有指向不同且有效 DOI 的 correction/corrigendum/erratum 或撤回通知才派生已有通知类型。
+updated-by、自身原位更新、版本变更及无效数据不把正常研究论文误标为通知。
+旧来源记录不重写，摘要保持缺失，不借用被更正论文的摘要，也不宣称通知必然没有摘要。
+这项识别本身不降低全库摘要缺失数量、不删除记录；原论文与通知在现有筛选中分别保留。
+依据：[Crossref 更新通知说明](https://www.crossref.org/documentation/register-maintain-records/maintaining-your-metadata/registering-updates/)。
+
+### 临时限流的有界恢复
+
+HTTP 429 作用于整个来源站点，不能换论文 URL 提前重试。
+优先遵守 Retry-After，最少冷却一分钟；服务器未提供有效时间则冷却五分钟。
+每轮每个来源最多允许两次冷却后的恢复尝试，第三次收到 429 后本轮停止该来源。
+恢复不阻塞等待线程，而是在之后处理其他待办时检查是否到期；总请求数和整轮时限仍生效。
+结构化 API 的失败 Promise 在 429 时释放，避免冷却已结束却永久读到旧失败。
+401/403 不按临时限流重试；不绕过认证、验证码或访问限制，不影响既有付费搜索账本。
+
 代码测试通过不代表所有摘要已找到。必须继续核对正式库、运行报告与发布页面，
 分别报告缺英文原摘要与未完成中文翻译；不能删除真实论文或编造摘要来归零。
+
+### 翻译数字的可逆保护
+
+正式库 2026-09-17T17:58:37.705Z 快照中有八篇摘要多次返回 MISSING_NUMBERS，
+另有一篇标题及摘要属于此前 NETWORK_ERROR，不能混为同一种失败。
+失败草稿没有保存到公开库，因此不能声称已经知道每篇具体漏了哪个数字。
+
+新增 numeric_placeholders_v2：请求发送前将每次出现的阿拉伯数字临时编码为独立标记，
+模型只翻译周围正文，返回后程序按原样还原千位分隔、小数、年份和编号。
+论文原文、原文指纹及历史译文都不修改。标记遗漏、重复、跨字段或未知标记拒收；
+还原后继续执行原有正文、长度和数字检查。若模型直接返回普通数字，仍须通过原有检查。
+成功译文不重译，失败字段每个请求方案最多三次、至少间隔三十分钟；
+原始方案、v1、v2 合计最多九次，保留全部历史登记，不重发未结算或网络结果不确定的请求。
+本地测试通过不代表实际 DeepSeek 已成功采用此格式，仍须发布后验证真实运行。
+
+### 四条额外错刊证据：隔离而非删除
+
+2026-09-18（北京时间）只读核对正式库及 Crossref DOI 登记，并查看出版社页面：
+三个 10.1007/978-3-032-11327-6、978-3-032-25831-1、978-3-032-29056-4
+是 Springer 的 Research for Policy 丛书，类型 book，ISSN 2662-3684 / 2662-3692，
+不是 Research Policy（0048-7333 / 1873-7625）论文。
+10.34218/jom_13_02_005 是 IAEME 的同名 Journal of Management，ISSN 2347-3940 / 2347-3959，
+不是目标 Sage Journal of Management（0149-2063 / 1557-1211）。
+四条现有入库记录均仅来自 Semantic Scholar。此处不能拿规范化后填入的目标 ISSN 当独立证据。
+
+为这四个精确 DOI 增加已核实错刊证据，复用现有隔离显示、翻译及补查队列保护，阻止再收。
+保留原始库及历史，不扩大此前五条 JAR 记录的实体删除名单；隔离不算“成功补齐摘要”。
+没有使用整个出版社或 DOI 前缀封禁，不以相似标题或摘要为空排除真实论文。
+后续应针对单一来源的期刊身份增加独立交叉核验，不能声称四条特例已经解决所有上游误配。
+
+来源：[Media Matters](https://link.springer.com/book/10.1007/978-3-032-11327-6)、
+[People and Climate](https://link.springer.com/book/10.1007/978-3-032-25831-1)、
+[European Ageing in Focus](https://link.springer.com/book/10.1007/978-3-032-29056-4)、
+[IAEME 论文](https://iaeme.com/Home/article_id/JOM_13_02_005)、
+[IAEME 期刊 ISSN](https://iaeme.com/Home/current_issue/JOM)、[目标 Sage 期刊](https://journals.sagepub.com/home/jom)。
+
+### JPE 搜索原文的结束边界
+
+官方 10.1086/742421 页面明确使用独立标题 “Get full access to this article” 结束 Abstract。
+旧提取器仅寻找 Introduction、References、Copyright 等标题，可能混入后续订阅和作者信息而拒收。
+新增在空白归一化之前识别这一整行标题，正文中同样的短语不算边界。
+只改变已获取原文的分段，不降低 DOI、标题、来源主机或完整性核验要求，不生成摘要。
+此修复不代表智谱已经返回该页面的完整原文，也不代表该篇已入库。
+来源：[JPE 官方摘要页面](https://www.journals.uchicago.edu/doi/abs/10.1086/742421)。

@@ -7,12 +7,18 @@ const identity = value => normalizeTitleForMatch(value).replace(/\s/g, '');
 // Search summaries are not abstracts. Only a bounded, explicitly labelled
 // Abstract section can supply an original quote; trailing truncation is rejected.
 export function originalAbstractSection(content) {
-  const text = cleanText(String(content || '').replace(/^\s*#{1,6}\s+/gm, '')
+  const input = String(content || ''), endMarker = 'PD-VERIFIED-ABSTRACT-SECTION-END';
+  if (input.includes(endMarker)) return '';
+  // UChicago's public abstract page ends at this standalone access heading,
+  // not at Introduction. Recognize the actual heading before whitespace is
+  // collapsed; an occurrence inside an author's sentence is not a boundary.
+  const text = cleanText(input.replace(/^\s*(?:#{1,6}\s*)?Get full access to this article\s*$/gim, `\n${endMarker}\n`)
+    .replace(/^\s*#{1,6}\s+/gm, '')
     .replace(/\*\*(Abstract|Keywords?|References|Introduction|JEL[^*\n]*)\*\*/gi, '$1')
     // Wiley may put an explicit language marker on a separate line. It is a
     // UI label, not part of the author's abstract; never remove prose words.
     .replace(/(\bAbstract\s*[:.]?\s*\r?\n)\s*(?:en|English)\s*\r?\n/gi, '$1'));
-  const match = text.match(/\bAbstract\s*[:.\-]?\s+([\s\S]+?)(?=\s+(?:Keywords?\s*[:：]|JEL (?:classification|codes?)\b|References\b|Copyright\b|©|(?:\d+(?:\.\d+)*[.)]?\s+)?Introduction\b|RÉSUMÉ(?=\s|:)|(?:Recommended|Suggested) citation\b))/i);
+  const match = text.match(/\bAbstract\s*[:.\-]?\s+([\s\S]+?)(?=\s+(?:PD-VERIFIED-ABSTRACT-SECTION-END|Keywords?\s*[:：]|JEL (?:classification|codes?)\b|References\b|Copyright\b|©|(?:\d+(?:\.\d+)*[.)]?\s+)?Introduction\b|RÉSUMÉ(?=\s|:)|(?:Recommended|Suggested) citation\b))/i);
   if (!match) return '';
   const quote = match[1].trim();
   if (/\.\.\.|…|read more|show more|view full|\[\s*\.\s*\.\s*\.\s*\]/i.test(quote) || !/[.!?]["”']?$/.test(quote)) return '';

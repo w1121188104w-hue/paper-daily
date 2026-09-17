@@ -64,6 +64,23 @@ test('新字段重试状态传给原页面，选择较新记录且不暴露完�
   issue.status = 'resolved';
   assert.equal(presentJournalLibrary(lib, config).papers[0].abstract_status, 'not_found');
 });
+
+test('四条已核实错刊隔离与摘要补齐分别计数，历史原库不删、正常论文仍可显示', async t => {
+  const { root } = await fixture(t), lib = await readJournalLibrary({ root, config });
+  for (const [journal_key, doi] of [['JM', '10.34218/jom_13_02_005'],
+    ['RP', '10.1007/978-3-032-11327-6'], ['RP', '10.1007/978-3-032-25831-1'], ['RP', '10.1007/978-3-032-29056-4']]) {
+    const wrong = structuredClone(lib.papers[0]);
+    Object.assign(wrong, { id: `doi:${doi}`, doi, journal_key, abstract_original: '' });
+    lib.papers.push(wrong);
+  }
+  const before = JSON.stringify(lib), result = presentJournalLibrary(lib, config);
+  assert.equal(JSON.stringify(lib), before);
+  assert.equal(result.archive_paper_count, 5);
+  assert.equal(result.quarantined.length, 4);
+  assert.equal(result.papers.length, 1);
+  assert.equal(result.translation_eligibility.ready.paper_count, 1);
+  assert.equal(result.enrichment.missing_abstracts, 0);
+});
 async function fixture(t, collect = true) {
   const parent = path.resolve(os.tmpdir()), temp = await fs.mkdtemp(path.join(parent, 'journal-preview-test-'));
   t.after(async () => {

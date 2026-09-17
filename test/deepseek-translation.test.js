@@ -63,7 +63,7 @@ test('DeepSeek：固定官方地址、非思考JSON、输出上限；原文只�
     assert.deepEqual(body.thinking, { type: 'disabled' }); assert.equal(body.max_tokens, 4096);
     assert.equal(body.stream, false); assert.deepEqual(body.response_format, { type: 'json_object' });
     assert.equal(body.tools, undefined); assert.ok(!options.body.includes(apiKey));
-    assert.deepEqual(Object.keys(JSON.parse(body.messages[1].content)).sort(), ['abstract_original', 'journal', 'numeric_tokens_to_preserve', 'requested_fields', 'title_original']);
+    assert.deepEqual(Object.keys(JSON.parse(body.messages[1].content)).sort(), ['abstract_original', 'journal', 'numeric_tokens_to_preserve', 'protected_numeric_tokens', 'requested_fields', 'title_original']);
     assert.deepEqual(JSON.parse(body.messages[1].content).numeric_tokens_to_preserve, { title: [], abstract: ['2001', '2020', '2.5'] });
     return response();
   } });
@@ -77,7 +77,9 @@ test('DeepSeek数字清单只来自本次待译原文，不携带未请求摘要
   const b = batch([record({ title: 'Big 4 and audit quality', abstract: 'From 2015 to 2010, we observe 200,000 workers and 10.4 billion in costs. These values describe the original sample without changing its published figures.' })]);
   const item = b.items[0], request = deepseekRequest(item), input = JSON.parse(request.messages[1].content);
   assert.deepEqual(input.numeric_tokens_to_preserve, { title: ['4'], abstract: ['2015', '2010', '200000', '10.4'] });
-  assert.equal(input.abstract_original, item.abstract_original);
+  assert.equal(input.abstract_original, 'From ⟦PDN_A_0⟧ to ⟦PDN_A_1⟧, we observe ⟦PDN_A_2⟧ workers and ⟦PDN_A_3⟧ billion in costs. These values describe the original sample without changing its published figures.');
+  assert.deepEqual(input.protected_numeric_tokens.abstract.map(token => token.value), ['2015', '2010', '200,000', '10.4']);
+  assert.ok(item.abstract_original.includes('2015 to 2010'));
   const titleOnly = JSON.parse(deepseekRequest({ ...item, requested_fields: ['title'] }).messages[1].content);
   assert.deepEqual(titleOnly.numeric_tokens_to_preserve, { title: ['4'] });
   assert.equal(titleOnly.abstract_original, undefined);
@@ -148,6 +150,20 @@ test('DeepSeek：遗漏数字的摘要不进入导入结果，合格标题仍可
     message: { role: 'assistant', content: JSON.stringify({ ...zh, abstract_zh: zh.abstract_zh.replace('2.5', '很多') }) } }] })) });
   assert.equal(output.report.status, 'quality_review_needed'); assert.equal(output.report.rows[0].fields.abstract, 'MISSING_NUMBERS');
   assert.equal(output.result.items[0].abstract_zh, undefined); assert.equal(output.result.items[0].title_zh, zh.title_zh);
+});
+
+test('DeepSeek：逐项还原数字标记后才保存，标记缺失不影响另一合格字段', async () => {
+  const encoded = '我们利用⟦PDN_A_0⟧至⟦PDN_A_1⟧年的数据研究企业投资。信贷供给对投资的影响幅度为⟦PDN_A_2⟧%。结果在不同企业和地区中均保持稳健。';
+  const invoke = abstract_zh => run(batch(), { fetchImpl: async () => response(payload({ choices: [{ finish_reason: 'stop',
+    message: { role: 'assistant', content: JSON.stringify({ ...zh, abstract_zh }) } }] })) });
+  const good = await invoke(encoded);
+  assert.equal(good.result.items[0].abstract_zh, zh.abstract_zh);
+  assert.deepEqual(good.result.items[0].source_text_hash, batch().items[0].source_text_hash);
+  assert.equal(applyTranslationResult(papers(), good.request, good.result, { config, importedAt: time }).report.stats.completed_fields, 2);
+  const bad = await invoke(encoded.replace('⟦PDN_A_2⟧', '2.5'));
+  assert.equal(bad.report.rows[0].fields.abstract, 'NUMERIC_MARKER_MISMATCH');
+  assert.equal(bad.result.items[0].abstract_zh, undefined);
+  assert.equal(bad.result.items[0].title_zh, zh.title_zh);
 });
 
 test('DeepSeek：最多10个串行请求，逐篇检查点和用量累计', async () => {

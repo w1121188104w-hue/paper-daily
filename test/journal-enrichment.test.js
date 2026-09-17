@@ -155,7 +155,7 @@ test('robots规则、允许例外和特定UA正确，URL不允许文件/认证/�
   assert.equal(robotsAllows('User-agent: GPTBot\nDisallow: /','/articles'),true);
   for (const url of ['http://a.test/a','https://user:pass@a.test/a','https://evil.test/a','file:///a']) assert.throws(() => checkedEvidenceUrl(url,['a.test']));
 });
-test('请求尊重robots；429当轮停止同站请求；敏感头不跟随重定向', async () => {
+test('请求尊重robots；429冷却期停止同站请求；敏感头不跟随重定向', async () => {
   let calls = 0;
   const h = makeEvidenceHttp({ intervalMs: 0,fetchImpl: async url => { calls++; return new Response(url.endsWith('robots.txt') ? 'User-agent: *\nDisallow: /blocked' : 'ok'); } });
   await assert.rejects(h.request('https://a.test/blocked',['a.test']),/ROBOTS_DISALLOWED/); assert.equal(calls,1);
