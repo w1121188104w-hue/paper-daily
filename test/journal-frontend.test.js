@@ -304,6 +304,20 @@ test('RePEc摘要来源使用原有页面样式显示并链接原记录', async 
   assert.ok(descendants(ui.get('paperList')).some(e => e.href === url));
 });
 
+test('CAR只有法文摘要时不标成English，保留原文切换和已有中文', async t => {
+  const french = 'RÉSUMÉ Nous étudions les informations comptables.';
+  for (const translated of [false, true]) {
+    const ui = await app(t, { data: payload({ papers: [paper({ journal_key: 'CAR', abstract_status: 'english_missing',
+      abstract_original: french, abstract_zh: translated ? '已有法文对应译文' : '', abstract_translation_status: translated ? 'done' : 'pending' })] }) });
+    const root = ui.get('paperList');
+    assert.ok(root.textContent.includes('只有法文原文，英文摘要待补全'));
+    assert.ok(root.textContent.includes('法文原文（英文待补）'));
+    assert.ok(!root.textContent.includes('English abstract'));
+    if (translated) await descendants(root).find(e => e.tagName === 'button' && e.textContent === '法文原文（英文待补）').trigger('click');
+    assert.ok(descendants(root).some(e => e.textContent === french && e.lang === 'fr'));
+  }
+});
+
 test('网页显示官网部分核对/受限与摘要真实来源，不把未知显示成零篇或生成摘要', async t => {
   const ui = await app(t,{ data: payload({ papers: [paper({ sources: ['publisher'],abstract_status: 'found',abstract_source: 'publisher',
     abstract_source_url: 'https://www.aeaweb.org/articles?id=10.1234/one' })],enrichment: {
