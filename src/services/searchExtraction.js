@@ -40,8 +40,10 @@ export async function extractSearchRecord(leads, paper, journal, extract, checke
   const result = await extract({ paper: { title: paper.title_original, doi: paper.doi, journal: journal.name },
     evidence: evidence.map(({ title, url, content }) => ({ title, url, content })) });
   const row = result?.record;
-  if (!row || !Number.isInteger(row.source_index) || !evidence[row.source_index]) return null;
-  const source = evidence[row.source_index];
+  if (!row) return null;
+  const source = row.source_url ? evidence.find(item => item.url === row.source_url) :
+    Number.isInteger(row.source_index) ? evidence[row.source_index] : null;
+  if (!source) return null;
   if (identity(row.title) !== identity(paper.title_original) || normalizeDoi(row.doi) !== normalizeDoi(paper.doi) ||
     cleanText(row.abstract) !== source.abstract) throw new EvidenceError('UNVERIFIED_EXTRACTION');
   // Authors and month are filled only by their dedicated, original-source

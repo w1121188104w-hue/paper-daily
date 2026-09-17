@@ -13,7 +13,9 @@ try {
   const config = await loadJournalConfig(), policy = await loadSearchPolicy();
   const baseline = await readJournalLibrary({ config, root: path.resolve('production-baseline/data/journal-store') });
   const runtime = await makePipelineRuntime({ env: process.env, policy });
-  const targets = ['JFE', 'RP', 'QJE'].map(key => baseline.papers.find(p => p.journal_key === key && !p.abstract_original && p.doi)).filter(Boolean);
+  const targets = ['10.1016/j.jfineco.2026.104335', '10.1016/j.respol.2026.105508', '10.1016/j.respol.2026.105502']
+    .map(doi => baseline.papers.find(p => p.doi === doi && !p.abstract_original)).filter(Boolean);
+  assertLibrary(targets.length > 0, '没有符合条件的缺摘要研究论文');
   const records = [];
   let calls = 0;
   const search = async request => {

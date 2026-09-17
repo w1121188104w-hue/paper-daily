@@ -64,6 +64,11 @@ export async function makePipelineRuntime({ env, policy }) {
       taskId: `extract:${extraction.paper.doi}`, extraction });
     return result.result?.extracted || null;
   };
+  sources.searchArticle = async (paper, journal) => {
+    const article = { title: paper.title_original, doi: paper.doi, journal: journal.name };
+    return search({ provider: 'zhipu', query: `article:${JSON.stringify(article)}`.slice(0, 2000),
+      taskId: `article:${paper.id}`, article });
+  };
   return { http, search, sources,
     collectionOptions: { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '', maxAttempts: 2, timeoutMs: 12000 },
     quotaResetsAt: () => {

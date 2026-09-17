@@ -62,6 +62,22 @@ test('智谱多查询先于SerpAPI，结构化提取解决后立即停止', asyn
   assert.equal(result.status, 'resolved');
   assert.deepEqual(calls.map(x => x.provider), ['zhipu', 'zhipu']);
 });
+
+test('智谱联网整理请求完整标题和Pro搜索，模型回答须有返回检索原文才能采纳', async () => {
+  let request;
+  const row = { ...extracted.record, source_url: lead.url }; delete row.source_index;
+  const api = makeSearchSources({ zhipuKey: 'test-key-not-real', zhipuEngine: 'search_pro', fetchImpl: async (_, init) => {
+    request = JSON.parse(init.body);
+    return new Response(JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ record: row }) } }],
+      search_result: [{ title: lead.title, link: lead.url, content: lead.content }] }));
+  } });
+  const result = await api.request({ provider: 'zhipu', query: 'article:test', article: paper });
+  assert.equal(request.tools[0].web_search.search_engine, 'search_pro');
+  assert.equal(request.tools[0].web_search.search_result, true);
+  const verified = await extractSearchRecord(result.leads, paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z');
+  assert.equal(verified.abstract, abstract);
+  assert.equal(await extractSearchRecord([], paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z'), null);
+});
 test('放开智谱额度只接受新授权，SerpAPI仍严格保护免费额度', () => {
   const policy = { schema_version: 1, approved_on: '2026-09-17', zhipu_engine: 'search_pro', zhipu_monthly_limit: null,
     serpapi_monthly_limit: 250, lookback_days: 60, automatic_payment: false, production_enabled: true };

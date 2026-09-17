@@ -124,6 +124,20 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
     }
   }
   let searchResult = null;
+  if (stillMissing().includes('abstract') && !mergeClaims().length && sources.searchArticle) {
+    try {
+      const answer = await sources.searchArticle(current, journal);
+      const record = answer.called && answer.result ? await extractSearchRecord(answer.result.leads || [], current, journal,
+        async () => answer.result.extracted, checkedAt) : null;
+      if (record) adopt(record);
+      attempts.push({ source: 'zhipu', status: record ? 'filled' : 'no_verified_abstract',
+        called: Boolean(answer.called), stage: 'search_and_extract',
+        leads_returned: answer.result?.leads?.length || 0, ...(answer.diagnostic ? { diagnostic: answer.diagnostic } : {}) });
+    } catch (error) {
+      if (['EVIDENCE_STORAGE_ERROR', 'SEARCH_LEDGER_CHECKPOINT_FAILED'].includes(error.code)) throw error;
+      attempts.push({ source: 'zhipu', status: safeCode(error), stage: 'search_and_extract' });
+    }
+  }
   if (stillMissing().length && !mergeClaims().length && search) {
     searchResult = await searchWithFallback({ maxLeadsPerSource: 50, queryFor: provider => {
       const query = paperSearchQuery(current, provider);
