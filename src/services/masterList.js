@@ -5,6 +5,7 @@ import { classifyPaper } from './paperClassification.js';
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
 import { paperDocumentType, evidenceWindowStatus } from './paperScope.js';
 import { titleConsensusFor } from './titleConsensus.js';
+import { missingOriginalAbstract } from './carAbstractLanguage.js';
 
 export const DISCOVERY_SOURCES = ['crossref', 'openalex', 'semanticscholar', 'publisher'];
 const flag = { crossref: 'found_crossref', openalex: 'found_openalex', semanticscholar: 'found_semantic_scholar', publisher: 'found_official_site' };
@@ -100,7 +101,7 @@ function abstractProvenance(paper) {
 
 export function buildMasterList(papers, { generatedAt, fromDate = null, toDate = null, officialIds = new Set(), policyVersion = 1 } = {}) {
   assertLibrary(isIsoTime(generatedAt), '总名册生成时间无效');
-  assertLibrary([1, 2, 3, 4].includes(policyVersion), '不支持的总名册统计规则版本');
+  assertLibrary([1, 2, 3, 4, 5].includes(policyVersion), '不支持的总名册统计规则版本');
   const entries = [...papers].sort((a, b) => a.id.localeCompare(b.id)).map(paper => {
     const publication = publicationFor(paper), found = discoverySourcesFor(paper, officialIds);
     const titles = [...new Set(evidence(paper.source_records, 'title').map(record => identityTitle(record.title)))];
@@ -110,7 +111,8 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
     const titleConflict = titles.length > 1 && !resolution;
     const conflicts = [...(titleConflict ? ['title_conflict'] : []), ...(publication.publication_conflict ? ['publication_month_conflict'] : [])];
     const missing = [...(!paper.doi ? ['doi'] : []), ...(!paper.authors.length ? ['authors'] : []),
-      ...(!publication.publication_month ? ['publication_month'] : []), ...(!paper.abstract_original ? ['abstract'] : [])];
+      ...(!publication.publication_month ? ['publication_month'] : []),
+      ...((policyVersion >= 5 ? missingOriginalAbstract(paper) : !paper.abstract_original) ? ['abstract'] : [])];
     return { id: paper.id, title: paper.title_original, doi: paper.doi || null, journal: paper.journal_key,
       journal_name: paper.journal_name, authors: paper.authors.map(author => ({ ...author })),
       abstract: paper.abstract_original || null, ...abstractProvenance(paper), ...publication,

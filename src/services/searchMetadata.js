@@ -12,6 +12,7 @@ import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 import { classifyPaper } from './paperClassification.js';
 import { duplicateMergeProof } from './duplicateMerge.js';
 import { extractSearchRecord } from './searchExtraction.js';
+import { missingOriginalAbstract, needsCarEnglishAbstract, verifiedCarEnglishRecord } from './carAbstractLanguage.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -42,7 +43,7 @@ export function fillMissingMetadata(paper, input, { otherPapers = [], identityEv
       next[field] = candidate; next.provenance[field] = { source: record.source, source_id: record.source_id }; changed.push(field);
     }
   }
-  if (!next.abstract_original && authenticAbstract(record.abstract)) {
+  if ((!next.abstract_original || (needsCarEnglishAbstract(next) && verifiedCarEnglishRecord(record))) && authenticAbstract(record.abstract)) {
     next.abstract_original = record.abstract;
     next.provenance.abstract_original = { source: record.source, source_id: record.source_id };
     next.source_text_hash = buildSourceTextHash(next.title_original, next.abstract_original);
@@ -56,7 +57,7 @@ export function fillMissingMetadata(paper, input, { otherPapers = [], identityEv
   return { paper: next, changed_fields: changed };
 }
 const missingFields = paper => [...(!paper.doi ? ['doi'] : []), ...(!paper.authors.length ? ['authors'] : []),
-  ...(!publicationFor(paper).publication_month ? ['publication_month'] : []), ...(!paper.abstract_original ? ['abstract'] : [])];
+  ...(!publicationFor(paper).publication_month ? ['publication_month'] : []), ...(missingOriginalAbstract(paper) ? ['abstract'] : [])];
 const safeCode = error => /^[A-Z_]{3,50}$/.test(error?.code || '') ? error.code : 'SOURCE_UNAVAILABLE';
 
 /** Second phase: THREE structured lookups first; only then search known-paper missing fields.
@@ -79,7 +80,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
         // title match has a different abstract. Keep the established date and
         // retain the conflicting dates as raw evidence, adopting ONLY abstract.
         const original = normalizeSourceRecord(record);
-        if (error.code !== 'PUBLICATION_MONTH_CONFLICT' || !wanted.has('abstract') || current.abstract_original ||
+        if (error.code !== 'PUBLICATION_MONTH_CONFLICT' || !wanted.has('abstract') || !missingOriginalAbstract(current) ||
           !current.doi || original.doi !== current.doi || !repairIdentityMatches(current, original) ||
           !authenticAbstract(original.abstract)) throw error;
         const scoped = { ...original, authors: [], published_online_date: '', published_print_date: '', publication_date: '',
