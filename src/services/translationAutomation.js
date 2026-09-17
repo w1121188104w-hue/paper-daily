@@ -7,6 +7,7 @@ import { dateInShanghai } from './paperMerge.js';
 import { createTranslationBatch, translationBatchId, translationEligibility, translationTaskId, validateTranslationBatch } from './translationQueue.js';
 import { readTranslationJson, importTranslationFile } from './translationWorkflow.js';
 import { DEEPSEEK_MODEL, PILOT_LIMITS, deepseekRequest, requireDeepSeekKey, planDeepSeekBatch, translateDeepSeekBatch } from './deepseekTranslation.js';
+import { recoverHistoricalTranslations } from './translationRecovery.js';
 
 export const TRANSLATION_STATE_PATH = 'automation/translation-state.json';
 export const AUTOMATION_LIMITS = Object.freeze({ batch: 10, backfill_requests: 1000, daily_requests: 500,
@@ -178,8 +179,15 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
   publishCheckpoint, fetchImpl = fetch, now = () => new Date(), log = () => {} } = {}) {
   assertLibrary(['daily', 'backfill'].includes(mode) && typeof publishCheckpoint === 'function', '自动翻译需要明确模式及持久保存步骤');
   let library = await readJournalLibrary({ root, config }), state = await readTranslationState(root);
+  const recovery = state.paused ? { recovered_fields: 0, committed: false }
+    : await recoverHistoricalTranslations(config, { root, state, now });
+  if (recovery.committed) {
+    await publishCheckpoint({ phase: 'settle' });
+    library = await readJournalLibrary({ root, config });
+  }
   const initial = automationSummary(library, state, now());
-  if (state.paused || !initial.available_papers) return { ...initial, requested_this_run: 0, stop_reason: state.paused ? 'PAUSED' : 'NO_UNATTEMPTED_TASKS' };
+  if (state.paused || !initial.available_papers) return { ...initial, recovered_fields: recovery.recovered_fields,
+    requested_this_run: 0, stop_reason: state.paused ? 'PAUSED' : 'NO_UNATTEMPTED_TASKS' };
   requireDeepSeekKey(apiKey);
   assertLibrary(!JSON.stringify(state).includes(apiKey), '状态文件不能包含密钥');
   const started = now(), cap = mode === 'backfill' ? AUTOMATION_LIMITS.backfill_requests : AUTOMATION_LIMITS.daily_requests;
@@ -258,5 +266,5 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
   }
   if (requested >= cap) stopReason = 'REQUEST_LIMIT';
   return { ...automationSummary(await readJournalLibrary({ root, config }), await readTranslationState(root), now()),
-    requested_this_run: requested, stop_reason: stopReason };
+    recovered_fields: recovery.recovered_fields, requested_this_run: requested, stop_reason: stopReason };
 }

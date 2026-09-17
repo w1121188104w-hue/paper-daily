@@ -146,6 +146,56 @@ test('自动翻译：机械检查只拒绝失败字段，不改写、不重复�
 
 const later = minutes => () => new Date(Date.parse(time) + minutes * 60000);
 
+async function recollect(root, abstract, minutes) {
+  const at = later(minutes), rows = [record(0, { abstract, last_checked_at: at().toISOString() })];
+  const clients = Object.fromEntries(['crossref', 'openalex'].map(source => [source, async j => ({
+    source, journal_key: j.key, ok: true, complete: true, raw_count: source === 'crossref' ? 1 : 0,
+    records: source === 'crossref' ? rows : [], raw_pages: [{ fixture: true }], rejected: [], duration_ms: 0, error: null
+  })]));
+  return runJournalCollection(config, { root, journalKey: 'AER', clients, now: at });
+}
+
+test('自动恢复：英文回到历史版本后原样恢复已接受译文，零调用且不重置账本', async t => {
+  const { root } = await fixture(t);
+  await run(root);
+  const original = (await readJournalLibrary({ root, config })).papers[0];
+  await recollect(root, `${record(0).abstract} Additional evidence is provided.`, 60);
+  const otherZh = `${zh.abstract_zh}我们还提供了额外的证据。`;
+  await run(root, { now: later(61), fetchImpl: async () => response({ abstract_zh: otherZh }) });
+  await recollect(root, record(0).abstract, 120);
+  const before = await readJournalLibrary({ root, config }), ledger = await readTranslationState(root);
+  assert.equal(before.papers[0].abstract_translation_status, 'outdated');
+  assert.equal(before.papers[0].abstract_zh, otherZh);
+  let checkpoints = 0;
+  const recovered = await run(root, { apiKey: undefined, now: later(121),
+    publishCheckpoint: async ({ phase }) => { assert.equal(phase, 'settle'); checkpoints++; },
+    fetchImpl: async () => { throw new Error('must not call API'); } });
+  assert.equal(recovered.recovered_fields, 1); assert.equal(recovered.requested_this_run, 0);
+  assert.equal(recovered.held_fields, 0); assert.equal(checkpoints, 1);
+  const after = await readJournalLibrary({ root, config }), paper = after.papers[0];
+  assert.equal(paper.abstract_translation_status, 'done'); assert.equal(paper.abstract_zh, original.abstract_zh);
+  assert.equal(paper.translation_provenance.abstract.translated_at, original.translation_provenance.abstract.translated_at);
+  assert.equal(paper.translation_provenance.abstract.imported_at, later(121)().toISOString());
+  for (const key of ['title_zh', 'title_original', 'abstract_original', 'source_records', 'source_text_hash', 'authors', 'doi'])
+    assert.deepEqual(paper[key], before.papers[0][key]);
+  assert.deepEqual(await readTranslationState(root), ledger);
+  assert.equal((await run(root, { now: later(122) })).recovered_fields, 0);
+});
+
+test('自动恢复：历史原文不同则不借用旧译文，成功账本不能替代校验过的快照', async t => {
+  const { root } = await fixture(t); await run(root);
+  const original = await readJournalLibrary({ root, config });
+  await recollect(root, `${record(0).abstract} Different original text.`, 60);
+  assert.equal((await run(root, { now: later(61) })).recovered_fields, 0);
+  await recollect(root, record(0).abstract, 120);
+  const before = await readJournalLibrary({ root, config });
+  // Tampering with the accepted old paper must fail its immutable reference hash.
+  const file = path.join(root, Object.values(original.manifest.papers)[0].path);
+  await fs.appendFile(file, ' ');
+  await assert.rejects(run(root, { now: later(121), fetchImpl: async () => { throw new Error('must not call API'); } }));
+  assert.equal(await fs.readFile(path.join(root, 'current.json'), 'utf8'), before.pointerText);
+});
+
 test('自动翻译恢复：30分钟后只重试失败摘要，保留成功标题和历史账本', async (t) => {
   const { root } = await fixture(t);
   await run(root, { fetchImpl: async () => response({ ...zh, abstract_zh: zh.abstract_zh.replace('2.5', '很多') }) });
