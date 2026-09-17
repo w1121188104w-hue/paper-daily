@@ -72,6 +72,40 @@ export function doiUrl(value) {
   return doi ? `https://doi.org/${doi}` : '';
 }
 
+// Crossmark's update-to belongs to the separate notice, not the original work.
+// In-situ/self updates and unrelated version changes must not turn a research
+// article into a correction. Keep the declared type alongside this derivation.
+const NOTICE_TYPES = new Map([
+  ['erratum', 'erratum'], ['correction', 'correction'], ['corrigendum', 'correction'],
+  ['retraction', 'retraction'], ['partial_retraction', 'retraction'], ['withdrawal', 'retraction']
+]);
+export function crossrefNoticeFromWork(item) {
+  const doi = normalizeDoi(item?.DOI);
+  if (!/^10\.\d{4,9}\/\S+$/.test(doi) || !Array.isArray(item?.['update-to'])) return null;
+  const updates = item['update-to'].flatMap(update => {
+    const target = normalizeDoi(update?.DOI);
+    return NOTICE_TYPES.has(update?.type) && /^10\.\d{4,9}\/\S+$/.test(target) && target !== doi
+      ? [{ doi: target, type: update.type }] : [];
+  });
+  if (!updates.length || updates.length > 100) return null;
+  return { policy: 'crossref_update_to_v1', original_type: String(item.type || '').trim(), updates };
+}
+export function crossrefNoticeType(notice) {
+  const types = notice.updates.map(update => NOTICE_TYPES.get(update.type));
+  return types.includes('retraction') ? 'retraction' : types.includes('correction') ? 'correction' : 'erratum';
+}
+function normalizedCrossrefNotice(value, source, doi, type) {
+  if (source !== 'crossref' || value?.policy !== 'crossref_update_to_v1' ||
+      Object.keys(value).sort().join(',') !== 'original_type,policy,updates' ||
+      typeof value.original_type !== 'string' || !Array.isArray(value.updates) ||
+      !value.updates.length || value.updates.length > 100 ||
+      value.updates.some(update => !update || Object.keys(update).sort().join(',') !== 'doi,type' ||
+        typeof update.doi !== 'string' || !/^10\.\d{4,9}\/\S+$/.test(update.doi) ||
+        normalizeDoi(update.doi) !== update.doi || update.doi === doi || !NOTICE_TYPES.has(update.type)) ||
+      crossrefNoticeType(value) !== type) throw new Error('Crossref更新通知证据格式无效');
+  return structuredClone(value);
+}
+
 export function normalizeTitleForMatch(value) {
   return cleanText(value)
     .normalize('NFKD')
@@ -224,6 +258,8 @@ export function normalizeSourceRecord(input) {
     pages: cleanText(input?.pages),
     type: String(input?.type || '').trim(),
     ...(input?.source_evidence !== undefined ? { source_evidence: normalizeSourceEvidence(input.source_evidence) } : {}),
+    ...(input?.crossref_notice !== undefined ? { crossref_notice: normalizedCrossrefNotice(input.crossref_notice,
+      source, doi, String(input?.type || '').trim()) } : {}),
     ...(input.text_selection ? { text_selection: structuredClone(input.text_selection) } : {})
   };
 }

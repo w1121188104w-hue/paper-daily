@@ -2,6 +2,8 @@ import {
   cleanText,
   normalizePartialDate,
   normalizeDoi,
+  crossrefNoticeFromWork,
+  crossrefNoticeType,
   normalizeSourceRecord
 } from './paperModel.js';
 import { matchesJournalIssn, knownJournalMismatch } from './journalIdentity.js';
@@ -109,6 +111,7 @@ export function normalizeCrossrefWork(item, journal, checkedAt = new Date().toIS
   }));
   const onlineDate = dateFromParts(item?.['published-online']);
   const printDate = dateFromParts(item?.['published-print']);
+  const notice = crossrefNoticeFromWork(item);
 
   return normalizeSourceRecord({
     source: 'crossref',
@@ -130,6 +133,7 @@ export function normalizeCrossrefWork(item, journal, checkedAt = new Date().toIS
     volume: item?.volume,
     issue: item?.issue,
     pages: item?.page,
-    type: item?.type
+    type: notice ? crossrefNoticeType(notice) : item?.type,
+    ...(notice ? { crossref_notice: notice } : {})
   });
 }

@@ -107,5 +107,16 @@ CC BY-NC 4.0 许可链接。证据保存在 data/publisher-captures/car-70065.js
 
 ## 验收边界
 
+### 同名勘误不能借用原论文摘要
+
+Crossref 对 10.1016/j.respol.2026.105588 明确提供 update-to / erratum，
+指向 10.1016/j.respol.2026.105542；标题和作者相同并不意味着同一篇论文。
+新增规范化保留 crossref_notice：原始 type、更新类型及关联 DOI。
+只有指向不同且有效 DOI 的 correction/corrigendum/erratum 或撤回通知才派生已有通知类型。
+updated-by、自身原位更新、版本变更及无效数据不把正常研究论文误标为通知。
+旧来源记录不重写，摘要保持缺失，不借用被更正论文的摘要，也不宣称通知必然没有摘要。
+这项识别本身不降低全库摘要缺失数量、不删除记录；原论文与通知在现有筛选中分别保留。
+依据：[Crossref 更新通知说明](https://www.crossref.org/documentation/register-maintain-records/maintaining-your-metadata/registering-updates/)。
+
 代码测试通过不代表所有摘要已找到。必须继续核对正式库、运行报告与发布页面，
 分别报告缺英文原摘要与未完成中文翻译；不能删除真实论文或编造摘要来归零。
