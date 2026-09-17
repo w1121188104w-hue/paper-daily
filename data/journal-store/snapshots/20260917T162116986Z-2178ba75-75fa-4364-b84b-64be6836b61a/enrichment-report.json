@@ -1,0 +1,6783 @@
+{
+  "schema_version": 1,
+  "run_id": "20260917T162116986Z-2178ba75-75fa-4364-b84b-64be6836b61a",
+  "stage": "missing_metadata_repair",
+  "status": "partial",
+  "from_date": "2026-07-21",
+  "to_date": "2026-09-18",
+  "stats": {
+    "added": 0,
+    "abstracts_filled": 3,
+    "abstracts_checked": 27,
+    "single_source_confirmed": 1,
+    "pending_candidates": 0,
+    "papers_checked": 27,
+    "papers_changed": 23
+  },
+  "journals": [],
+  "abstracts": [
+    {
+      "paper_id": "doi:10.1086/742716",
+      "journal_key": "JPE",
+      "doi": "10.1086/742716",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1111/1911-3846.70065",
+      "journal_key": "CAR",
+      "doi": "10.1111/1911-3846.70065",
+      "status": "retry_later",
+      "abstract_source": "crossref",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 4,
+          "leads_checked": 4,
+          "lead_statuses": {
+            "ACCESS_RESTRICTED": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "ACCESS_RESTRICTED": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ACCESS_RESTRICTED": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ACCESS_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 13,
+            "NOT_OFFICIAL_HOST": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2025.105376",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2025.105376",
+      "status": "found",
+      "abstract_source": "repec",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 8,
+          "leads_checked": 8,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 8
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "resolved",
+          "called": true,
+          "stage": "grounded_extraction"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/s0304-405x(26)00004-8",
+      "journal_key": "JFE",
+      "doi": "10.1016/s0304-405x(26)00004-8",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 2,
+          "leads_checked": 2,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 38,
+          "leads_checked": 38,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 39,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 12,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/s0048-7333(26)00032-6",
+      "journal_key": "RP",
+      "doi": "10.1016/s0048-7333(26)00032-6",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 15
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "ROBOTS_UNAVAILABLE": 2,
+            "NOT_OFFICIAL_HOST": 42
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 5,
+            "UNVERIFIED_IDENTITY": 10
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/s0304-405x(26)00032-2",
+      "journal_key": "JFE",
+      "doi": "10.1016/s0304-405x(26)00032-2",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 38,
+          "leads_checked": 38,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41,
+            "ROBOTS_UNAVAILABLE": 5
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 8,
+            "NOT_OFFICIAL_HOST": 7
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105542",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105542",
+      "status": "found",
+      "abstract_source": "repec",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "resolved",
+          "called": true,
+          "stage": "grounded_extraction"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/s0048-7333(25)00217-3",
+      "journal_key": "RP",
+      "doi": "10.1016/s0048-7333(25)00217-3",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 15
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "ROBOTS_UNAVAILABLE": 2,
+            "NOT_OFFICIAL_HOST": 42
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 5,
+            "UNVERIFIED_IDENTITY": 10
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1257/aer.116.7.2357",
+      "journal_key": "AER",
+      "doi": "10.1257/aer.116.7.2357",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "PUBLISHER_NO_ABSTRACT"
+        },
+        {
+          "source": "zhipu",
+          "status": "filled",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 15
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 11,
+          "leads_checked": 11,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 11
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "UNRESOLVED_FIELDS": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "UNRESOLVED_FIELDS": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "NOT_OFFICIAL_HOST": 5,
+            "UNVERIFIED_IDENTITY": 9
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "UNVERIFIED_IDENTITY": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1257/aer.116.7.2299",
+      "journal_key": "AER",
+      "doi": "10.1257/aer.116.7.2299",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "PUBLISHER_NO_ABSTRACT"
+        },
+        {
+          "source": "zhipu",
+          "status": "filled",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "UNRESOLVED_FIELDS": 3,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "UNRESOLVED_FIELDS": 3,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 5,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 9
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 4
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1002/joom.70053",
+      "journal_key": "JOM",
+      "doi": "10.1002/joom.70053",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 1,
+            "ACCESS_RESTRICTED": 14
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "ACCESS_RESTRICTED": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ACCESS_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 38,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 38,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ACCESS_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 12,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1257/aer.116.7.2324",
+      "journal_key": "AER",
+      "doi": "10.1257/aer.116.7.2324",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "PUBLISHER_NO_ABSTRACT"
+        },
+        {
+          "source": "zhipu",
+          "status": "filled",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 16
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 7,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 7
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 4
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104352",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104352",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "ROBOTS_UNAVAILABLE": 1,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 33,
+            "ROBOTS_UNAVAILABLE": 14
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 13,
+          "leads_checked": 13,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 5,
+            "NOT_OFFICIAL_HOST": 7,
+            "NOT_FOUND": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 8,
+            "UNVERIFIED_IDENTITY": 7
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105586",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105586",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 12,
+            "UNVERIFIED_IDENTITY": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 8,
+            "UNVERIFIED_IDENTITY": 7
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104355",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104355",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "UNVERIFIED_IDENTITY": 2,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ROBOTS_UNAVAILABLE": 1,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 8
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 3,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 11,
+            "UNVERIFIED_IDENTITY": 4
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1086/742421",
+      "journal_key": "JPE",
+      "doi": "10.1086/742421",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1057/s41267-026-00905-3",
+      "journal_key": "JIBS",
+      "doi": "10.1057/s41267-026-00905-3",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "REDIRECT_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 17,
+            "PAGE_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 17,
+            "PAGE_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 2,
+            "NOT_OFFICIAL_HOST": 40
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "REDIRECT_RESTRICTED": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "REDIRECT_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 1,
+            "NOT_OFFICIAL_HOST": 14
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 12,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105494",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105494",
+      "status": "found",
+      "abstract_source": "repec",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 36,
+            "ROBOTS_UNAVAILABLE": 8,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 4,
+          "leads_checked": 4,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 39,
+            "ROBOTS_UNAVAILABLE": 2,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "resolved",
+          "called": true,
+          "stage": "grounded_extraction"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1086/742424",
+      "journal_key": "JPE",
+      "doi": "10.1086/742424",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 10,
+          "leads_checked": 10,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105601",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105601",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 3,
+          "leads_checked": 3,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 39,
+            "ROBOTS_UNAVAILABLE": 5,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 4,
+            "NOT_OFFICIAL_HOST": 11
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104356",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104356",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "UNVERIFIED_IDENTITY": 2,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 2,
+          "leads_checked": 2,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 8,
+            "NOT_OFFICIAL_HOST": 7
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104335",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104335",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 5
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 5,
+          "leads_checked": 5,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 3,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "UNVERIFIED_IDENTITY": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105603",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105603",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 4,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41,
+            "ROBOTS_UNAVAILABLE": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 2,
+            "NOT_OFFICIAL_HOST": 13
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 6,
+            "NOT_OFFICIAL_HOST": 9
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101937",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101937",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 4,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 2,
+          "leads_checked": 2,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6,
+            "UNVERIFIED_IDENTITY": 9
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1057/s41267-026-00897-0",
+      "journal_key": "JIBS",
+      "doi": "10.1057/s41267-026-00897-0",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "REDIRECT_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 18,
+            "PAGE_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 18,
+            "PAGE_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46,
+            "REDIRECT_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "EXTRACTION_NOT_VERIFIED": 1,
+            "NOT_OFFICIAL_HOST": 46,
+            "REDIRECT_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "PAGE_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 10,
+            "NOT_OFFICIAL_HOST": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105606",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 5,
+            "UNVERIFIED_IDENTITY": 5
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 12,
+            "UNVERIFIED_IDENTITY": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 14,
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    },
+    {
+      "paper_id": "doi:10.1016/j.jcorpfin.2026.103094",
+      "journal_key": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103094",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 8,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "REQUEST_LIMIT": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "serpapi_google",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "paper_id": "doi:10.1086/742716",
+      "journal_key": "JPE",
+      "doi": "10.1086/742716",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "identity",
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "openalex",
+        "source_id": "W7164839830",
+        "url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742716",
+        "fetched_at": "2026-09-17T16:21:18.418Z",
+        "body_sha256": "f2921450a978fa5f427920aad6db90ad071ea9317a07237b3dfc2628ff150415",
+        "method": "openalex_api",
+        "scope_url": "https://api.openalex.org/works/https://doi.org/10.1086%2F742716"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1111/1911-3846.70065",
+      "journal_key": "CAR",
+      "doi": "10.1111/1911-3846.70065",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 4,
+          "leads_checked": 4,
+          "lead_statuses": {
+            "ACCESS_RESTRICTED": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "ACCESS_RESTRICTED": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ACCESS_RESTRICTED": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ACCESS_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 13,
+            "NOT_OFFICIAL_HOST": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2025.105376",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2025.105376",
+      "status": "resolved",
+      "changed_fields": [
+        "abstract"
+      ],
+      "missing_fields": [],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 8,
+          "leads_checked": 8,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 8
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "resolved",
+          "called": true,
+          "stage": "grounded_extraction"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/s0304-405x(26)00004-8",
+      "journal_key": "JFE",
+      "doi": "10.1016/s0304-405x(26)00004-8",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 2,
+          "leads_checked": 2,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 38,
+          "leads_checked": 38,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 39,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 12,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/s0048-7333(26)00032-6",
+      "journal_key": "RP",
+      "doi": "10.1016/s0048-7333(26)00032-6",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 15
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "ROBOTS_UNAVAILABLE": 2,
+            "NOT_OFFICIAL_HOST": 42
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 5,
+            "UNVERIFIED_IDENTITY": 10
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/s0304-405x(26)00032-2",
+      "journal_key": "JFE",
+      "doi": "10.1016/s0304-405x(26)00032-2",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 38,
+          "leads_checked": 38,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41,
+            "ROBOTS_UNAVAILABLE": 5
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 8,
+            "NOT_OFFICIAL_HOST": 7
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105542",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105542",
+      "status": "resolved",
+      "changed_fields": [
+        "abstract"
+      ],
+      "missing_fields": [],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "resolved",
+          "called": true,
+          "stage": "grounded_extraction"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/s0048-7333(25)00217-3",
+      "journal_key": "RP",
+      "doi": "10.1016/s0048-7333(25)00217-3",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "openalex",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 15
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "ROBOTS_UNAVAILABLE": 2,
+            "NOT_OFFICIAL_HOST": 42
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 5,
+            "UNVERIFIED_IDENTITY": 10
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1257/aer.116.7.2357",
+      "journal_key": "AER",
+      "doi": "10.1257/aer.116.7.2357",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "PUBLISHER_NO_ABSTRACT"
+        },
+        {
+          "source": "zhipu",
+          "status": "filled",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 15
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 11,
+          "leads_checked": 11,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 11
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "UNRESOLVED_FIELDS": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "UNRESOLVED_FIELDS": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "NOT_OFFICIAL_HOST": 5,
+            "UNVERIFIED_IDENTITY": 9
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "UNVERIFIED_IDENTITY": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1257/aer.116.7.2299",
+      "journal_key": "AER",
+      "doi": "10.1257/aer.116.7.2299",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "PUBLISHER_NO_ABSTRACT"
+        },
+        {
+          "source": "zhipu",
+          "status": "filled",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43,
+            "UNRESOLVED_FIELDS": 3,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "UNRESOLVED_FIELDS": 3,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 5,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 9
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 4
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1002/joom.70053",
+      "journal_key": "JOM",
+      "doi": "10.1002/joom.70053",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 1,
+            "ACCESS_RESTRICTED": 14
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "ACCESS_RESTRICTED": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ACCESS_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 38,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 40,
+          "leads_checked": 40,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 38,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ACCESS_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 12,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1257/aer.116.7.2324",
+      "journal_key": "AER",
+      "doi": "10.1257/aer.116.7.2324",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "PUBLISHER_NO_ABSTRACT"
+        },
+        {
+          "source": "zhipu",
+          "status": "filled",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 16
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "PUBLISHER_NO_ABSTRACT": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 7,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 7
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "PUBLISHER_NO_ABSTRACT": 1,
+            "UNVERIFIED_IDENTITY": 4
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104352",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104352",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "ROBOTS_UNAVAILABLE": 1,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 33,
+            "ROBOTS_UNAVAILABLE": 14
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 13,
+          "leads_checked": 13,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 5,
+            "NOT_OFFICIAL_HOST": 7,
+            "NOT_FOUND": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 8,
+            "UNVERIFIED_IDENTITY": 7
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105586",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105586",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 12,
+            "UNVERIFIED_IDENTITY": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 8,
+            "UNVERIFIED_IDENTITY": 7
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104355",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104355",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "UNVERIFIED_IDENTITY": 2,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "ROBOTS_UNAVAILABLE": 1,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 8
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 6,
+          "leads_checked": 6,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 3,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 11,
+            "UNVERIFIED_IDENTITY": 4
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742421",
+      "journal_key": "JPE",
+      "doi": "10.1086/742421",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1057/s41267-026-00905-3",
+      "journal_key": "JIBS",
+      "doi": "10.1057/s41267-026-00905-3",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "REDIRECT_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 17,
+            "PAGE_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 17,
+            "PAGE_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 2,
+            "NOT_OFFICIAL_HOST": 40
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44,
+            "REDIRECT_RESTRICTED": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "REDIRECT_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 1,
+            "NOT_OFFICIAL_HOST": 14
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 12,
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105494",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105494",
+      "status": "resolved",
+      "changed_fields": [
+        "abstract"
+      ],
+      "missing_fields": [],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 36,
+            "ROBOTS_UNAVAILABLE": 8,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 4,
+          "leads_checked": 4,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 39,
+            "ROBOTS_UNAVAILABLE": 2,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "resolved",
+          "called": true,
+          "stage": "grounded_extraction"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1086/742424",
+      "journal_key": "JPE",
+      "doi": "10.1086/742424",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "source": "repec",
+          "status": "NOT_FOUND"
+        },
+        {
+          "source": "zhipu",
+          "status": "ACCESS_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 10,
+          "leads_checked": 10,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 49,
+          "leads_checked": 49,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 49
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105601",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105601",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 3,
+          "leads_checked": 3,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 42,
+          "leads_checked": 42,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 39,
+            "ROBOTS_UNAVAILABLE": 5,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 4,
+            "NOT_OFFICIAL_HOST": 11
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104356",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104356",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 43,
+          "leads_checked": 43,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 43
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "UNVERIFIED_IDENTITY": 2,
+            "ROBOTS_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 2,
+          "leads_checked": 2,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 8,
+            "NOT_OFFICIAL_HOST": 7
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104335",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104335",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 44
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 50,
+          "leads_checked": 50,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 50
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 5
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 5,
+          "leads_checked": 5,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 3,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 10,
+            "UNVERIFIED_IDENTITY": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105603",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105603",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 1,
+          "leads_checked": 1,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 40,
+            "ROBOTS_UNAVAILABLE": 4,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 45,
+          "leads_checked": 45,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 41,
+            "ROBOTS_UNAVAILABLE": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 2,
+            "NOT_OFFICIAL_HOST": 13
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 6,
+            "NOT_OFFICIAL_HOST": 9
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101937",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101937",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 4
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 4,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 44,
+          "leads_checked": 44,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 2,
+          "leads_checked": 2,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 1,
+            "UNVERIFIED_IDENTITY": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 6,
+            "UNVERIFIED_IDENTITY": 9
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1057/s41267-026-00897-0",
+      "journal_key": "JIBS",
+      "doi": "10.1057/s41267-026-00897-0",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "REDIRECT_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 18,
+            "PAGE_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 20,
+          "leads_checked": 20,
+          "lead_statuses": {
+            "REDIRECT_RESTRICTED": 18,
+            "PAGE_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46,
+            "REDIRECT_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "EXTRACTION_NOT_VERIFIED": 1,
+            "NOT_OFFICIAL_HOST": 46,
+            "REDIRECT_RESTRICTED": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47,
+            "PAGE_UNAVAILABLE": 1
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 13,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 10,
+            "NOT_OFFICIAL_HOST": 5
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105606",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "ROBOTS_UNAVAILABLE",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 48
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 45,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 5,
+            "UNVERIFIED_IDENTITY": 5
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 41,
+          "leads_checked": 41,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "UNVERIFIED_IDENTITY": 1,
+            "ROBOTS_UNAVAILABLE": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 12,
+            "UNVERIFIED_IDENTITY": 3
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "UNVERIFIED_IDENTITY": 14,
+            "NOT_OFFICIAL_HOST": 1
+          }
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.jcorpfin.2026.103094",
+      "journal_key": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103094",
+      "status": "source_unavailable",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "PUBLICATION_MONTH_CONFLICT"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "source": "zhipu",
+          "status": "no_verified_abstract",
+          "called": true,
+          "stage": "search_and_extract",
+          "leads_returned": 0
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 0,
+          "leads_checked": 0,
+          "lead_statuses": {}
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 15,
+          "leads_checked": 15,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 15
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 47
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "not_found",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 46,
+          "leads_checked": 46,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 46
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 47,
+          "leads_checked": 47,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 37,
+            "ROBOTS_UNAVAILABLE": 8,
+            "UNVERIFIED_IDENTITY": 2
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "access_restricted",
+          "called": true,
+          "stage": "original_page_verification",
+          "leads_returned": 48,
+          "leads_checked": 48,
+          "lead_statuses": {
+            "NOT_OFFICIAL_HOST": 42,
+            "REQUEST_LIMIT": 6
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "serpapi_google",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    }
+  ],
+  "unresolved": {
+    "unresolved_papers": 172,
+    "unresolved_issues": 280,
+    "by_status": {
+      "pending": 27,
+      "not_found": 0,
+      "quota_exhausted": 250,
+      "access_restricted": 0,
+      "source_unavailable": 0,
+      "identity_conflict": 3
+    }
+  },
+  "library_statistics": {
+    "total": 801,
+    "research_candidates": 780,
+    "lectures": 4,
+    "research_confirmed_inside_window": 416,
+    "research_uncertain_window": 134,
+    "research_outside_window": 230,
+    "missing_doi": 0,
+    "missing_authors": 28,
+    "missing_publication_month": 22,
+    "missing_abstract": 121,
+    "independent_source_union": 698,
+    "official_only": 103,
+    "confirmed_inside_window": 430,
+    "uncertain_window": 135,
+    "by_discovery_source": {
+      "crossref": 542,
+      "openalex": 354,
+      "semanticscholar": 340,
+      "publisher": 214
+    }
+  }
+}
