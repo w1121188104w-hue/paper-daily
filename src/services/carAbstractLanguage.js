@@ -12,7 +12,7 @@ export const missingOriginalAbstract = paper => !paper.abstract_original || need
 // nonempty French abstract. Model-produced text and mere language guesses fail.
 export function verifiedCarEnglishRecord(record) {
   if (record.journal_key !== 'CAR' || record.source !== 'publisher' ||
-      record.source_evidence?.method !== 'zhipu_search_verbatim_abstract' ||
+      !['zhipu_search_verbatim_abstract', 'zhipu_reader_verbatim_abstract'].includes(record.source_evidence?.method) ||
       record.source_evidence.body_sha256 !== evidenceHash(record.raw_abstract)) return false;
   const rows = extractionEvidence([{ title: record.title, url: record.source_evidence.url,
     content: record.raw_abstract }], { title_original: record.title, doi: record.doi },

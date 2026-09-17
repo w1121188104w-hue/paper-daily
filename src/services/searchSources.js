@@ -130,9 +130,28 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
       // Do not log or persist data: /account.json includes the private API key.
       return safeSerpAccount(await readAccount(), now().toISOString());
     },
-    async request({ provider, query, extraction, article }) {
+    async request({ provider, query, extraction, article, reader }) {
       fail(typeof query === 'string' && query.trim() && query.length <= 2000, 'INVALID_SEARCH_QUERY');
       let data;
+      if (reader) {
+        fail(provider === 'zhipu' && credential(zhipuKey), 'MISSING_ZHIPU_KEY');
+        fail(!article && !extraction, 'INVALID_SEARCH_OPTIONS');
+        const url = safeSearchLink(reader.url);
+        fail(url, 'UNSAFE_LINK');
+        data = await json('https://open.bigmodel.cn/api/paas/v4/reader', {
+          method: 'POST', headers: { Authorization: `Bearer ${zhipuKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, timeout: 15, no_cache: false, return_format: 'markdown', retain_images: false,
+            keep_img_data_url: false, with_images_summary: false, with_links_summary: false })
+        }, provider);
+        const row = data.reader_result, actual = safeSearchLink(row?.url), title = cleanText(row?.title);
+        // Keep this initial probe narrowly on the requested URL. Redirected,
+        // login/challenge and unrelated pages never supply evidence implicitly.
+        fail(actual === url && title && title.length <= 1500 && typeof row.content === 'string' &&
+          row.content.length > 0 && row.content.length <= 1000000, 'INVALID_READER_RESPONSE');
+        fail(!/^(?:just a moment|access denied|robot check|verify you are human|sign in|log in)\b/i.test(title), 'ACCESS_RESTRICTED');
+        return { provider, charged: 1, leads: [{ title, url: actual, content: row.content,
+          search_provider: provider, search_endpoint: 'reader', requires_original_page_verification: true }] };
+      }
       if (extraction || article) {
         fail(provider === 'zhipu' && credential(zhipuKey), 'MISSING_ZHIPU_KEY');
         const officialSite = article?.official_site ? safeSearchLink(article.official_site) : null;

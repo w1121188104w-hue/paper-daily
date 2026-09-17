@@ -15,6 +15,8 @@ import { validatePapers, validateHistoryPreserved } from '../src/services/librar
 import { runJournalCollection } from '../src/services/journalRun.js';
 import { runMetadataRepair } from '../src/services/metadataRepairRun.js';
 import { readJournalLibrary } from '../src/services/journalLibrary.js';
+import { presentJournalLibrary } from '../src/services/journalPresentation.js';
+import { buildTranslationQueue, translationEligibility, createTranslationBatch } from '../src/services/translationQueue.js';
 
 const config = await loadJournalConfig(), journal = findJournal(config, 'CAR');
 const at = '2026-09-17T01:00:00.000Z', doi = '10.1111/1911-3846.70065';
@@ -33,6 +35,30 @@ function original() {
   { firstSeenDate: '2026-09-17', checkedAt: at }).papers[0];
 }
 const verified = () => extractSearchRecord([lead], original(), journal, async () => answer, at);
+
+test('CAR法文原文公开显示英文待补及重试时间，不清空法文、不误算英文完整', () => {
+  const paper = original(), retry = '2026-09-19T01:00:00Z';
+  const library = { papers: [paper], manifest: { created_at: at }, runs: [], queue: buildTranslationQueue([paper]),
+    repairState: { issues: { sample: { paper_id: paper.id, reason: 'missing_abstract', status: 'pending', updated_at: at,
+      attempts: [], next_retry_at: retry } } } };
+  const before = JSON.stringify(library), data = presentJournalLibrary(library, config);
+  assert.equal(data.papers[0].abstract_status, 'english_missing');
+  assert.equal(data.papers[0].abstract_next_retry_at, retry);
+  assert.equal(data.papers[0].abstract_original, french); assert.equal(data.enrichment.missing_abstracts, 1);
+  assert.equal(JSON.stringify(library), before);
+});
+
+test('CAR仅法文摘要等待英文原文再翻译，英文标题可先译，历史队列与指纹不改', async () => {
+  const paper = original(), before = buildTranslationQueue([paper]);
+  assert.deepEqual(before.tasks.map(task => task.field), ['title', 'abstract']);
+  const eligibility = translationEligibility([paper]);
+  assert.deepEqual(eligibility.ready.tasks.map(task => task.field), ['title']);
+  assert.deepEqual(eligibility.held.tasks.map(task => task.field), ['abstract']);
+  assert.deepEqual(createTranslationBatch([paper], { now: new Date(at) }).items[0].requested_fields, ['title']);
+  assert.deepEqual(buildTranslationQueue([paper]), before);
+  const next = fillMissingMetadata(paper, await verified()).paper;
+  assert.deepEqual(translationEligibility([next]).ready.tasks.map(task => task.field), ['title', 'abstract']);
+});
 
 test('CAR法文原文非空仍缺英文；旧版名册含义不改，新版进入摘要补查', () => {
   const paper = original();
@@ -82,7 +108,7 @@ test('CAR法文摘要三源无英文后使用智谱；成功后不进入SerpAPI�
   const calls = [], unavailable = async () => { throw Object.assign(new Error(), { code: 'NOT_FOUND' }); };
   const sources = { ...Object.fromEntries(['crossref', 'openalex', 'semanticscholar'].map(source =>
     [source, async () => { calls.push(source); return unavailable(); }])), publisherArticle: unavailable,
-    searchArticle: async () => { calls.push('zhipu'); return { called: true, result: { leads: [lead], extracted: answer } }; } };
+    searchArticle: async () => { calls.push('zhipu'); return { called: true, result: { leads: [lead], extracted: { record: null } } }; } };
   const result = await repairPaperMetadata(original(), journal, { sources, checkedAt: at,
     search: () => assert.fail('No fallback after verified abstract') });
   assert.deepEqual(calls, ['crossref', 'openalex', 'semanticscholar', 'zhipu']);

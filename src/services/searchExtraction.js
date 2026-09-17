@@ -35,7 +35,7 @@ export function extractionEvidence(leads, paper, journal) {
       !doi || !doiPattern.test(text + ' ' + decoded) ||
       (repec && !identity(text).includes(identity(journal.name)))) return [];
     return [{ title: lead.title, url: lead.url, content, abstract: originalAbstractSection(content), publisher,
-      searchEndpoint: lead.search_endpoint === 'chat_completions' ? 'chat/completions' : 'web_search' }];
+      searchEndpoint: lead.search_endpoint === 'reader' ? 'reader' : lead.search_endpoint === 'chat_completions' ? 'chat/completions' : 'web_search' }];
   }).filter(row => row.abstract).slice(0, 8);
 }
 
@@ -51,12 +51,28 @@ export async function extractSearchRecord(leads, paper, journal, extract, checke
   if (!source) return null;
   if (identity(row.title) !== identity(paper.title_original) || normalizeDoi(row.doi) !== normalizeDoi(paper.doi) ||
     cleanText(row.abstract) !== source.abstract) throw new EvidenceError('UNVERIFIED_EXTRACTION');
+  return recordFromSearchEvidence(source, paper, journal, checkedAt);
+}
+
+// If tool-returned original text already contains one unambiguous, bounded
+// abstract, copy it mechanically. A model's refusal, paraphrase or malformed
+// JSON is neither needed nor accepted as the source of this original text.
+export function verifiedSearchRecord(leads, paper, journal, checkedAt) {
+  const evidence = extractionEvidence(leads, paper, journal);
+  if (!evidence.length) return null;
+  if (new Set(evidence.map(row => row.abstract)).size !== 1) throw new EvidenceError('CONFLICTING_ABSTRACT_EVIDENCE');
+  const source = evidence.find(row => row.publisher) || evidence[0];
+  return recordFromSearchEvidence(source, paper, journal, checkedAt);
+}
+
+function recordFromSearchEvidence(source, paper, journal, checkedAt) {
   // Authors and month are filled only by their dedicated, original-source
   // adapters. An LLM's extra keys cannot smuggle unsupported metadata in.
   const record = publisherRecord({ title: paper.title_original, doi: paper.doi, authors: [], date: '',
     url: source.url, abstract: source.abstract, raw_abstract: source.content,
     evidence: { url: source.url, scope_url: `https://open.bigmodel.cn/api/paas/v4/${source.searchEndpoint}`,
-      fetched_at: checkedAt, body_sha256: evidenceHash(source.content), method: 'zhipu_search_verbatim_abstract' } }, journal);
+      fetched_at: checkedAt, body_sha256: evidenceHash(source.content),
+      method: source.searchEndpoint === 'reader' ? 'zhipu_reader_verbatim_abstract' : 'zhipu_search_verbatim_abstract' } }, journal);
   if (!source.publisher) record.source = 'repec';
   return record;
 }

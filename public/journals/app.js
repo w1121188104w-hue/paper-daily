@@ -157,19 +157,20 @@ function renderPaper(paper) {
   }
   card.append(abstractState);
   if (paper.abstract_original) {
+    const originalLanguage = paper.abstract_status === 'english_missing' ? 'fr' : 'en';
     const translated = paper.abstract_translation_status === 'done' && Boolean(paper.abstract_zh);
     const abstract = node('p', translated ? paper.abstract_zh : paper.abstract_original, 'summary');
-    abstract.lang = translated ? 'zh-CN' : 'en';
+    abstract.lang = translated ? 'zh-CN' : originalLanguage;
     if (translated) {
       const controls = node('div', '', 'abstract-switch'); controls.setAttribute('aria-label', '摘要语言');
       const setLanguage = (zh) => {
-        abstract.textContent = zh ? paper.abstract_zh : paper.abstract_original; abstract.lang = zh ? 'zh-CN' : 'en';
+        abstract.textContent = zh ? paper.abstract_zh : paper.abstract_original; abstract.lang = zh ? 'zh-CN' : originalLanguage;
         chinese.setAttribute('aria-pressed', String(zh)); english.setAttribute('aria-pressed', String(!zh));
       };
       const chinese = button('中文摘要', () => setLanguage(true));
-      const english = button('English abstract', () => setLanguage(false));
+      const english = button(originalLanguage === 'fr' ? '法文原文（英文待补）' : 'English abstract', () => setLanguage(false));
       controls.append(chinese, english); setLanguage(true); card.append(controls);
-    } else card.append(node('p', '英文摘要', 'meta'));
+    } else card.append(node('p', originalLanguage === 'fr' ? '法文原文（英文待补）' : '英文摘要', 'meta'));
     card.append(abstract);
   } else card.append(node('p', '来源未提供摘要。暂不补写或推测论文内容。', 'empty-state'));
   const oldAbstract = oldTranslation('abstract', paper); if (oldAbstract) card.append(oldAbstract);

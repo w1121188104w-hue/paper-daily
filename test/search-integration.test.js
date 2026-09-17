@@ -180,6 +180,39 @@ test('远端搜索账本：已存在分支却丢失账本时停止，禁止将�
   await assert.rejects(ledger.read({ initialize: true }));
 });
 
+test('远端搜索账本超过1MB时按相同blob SHA读取，用量不丢失且写入保留并发保护', async () => {
+  const budget = reserveSearchRequest(emptySearchBudget(), { provider: 'zhipu', query: 'q', taskId: 'task', now: new Date(at), zhipuMonthlyLimit: 2000 }).state;
+  const bytes = Buffer.from(JSON.stringify(budget) + ' '.repeat(1050000)), sha = 'c'.repeat(40), calls = [];
+  const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {
+    calls.push(url);
+    if (init.method === 'PUT') { assert.equal(JSON.parse(init.body).sha, sha); return new Response(JSON.stringify({ content: { sha: 'd'.repeat(40) } })); }
+    if (url.includes('/git/ref/')) return new Response(JSON.stringify({ object: { sha } }));
+    if (url.includes('/contents/')) {
+      assert.equal(init.headers.Accept, 'application/vnd.github.object+json');
+      return new Response(JSON.stringify({ sha, size: bytes.length, encoding: 'none', content: '', download_url: 'https://untrusted.example/never-follow' }));
+    }
+    assert.ok(url.endsWith('/git/blobs/' + sha));
+    return new Response(JSON.stringify({ sha, size: bytes.length, encoding: 'base64', content: bytes.toString('base64') }));
+  } });
+  const state = await ledger.read(); assert.deepEqual(state, budget); await ledger.persist(state);
+  assert.equal(calls.length, 4); assert.ok(calls.every(url => url.startsWith('https://api.github.com/repos/w1121188104w-hue/paper-daily/')));
+});
+
+test('远端大账本缺失、截断、SHA错配或超限必须停止，不能重置用量或写入', async () => {
+  const sha = 'c'.repeat(40), size = 1050000;
+  for (const mode of ['missing', 'sha', 'truncated', 'oversized']) {
+    const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {
+      assert.equal(init.method, 'GET');
+      if (url.includes('/git/ref/')) return new Response(JSON.stringify({ object: { sha } }));
+      if (url.includes('/contents/')) return new Response(JSON.stringify({ sha, size: mode === 'oversized' ? 5000001 : size, encoding: 'none', content: '' }));
+      if (mode === 'missing') return new Response('', { status: 404 });
+      return new Response(JSON.stringify({ sha: mode === 'sha' ? 'd'.repeat(40) : sha, size, encoding: 'base64', content: Buffer.from(JSON.stringify(emptySearchBudget())).toString('base64') }));
+    } });
+    await assert.rejects(ledger.read({ initialize: true }));
+    await assert.rejects(ledger.persist(emptySearchBudget()));
+  }
+});
+
 test('远端搜索账本：首次创建使用无尾斜杠仓库地址，分支建立后才能预占', async () => {
   const calls = [], base = 'https://api.github.com/repos/w1121188104w-hue/paper-daily';
   const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {

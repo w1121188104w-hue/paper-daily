@@ -3,6 +3,7 @@ import { buildSourceTextHash } from './paperModel.js';
 import { assertLibrary, isObject, isIsoTime, stableJson } from './libraryValidation.js';
 import { classifyPaper } from './paperClassification.js';
 import { knownJournalMismatch } from './journalIdentity.js';
+import { needsCarEnglishAbstract } from './carAbstractLanguage.js';
 
 export const TRANSLATION_FIELDS = ['title', 'abstract'];
 export const QUEUED_STATUSES = ['pending', 'failed', 'outdated'];
@@ -21,6 +22,10 @@ export function buildTranslationQueue(papers) {
       }
     }
   }
+  return summarizeQueue(tasks);
+}
+
+function summarizeQueue(tasks) {
   return { schema_version: 1, tasks, field_count: tasks.length,
     paper_count: new Set(tasks.map((task) => task.paper_id)).size,
     by_status: Object.fromEntries(QUEUED_STATUSES.map((status) => [status, tasks.filter((task) => task.status === status).length])) };
@@ -32,14 +37,16 @@ export const translationBatchId = (items) => `batch-${hash(items)}`;
 export function translationEligibility(papers) {
   const eligible = papers.filter((paper) => !knownJournalMismatch(paper) && classifyPaper(paper).kind === 'candidate');
   const ids = new Set(eligible.map((paper) => paper.id));
-  return { eligible, ready: buildTranslationQueue(eligible),
-    held: buildTranslationQueue(papers.filter((paper) => !ids.has(paper.id))) };
+  const frenchOnly = new Set(eligible.filter(needsCarEnglishAbstract).map(paper => paper.id));
+  const queue = buildTranslationQueue(papers), ready = task => ids.has(task.paper_id) &&
+    !(task.field === 'abstract' && frenchOnly.has(task.paper_id));
+  return { eligible, ready: summarizeQueue(queue.tasks.filter(ready)), held: summarizeQueue(queue.tasks.filter(task => !ready(task))) };
 }
 
 export function createTranslationBatch(papers, { limit = 10, journalKey, now = new Date(), sourceManifest = null } = {}) {
   assertLibrary(Number.isInteger(limit) && limit >= 1 && limit <= 100, '每批论文数量应为1–100');
-  const selected = translationEligibility(journalKey ? papers.filter((paper) => paper.journal_key === journalKey) : papers).eligible;
-  const queue = buildTranslationQueue(selected), byId = new Map(selected.map((paper) => [paper.id, paper]));
+  const { eligible: selected, ready: queue } = translationEligibility(journalKey ? papers.filter((paper) => paper.journal_key === journalKey) : papers);
+  const byId = new Map(selected.map((paper) => [paper.id, paper]));
   const ids = [...new Set(queue.tasks.map((task) => task.paper_id))].slice(0, limit);
   const items = ids.map((id) => {
     const paper = byId.get(id), tasks = queue.tasks.filter((task) => task.paper_id === id);
