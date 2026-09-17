@@ -3,6 +3,11 @@
   "on": {
     "workflow_dispatch": {
       "inputs": {
+        "restore_only": {
+          "description": "只验证已有存档恢复和网页构建；需填写resume_run_id，不联网搜索、不翻译、不发布",
+          "type": "boolean",
+          "default": false
+        },
         "resume_run_id": {
           "description": "从本仓库此前隔离任务的pipeline-checkpoint存档续跑；留空则首次运行",
           "type": "string",
@@ -75,7 +80,7 @@
           "name": "Checkout reviewed search code only",
           "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
           "with": {
-            "ref": "3a222824a0392bc4b10d4f05ecb499d5dc67c66b",
+            "ref": "8f8e4eafeb214702fd5ce44c7f1362cd32234d06",
             "persist-credentials": false
           }
         },
@@ -111,10 +116,11 @@
         {
           "name": "Validate checkpoint selection without reading API keys",
           "env": {
+            "RESTORE_ONLY": "${{ inputs.restore_only }}",
             "RESUME_RUN_ID": "${{ inputs.resume_run_id }}",
             "PIPELINE_ALL": "${{ inputs.pipeline_all }}"
           },
-          "run": "node --input-type=module -e \"const id=process.env.RESUME_RUN_ID; if(id && (process.env.PIPELINE_ALL!=='true' || !/^[1-9][0-9]{0,19}$/.test(id))) process.exit(1);\""
+          "run": "node --input-type=module -e \"const id=process.env.RESUME_RUN_ID; if((process.env.RESTORE_ONLY==='true' && !id) || (id && (process.env.PIPELINE_ALL!=='true' || !/^[1-9][0-9]{0,19}$/.test(id)))) process.exit(1);\""
         },
         {
           "name": "Download isolated data checkpoint only",
@@ -129,8 +135,15 @@
           }
         },
         {
+          "name": "Verify downloaded checkpoint and build without any source or AI calls",
+          "if": "inputs.restore_only",
+          "env": { "RESTORE_DIRECTORY": "${{ runner.temp }}/pipeline-resume" },
+          "run": "node --input-type=module <<'NODE'\nimport path from 'node:path';\nimport assert from 'node:assert/strict';\nimport {loadJournalConfig} from './src/services/journals.js';\nimport {restorePipelineCheckpoint} from './scripts/pipeline-checkpoint.js';\nimport {readJournalLibrary} from './src/services/journalLibrary.js';\nimport {buildJournalSite} from './src/services/journalSiteBuild.js';\nglobalThis.fetch=()=>{throw new Error('NETWORK_FORBIDDEN_DURING_RESTORE');};\nconst config=await loadJournalConfig(), directory=process.env.RESTORE_DIRECTORY;\nconst restored=await restorePipelineCheckpoint(config,{directory,tempParent:process.env.RUNNER_TEMP});\nconst original=await readJournalLibrary({config,root:path.join(directory,'data','journal-store')});\nconst saved=await readJournalLibrary({config,root:restored.root});\nfor(const field of ['papers','runs','imports','enrichments','queue','repairState','enrichmentState']) assert.deepEqual(saved[field],original[field]);\nassert.ok(await restored.verifyOriginal());\nconst site=await buildJournalSite(config,{root:restored.root,outputRoot:path.join(process.env.RUNNER_TEMP,'restored-site')});\nconsole.log('RESTORE_REPORT '+JSON.stringify({status:'verified',papers:saved.papers.length,translations_unchanged:true,history_unchanged:true,site_papers:site.paper_count,search_calls:0,translation_calls:0,deployed:false}));\nNODE"
+        },
+        {
           "name": "Run explicitly selected bounded verification mode (no publication)",
           "id": "verification",
+          "if": "!inputs.restore_only",
           "env": {
             "RESUME_RUN_ID": "${{ inputs.resume_run_id }}",
             "PIPELINE_ALL": "${{ inputs.pipeline_all }}",
