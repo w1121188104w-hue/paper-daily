@@ -25228,7 +25228,7 @@
       "batch_id": "batch-5b9d908f25adee4edfd816dbe4f1590476d816582507ecd570daa0c105d558bd",
       "mode": "daily",
       "created_at": "2026-09-17T16:51:13.298Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T16:52:13.926Z",
       "items": [
         {
           "id": "doi:10.1016/j.jfineco.2026.104309",
@@ -25242,11 +25242,17 @@
           "retry_of": {
             "abstract": "1616a2d8-2c56-4293-8bd0-74939b4ff490"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 475,
+            "completion_tokens": 117,
+            "total_tokens": 592
+          },
           "completed_fields": []
         },
         {
@@ -25263,10 +25269,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 482,
+            "completion_tokens": 110,
+            "total_tokens": 592
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104348",
@@ -25282,10 +25294,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 487,
+            "completion_tokens": 146,
+            "total_tokens": 633
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.respol.2026.105494",
@@ -25299,10 +25317,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 488,
+            "completion_tokens": 123,
+            "total_tokens": 611
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag038",
@@ -25316,11 +25340,17 @@
           "retry_of": {
             "abstract": "1616a2d8-2c56-4293-8bd0-74939b4ff490"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 729,
+            "completion_tokens": 323,
+            "total_tokens": 1052
+          },
           "completed_fields": []
         },
         {
@@ -25337,10 +25367,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 586,
+            "completion_tokens": 214,
+            "total_tokens": 800
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag078",
@@ -25356,10 +25392,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 506,
+            "completion_tokens": 127,
+            "total_tokens": 633
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1475-679x.70084",
@@ -25373,11 +25415,17 @@
           "retry_of": {
             "abstract": "1616a2d8-2c56-4293-8bd0-74939b4ff490"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 541,
+            "completion_tokens": 156,
+            "total_tokens": 697
+          },
           "completed_fields": []
         },
         {
@@ -25394,10 +25442,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 599,
+            "completion_tokens": 227,
+            "total_tokens": 826
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/jofi.70076",
@@ -25411,11 +25465,17 @@
           "retry_of": {
             "abstract": "1616a2d8-2c56-4293-8bd0-74939b4ff490"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 525,
+            "completion_tokens": 144,
+            "total_tokens": 669
+          },
           "completed_fields": []
         }
       ]
