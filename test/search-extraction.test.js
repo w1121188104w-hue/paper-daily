@@ -110,6 +110,39 @@ test('智谱联网整理请求完整标题和Pro搜索，模型回答须有返�
   assert.equal(verified.abstract, abstract);
   assert.equal(await extractSearchRecord([], paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z'), null);
 });
+
+test('智谱Chat读取官方web_search字段，与旧字段去重；模型自行填写的证据字段不采纳', async () => {
+  const row = { ...extracted.record, source_url: lead.url }; delete row.source_index;
+  const evidence = [{ title: lead.title, link: lead.url, content: lead.content }];
+  for (const placement of ['web_search', 'both', 'model_only']) {
+    let request;
+    const api = makeSearchSources({ zhipuKey: 'test-key-not-real', fetchImpl: async (_, init) => {
+      request = JSON.parse(init.body);
+      return new Response(JSON.stringify({ choices: [{ finish_reason: 'stop', message: {
+        content: JSON.stringify({ record: row, web_search: evidence }) } }],
+        ...(placement !== 'model_only' ? { web_search: evidence } : {}),
+        ...(placement === 'both' ? { search_result: evidence } : {}) }));
+    } });
+    const result = await api.request({ provider: 'zhipu', query: 'article:test', article: { ...paper, official_site: 'https://www.aeaweb.org' } });
+    assert.equal(request.tools[0].web_search.search_domain_filter, 'www.aeaweb.org');
+    assert.equal(result.leads.length, placement === 'model_only' ? 0 : 1);
+    const verified = await extractSearchRecord(result.leads, paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z');
+    assert.equal(verified?.abstract || null, placement === 'model_only' ? null : abstract);
+  }
+});
+
+test('智谱定向搜索使用官方域名参数，普通检索不继承前一次域名限制', async () => {
+  const requests = [];
+  const api = makeSearchSources({ zhipuKey: 'test-key-not-real', fetchImpl: async (_, init) => {
+    requests.push(JSON.parse(init.body)); return new Response(JSON.stringify({ search_result: [] }));
+  } });
+  await api.request({ provider: 'zhipu', query: '10.1016/example site:sciencedirect.com' });
+  await api.request({ provider: 'zhipu', query: paper.title_original });
+  assert.equal(requests[0].search_domain_filter, 'sciencedirect.com');
+  assert.equal(requests[0].search_query, '10.1016/example');
+  assert.equal(requests[1].search_domain_filter, undefined);
+  assert.equal(requests[1].search_query, paper.title_original);
+});
 test('放开智谱额度只接受新授权，SerpAPI仍严格保护免费额度', () => {
   const policy = { schema_version: 1, approved_on: '2026-09-17', zhipu_engine: 'search_pro', zhipu_monthly_limit: null,
     serpapi_monthly_limit: 250, lookback_days: 60, automatic_payment: false, production_enabled: true };

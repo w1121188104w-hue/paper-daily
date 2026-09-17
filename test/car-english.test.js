@@ -102,3 +102,15 @@ test('CAR补查达到时间预算不能误报完成，也不提前访问剩余�
     fetchImpl: async () => { calls++; return new Response(JSON.stringify({ status: 'ok', message: { items: [], 'total-results': 0 } })); } });
   assert.equal(calls, 1); assert.equal(result.ok, false); assert.equal(result.error.code, 'CAR_TITLE_LOOKUP_FAILED');
 });
+
+test('CAR清单仍返回双语拼接标题时，不能当成已确认英文而跳过DOI核对', async () => {
+  let calls = 0;
+  const work = title => ({ DOI: doi, ISSN: [journal.print_issn], title: [title] });
+  const result = await fetchCrossrefJournal(journal, { fromDate: '2026-07-20', toDate: '2026-09-17', checkedAt: at,
+    carBilingualPapers: [{ doi, title_original: enTitle + frTitle }],
+    fetchImpl: async () => { calls++; return new Response(JSON.stringify(calls === 1 ?
+      { status: 'ok', message: { items: [work(enTitle + frTitle)], 'total-results': 1 } } :
+      { status: 'ok', message: work(enTitle) })); } });
+  assert.equal(calls, 2);
+  assert.ok(result.records.some(r => r.title === enTitle));
+});

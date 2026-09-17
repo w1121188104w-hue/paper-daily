@@ -135,6 +135,8 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
       let data;
       if (extraction || article) {
         fail(provider === 'zhipu' && credential(zhipuKey), 'MISSING_ZHIPU_KEY');
+        const officialSite = article?.official_site ? safeSearchLink(article.official_site) : null;
+        fail(!article?.official_site || officialSite, 'UNSAFE_LINK');
         data = await json('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
           method: 'POST', headers: { Authorization: `Bearer ${zhipuKey}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ model: 'glm-4-air', messages: article ? [
@@ -142,6 +144,7 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
             { role: 'user', content: JSON.stringify(article) }
           ] : extractionMessages(extraction),
             ...(article ? { tools: [{ type: 'web_search', web_search: { enable: true, search_engine: zhipuEngine,
+              ...(officialSite ? { search_domain_filter: new URL(officialSite).hostname } : {}),
               search_result: true, count: 10, content_size: 'high', search_recency_filter: 'noLimit' } }] } : {}),
             temperature: 0, max_tokens: 4000, response_format: { type: 'json_object' } })
         }, provider);
@@ -149,13 +152,20 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
         let extracted;
         try { extracted = JSON.parse(data.choices[0].message.content); } catch { throw new EvidenceError('INVALID_EXTRACTION'); }
         return { provider, charged: 1, extracted,
-          ...(article ? { leads: Array.isArray(data.search_result) ? searchLeads(data, provider) : [] } : {}) };
+          // Chat completions returns `web_search`; standalone search returns
+          // `search_result`. Never treat the model's JSON answer as tool evidence.
+          ...(article ? { leads: searchLeads({ search_result: [
+            ...(Array.isArray(data.web_search) ? data.web_search : []),
+            ...(Array.isArray(data.search_result) ? data.search_result : [])
+          ] }, provider) } : {}) };
       }
       if (provider === 'zhipu') {
         fail(credential(zhipuKey), 'MISSING_ZHIPU_KEY'); fail([...query].length <= 70, 'SEARCH_QUERY_TOO_LONG');
+        const site = /\s+site:([a-z0-9.-]+\.[a-z]{2,})$/i.exec(query);
         data = await json('https://open.bigmodel.cn/api/paas/v4/web_search', { method: 'POST',
           headers: { Authorization: `Bearer ${zhipuKey}`, 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ search_engine: zhipuEngine, search_query: query, search_intent: false,
+          body: JSON.stringify({ search_engine: zhipuEngine, search_query: site ? query.slice(0, site.index).trim() : query,
+            ...(site ? { search_domain_filter: site[1] } : {}), search_intent: false,
             count: 10, search_recency_filter: 'noLimit', content_size: 'high' }) }, provider);
       } else {
         fail(['serpapi_scholar', 'serpapi_google'].includes(provider), 'INVALID_SEARCH_PROVIDER');
