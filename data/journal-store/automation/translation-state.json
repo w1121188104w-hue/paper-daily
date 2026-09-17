@@ -25740,7 +25740,7 @@
       "batch_id": "batch-381ce77ba9cdddffe651b32561fe9a040ef9975b46da8ccd9c5ad29a61514611",
       "mode": "daily",
       "created_at": "2026-09-17T16:54:40.501Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T16:55:39.756Z",
       "items": [
         {
           "id": "doi:10.1093/qje/qjag017",
@@ -25756,10 +25756,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 519,
+            "completion_tokens": 153,
+            "total_tokens": 672
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70037",
@@ -25773,11 +25779,17 @@
           "retry_of": {
             "abstract": "9371ac7f-f8bc-43fd-8eb6-9bfad61e892b"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 705,
+            "completion_tokens": 299,
+            "total_tokens": 1004
+          },
           "completed_fields": []
         },
         {
@@ -25794,10 +25806,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 555,
+            "completion_tokens": 183,
+            "total_tokens": 738
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70043",
@@ -25811,11 +25829,17 @@
           "retry_of": {
             "abstract": "9371ac7f-f8bc-43fd-8eb6-9bfad61e892b"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 604,
+            "completion_tokens": 202,
+            "total_tokens": 806
+          },
           "completed_fields": []
         },
         {
@@ -25832,10 +25856,16 @@
           },
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 717,
+            "completion_tokens": 341,
+            "total_tokens": 1058
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70057",
@@ -25849,10 +25879,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 335,
+            "completion_tokens": 13,
+            "total_tokens": 348
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70058",
@@ -25866,10 +25902,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 341,
+            "completion_tokens": 13,
+            "total_tokens": 354
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70059",
@@ -25883,10 +25925,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 342,
+            "completion_tokens": 17,
+            "total_tokens": 359
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70060",
@@ -25900,10 +25948,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 346,
+            "completion_tokens": 18,
+            "total_tokens": 364
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70061",
@@ -25917,10 +25971,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 339,
+            "completion_tokens": 16,
+            "total_tokens": 355
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
