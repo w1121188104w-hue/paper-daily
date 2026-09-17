@@ -16,7 +16,8 @@ export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetc
     try {
       const response = await fetchImpl(`https://api.github.com/repos/${repository}${endpoint ? `/${endpoint}` : ''}`, {
         method, redirect: 'error', signal: controller.signal,
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json',
+        headers: { Authorization: `Bearer ${token}`, Accept: method === 'GET' && endpoint.startsWith('contents/')
+          ? 'application/vnd.github.object+json' : 'application/vnd.github+json',
           'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
         ...(body ? { body: JSON.stringify(body) } : {})
       });
@@ -47,8 +48,21 @@ export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetc
       assertLibrary(branch, '搜索账本分支不存在');
       const file = await api(`${contentEndpoint}?ref=${encodeURIComponent(SEARCH_LEDGER_BRANCH)}`);
       if (!file) { assertLibrary(createdHere, '搜索账本缺失，不能当作零用量'); fileSha = null; initialized = true; return emptySearchBudget(); }
-      assertLibrary(file.encoding === 'base64' && /^[a-f0-9]{40}$/.test(file.sha), '搜索账本内容无效');
-      const state = validateSearchBudget(JSON.parse(Buffer.from(file.content, 'base64').toString('utf8')));
+      assertLibrary(/^[a-f0-9]{40}$/.test(file.sha), '搜索账本内容无效');
+      let blob = file;
+      // Contents omits base64 above 1 MB. Read the SAME immutable blob SHA,
+      // never a download_url supplied by a response and never an empty ledger.
+      if (file.encoding === 'none' && file.content === '') {
+        assertLibrary(Number.isSafeInteger(file.size) && file.size > 1000000 && file.size <= 5000000,
+          '搜索账本大小超出已支持范围');
+        blob = await api(`git/blobs/${file.sha}`);
+        assertLibrary(blob?.sha === file.sha && blob.size === file.size, '搜索账本大文件版本不一致');
+      }
+      assertLibrary(blob.encoding === 'base64' && typeof blob.content === 'string' && blob.content,
+        '搜索账本内容无效');
+      const bytes = Buffer.from(blob.content, 'base64');
+      assertLibrary(blob.size === undefined || bytes.length === blob.size, '搜索账本内容长度不一致');
+      const state = validateSearchBudget(JSON.parse(bytes.toString('utf8')));
       fileSha = file.sha; initialized = true; return state;
     },
     async persist(state) {

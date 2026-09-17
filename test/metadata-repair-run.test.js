@@ -188,7 +188,7 @@ test('摘要专用名额独立于一般待办，保存智谱逐字摘录并进�
       return { called: true, result: { leads: [{ title, url: 'https://www.aeaweb.org/articles?id=10.1257/example',
         content: `${title} DOI: 10.1257/example Abstract ${abstract} Keywords: trade` }] } };
     } });
-  assert.equal(result.stats.abstracts_filled, 1); assert.equal(searches, 1); assert.equal(extractions, 1);
+  assert.equal(result.stats.abstracts_filled, 1); assert.equal(searches, 1); assert.equal(extractions, 0);
   const saved = await readJournalLibrary({ ...dirs, config });
   assert.equal(saved.papers[0].abstract_original, abstract);
   assert.equal(saved.papers[0].source_records.at(-1).source_evidence.method, 'zhipu_search_verbatim_abstract');

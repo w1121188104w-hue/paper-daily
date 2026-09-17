@@ -43,7 +43,7 @@ export function parsePipelineArgs(args) {
 }
 
 /** No production secrets are accessed before the command/mode/library gates. */
-export async function makePipelineRuntime({ env, policy }) {
+export async function makePipelineRuntime({ env, policy, enableReaderProbe = false }) {
   const providers = makeSearchSources({ zhipuKey: env.ZHIPU_API_KEY || '', serpapiKey: env.SERPAPI_API_KEY || '', zhipuEngine: policy.zhipu_engine });
   const ledger = makeSearchBudgetGitHub({ token: env.GITHUB_TOKEN, repositoryName: env.GITHUB_REPOSITORY });
   const budget = makeBudgetedSearch({ initialState: await ledger.read({ initialize: true }), persist: s => ledger.persist(s), request: o => providers.request(o) });
@@ -73,6 +73,13 @@ export async function makePipelineRuntime({ env, policy }) {
       official_site: new URL(publisherFor(journal).home).origin };
     return search({ provider: 'zhipu', query: `article:${JSON.stringify(article)}`.slice(0, 2000),
       taskId: `article:${paper.id}`, article });
+  };
+  // Probe-only: daily collection does not call this new endpoint until live
+  // original-source retrieval has been verified. It shares the durable ledger.
+  if (enableReaderProbe) sources.readerArticle = async (paper, journal, url) => {
+    let parsed; try { parsed = new URL(url); } catch { throw new EvidenceError('UNSAFE_LINK'); }
+    assertLibrary(parsed.protocol === 'https:' && publisherFor(journal).hosts.includes(parsed.hostname), '阅读验证只允许目标期刊官网');
+    return search({ provider: 'zhipu', query: `reader:${url}`, taskId: `reader:${paper.id}`, reader: { url } });
   };
   return { http, search, sources, shouldContinue: () => Date.now() < deadline,
     collectionOptions: { semanticScholarKey: env.SEMANTIC_SCHOLAR_API_KEY || '', maxAttempts: 2, timeoutMs: 12000 },

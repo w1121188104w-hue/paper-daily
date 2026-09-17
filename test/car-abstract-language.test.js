@@ -82,7 +82,7 @@ test('CAR法文摘要三源无英文后使用智谱；成功后不进入SerpAPI�
   const calls = [], unavailable = async () => { throw Object.assign(new Error(), { code: 'NOT_FOUND' }); };
   const sources = { ...Object.fromEntries(['crossref', 'openalex', 'semanticscholar'].map(source =>
     [source, async () => { calls.push(source); return unavailable(); }])), publisherArticle: unavailable,
-    searchArticle: async () => { calls.push('zhipu'); return { called: true, result: { leads: [lead], extracted: answer } }; } };
+    searchArticle: async () => { calls.push('zhipu'); return { called: true, result: { leads: [lead], extracted: { record: null } } }; } };
   const result = await repairPaperMetadata(original(), journal, { sources, checkedAt: at,
     search: () => assert.fail('No fallback after verified abstract') });
   assert.deepEqual(calls, ['crossref', 'openalex', 'semanticscholar', 'zhipu']);

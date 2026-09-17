@@ -50,6 +50,27 @@ DeepSeek 请求中附带由待译原文机械提取的数字清单，与导入�
 每种方案最多三次、同一原文字段合计最多六次，仍有三十分钟冷却。
 旧账本原样保留并通过 `retry_of` 关联；成功字段、未结算请求及网络结果不确定的请求均不自动重发。
 
+## 原文机械提取与搜索账本体积保护
+
+搜索工具正文已经包含同一 DOI/标题、正确期刊来源且边界完整的唯一英文 Abstract 时，直接机械复制。
+不再让模型重复抄一遍作为保存前提；模型回答为 null 或改写也不会影响对独立原文的识别。
+只有 snippet、正文截断、身份不符或多个真实来源摘要相冲突时仍不采纳，不用 AI 猜测补齐。
+
+账本读取使用 GitHub Contents object 媒体类型；超过 1 MB 导致 content 为空时，只按同一个 blob SHA
+读取原始账本，核对 SHA、长度和结构后再继续。缺文件、错误版本、截断或超出本程序 5 MB 上限均停止，
+不能重置历史用量；写入继续保留原 SHA 的并发保护，不跟随响应提供的 download_url。
+依据：[Contents 大文件行为](https://docs.github.com/en/rest/repos/contents#get-repository-content)、
+[Git Blob 读取接口](https://docs.github.com/en/rest/git/blobs#get-a-blob)。
+
+## 智谱网页阅读小范围验证（未接入每日流程）
+
+新增 `/api/paas/v4/reader` 适配，复用智谱密钥及预记账，不启用图片/链接摘要功能。
+仅已有手动验证任务启用 `enableReaderProbe`，固定三次：JFE 缺摘要、CAR 法文摘要，以及已有英文原文的 RP 对照。
+返回 URL 必须与请求一致；只读取 `reader_result.content`，不用 description 或模型生成文本。
+仍需完整英文 Abstract 边界及期刊/DOI/标题证据。保存来源类型可区分 reader 与 web_search。
+本验证不修改正式库、不翻译、不发布；结果只报长度、核验状态及安全错误码。
+接口依据：[智谱网页阅读](https://zhipu-ef7018ed.mintlify.app/api-reference/工具-api/网页阅读)。
+
 ## 验收边界
 
 代码测试通过不代表所有摘要已找到。必须继续核对正式库、运行报告与发布页面，

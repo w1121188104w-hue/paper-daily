@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { originalAbstractSection, extractionEvidence, extractSearchRecord } from '../src/services/searchExtraction.js';
+import { originalAbstractSection, extractionEvidence, extractSearchRecord, verifiedSearchRecord } from '../src/services/searchExtraction.js';
 import { makeSearchSources, searchWithFallback, abstractSearchQueries } from '../src/services/searchSources.js';
 import { searchAllowance, emptySearchBudget } from '../src/services/searchBudget.js';
 import { validateSearchPolicy } from '../src/services/searchPolicy.js';
@@ -13,6 +13,16 @@ const abstract = 'We study international trade using administrative firm data. W
 const lead = { title: paper.title_original, url: 'https://www.aeaweb.org/articles?id=10.1257/example',
   content: `${paper.title_original}\nDOI: ${paper.doi}\nAbstract\n${abstract}\nKeywords: trade, productivity` };
 const extracted = { record: { source_index: 0, title: paper.title_original, doi: paper.doi, abstract } };
+
+test('有唯一完整检索原文时机械复制，不依赖模型改写；冲突、缺身份或只有片段时不采纳', () => {
+  const at = '2026-09-17T01:00:00Z';
+  assert.equal(verifiedSearchRecord([lead], paper, journal, at).abstract, abstract);
+  assert.equal(verifiedSearchRecord([{ ...lead, content: '', snippet: abstract }], paper, journal, at), null);
+  assert.equal(verifiedSearchRecord([{ ...lead, title: 'Wrong title', content: lead.content.replace(paper.title_original, 'Wrong title') }], paper, journal, at), null);
+  const conflict = { ...lead, url: lead.url + '&view=full', content: lead.content.replace(abstract, abstract + ' Additional claim.') };
+  assert.throws(() => verifiedSearchRecord([lead, conflict], paper, journal, at), /CONFLICTING_ABSTRACT_EVIDENCE/);
+  assert.equal(verifiedSearchRecord([lead, { ...lead, url: lead.url + '&view=full' }], paper, journal, at).abstract, abstract);
+});
 
 test('长标题摘要检索：保留标题检索路径，不全部退化为DOI，查询均符合70字限制', () => {
   const item = { title_original: 'Can ChatGPT forecast stock price movements? Return predictability and large language models', doi: '10.1016/j.jfineco.2026.104335' };

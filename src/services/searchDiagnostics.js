@@ -3,7 +3,8 @@
 const localCodes = new Set(['RATE_LIMITED', 'ACCESS_RESTRICTED', 'SEARCH_HTTP_ERROR',
   'SEARCH_PROVIDER_ERROR', 'INVALID_SEARCH_RESPONSE', 'SEARCH_RESPONSE_TOO_LARGE',
   'TIMEOUT', 'SEARCH_NETWORK_ERROR', 'MISSING_ZHIPU_KEY', 'MISSING_SERPAPI_KEY',
-  'INVALID_SEARCH_QUERY', 'SEARCH_QUERY_TOO_LONG', 'INVALID_SEARCH_PROVIDER']);
+  'INVALID_SEARCH_QUERY', 'SEARCH_QUERY_TOO_LONG', 'INVALID_SEARCH_PROVIDER',
+  'INVALID_READER_RESPONSE', 'INCOMPLETE_EXTRACTION', 'INVALID_EXTRACTION', 'UNSAFE_LINK', 'INVALID_SEARCH_OPTIONS']);
 // Current /cn/api/api-code plus the provider's older /cn/faq/api-code reference.
 // Unknown future codes stay redacted, including arbitrary strings from the server.
 const zhipuCodes = new Set(['1000', '1001', '1002', '1003', '1004', '1005', '1113', '1200', '1210',

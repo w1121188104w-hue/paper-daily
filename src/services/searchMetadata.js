@@ -11,7 +11,7 @@ import { supportedRepecUrl, repecJournalUrl } from './repecAbstract.js';
 import { singleSourceConfirmationFor } from './sourceConfirmation.js';
 import { classifyPaper } from './paperClassification.js';
 import { duplicateMergeProof } from './duplicateMerge.js';
-import { extractSearchRecord } from './searchExtraction.js';
+import { verifiedSearchRecord } from './searchExtraction.js';
 import { missingOriginalAbstract, needsCarEnglishAbstract, verifiedCarEnglishRecord } from './carAbstractLanguage.js';
 
 export function repairIdentityMatches(paper, record) {
@@ -143,8 +143,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
   if (stillMissing().includes('abstract') && !mergeClaims().length && sources.searchArticle) {
     try {
       const answer = await sources.searchArticle(current, journal);
-      let record = answer.called && answer.result ? await extractSearchRecord(answer.result.leads || [], current, journal,
-        async () => answer.result.extracted, checkedAt) : null;
+      let record = answer.called && answer.result ? verifiedSearchRecord(answer.result.leads || [], current, journal, checkedAt) : null;
       // Some Chat API responses omit tool text. A model-suggested URL is only
       // a lead: fetch it independently and use the verified page, not its answer.
       const proposedUrl = safeSearchLink(answer.result?.extracted?.record?.source_url);
@@ -172,7 +171,7 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
       search: request => search({ ...request, taskId: `metadata:${paper.id}` }),
       verifyResult: sources.searchExtract ? async leads => {
         if (!stillMissing().includes('abstract')) return null;
-        const record = await extractSearchRecord(leads, current, journal, sources.searchExtract, checkedAt);
+        const record = verifiedSearchRecord(leads, current, journal, checkedAt);
         if (!record) return null;
         adopt(record);
         // The abstract can be saved even if another field remains unresolved.
