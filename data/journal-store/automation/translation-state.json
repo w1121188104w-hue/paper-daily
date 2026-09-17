@@ -26531,7 +26531,7 @@
       "batch_id": "batch-c5964da5b844ec60d05669c967a3aa0727a1c9e6e8e207af34820780b29373bb",
       "mode": "daily",
       "created_at": "2026-09-17T18:48:35.366Z",
-      "finished_at": null,
+      "finished_at": "2026-09-17T18:49:40.924Z",
       "items": [
         {
           "id": "doi:10.1016/j.jacceco.2026.101884",
@@ -26545,10 +26545,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 524,
+            "completion_tokens": 163,
+            "total_tokens": 687
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jcorpfin.2026.103063",
@@ -26562,10 +26568,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 498,
+            "completion_tokens": 137,
+            "total_tokens": 635
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104293",
@@ -26579,10 +26591,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 503,
+            "completion_tokens": 158,
+            "total_tokens": 661
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104309",
@@ -26596,11 +26614,17 @@
           "retry_of": {
             "abstract": "830b57b6-cdbc-4102-bae2-3985f3df44fc"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 475,
+            "completion_tokens": 116,
+            "total_tokens": 591
+          },
           "completed_fields": []
         },
         {
@@ -26615,10 +26639,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 450,
+            "completion_tokens": 92,
+            "total_tokens": 542
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104321",
@@ -26632,10 +26662,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 541,
+            "completion_tokens": 193,
+            "total_tokens": 734
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104323",
@@ -26649,10 +26685,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 468,
+            "completion_tokens": 121,
+            "total_tokens": 589
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.respol.2026.105537",
@@ -26666,10 +26708,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 506,
+            "completion_tokens": 148,
+            "total_tokens": 654
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.respol.2026.105539",
@@ -26683,10 +26731,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 511,
+            "completion_tokens": 154,
+            "total_tokens": 665
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1057/s41267-026-00895-2",
@@ -26700,10 +26754,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_preservation_v1",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 1020,
+            "completion_tokens": 586,
+            "total_tokens": 1606
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }

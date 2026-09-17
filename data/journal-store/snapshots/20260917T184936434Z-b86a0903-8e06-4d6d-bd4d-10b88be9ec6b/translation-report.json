@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-c5964da5b844ec60d05669c967a3aa0727a1c9e6e8e207af34820780b29373bb",
+  "stats": {
+    "completed_fields": 9,
+    "failed_fields": 1,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 9
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.jacceco.2026.101884",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1016/j.jcorpfin.2026.103063",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1016/j.jfineco.2026.104293",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1016/j.jfineco.2026.104309",
+      "field": "abstract",
+      "action": "failed",
+      "code": "EXPLICIT_FAILURE",
+      "message": "该字段被主动标记为翻译失败"
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1016/j.jfineco.2026.104320",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "doi:10.1016/j.jfineco.2026.104321",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 6,
+      "id": "doi:10.1016/j.jfineco.2026.104323",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 7,
+      "id": "doi:10.1016/j.respol.2026.105537",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 8,
+      "id": "doi:10.1016/j.respol.2026.105539",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 9,
+      "id": "doi:10.1057/s41267-026-00895-2",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "partial_failure"
+}
