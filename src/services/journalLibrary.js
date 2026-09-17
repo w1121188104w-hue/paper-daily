@@ -11,6 +11,7 @@ import { buildMasterList, officialDiscoveries } from './masterList.js';
 import { emptyRepairState, reconcileRepairState, validateRepairState, validateRepairProjection } from './repairState.js';
 import { validateMetadataRepairOnlyChange } from './metadataRepairValidation.js';
 import { validateDuplicateTransition, validateDuplicateState } from './duplicateResolution.js';
+import { validateJournalIdentityCorrection } from './journalIdentityCorrection.js';
 
 export const DEFAULT_LIBRARY_ROOT = fileURLToPath(new URL('../../data/journal-store/', import.meta.url));
 const sha256 = (text) => createHash('sha256').update(text).digest('hex');
@@ -114,6 +115,12 @@ async function readManifest(root, manifestRef, config, ancestry = new Set()) {
     validateDuplicateTransition(parent.papers, papers, report);
     validateDuplicateState(parent, papers, report, enrichmentState);
   }
+  const correctionLog = operation === 'metadata_enrichment' && enrichments.find(entry => entry.run_id === manifest.run_id && entry.kind === 'journal_identity_correction');
+  if (correctionLog) {
+    assertLibrary(manifest.parent, '错刊删除必须保留父版本用于恢复');
+    const parent = await readManifest(root, manifest.parent, config, ancestry);
+    validateJournalIdentityCorrection(parent, papers, enrichmentReports.find(report => report.run_id === correctionLog.run_id), enrichmentState);
+  }
   if (operation === 'translation_import') {
     const log = imports.find((entry) => entry.run_id === manifest.run_id);
     const report = await readLibraryRef(root, log.report);
@@ -186,11 +193,13 @@ function groupBy(items, key) {
 export async function publishLibrarySnapshot({ root, config, previous, papers, run, translationImport, enrichment, enrichmentState, repairState, masterWindow, audit, raw = [], beforePublish }) {
   validatePapers(papers, config);
   const duplicateOperation = enrichment?.kind === 'duplicate_resolution';
+  const identityCorrection = enrichment?.kind === 'journal_identity_correction';
   if (duplicateOperation) {
     const report = await readLibraryRef(root, enrichment.report);
     validateDuplicateTransition(previous.papers, papers, report);
     validateDuplicateState(previous, papers, report, enrichmentState);
   }
+  else if (identityCorrection) validateJournalIdentityCorrection(previous, papers, await readLibraryRef(root, enrichment.report), enrichmentState);
   else validateHistoryPreserved(previous.papers, papers);
   assertLibrary([run, translationImport, enrichment].filter(Boolean).length === 1, '每个版本必须且只能有一种操作');
   const runs = run ? [...previous.runs, run] : previous.runs;
@@ -199,8 +208,9 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   validateEnrichmentRuns(enrichments);
   if (enrichment) {
     if (enrichment.kind === 'missing_metadata_repair') validateMetadataRepairOnlyChange(previous.papers, papers);
-    else if (!duplicateOperation) validateEnrichmentOnlyChange(previous.papers, papers);
-    assertLibrary(duplicateOperation ? enrichment.stats.added === 0 && enrichment.stats.merged === previous.papers.length - papers.length :
+    else if (!duplicateOperation && !identityCorrection) validateEnrichmentOnlyChange(previous.papers, papers);
+    assertLibrary(identityCorrection ? enrichment.stats.added === 0 && enrichment.stats.removed === previous.papers.length - papers.length :
+      duplicateOperation ? enrichment.stats.added === 0 && enrichment.stats.merged === previous.papers.length - papers.length :
       enrichment.stats.added === papers.length - previous.papers.length, '补入/归并数量与论文库不一致');
   }
   validateRuns(runs); validateTranslationImports(imports);
@@ -247,7 +257,7 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
     validateRepairState(repairState, papers);
   }
   const activeIds = new Set(papers.map(paper => paper.id));
-  const previousRepairs = duplicateOperation ? { ...previous.repairState,
+  const previousRepairs = duplicateOperation || identityCorrection ? { ...previous.repairState,
     issues: Object.fromEntries(Object.entries(previous.repairState.issues).filter(([, issue]) => activeIds.has(issue.paper_id))) } : previous.repairState;
   const repairs = reconcileRepairState(repairState ?? previousRepairs, master);
   validateRepairState(repairs, papers); validateRepairProjection(repairs, master);
