@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { buildSourceTextHash } from './paperModel.js';
 import { assertLibrary, isObject, isIsoTime, stableJson } from './libraryValidation.js';
 import { classifyPaper } from './paperClassification.js';
+import { knownJournalMismatch } from './journalIdentity.js';
 
 export const TRANSLATION_FIELDS = ['title', 'abstract'];
 export const QUEUED_STATUSES = ['pending', 'failed', 'outdated'];
@@ -29,7 +30,7 @@ export const translationBatchId = (items) => `batch-${hash(items)}`;
 
 // Keep buildTranslationQueue unchanged: old snapshots contain hashes of that complete queue.
 export function translationEligibility(papers) {
-  const eligible = papers.filter((paper) => classifyPaper(paper).kind === 'candidate');
+  const eligible = papers.filter((paper) => !knownJournalMismatch(paper) && classifyPaper(paper).kind === 'candidate');
   const ids = new Set(eligible.map((paper) => paper.id));
   return { eligible, ready: buildTranslationQueue(eligible),
     held: buildTranslationQueue(papers.filter((paper) => !ids.has(paper.id))) };

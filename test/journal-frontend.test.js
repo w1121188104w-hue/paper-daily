@@ -84,6 +84,17 @@ test('真实渲染函数生成日历、全部19刊、双语卡片及双源徽章
   assert.equal(ui.get('calendarGrid').children.filter((element) => element.tagName === 'a').length, 30);
   assert.ok(ui.get('calendarGrid').children.some((element) => element.href?.includes('date=2026-09-07')));
 });
+
+test('页面明确展示错刊隔离原因和ISSN，不静默删除或执行来源HTML', async t => {
+  const data = payload(); data.quarantined = [{ doi: '10.67983/journaldialectica.v1i2.100',
+    title_original: '<img src=x onerror=bad()>', journal_key: 'JAR',
+    actual_journal: 'Journal Dialectica (Journal of Accounting Research)', actual_issn: '3163-821X',
+    expected_issns: ['0021-8456', '1475-679X'] }];
+  const ui = await app(t, { data });
+  assert.ok(ui.get('libraryMeta').textContent.includes('1 条已确认错刊记录被隔离'));
+  assert.ok(ui.get('libraryMeta').textContent.includes('3163-821X'));
+  assert.ok(descendants(ui.get('libraryMeta')).every(e => e.tagName !== 'img'));
+});
 test('摘要中英文切换改变全文、语言及按下状态', async (t) => {
   const ui = await app(t), elements = descendants(ui.get('paperList'));
   const english = elements.find((element) => element.tagName === 'button' && element.textContent === 'English abstract');

@@ -1,4 +1,5 @@
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
+import { knownJournalMismatch } from './journalIdentity.js';
 import { findJournal } from './journals.js';
 import { dateInShanghai } from './paperMerge.js';
 import { buildMasterList, officialDiscoveries } from './masterList.js';
@@ -18,6 +19,7 @@ export function dueMetadataRepairIssues(config, state, now, { journalKey, paperI
   const enabled = new Set(config.journals.filter(journal => journal.enabled).map(journal => journal.key));
   const selectedIds = paperIds === null ? null : new Set(paperIds);
   return dueRepairIssues(state, now, { limit: null, filter: issue => metadataRepairIssue(issue) &&
+    !knownJournalMismatch({ journal_key: issue.journal_key, doi: issue.paper_id.startsWith('doi:') ? issue.paper_id.slice(4) : '' }) &&
     (!selectedIds || selectedIds.has(issue.paper_id)) && (!journalKey || issue.journal_key === journalKey) && enabled.has(issue.journal_key) });
 }
 

@@ -1,7 +1,8 @@
 import { fetchPages } from './sourceClient.js';
-import { SourceError } from './sourceHttp.js';
+import { SourceError, requestSourceJson } from './sourceHttp.js';
 import { isValidIssn } from './journals.js';
 import { normalizeCrossrefWork } from './sourceNormalizers.js';
+import { carTitlePrefix } from './carEnglish.js';
 
 export function buildCrossrefUrl(journal, { fromDate, toDate, pageSize = 100, cursor = '*' }) {
   if (!isValidIssn(journal.crossref_route_issn)) throw new SourceError('INVALID_JOURNAL', '无效 Crossref ISSN');
@@ -12,8 +13,8 @@ export function buildCrossrefUrl(journal, { fromDate, toDate, pageSize = 100, cu
   return url;
 }
 
-export function fetchCrossrefJournal(journal, options) {
-  return fetchPages('crossref', journal, options, {
+export async function fetchCrossrefJournal(journal, options) {
+  const result = await fetchPages('crossref', journal, options, {
     url: buildCrossrefUrl,
     normalize: normalizeCrossrefWork,
     page(payload, pageSize) {
@@ -25,4 +26,31 @@ export function fetchCrossrefJournal(journal, options) {
         done: payload.message.items.length < pageSize };
     }
   });
+  // Repair known CAR identities only; this is not an expansion of discovery's
+  // rolling window. DOI and actual ISSN must both agree before accepting a title.
+  const deadline = Date.now() + 45000;
+  for (const paper of (journal.key === 'CAR' ? options.carBilingualPapers || [] : []).slice(0, 50)) {
+    if (Date.now() >= deadline) break;
+    if (result.records.some(r => r.doi === paper.doi && carTitlePrefix(paper.title_original, r.title))) continue;
+    try {
+      const payload = await requestSourceJson(new URL(`https://api.crossref.org/works/${encodeURIComponent(paper.doi)}`),
+        { ...options, maxAttempts: 1, timeoutMs: 8000 });
+      const index = result.raw_count++;
+      result.raw_pages.push({ purpose: 'car_existing_bilingual_title', doi: paper.doi, response: payload });
+      const record = normalizeCrossrefWork(payload?.message, journal, options.checkedAt);
+      if (record.doi !== paper.doi || !carTitlePrefix(paper.title_original, record.title)) {
+        result.rejected.push({ index, code: 'CAR_TITLE_UNVERIFIED', message: 'CAR英文标题边界尚未得到DOI与ISSN共同核实' });
+        result.ok = false;
+        result.error ||= { code: 'CAR_TITLE_UNVERIFIED', message: 'CAR标题核实返回不一致，保留原文重试' };
+        continue;
+      }
+      result.records.push(record);
+    } catch {
+      // Leave the source text intact and retry next collection. No guessed title.
+      result.ok = false;
+      result.error ||= { code: 'CAR_TITLE_LOOKUP_FAILED', message: 'CAR英文标题核实暂未完成，将保留原文重试' };
+      break;
+    }
+  }
+  return result;
 }

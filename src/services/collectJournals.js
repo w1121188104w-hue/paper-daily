@@ -21,9 +21,14 @@ export async function collectJournals(config, { journalKey, fromDate, toDate,
   const sourceResults = [];
   const sourceNames = collectionSources(withSemanticScholar);
   for (const journal of selected) {
+    const carBilingualPapers = journal.key === 'CAR' ? existingPapers.filter(p => p.journal_key === 'CAR' && p.doi &&
+      !p.source_records.some(r => r.source === 'crossref' && r.title === p.title_original && !/RÉSUMÉ/u.test(r.raw_abstract || r.abstract)) &&
+      p.source_records.some(r => r.title === p.title_original && (!r.text_selection || r.text_selection.original_title === r.title) &&
+        /RÉSUMÉ/u.test(r.raw_abstract || r.abstract))) : [];
     // Always dispatch BOTH; neither source is a fallback for the other.
     const outcomes = await Promise.allSettled(sourceNames.map((source) =>
-      Promise.resolve().then(() => clients[source](journal, { ...requestOptions, fromDate, toDate, checkedAt }))));
+      Promise.resolve().then(() => clients[source](journal, { ...requestOptions, fromDate, toDate, checkedAt,
+        ...(source === 'crossref' && carBilingualPapers.length ? { carBilingualPapers } : {}) }))));
     for (const [index, outcome] of outcomes.entries()) {
       const result = outcome.status === 'fulfilled' ? outcome.value : { source: sourceNames[index], journal_key: journal.key,
         ok: false, complete: false, records: [], raw_pages: [], raw_count: 0, rejected: [], duration_ms: 0,
@@ -34,7 +39,7 @@ export async function collectJournals(config, { journalKey, fromDate, toDate,
     }
   }
   const filtered = filterSourceRecords(sourceResults.flatMap((result) => result.records));
-  const merged = mergePapers(filtered.accepted, { existingPapers, firstSeenDate, checkedAt });
+  const merged = mergePapers(filtered.accepted, { existingPapers, firstSeenDate, checkedAt, normalizeCar: true });
   const discoverySummary = { coverage: 'not_proven_complete',
     union_count: mergePapers(filtered.accepted, { firstSeenDate, checkedAt }).papers.length,
     sources: ['crossref', 'openalex', 'semanticscholar'].map(source => {

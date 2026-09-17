@@ -80,7 +80,7 @@ export function reconcileCatalogDiscovery(discovery, journal, input, window, { c
     if (membership === 'outside') { entries.push({ ...entry, status: 'outside_window', window_status: membership }); continue; }
     if (membership === 'inside') inside++;
     missing++;
-    const added = mergePapers([record], { firstSeenDate: runDate, checkedAt }).papers[0];
+    const added = mergePapers([record], { firstSeenDate: runDate, checkedAt, normalizeCar: true }).papers[0];
     if (papers.some(p => p.id === added.id)) { entries.push({ ...entry, status: 'pending', reason: 'ID_COLLISION' }); continue; }
     papers.push(added);
     entries.push({ ...entry, status: 'added', paper_id: added.id, window_status: membership,

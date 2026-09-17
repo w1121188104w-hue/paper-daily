@@ -5,6 +5,7 @@ import { classifyPaper, CLASSIFICATION_VERSION } from './paperClassification.js'
 import { translationEligibility } from './translationQueue.js';
 import { evidence } from './paperMerge.js';
 import { publicationFor } from './masterList.js';
+import { journalIdentity, knownJournalMismatch } from './journalIdentity.js';
 
 // Explicit public fields: never serialize a library snapshot or raw source response directly.
 const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_category', 'journal_category_zh',
@@ -69,7 +70,11 @@ export function authorVariants(paper) {
 }
 
 export function presentJournalLibrary(library, config) {
-  const papers = library.papers.map((paper) => ({ ...select(paper, PAPER_FIELDS),
+  const identities = new Map(config.journals.map(journal => [journal.key, journalIdentity(journal)]));
+  const quarantined = library.papers.filter(knownJournalMismatch).map(paper => ({
+    ...select(paper, ['id', 'doi', 'title_original', 'journal_key']), ...knownJournalMismatch(paper) }));
+  const papers = library.papers.filter(paper => !knownJournalMismatch(paper)).map((paper) => ({ ...select(paper, PAPER_FIELDS),
+    journal_id: identities.get(paper.journal_key).id,
     ...abstractInfo(paper,library.enrichmentState,library.repairState),
     sources: [...paper.sources], authors: paper.authors.map((author) => select(author, ['name', 'orcid'])),
     author_variants: authorVariants(paper),
@@ -80,8 +85,8 @@ export function presentJournalLibrary(library, config) {
     schema_version: 1, initialized: Boolean(library.manifest),
     snapshot_at: library.manifest?.created_at || null,
     journals: config.journals.filter((journal) => journal.enabled)
-      .map((journal) => select(journal, ['key', 'name', 'category', 'category_zh'])),
-    papers,
+      .map((journal) => ({ ...select(journal, ['key', 'name', 'category', 'category_zh']), ...journalIdentity(journal) })),
+    papers, quarantined, archive_paper_count: library.papers.length,
     classification_summary: { version: CLASSIFICATION_VERSION,
       counts: papers.reduce((counts, paper) => { counts[paper.classification.kind] = (counts[paper.classification.kind] || 0) + 1; return counts; }, {}) },
     translation_eligibility: { ready: select(eligibility.ready, ['paper_count', 'field_count']),
