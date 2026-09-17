@@ -24238,6 +24238,81 @@
           ]
         }
       ]
+    },
+    {
+      "id": "3df0bc38-81ea-4666-b3ce-8d6198c7dc61",
+      "batch_id": "batch-ba5db4eff10a4540c16fd86675e002ce3498b01299239b0bd77570b325e29da0",
+      "mode": "daily",
+      "created_at": "2026-09-17T14:58:09.286Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1111/1911-3846.70061",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "a30326e5c81d9bcf18ef4ad0432cc044457c4a7b8595d2d5a754b98687bb5b62",
+              "task_id": "task:10a8805e532b2553e0b125c8949cd393165334d9ca5b701f882b85eadc3635a3"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1111/1911-3846.70062",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "7d6fdc06506de7bd6801e2f9b3c5f4e4ecce587eb9b3e6d9f2cd54e6515edda2",
+              "task_id": "task:69146ea504bc7f35ffb56b9d24f923e2df27fa2b1f5856cdab01a3bdf4727c13"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1111/1911-3846.70066",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "ebdaba166580f98d9fa8bd67fe2390ecb4ddaaab872f5e8f9c331c80d1230903",
+              "task_id": "task:05f1f97809ea2bd1cf7d8fd6f542e2e7c1b73af23793460cc84856451a0b626a"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1111/jofi.70042",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "6c9d5afa609eeee248dbd49c3b8ccb7fc992b96c75793770991eee4e81f65773",
+              "task_id": "task:9d473571fa487da907ee99805168c2bedc7d97668b50d0526a20e8ad15ee4b83"
+            }
+          ],
+          "retry_of": {
+            "abstract": "bcac1724-06f0-4d26-abc7-969a20a457b4"
+          },
+          "field_errors": {},
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
