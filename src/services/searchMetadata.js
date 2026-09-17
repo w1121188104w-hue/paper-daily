@@ -14,6 +14,7 @@ import { classifyPaper } from './paperClassification.js';
 import { duplicateMergeProof } from './duplicateMerge.js';
 import { verifiedSearchRecord } from './searchExtraction.js';
 import { missingOriginalAbstract, needsCarEnglishAbstract, verifiedCarEnglishRecord } from './carAbstractLanguage.js';
+import { publisherCaptureRecord } from './publisherCaptures.js';
 
 export function repairIdentityMatches(paper, record) {
   if (paper.journal_key !== record.journal_key || titleIdentity(paper.title_original) !== titleIdentity(record.title)) return false;
@@ -97,6 +98,16 @@ export async function repairPaperMetadata(paper, journal, { sources, search, oth
         if (!duplicateEvidence.some(row => stableJson(row) === stableJson(normalized))) duplicateEvidence.push(normalized);
       }
       throw error;
+    }
+  }
+  // Reuse a previously verified original before spending more API calls. This
+  // only supplies an abstract; other missing fields still follow the usual chain.
+  if (wanted.has('abstract') && missingOriginalAbstract(current)) {
+    const cached = publisherCaptureRecord(current, journal, checkedAt);
+    if (cached) {
+      const result = adopt(cached);
+      attempts.push({ source: 'publisher', stage: 'verified_browser_excerpt',
+        status: result.changed_fields.length ? 'filled' : 'no_new_fields' });
     }
   }
   for (const source of ['crossref', 'openalex', 'semanticscholar']) {

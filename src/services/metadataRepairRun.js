@@ -7,6 +7,7 @@ import { buildMasterList, officialDiscoveries } from './masterList.js';
 import { dueRepairIssues, reconcileRepairState, recordRepairAttempt, recordSourceConfirmation, repairSummary } from './repairState.js';
 import { repairPaperMetadata } from './searchMetadata.js';
 import { prioritizeRepecCatalogPapers } from './repecCatalog.js';
+import { publisherCaptureFor } from './publisherCaptures.js';
 import { validateEnrichmentReport } from './enrichmentValidation.js';
 import { newRunId, readJournalLibrary, withLibraryLock, writeLibraryJson, publishLibrarySnapshot } from './journalLibrary.js';
 
@@ -45,7 +46,9 @@ export async function runMetadataRepair(config, { root, sources, search, now = (
     const generalIds = [...new Set(due.map(issue => issue.paper_id))].filter(id => !abstractIds.includes(id)).slice(0, maxPapers);
     const prioritized = await prioritizeRepecCatalogPapers(abstractIds.map(id => papers[byId.get(id)]), {
       sources, journalFor: key => findJournal(config, key), shouldContinue });
-    const selected = [...prioritized.map(p => p.id), ...generalIds], repairs = [], abstracts = [];
+    const cached = new Set(prioritized.filter(p => publisherCaptureFor(p, findJournal(config, p.journal_key))).map(p => p.id));
+    const selected = [...prioritized.filter(p => cached.has(p.id)), ...prioritized.filter(p => !cached.has(p.id))]
+      .map(p => p.id).concat(generalIds), repairs = [], abstracts = [];
     const attemptedIssueIds = new Set(due.filter(issue => selected.includes(issue.paper_id)).map(issue => issue.id));
     if (!selected.length) return { committed: false, status: 'skipped', reason: 'NOT_DUE' };
     for (const id of selected) {
