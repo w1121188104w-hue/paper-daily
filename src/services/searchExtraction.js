@@ -12,7 +12,7 @@ export function originalAbstractSection(content) {
   // UChicago's public abstract page ends at this standalone access heading,
   // not at Introduction. Recognize the actual heading before whitespace is
   // collapsed; an occurrence inside an author's sentence is not a boundary.
-  const text = cleanText(input.replace(/^\s*(?:#{1,6}\s*)?Get full access to this article\s*$/gim, `\n${endMarker}\n`)
+  const text = cleanText(input.replace(/^\s*(?:#{1,6}\s*)?(?:Get full access to this article|Access this article|Downloads)\s*$/gim, `\n${endMarker}\n`)
     .replace(/^\s*#{1,6}\s+/gm, '')
     .replace(/\*\*(Abstract|Keywords?|References|Introduction|JEL[^*\n]*)\*\*/gi, '$1')
     // Wiley may put an explicit language marker on a separate line. It is a

@@ -7,7 +7,7 @@ on:
         required: true
         type: string
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: journal-production
   cancel-in-progress: false
@@ -34,10 +34,7 @@ jobs:
           ref: ${{ github.event.repository.default_branch }}
           path: production-baseline
           persist-credentials: false
-      - name: Verify live retrieval and grounded extraction without changing the library
+      - name: Verify Elsevier abstracts without changing the library
         env:
-          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
-          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
-          SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
-          GITHUB_TOKEN: ${{ github.token }}
+          ELSEVIER_API_KEY: ${{ secrets.ELSEVIER_API_KEY }}
         run: node scripts/abstract-extraction-probe.js

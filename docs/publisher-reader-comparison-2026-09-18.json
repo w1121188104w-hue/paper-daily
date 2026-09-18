@@ -1,0 +1,1089 @@
+{
+  "date": "2026-09-18",
+  "scope": "9 publisher groups; 17 distinct papers (8 missing abstracts, 9 controls)",
+  "runs": [
+    35319570075,
+    35320481563
+  ],
+  "code_commits": [
+    "403e90131914d4c12b1d11540afe00114876d593",
+    "e975977be04dc9089afe08753cb257c36125534a"
+  ],
+  "baseline_head": "63939a141baa6e6aedfac50564f73dc6768dc57a",
+  "production_unchanged": true,
+  "paid_requests": {
+    "total": 42,
+    "reader": 26,
+    "web_search": 16,
+    "serpapi": 0,
+    "deepseek": 0,
+    "ledger_succeeded": 25,
+    "ledger_unknown": 17
+  },
+  "ledger": "c1cb872e54b790f81013f2f493932cdcd6d55404",
+  "groups": [
+    {
+      "publisher": "Elsevier",
+      "journals": [
+        "AOS",
+        "JAE",
+        "JFE",
+        "JCF",
+        "RP"
+      ],
+      "missing_in_library": 37,
+      "samples": 3
+    },
+    {
+      "publisher": "Wiley",
+      "journals": [
+        "JAR",
+        "CAR",
+        "JF",
+        "JOM"
+      ],
+      "missing_in_library": 2,
+      "samples": 3
+    },
+    {
+      "publisher": "Springer Nature",
+      "journals": [
+        "RAS",
+        "JIBS"
+      ],
+      "missing_in_library": 5,
+      "samples": 3
+    },
+    {
+      "publisher": "Oxford University Press",
+      "journals": [
+        "QJE",
+        "RES",
+        "RFS"
+      ],
+      "missing_in_library": 0,
+      "samples": 1
+    },
+    {
+      "publisher": "American Accounting Association",
+      "journals": [
+        "TAR"
+      ],
+      "missing_in_library": 0,
+      "samples": 1
+    },
+    {
+      "publisher": "American Economic Association",
+      "journals": [
+        "AER"
+      ],
+      "missing_in_library": 0,
+      "samples": 1
+    },
+    {
+      "publisher": "University of Chicago Press",
+      "journals": [
+        "JPE"
+      ],
+      "missing_in_library": 17,
+      "samples": 3
+    },
+    {
+      "publisher": "INFORMS",
+      "journals": [
+        "MS"
+      ],
+      "missing_in_library": 0,
+      "samples": 1
+    },
+    {
+      "publisher": "SAGE",
+      "journals": [
+        "JM"
+      ],
+      "missing_in_library": 0,
+      "samples": 1
+    }
+  ],
+  "review_corrections": [
+    "Raw first-run Springer verified count included subscription/notes contamination and is NOT accepted as reported.",
+    "Offline boundary correction on the captured original excerpt yields exactly 831 characters for 10.1007/s11142-026-09985-w; no formal import.",
+    "SAGE control Reader text includes the saved abstract verbatim, but automated boundary extraction returned empty.",
+    "AEA unescaped slash URL succeeds; Downloads heading now handled in offline prototype. Direct retrieval already succeeded.",
+    "Five fallback URLs were other articles on the correct publisher domain; they provided no accepted records. Probe now filters DOI/title before paid reads and excludes /doi/pdf/."
+  ],
+  "new_missing_abstract_located": 1,
+  "formal_insertions": 0,
+  "records": [
+    {
+      "publisher": "Elsevier",
+      "journal": "RP",
+      "doi": "10.1016/j.respol.2026.105586",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "crossref_url_lookup",
+          "status": "official_url_found"
+        },
+        {
+          "channel": "direct",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0048733326001770",
+          "status": "ROBOTS_UNAVAILABLE"
+        },
+        {
+          "channel": "reader",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0048733326001770",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Wiley",
+      "journal": "JF",
+      "doi": "10.1111/jofi.70063",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/jofi.70063",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/jofi.70063",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 15,
+          "status": "abstract_section_not_accepted",
+          "content_lengths": [
+            4372,
+            2043,
+            3603,
+            3108,
+            1957,
+            4492,
+            1471,
+            4904,
+            208,
+            4723,
+            3199,
+            4461,
+            40000,
+            1652,
+            2471
+          ],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "direct",
+          "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/admt.202101362",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/admt.202101362",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Springer Nature",
+      "journal": "JIBS",
+      "doi": "10.1057/s41267-026-00906-2",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://link.springer.com/article/10.1057/s41267-026-00906-2",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://link.springer.com/article/10.1057/s41267-026-00906-2",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "status": "page_without_abstract_marker",
+          "content_lengths": [
+            1622
+          ],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Oxford University Press",
+      "journal": "QJE",
+      "doi": "10.1093/qje/qjag047",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "crossref_url_lookup",
+          "status": "official_url_found"
+        },
+        {
+          "channel": "direct",
+          "url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag047/8802089",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag047/8802089",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 15,
+          "status": "abstract_section_not_accepted",
+          "content_lengths": [
+            1870,
+            4313,
+            3258,
+            3273,
+            11533,
+            12413,
+            4705,
+            3190,
+            3372,
+            4666,
+            12574,
+            2760,
+            3006,
+            2756,
+            8241
+          ],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "direct",
+          "url": "https://academic.oup.com/gbe/article/doi/10.1093/gbe/evab005/6121099",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://academic.oup.com/gbe/article/doi/10.1093/gbe/evab005/6121099",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "American Accounting Association",
+      "journal": "TAR",
+      "doi": "10.2308/tar-2023-0303",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "crossref_url_lookup",
+          "status": "official_url_found"
+        },
+        {
+          "channel": "direct",
+          "url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2023-0303/28063/Exchange-Traded-Fund-Flows-and-Valuation",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2023-0303/28063/Exchange-Traded-Fund-Flows-and-Valuation",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "SEARCH_HTTP_ERROR",
+            "http_status": 500,
+            "provider_error_code": "1234"
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 2,
+          "status": "verified_abstract",
+          "content_lengths": [
+            3411,
+            3171
+          ],
+          "bounded_abstract": true,
+          "abstract_length": 1064,
+          "matches_existing": true,
+          "evidence_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2023-0303/28063/Exchange-Traded-Fund-Flows-and-Valuation",
+          "reported_abstract_sha256": "89e6b9bffae1c8d9d0c7aff3f6a39ff44fea2f4fbae71ad951e85622370902af"
+        }
+      ],
+      "newly_verified": false,
+      "verified": true
+    },
+    {
+      "publisher": "American Economic Association",
+      "journal": "AER",
+      "doi": "10.1257/aer.20230768",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230768",
+          "status": "verified_abstract",
+          "abstract_length": 665
+        },
+        {
+          "channel": "reader",
+          "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230768",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "INVALID_READER_RESPONSE",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "University of Chicago Press",
+      "journal": "JPE",
+      "doi": "10.1086/742716",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://www.journals.uchicago.edu/doi/abs/10.1086/742716",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://www.journals.uchicago.edu/doi/abs/10.1086/742716",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "INFORMS",
+      "journal": "MS",
+      "doi": "10.1287/mnsc.2024.08449",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://pubsonline.informs.org/doi/abs/10.1287/mnsc.2024.08449",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://pubsonline.informs.org/doi/abs/10.1287/mnsc.2024.08449",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 15,
+          "status": "identity_not_verified",
+          "content_lengths": [
+            2739,
+            3340,
+            2517,
+            1103,
+            1370,
+            4002,
+            3848,
+            3101,
+            1284,
+            1871,
+            3128,
+            1393,
+            3703,
+            3007,
+            4091
+          ],
+          "bounded_abstract": true
+        },
+        {
+          "channel": "direct",
+          "url": "https://pubsonline.informs.org/doi/pdf/10.1287/msom.2024.0946",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://pubsonline.informs.org/doi/pdf/10.1287/msom.2024.0946",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "status": "abstract_section_not_accepted",
+          "content_lengths": [
+            13547
+          ],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "SAGE",
+      "journal": "JM",
+      "doi": "10.1177/01492063261480612",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://journals.sagepub.com/doi/abs/10.1177/01492063261480612",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://journals.sagepub.com/doi/abs/10.1177/01492063261480612",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "status": "abstract_section_not_accepted",
+          "content_lengths": [
+            104132
+          ],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Elsevier",
+      "journal": "JCF",
+      "doi": "10.1016/j.jcorpfin.2026.103091",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "crossref_url_lookup",
+          "status": "official_url_found"
+        },
+        {
+          "channel": "direct",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0929119926001495",
+          "status": "ROBOTS_UNAVAILABLE"
+        },
+        {
+          "channel": "reader",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0929119926001495",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Wiley",
+      "journal": "JOM",
+      "doi": "10.1002/joom.70053",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://onlinelibrary.wiley.com/doi/10.1002/joom.70053",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://onlinelibrary.wiley.com/doi/10.1002/joom.70053",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 15,
+          "status": "identity_not_verified",
+          "content_lengths": [
+            2920,
+            2952,
+            3400,
+            5607,
+            3319,
+            2930,
+            1426,
+            3967,
+            5476,
+            4092,
+            5546,
+            1831,
+            2154,
+            3112,
+            3024
+          ],
+          "bounded_abstract": true
+        },
+        {
+          "channel": "direct",
+          "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/rnc.7107",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/rnc.7107",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Springer Nature",
+      "journal": "RAS",
+      "doi": "10.1007/s11142-026-09985-w",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://link.springer.com/article/10.1007/s11142-026-09985-w",
+          "status": "TIMEOUT"
+        },
+        {
+          "channel": "reader",
+          "url": "https://link.springer.com/article/10.1007/s11142-026-09985-w",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "status": "verified_abstract",
+          "content_lengths": [
+            19931
+          ],
+          "bounded_abstract": true,
+          "abstract_length": 7837,
+          "matches_existing": null,
+          "evidence_url": "https://link.springer.com/article/10.1007/s11142-026-09985-w",
+          "reported_abstract_sha256": "581e3f0e2157df592a2ee114acff2dbfd7ef06d69cb40c35a1a9624894460426"
+        }
+      ],
+      "newly_verified": true,
+      "verified": true
+    },
+    {
+      "publisher": "University of Chicago Press",
+      "journal": "JPE",
+      "doi": "10.1086/744015",
+      "control": false,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://www.journals.uchicago.edu/doi/abs/10.1086/744015",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://www.journals.uchicago.edu/doi/abs/10.1086/744015",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Elsevier",
+      "journal": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104354",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "crossref_url_lookup",
+          "status": "official_url_found"
+        },
+        {
+          "channel": "direct",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0304405X2600125X",
+          "status": "ROBOTS_UNAVAILABLE"
+        },
+        {
+          "channel": "reader",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0304405X2600125X",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Wiley",
+      "journal": "CAR",
+      "doi": "10.1111/1911-3846.70078",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/1911-3846.70078",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/1911-3846.70078",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 5,
+          "status": "abstract_section_not_accepted",
+          "content_lengths": [
+            40000,
+            3510,
+            1445,
+            222,
+            230
+          ],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "direct",
+          "url": "https://onlinelibrary.wiley.com/doi/10.1111/ablj.12009",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://onlinelibrary.wiley.com/doi/10.1111/ablj.12009",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "Springer Nature",
+      "journal": "JIBS",
+      "doi": "10.1057/s41267-026-00896-1",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://link.springer.com/article/10.1057/s41267-026-00896-1",
+          "status": "REDIRECT_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://link.springer.com/article/10.1057/s41267-026-00896-1",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "status": "page_without_abstract_marker",
+          "content_lengths": [
+            89964
+          ],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    },
+    {
+      "publisher": "University of Chicago Press",
+      "journal": "JPE",
+      "doi": "10.1086/742725",
+      "control": true,
+      "attempts": [
+        {
+          "channel": "direct",
+          "url": "https://www.journals.uchicago.edu/doi/abs/10.1086/742725",
+          "status": "ACCESS_RESTRICTED"
+        },
+        {
+          "channel": "reader",
+          "url": "https://www.journals.uchicago.edu/doi/abs/10.1086/742725",
+          "called": true,
+          "reason": "request_outcome_unknown",
+          "diagnostic": {
+            "code": "ACCESS_RESTRICTED",
+            "http_status": null,
+            "provider_error_code": null
+          },
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        },
+        {
+          "channel": "search",
+          "called": true,
+          "reason": null,
+          "diagnostic": null,
+          "leads": 0,
+          "status": "no_page_content",
+          "content_lengths": [],
+          "bounded_abstract": false
+        }
+      ],
+      "newly_verified": false,
+      "verified": false
+    }
+  ],
+  "followup": [
+    {
+      "doi": "10.1007/s11142-026-09985-w",
+      "url": "https://link.springer.com/article/10.1007/s11142-026-09985-w",
+      "called": true,
+      "reason": null,
+      "diagnostic": null,
+      "pages": [
+        {
+          "title": "Late trade credit payments to meet cash flow forecasts",
+          "content_length": 19931,
+          "content_sha256": "c8ea630736696a5d904b3f25d9ef17c09d9737f4b18871d055014bcd0b5b3e53",
+          "current_extraction_length": 7837,
+          "matches_saved_abstract": false,
+          "section_markers": [
+            {
+              "marker": "Abstract",
+              "offset": 3
+            },
+            {
+              "marker": "Access this article",
+              "offset": 849
+            },
+            {
+              "marker": "Data Availability",
+              "offset": 1220
+            },
+            {
+              "marker": "References",
+              "offset": 7887
+            },
+            {
+              "marker": "references",
+              "offset": 17314
+            },
+            {
+              "marker": "Keywords",
+              "offset": 19899
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1177/01492063261480612",
+      "url": "https://journals.sagepub.com/doi/abs/10.1177/01492063261480612",
+      "called": true,
+      "reason": null,
+      "diagnostic": null,
+      "pages": [
+        {
+          "title": "The Networks of Others: A Model of Secondhand Brokerage and its Effects on Employee Innovation",
+          "content_length": 104132,
+          "content_sha256": "f11b34660755290eed75ffa863f1a2c9257d2f0d52c0cfb9f9f85cffb3c8af01",
+          "current_extraction_length": 0,
+          "matches_saved_abstract": true,
+          "section_markers": [
+            {
+              "marker": "Abstract",
+              "offset": 3
+            },
+            {
+              "marker": "References",
+              "offset": 86538
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1057/s41267-026-00896-1",
+      "url": "https://link.springer.com/article/10.1057/s41267-026-00896-1",
+      "called": true,
+      "reason": null,
+      "diagnostic": null,
+      "pages": [
+        {
+          "title": "The impact of migration and institutions on new business creation: integrating social capital theory and institutional theory",
+          "content_length": 89964,
+          "content_sha256": "a1b06e942f7d6658f03fe30fc6255dc8de2b488637d63719e3d3342367cfdf7e",
+          "current_extraction_length": 0,
+          "matches_saved_abstract": false,
+          "section_markers": [
+            {
+              "marker": "Introduction",
+              "offset": 3
+            },
+            {
+              "marker": "data availability",
+              "offset": 22901
+            },
+            {
+              "marker": "References",
+              "offset": 77326
+            },
+            {
+              "marker": "introduction",
+              "offset": 80528
+            },
+            {
+              "marker": "references",
+              "offset": 89954
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1257/aer.20230768",
+      "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20230768",
+      "called": true,
+      "reason": null,
+      "diagnostic": null,
+      "pages": [
+        {
+          "title": "Optimal Public Transportation Networks: Evidence from the World’s Largest Bus Rapid Transit System in Jakarta - American Economic Association",
+          "content_length": 3575,
+          "content_sha256": "cbd911a91607d8ee168c432b1b3248f9f8fad56dcf90a7c91e1456f87116d581",
+          "current_extraction_length": 0,
+          "matches_saved_abstract": false,
+          "section_markers": [
+            {
+              "marker": "Abstract",
+              "offset": 1984
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
