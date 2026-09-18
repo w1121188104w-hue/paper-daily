@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "removal_policy_version": 2,
+  "stage": "journal_identity_correction",
+  "run_id": "20260918T043345540Z-9e0aa1dd-9f3e-42c2-9856-035c82fa317a",
+  "status": "success",
+  "from_date": "2026-07-21",
+  "to_date": "2026-09-18",
+  "stats": {
+    "added": 0,
+    "removed": 1,
+    "abstracts_filled": 0,
+    "abstracts_checked": 0,
+    "pending_candidates": 0
+  },
+  "journals": [],
+  "abstracts": [],
+  "removed": [
+    {
+      "paper_id": "doi:10.34218/jom_13_02_005",
+      "doi": "10.34218/jom_13_02_005",
+      "journal_key": "JM",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Journal of Management (IAEME)",
+        "actual_issn": "2347-3940",
+        "expected_issns": [
+          "0149-2063",
+          "1557-1211"
+        ],
+        "evidence_url": "https://iaeme.com/Home/article_id/JOM_13_02_005",
+        "target_url": "https://journals.sagepub.com/home/jom"
+      }
+    }
+  ],
+  "checked_at": "2026-09-18T04:33:45.540Z"
+}

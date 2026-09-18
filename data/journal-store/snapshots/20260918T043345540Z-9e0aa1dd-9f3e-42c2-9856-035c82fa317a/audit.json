@@ -1,0 +1,27 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "paper_id": "doi:10.34218/jom_13_02_005",
+      "doi": "10.34218/jom_13_02_005",
+      "journal_key": "JM",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Journal of Management (IAEME)",
+        "actual_issn": "2347-3940",
+        "expected_issns": [
+          "0149-2063",
+          "1557-1211"
+        ],
+        "evidence_url": "https://iaeme.com/Home/article_id/JOM_13_02_005",
+        "target_url": "https://journals.sagepub.com/home/jom"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "type": "user_authorized_wrong_journal_removal",
+      "backup": "snapshots/20260918T005351165Z-8de0728f-1ee8-40bf-920c-c52544a692b1/manifest.json"
+    }
+  ]
+}
