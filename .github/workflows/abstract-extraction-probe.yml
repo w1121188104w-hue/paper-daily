@@ -37,4 +37,5 @@ jobs:
       - name: Verify Elsevier abstracts without changing the library
         env:
           ELSEVIER_API_KEY: ${{ secrets.ELSEVIER_API_KEY }}
+          ELSEVIER_DIAGNOSTIC_ONLY: 'true'
         run: node scripts/abstract-extraction-probe.js

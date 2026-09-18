@@ -1,11 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { inspectElsevier, requestElsevier } from '../scripts/elsevier-api-probe.js';
+import { inspectElsevier, requestElsevier, authenticationReason } from '../scripts/elsevier-api-probe.js';
 const paper = { doi: '10.1016/j.respol.2026.105586', title: 'A sample research paper' };
 const journal = { print_issn: '0048-7333', electronic_issn: '1873-7625' };
 const abstract = 'This study examines the relationship between firm innovation and economic outcomes using a longitudinal dataset.';
 const payload = (changes = {}) => ({ 'full-text-retrieval-response': { coredata: { 'prism:doi': paper.doi,
   'dc:title': paper.title, 'prism:issn': '00487333', 'dc:description': abstract, ...changes } } });
+test('Elsevier classifies authentication reasons without printing provider text', () => {
+  const reason = s => authenticationReason({ 'service-error': { status: { statusText: s } } });
+  assert.equal(reason('Invalid API Key'), 'invalid_api_key');
+  assert.equal(reason('Request from an invalid IP address'), 'institution_or_ip_restriction');
+  assert.equal(reason('Not entitled for this resource'), 'insufficient_entitlement');
+  assert.equal(reason('secret-example'), 'unspecified');
+});
 test('Elsevier verifies DOI title ISSN and existing abstract without returning original text', () => {
   const r = inspectElsevier(payload(), { ...paper, abstract_original: abstract }, journal);
   assert.equal(r.status, 'verified_abstract'); assert.equal(r.matches_existing, true);

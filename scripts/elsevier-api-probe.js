@@ -13,6 +13,15 @@ import { assertLibrary } from '../src/services/libraryValidation.js';
 const KEYS = ['AOS', 'JAE', 'JFE', 'JCF', 'RP'];
 const scalar = value => typeof value === 'string' ? value : typeof value?.$ === 'string' ? value.$ : '';
 const code = value => /^[A-Z_0-9:-]{1,80}$/.test(value || '') ? value : null;
+export function authenticationReason(data) {
+  const message = String(data?.['service-error']?.status?.statusText || data?.['error-response']?.['error-message'] || '');
+  if (/invalid.{0,30}api.?key|api.?key.{0,30}(?:invalid|not found|not recognized)|unrecognized.{0,30}key/i.test(message)) return 'invalid_api_key';
+  if (/ip address|institution|institutional|outside.{0,30}network/i.test(message)) return 'institution_or_ip_restriction';
+  if (/not authorized|not entitled|insufficient|subscription|entitlement/i.test(message)) return 'insufficient_entitlement';
+  if (/quota|rate limit/i.test(message)) return 'quota_or_rate_limit';
+  if (/missing.{0,30}api.?key|api.?key.{0,30}required/i.test(message)) return 'api_key_not_received';
+  return 'unspecified';
+}
 export function selectElsevierSamples(papers) {
   return KEYS.flatMap(key => {
     const pool = papers.filter(p => p.journal_key === key && p.doi && !knownJournalMismatch(p) && classifyPaper(p).kind === 'candidate')
@@ -50,6 +59,7 @@ export async function requestElsevier(doi, key, view = 'META_ABS', fetchImpl = f
     text += decoder.decode();
     let data; try { data = JSON.parse(text); } catch { return { http_status: response.status, error: 'NON_JSON_RESPONSE' }; }
     return { http_status: response.status, provider_code: code(data?.['service-error']?.status?.statusCode),
+      ...(!response.ok ? { provider_reason: authenticationReason(data) } : {}),
       data: response.ok ? data : null };
   } catch { return { http_status: null, error: 'TRANSPORT_FAILURE' }; }
 }
@@ -58,7 +68,7 @@ export async function probeElsevier({ env = process.env, log = console.log } = {
     env.GITHUB_REPOSITORY === 'w1121188104w-hue/paper-daily', '仅允许隔离测试');
   if (!env.ELSEVIER_API_KEY?.trim()) { const e = new Error(); e.code = 'ELSEVIER_KEY_MISSING'; throw e; }
   const config = await loadJournalConfig(), root = path.resolve('production-baseline/data/journal-store');
-  const before = await readJournalLibrary({ root, config }), samples = selectElsevierSamples(before.papers), records = [];
+  const before = await readJournalLibrary({ root, config }), samples = selectElsevierSamples(before.papers).slice(0, env.ELSEVIER_DIAGNOSTIC_ONLY === 'true' ? 1 : 10), records = [];
   assertLibrary(samples.length > 0 && samples.length <= 10, '样本数量异常');
   let calls = 0, stopped = null;
   for (const paper of samples) {
@@ -68,7 +78,7 @@ export async function probeElsevier({ env = process.env, log = console.log } = {
     const row = { journal: paper.journal_key, doi: paper.doi, control: !missingOriginalAbstract(paper), view: 'META_ABS', ...diagnostic,
       ...(data ? inspectElsevier(data, paper, findJournal(config, paper.journal_key)) : { status: 'request_failed' }) };
     // One META diagnostic distinguishes abstract-view restrictions from complete access denial.
-    if (answer.http_status === 403 && !records.some(r => r.meta_diagnostic)) {
+    if (env.ELSEVIER_DIAGNOSTIC_ONLY !== 'true' && answer.http_status === 403 && !records.some(r => r.meta_diagnostic)) {
       await sleep(1100);
       const diagnosticAnswer = await requestElsevier(paper.doi, env.ELSEVIER_API_KEY.trim(), 'META'); calls++;
       row.meta_diagnostic = { http_status: diagnosticAnswer.http_status, provider_code: diagnosticAnswer.provider_code,
