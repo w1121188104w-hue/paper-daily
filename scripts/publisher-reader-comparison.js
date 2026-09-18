@@ -24,7 +24,7 @@ const safeCode = e => /^[A-Z_]{3,50}$/.test(e?.code || '') ? e.code : 'CHECK_FAI
 export function officialArticleUrl(value, journal) {
   const url = safeSearchLink(value); if (!url) return null;
   const u = new URL(url), p = publisherFor(journal);
-  if (!p.hosts.includes(u.hostname) || /^(?:api|rss)\./.test(u.hostname) || /\.pdf$/i.test(u.pathname)) return null;
+  if (!p.hosts.includes(u.hostname) || /^(?:api|rss)\./.test(u.hostname) || /\.pdf$/i.test(u.pathname) || /\/doi\/(?:pdf|epdf)\//i.test(u.pathname)) return null;
   return /\/(?:doi|article|articles)(?:\/|$)/i.test(u.pathname) || /\/advance-article\//i.test(u.pathname) ? url : null;
 }
 export function knownArticleUrl(paper, journal) {
@@ -64,10 +64,14 @@ function checkedContent(leads, paper, journal) {
   let record = null, code = null;
   try { record = verifiedSearchRecord(leads, paper, journal, new Date().toISOString()); }
   catch (e) { if (fatal(e)) throw e; code = safeCode(e); }
+  // A parser match is not success if it swallowed navigation or access text.
+  if (record && /\b(?:Access this article|Log in via an institution|Subscribe and save|Similar content being viewed by others)\b/i.test(record.abstract)) {
+    record = null; code = 'CONTAMINATED_ABSTRACT';
+  }
   const hasAbstract = leads.some(l => originalAbstractSection(l.content));
   const text = leads.map(l => String(l.content || ''));
   const challenge = text.some(s => /^\s*(?:#\s*)?(?:Just a moment|Access denied|Verify you are human|Robot check|Sign in|Log in)\b/i.test(s));
-  const status = record ? 'verified_abstract' : challenge ? 'challenge_page' : hasAbstract ? 'identity_not_verified' :
+  const status = record ? 'verified_abstract' : code === 'CONTAMINATED_ABSTRACT' ? 'contaminated_abstract' : challenge ? 'challenge_page' : hasAbstract ? 'identity_not_verified' :
     text.some(s => /\bAbstract\b/i.test(s)) ? 'abstract_section_not_accepted' : text.length ? 'page_without_abstract_marker' : 'no_page_content';
   return { record, result: { status, ...(code ? { code } : {}), content_lengths: text.map(s => s.length),
     bounded_abstract: hasAbstract, ...(record ? { abstract_length: record.abstract.length,
@@ -142,7 +146,12 @@ export async function publisherReaderComparison({ env = process.env, log = conso
             diagnostic: answer.diagnostic || null, leads: leads.length, ...inspected.result });
           verified ||= Boolean(inspected.record);
           const title = normalizeTitleForMatch(paper.title_original);
-          const official = leads.map(l => ({ ...l, url: officialArticleUrl(l.url, journal) })).filter(l => l.url);
+          const official = leads.map(l => ({ ...l, url: officialArticleUrl(l.url, journal) })).filter(l => {
+            if (!l.url) return false;
+            let decoded = l.url; try { decoded = decodeURIComponent(l.url); } catch { return false; }
+            return normalizeTitleForMatch(l.title) === title ||
+              (decoded + ' ' + (l.content || '')).toLowerCase().includes(paper.doi.toLowerCase());
+          });
           official.sort((a, b) => Number(normalizeTitleForMatch(b.title) === title) - Number(normalizeTitleForMatch(a.title) === title));
           for (const lead of official) { if (verified || !available() || urls.size >= 2) break; await tryUrl(lead.url); }
         }

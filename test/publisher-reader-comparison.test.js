@@ -21,7 +21,8 @@ test('官网候选不能含站外、凭据、API、订阅目录、PDF或任意�
   const j = findJournal(config, 'CAR');
   for (const url of ['https://evil.example/doi/x', 'https://onlinelibrary.wiley.com/toc/1/0/0',
     'https://onlinelibrary.wiley.com/doi/a?token=secret', 'https://user:secret@onlinelibrary.wiley.com/doi/a',
-    'https://localhost/article/a', 'https://onlinelibrary.wiley.com/article/a.pdf']) assert.equal(officialArticleUrl(url, j), null);
+    'https://localhost/article/a', 'https://onlinelibrary.wiley.com/article/a.pdf',
+    'https://onlinelibrary.wiley.com/doi/pdf/10.1111/example']) assert.equal(officialArticleUrl(url, j), null);
   assert.ok(knownArticleUrl(paper('CAR'), j).startsWith('https://onlinelibrary.wiley.com/doi/abs/'));
   assert.equal(knownArticleUrl(paper('JFE'), findJournal(config, 'JFE')), null);
 });
@@ -59,6 +60,13 @@ test('返回完整原文才算成功，保留可复核摘录，对照与新增�
   const result = await publisherReaderComparison(options);
   assert.equal(result.records[0].newly_verified, true); assert.equal(result.requested, 1);
   assert.equal(result.records[0].attempts[1].verified_evidence.abstract, text);
+  const polluted = `${text} Access this article Subscribe and save. Notes 1. This is outside the abstract.`;
+  const rejected = await publisherReaderComparison({ ...options, runtimeFactory: async () => ({ sources: {
+    publisherArticle: async () => ({ abstract: '' }), readerArticle: async () => ({ called: true, result: { leads: [{
+      title: p.title_original, url, search_endpoint: 'reader', content: `${p.title_original} ${p.doi}\nAbstract\n${polluted}\nReferences` }] } }) },
+    search: async () => ({ called: true, result: { leads: [] } }), summary: () => ({}) }) });
+  assert.equal(rejected.records[0].newly_verified, false);
+  assert.equal(rejected.records[0].attempts[1].status, 'contaminated_abstract');
   let reads = 0;
   await assert.rejects(publisherReaderComparison({ ...options, readLibrary: async () => ({ ...library, pointerText: reads++ ? 'changed' : 'same' }) }));
 });

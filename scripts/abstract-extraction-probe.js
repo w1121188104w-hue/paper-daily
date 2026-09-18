@@ -1,10 +1,10 @@
-import { publisherReaderComparison } from './publisher-reader-comparison.js';
+import { inspectPublisherReader } from './publisher-reader-inspection.js';
 
 // Keep the existing, explicitly authorized manual workflow entry point.
-// Publisher-grouped comparison: bounded reads and searches, no model generation,
+// Four-page follow-up to the completed publisher matrix. Reader only, no search,
 // translation, formal data mutation or publication. Same reviewed manual workflow.
 try {
-  await publisherReaderComparison();
+  await inspectPublisherReader();
 } catch (error) {
   console.error('PROBE_FAILED ' + (/^[A-Z_]{3,50}$/.test(error.code || '') ? error.code : 'CHECK_FAILED'));
   process.exitCode = 1;
