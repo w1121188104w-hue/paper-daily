@@ -1,0 +1,59 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "paper_id": "doi:10.1007/978-3-032-11327-6",
+      "doi": "10.1007/978-3-032-11327-6",
+      "journal_key": "RP",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Research for Policy (book series)",
+        "actual_issn": "2662-3684",
+        "expected_issns": [
+          "0048-7333",
+          "1873-7625"
+        ],
+        "evidence_url": "https://link.springer.com/book/10.1007/978-3-032-11327-6",
+        "target_url": "https://www.sciencedirect.com/journal/research-policy"
+      }
+    },
+    {
+      "paper_id": "doi:10.1007/978-3-032-25831-1",
+      "doi": "10.1007/978-3-032-25831-1",
+      "journal_key": "RP",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Research for Policy (book series)",
+        "actual_issn": "2662-3684",
+        "expected_issns": [
+          "0048-7333",
+          "1873-7625"
+        ],
+        "evidence_url": "https://link.springer.com/book/10.1007/978-3-032-25831-1",
+        "target_url": "https://www.sciencedirect.com/journal/research-policy"
+      }
+    },
+    {
+      "paper_id": "doi:10.1007/978-3-032-29056-4",
+      "doi": "10.1007/978-3-032-29056-4",
+      "journal_key": "RP",
+      "evidence": {
+        "reason": "verified_wrong_journal",
+        "actual_journal": "Research for Policy (book series)",
+        "actual_issn": "2662-3684",
+        "expected_issns": [
+          "0048-7333",
+          "1873-7625"
+        ],
+        "evidence_url": "https://link.springer.com/book/10.1007/978-3-032-29056-4",
+        "target_url": "https://www.sciencedirect.com/journal/research-policy"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "type": "user_authorized_wrong_journal_removal",
+      "backup": "snapshots/20260918T043345540Z-9e0aa1dd-9f3e-42c2-9856-035c82fa317a/manifest.json"
+    }
+  ]
+}
