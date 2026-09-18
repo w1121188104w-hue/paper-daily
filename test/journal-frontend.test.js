@@ -41,7 +41,7 @@ function payload(overrides = {}) {
 }
 let sequence = 0;
 async function app(t, { data = payload(), day = false, search = '?month=2026-09', fail = false } = {}) {
-  const commonIds = ['main', 'statusTitle', 'statusBadge', 'statusText', 'attemptWarning', 'libraryMeta', 'enrichmentStatus', 'enrichmentJournals', 'reload',
+  const commonIds = ['main', 'statusTitle', 'statusBadge', 'statusText', 'attemptWarning', 'libraryMeta', 'enrichmentStatus', 'reload',
     'filterTitle', 'filters', 'query', 'category', 'journal', 'kind', 'reset', 'quickFilters', 'listTitle', 'listMeta', 'paperList', 'pagination'];
   const ids = new Map([...commonIds, ...(day ? ['dayTitle', 'backToCalendar', 'dayCoverage'] :
     ['monthTitle', 'prevMonth', 'nextMonth', 'calendarMeta', 'thisMonth', 'calendarGrid'])].map((id) => [id, new Element('div')]));
@@ -72,7 +72,7 @@ test('两页HTML控件ID唯一、模块引用相对，不加载旧设置或第�
     const ids = [...text.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
     assert.equal(ids.length, new Set(ids).size); assert.ok(text.includes('src="./app.js"'));
     for (const required of ['filters', 'query', 'journal', 'category', 'paperList', 'pagination', 'reload']) assert.ok(ids.includes(required));
-    for (const forbidden of ['settings.js', 'home.js', 'src="/', 'fonts.googleapis', 'llmApiKey', 'fetchDayBtn']) assert.ok(!text.includes(forbidden));
+    for (const forbidden of ['settings.js', 'home.js', 'src="/', 'fonts.googleapis', 'llmApiKey', 'fetchDayBtn', 'enrichmentJournals', '官网漏收核对明细']) assert.ok(!text.includes(forbidden));
   }
 });
 test('真实渲染函数生成日历、全部19刊、双语卡片及双源徽章', async (t) => {
@@ -318,7 +318,7 @@ test('CAR只有法文摘要时不标成English，保留原文切换和已有中�
   }
 });
 
-test('网页显示官网部分核对/受限与摘要真实来源，不把未知显示成零篇或生成摘要', async t => {
+test('网页不再渲染官网漏收清单，仍显示补全概况与摘要真实来源', async t => {
   const ui = await app(t,{ data: payload({ papers: [paper({ sources: ['publisher'],abstract_status: 'found',abstract_source: 'publisher',
     abstract_source_url: 'https://www.aeaweb.org/articles?id=10.1234/one' })],enrichment: {
       latest: { finished_at: '2026-09-11T01:00:00Z',stats: { added: 0,abstracts_filled: 1 } },missing_abstracts: 3,
@@ -327,8 +327,9 @@ test('网页显示官网部分核对/受限与摘要真实来源，不把未知�
       { journal_key: 'JPE',coverage: 'restricted',official_observed_count: null,official_in_window_count: 0,
         existing_total_count: 4,missing_count: 0,added_count: 0,pending_count: 0,from_date: '2026-07-14',to_date: '2026-09-11',checked_at: '2026-09-11T01:00:00Z' }] }
   }) });
-  assert.ok(ui.get('enrichmentJournals').textContent.includes('官网清单观察 未知 条'));
-  assert.ok(ui.get('enrichmentJournals').textContent.includes('部分核对'));
+  assert.equal(ui.get('enrichmentJournals'), undefined);
+  assert.ok(ui.get('enrichmentStatus').textContent.includes('找到真实摘要 1 篇'));
+  assert.ok(ui.get('enrichmentStatus').textContent.includes('3 条缺摘要'));
   assert.ok(ui.get('paperList').textContent.includes('期刊／出版社官网'));
   assert.ok(ui.get('paperList').textContent.includes('已从真实来源补全'));
   assert.ok(descendants(ui.get('paperList')).some(e => e.href === 'https://www.aeaweb.org/articles?id=10.1234/one'));

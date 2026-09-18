@@ -62,10 +62,6 @@ function renderStatus() {
   const enrichment = data.enrichment;
   if ($('enrichmentStatus')) {
     $('enrichmentStatus').textContent = enrichment?.latest ? `最近补全：${timeText(enrichment.latest.finished_at)}；本轮补入 ${enrichment.latest.stats.added} 篇，找到真实摘要 ${enrichment.latest.stats.abstracts_filled} 篇。库中仍有 ${enrichment.missing_abstracts} 条缺摘要，将按间隔重试。` : '官网核对与摘要补全尚未运行。';
-    const items = (enrichment?.journals || []).sort((a,b) => a.journal_key.localeCompare(b.journal_key)).map(j => node('p',
-      `${j.journal_key}：${j.coverage === 'restricted' ? `访问受限／未核实；官网清单观察 未知 条，无法判断60天内覆盖和漏收情况，原库 ${j.existing_total_count} 条，本次未补入` :
-        `部分核对；官网清单观察 ${j.official_observed_count} 条，60天内确认 ${j.official_in_window_count} 条，原库 ${j.existing_total_count} 条，确认漏收 ${j.missing_count} 条，补入 ${j.added_count} 条，待核实 ${j.pending_count} 条`}。核对 ${j.from_date} 至 ${j.to_date}，完成于 ${timeText(j.checked_at)}。`, 'meta'));
-    $('enrichmentJournals').replaceChildren(...items);
   }
 }
 
