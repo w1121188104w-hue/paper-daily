@@ -33,17 +33,37 @@ test('错刊证据限定已核实DOI和归属，不扩大到同出版商、未�
     assert.equal(knownJournalMismatch({ journal_key, doi, abstract_original: '' }), null);
 });
 
-test('旧授权只删五条JAR；新授权仅多删除指定IAEME论文，其他错刊仍隔离', () => {
+test('历史v1/v2授权保留原范围；v3删除已确认三条错收丛书，不再隔离', () => {
   const papers = cases.map(([journal_key, doi]) => ({ id: `doi:${doi}`, journal_key, doi }));
   const previous = { papers, enrichmentState: { abstracts: Object.fromEntries(papers.map(p => [p.id, { status: 'missing' }])) } };
   const result = journalIdentityCorrection(previous, { policyVersion: 1 });
   assert.deepEqual(result.papers, papers);
   assert.deepEqual(result.removed, []);
   assert.deepEqual(result.enrichmentState, previous.enrichmentState);
-  const current = journalIdentityCorrection(previous);
+  const current = journalIdentityCorrection(previous, { policyVersion: 2 });
   assert.deepEqual(current.removed.map(p => p.doi), ['10.34218/jom_13_02_005']);
   assert.deepEqual(current.papers, papers.filter(p => p.journal_key !== 'JM'));
   assert.ok(!Object.hasOwn(current.enrichmentState.abstracts, 'doi:10.34218/jom_13_02_005'));
+  const latest = journalIdentityCorrection(previous);
+  assert.equal(latest.removed.length, 4);
+  assert.deepEqual(latest.papers, []);
+  assert.deepEqual(latest.enrichmentState.abstracts, {});
+  const report = { removal_policy_version: 3, removed: latest.removed, stats: { removed: 4 } };
+  assert.doesNotThrow(() => validateJournalIdentityCorrection(previous, [], report, latest.enrichmentState));
+  assert.throws(() => validateJournalIdentityCorrection(previous, [], { ...report, removal_policy_version: 2 }, latest.enrichmentState));
+});
+
+test('错刊删除不扩展到未知同前缀记录、其他期刊归属或缺摘要论文；重复执行不再删除', () => {
+  const papers = [['RP', '10.1007/978-3-032-11327-6'], ['RP', '10.1007/978-3-032-99999-9'],
+    ['JIBS', '10.1007/978-3-032-11327-6'], ['RP', '10.1016/j.respol.2026.105588']]
+    .map(([journal_key, doi], i) => ({ id: String(i), journal_key, doi, abstract_original: '' }));
+  const previous = { papers, enrichmentState: { abstracts: { '0': { status: 'missing' }, '1': { status: 'missing' } } } };
+  const result = journalIdentityCorrection(previous);
+  assert.deepEqual(result.papers, papers.slice(1));
+  assert.deepEqual(result.enrichmentState.abstracts, { '1': { status: 'missing' } });
+  assert.deepEqual(journalIdentityCorrection(result).removed, []);
+  assert.throws(() => validateJournalIdentityCorrection(previous, [],
+    { removal_policy_version: 3, removed: result.removed, stats: { removed: 1 } }, result.enrichmentState));
 });
 
 test('旧JAR删除快照即使同时含IAEME也仍按v1验证，不扩大历史授权；新授权不能删除其他记录', () => {

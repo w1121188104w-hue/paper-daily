@@ -102,7 +102,7 @@ test('新授权JM删除独立于采集和付费API，保留其他论文、旧账
   assert.deepEqual(after.papers, [survivor]); assert.equal(commits, 1);
   assert.ok(after.queue.tasks.every(x => x.paper_id === survivor.id));
   assert.ok(Object.values(after.repairState.issues).every(x => x.paper_id === survivor.id));
-  assert.equal(after.enrichmentReports.at(-1).removal_policy_version, 2);
+  assert.equal(after.enrichmentReports.at(-1).removal_policy_version, 3);
   assert.equal(after.enrichmentReports.at(-1).removed[0].evidence.actual_issn, '2347-3940');
   const backup = await readLibraryRef(root, after.manifest.parent);
   const oldPapers = (await Promise.all(Object.values(backup.papers).map(ref => readLibraryRef(root, ref)))).flat();
