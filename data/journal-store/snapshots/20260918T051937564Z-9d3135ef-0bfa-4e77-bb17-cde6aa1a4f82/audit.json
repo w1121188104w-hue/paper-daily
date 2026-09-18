@@ -1,0 +1,987 @@
+{
+  "duplicates": [
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1016/j.jfineco.2026.104323",
+        "semanticscholar:4bb67f00302dbf667aed2567d3cf6e6680329de1"
+      ],
+      "dois": [
+        "10.1016/j.jfineco.2026.104323",
+        "10.2139/ssrn.2939994"
+      ],
+      "journal_key": "JFE"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1016/j.respol.2026.105588",
+        "semanticscholar:efbdc1442085c6589691270a63a75f9af4747aab"
+      ],
+      "dois": [
+        "10.1016/j.respol.2026.105542",
+        "10.1016/j.respol.2026.105588"
+      ],
+      "journal_key": "RP"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1016/j.respol.2026.105588",
+        "repec:https://ideas.repec.org/a/eee/respol/v55y2026i8s0048733326001332.html"
+      ],
+      "dois": [
+        "10.1016/j.respol.2026.105542",
+        "10.1016/j.respol.2026.105588"
+      ],
+      "journal_key": "RP"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "openalex:W7212134732",
+        "repec:https://ideas.repec.org/a/eee/respol/v55y2026i8s0048733326001332.html"
+      ],
+      "dois": [
+        "10.1016/j.respol.2026.105542",
+        "10.1016/j.respol.2026.105588"
+      ],
+      "journal_key": "RP"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1057/s41267-026-00890-7",
+        "crossref:10.1057/s41267-026-00904-4"
+      ],
+      "dois": [
+        "10.1057/s41267-026-00890-7",
+        "10.1057/s41267-026-00904-4"
+      ],
+      "journal_key": "JIBS"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1057/s41267-026-00890-7",
+        "openalex:W7204453547"
+      ],
+      "dois": [
+        "10.1057/s41267-026-00890-7",
+        "10.1057/s41267-026-00904-4"
+      ],
+      "journal_key": "JIBS"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1057/s41267-026-00890-7",
+        "semanticscholar:ec10e8f68e5d96f30800953d7b56471cc4a71c60"
+      ],
+      "dois": [
+        "10.1057/s41267-026-00890-7",
+        "10.1057/s41267-026-00904-4"
+      ],
+      "journal_key": "JIBS"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1093/restud/rdag091",
+        "semanticscholar:8881eec6683e8b03651a5cef9b2bc4ace833208b"
+      ],
+      "dois": [
+        "10.1093/restud/rdag091",
+        "10.4324/9780080553948-34"
+      ],
+      "journal_key": "RES"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "openalex:W7204011459",
+        "semanticscholar:8881eec6683e8b03651a5cef9b2bc4ace833208b"
+      ],
+      "dois": [
+        "10.1093/restud/rdag091",
+        "10.4324/9780080553948-34"
+      ],
+      "journal_key": "RES"
+    }
+  ],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7170134563",
+      "doi": "10.1111/1475-679x.70077",
+      "journal_key": "JAR",
+      "title": "Issue Information ‐ Standing Call for Proposals for",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7170177824",
+      "doi": "10.1111/1475-679x.70078",
+      "journal_key": "JAR",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7170190563",
+      "doi": "10.1111/1475-679x.70076",
+      "journal_key": "JAR",
+      "title": "Issue Information ‐ Request for Papers",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1111/1475-679x.70076",
+      "doi": "10.1111/1475-679x.70076",
+      "journal_key": "JAR",
+      "title": "Issue Information ‐ Request for Papers",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1111/1475-679x.70077",
+      "doi": "10.1111/1475-679x.70077",
+      "journal_key": "JAR",
+      "title": "Issue Information ‐ Standing Call for Proposals for",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1111/1475-679x.70078",
+      "doi": "10.1111/1475-679x.70078",
+      "journal_key": "JAR",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204557895",
+      "doi": "10.1016/j.jacceco.2026.101939",
+      "journal_key": "JAE",
+      "title": "Editorial data",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7208773452",
+      "doi": "10.1016/s0165-4101(26)00087-x",
+      "journal_key": "JAE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.jacceco.2026.101915",
+      "doi": "10.1016/j.jacceco.2026.101915",
+      "journal_key": "JAE",
+      "title": "Editorial data",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0165-4101(26)00065-0",
+      "doi": "10.1016/s0165-4101(26)00065-0",
+      "journal_key": "JAE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7171966016",
+      "doi": "10.1257/aer.116.8.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204559224",
+      "doi": "10.1257/aer.116.9.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.8.i",
+      "doi": "10.1257/aer.116.8.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.9.i",
+      "doi": "10.1257/aer.116.9.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204257144",
+      "doi": "10.1086/743444",
+      "journal_key": "JPE",
+      "title": "JPE Turnaround Times",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204270199",
+      "doi": "10.1086/743795",
+      "journal_key": "JPE",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204276168",
+      "doi": "10.1086/743796",
+      "journal_key": "JPE",
+      "title": "Recent Referees",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743444",
+      "doi": "10.1086/743444",
+      "journal_key": "JPE",
+      "title": "JPE Turnaround Times",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743795",
+      "doi": "10.1086/743795",
+      "journal_key": "JPE",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743796",
+      "doi": "10.1086/743796",
+      "journal_key": "JPE",
+      "title": "Recent Referees",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7211918428",
+      "doi": "10.1016/s0304-405x(26)00139-x",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0304-405x(26)00087-5",
+      "doi": "10.1016/s0304-405x(26)00087-5",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0304-405x(26)00113-3",
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "05a723edd1fba1553eccd49979ad1fa10d21678e",
+      "doi": "10.1016/s0304-405x(26)00032-2",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "107dedec64951fd1f958ae0fbac4ae48362c214d",
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "431cd4b846b56db123aa2a156f4601502bab7999",
+      "doi": "10.1016/s0304-405x(25)00221-1",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "a265565b1c97fe2e077c8463a3628a9f1cf692cf",
+      "doi": "10.1016/s0304-405x(26)00087-5",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "adaf8fe7ced10e64e08806c59ec3c367075d3d0b",
+      "doi": "10.1016/s0304-405x(26)00016-4",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "d9864b6bf8d9ef2ed56a2f46f46cbd6be238efd4",
+      "doi": "10.1016/s0304-405x(26)00004-8",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "f2578234e70f3095824c1db544cbc11b894ee179",
+      "doi": "10.1016/s0304-405x(26)00041-3",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204646313",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0929-1199(26)00143-4",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "5e9563297e1902cbc75fb37169e14ba907de3d04",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "66f20db5adfe17d5a58552400e9ffff874c03dab",
+      "doi": "10.1016/s0929-1199(26)00005-2",
+      "journal_key": "JCF",
+      "title": "Journal of Corporate Finance: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "8e7167d1140a71c19786cc4bef90c1420fadc4f3",
+      "doi": "10.1016/s0929-1199(26)00042-8",
+      "journal_key": "JCF",
+      "title": "Journal of Corporate Finance: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "d1ed9e73c39bd3695d6adabf2de4822c5adf9278",
+      "doi": "10.1016/s0929-1199(25)00192-0",
+      "journal_key": "JCF",
+      "title": "Journal of Corporate Finance: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7201983954",
+      "doi": "10.1016/s0048-7333(26)00185-x",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7212155837",
+      "doi": "10.1016/s0048-7333(26)00207-6",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0048-7333(26)00145-9",
+      "doi": "10.1016/s0048-7333(26)00145-9",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "1c8368faa651c4b9f7fdcc9dc6fc3a158009fc4f",
+      "doi": "10.1016/s0048-7333(26)00006-5",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "32b1f5c2ec44b65ea6211404c4f514b360894f08",
+      "doi": "10.1016/s0048-7333(26)00059-4",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "71c261386648701663424c242e3e5dbedba51b88",
+      "doi": "10.1016/s0048-7333(26)00145-9",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "854121b871379d7c36423e60ea16603cd0dd3e4b",
+      "doi": "10.1016/s0048-7333(25)00217-3",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "e57cb324ae8aabe5cb43540acbae52b85ac10ab8",
+      "doi": "10.1016/s0048-7333(26)00032-6",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7172506715",
+      "doi": "10.1287/mnsc.2026.eb.v72n8",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7212280933",
+      "doi": "10.1287/mnsc.2026.eb.v72n9",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1287/mnsc.2026.eb.v72n8",
+      "doi": "10.1287/mnsc.2026.eb.v72n8",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1287/mnsc.2026.eb.v72n9",
+      "doi": "10.1287/mnsc.2026.eb.v72n9",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7211970592",
+      "doi": "10.1002/joom.70059",
+      "journal_key": "JOM",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1002/joom.70059",
+      "doi": "10.1002/joom.70059",
+      "journal_key": "JOM",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "source": "openalex",
+      "source_id": "W7172385481",
+      "doi": "10.1016/j.jacceco.2026.101931",
+      "journal_key": "JAE",
+      "title": "Retraction notice to “Lost in standardization: Effects of financial statement database discrepancies on inference” [J. Account. Econ. 76/1 (2023) 101573]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_retraction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204519381",
+      "doi": "10.1257/aer.116.9.3197",
+      "journal_key": "AER",
+      "title": "Presidential Address: Neighborhood Effects and Missing Markets for Opportunity",
+      "classification": {
+        "version": 4,
+        "kind": "other",
+        "excluded": false,
+        "rule": "named_lecture_or_address"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.9.3197",
+      "doi": "10.1257/aer.116.9.3197",
+      "journal_key": "AER",
+      "title": "Presidential Address: Neighborhood Effects and Missing Markets for Opportunity",
+      "classification": {
+        "version": 4,
+        "kind": "other",
+        "excluded": false,
+        "rule": "named_lecture_or_address"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1093/qje/qjag036",
+      "doi": "10.1093/qje/qjag036",
+      "journal_key": "QJE",
+      "title": "Correction to: A Further Augmentation of the Solow Model and the Empirics of Economic Growth for OECD Countries",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204453547",
+      "doi": "10.1057/s41267-026-00904-4",
+      "journal_key": "JIBS",
+      "title": "Correction: The world is your office: how work from anywhere boosts talent, productivity and innovation",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7207662313",
+      "doi": "10.1057/s41267-026-00905-3",
+      "journal_key": "JIBS",
+      "title": "Correction: Moving beyond entry modes: toward a new paradigm of international involvement in an era of digitalization and global transitions",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1057/s41267-026-00904-4",
+      "doi": "10.1057/s41267-026-00904-4",
+      "journal_key": "JIBS",
+      "title": "Correction: The world is your office: how work from anywhere boosts talent, productivity and innovation",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1057/s41267-026-00905-3",
+      "doi": "10.1057/s41267-026-00905-3",
+      "journal_key": "JIBS",
+      "title": "Correction: Moving beyond entry modes: toward a new paradigm of international involvement in an era of digitalization and global transitions",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "13d8a16702041ebaf64c1dc411b031d79b0f99a0",
+      "doi": "10.1057/s41267-026-00905-3",
+      "journal_key": "JIBS",
+      "title": "Correction: Moving beyond entry modes: toward a new paradigm of international involvement in an era of digitalization and global transitions",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "ec10e8f68e5d96f30800953d7b56471cc4a71c60",
+      "doi": "10.1057/s41267-026-00904-4",
+      "journal_key": "JIBS",
+      "title": "Correction: The world is your office: how work from anywhere boosts talent, productivity and innovation",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7203822458",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204757638",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105589",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105606",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105588",
+      "doi": "10.1016/j.respol.2026.105588",
+      "journal_key": "RP",
+      "title": "Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "source_notice_type"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "9122ba0645b21eb8250e2e123bff09f029046ef1",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "afb0cdb10bc61ef41d3ba9252001f4338c6879a3",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    }
+  ]
+}
