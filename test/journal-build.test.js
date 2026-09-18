@@ -59,6 +59,8 @@ test('静态两页使用正确展示文案和相对资源，仓库子路径下�
     const html = await fs.readFile(path.join(result.directory, page), 'utf8');
     assert.ok(html.includes('data-delivery="static"')); assert.ok(!html.includes('本地只读预览'));
     assert.ok(html.includes('重新读取网页数据'));
+    assert.ok(!html.includes('官网漏收核对明细'));
+    assert.ok(!html.includes('enrichmentJournals'));
     for (const [, ref] of html.matchAll(/(?:src|href)="(\.\/[^"?#]+)"/g)) {
       const url = new URL(ref, `https://example.test/paper-daily/${page}`);
       assert.ok(url.pathname.startsWith('/paper-daily/'));
