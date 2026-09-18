@@ -1,0 +1,935 @@
+{
+  "schema_version": 1,
+  "run_id": "20260918T005351165Z-8de0728f-1ee8-40bf-920c-c52544a692b1",
+  "stage": "missing_metadata_repair",
+  "status": "partial",
+  "from_date": "2026-07-21",
+  "to_date": "2026-09-18",
+  "stats": {
+    "added": 0,
+    "abstracts_filled": 0,
+    "abstracts_checked": 1,
+    "single_source_confirmed": 26,
+    "pending_candidates": 0,
+    "papers_checked": 28,
+    "papers_changed": 2
+  },
+  "journals": [],
+  "abstracts": [
+    {
+      "paper_id": "doi:10.1057/s41267-026-00906-2",
+      "journal_key": "JIBS",
+      "doi": "10.1057/s41267-026-00906-2",
+      "status": "retry_later",
+      "abstract_source": "",
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "zhipu",
+          "status": "REDIRECT_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": true,
+          "stage": "search_response",
+          "diagnostic": {
+            "code": "RATE_LIMITED",
+            "http_status": 429,
+            "provider_error_code": "1113"
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "paper_id": "doi:10.1057/s41267-026-00906-2",
+      "journal_key": "JIBS",
+      "doi": "10.1057/s41267-026-00906-2",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "abstract"
+      ],
+      "requested_fields": [
+        "abstract"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "publisher",
+          "status": "UNVERIFIED_IDENTITY"
+        },
+        {
+          "source": "zhipu",
+          "status": "REDIRECT_RESTRICTED",
+          "stage": "search_and_extract"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": true,
+          "stage": "search_response",
+          "diagnostic": {
+            "code": "RATE_LIMITED",
+            "http_status": 429,
+            "provider_error_code": "1113"
+          }
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2026.101651",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2026.101651",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2026.101651",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101651",
+        "fetched_at": "2026-09-17T13:12:59.468Z",
+        "body_sha256": "53f0fe5560da00c06eef52af0c2c8e3c0ae22d68a1aa8916d66d24fa9e1d4f7a",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101651"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105482",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105482",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105482",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105482",
+        "fetched_at": "2026-09-17T13:19:49.071Z",
+        "body_sha256": "5a8bc2c10c486311e7e9c601ead6b44442f7d19d5cfc1d9cdfc910fa8d8ca5a3",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105482"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2025.105374",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2025.105374",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2025.105374",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105374",
+        "fetched_at": "2026-09-17T13:10:19.858Z",
+        "body_sha256": "ee4d1355f8e0fdf520e832dd44f33c5084c5d3ca87c7f7c042fe40f58fea2f39",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105374"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105566",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105566",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105566",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105566",
+        "fetched_at": "2026-09-17T13:13:20.046Z",
+        "body_sha256": "4f015ed7bf43644eb9f78f7abf702a64c3b252bf266080d13a2c93ae07446721",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105566"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105536",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105536",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105536",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105536",
+        "fetched_at": "2026-09-17T13:11:23.137Z",
+        "body_sha256": "90519bab2ab954a9663f9520a1461ec7ae21a826f8e06f92a9e6e664390e6468",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105536"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105532",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105532",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105532",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105532",
+        "fetched_at": "2026-09-17T13:15:46.013Z",
+        "body_sha256": "5df72bfebec1e35fb26c5ec0d527015532ffdb27026a8b69dfab5507ec91cfdf",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105532"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2025.105375",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2025.105375",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2025.105375",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105375",
+        "fetched_at": "2026-09-17T13:11:24.200Z",
+        "body_sha256": "0e339d38626155cb37eb4f1ade6bba9402da2d18697a77c408518778a67252c8",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105375"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2026.101652",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2026.101652",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2026.101652",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101652",
+        "fetched_at": "2026-09-17T13:22:51.438Z",
+        "body_sha256": "2068aef2c0aa9d0c20c15016cdbebaca652fbad45b525617c71f5567a827affa",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101652"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105567",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105567",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105567",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105567",
+        "fetched_at": "2026-09-17T13:13:22.142Z",
+        "body_sha256": "bee1960804d8ec32ff63548ca9daba403738a7791d227d43e360bc5f03686795",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105567"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2025.105381",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2025.105381",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2025.105381",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105381",
+        "fetched_at": "2026-09-17T13:12:13.404Z",
+        "body_sha256": "cd5ec5762691c8ee1d138901456563f5454c64bd17f7e2e3b85129196a121a5a",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105381"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2025.101627",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2025.101627",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2025.101627",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101627",
+        "fetched_at": "2026-09-17T13:08:36.002Z",
+        "body_sha256": "3ce5e2e2900a203c7384e44fd70211a083fd98d2d65679c292f91e8fdbea246d",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101627"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2025.105379",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2025.105379",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2025.105379",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105379",
+        "fetched_at": "2026-09-17T13:16:04.173Z",
+        "body_sha256": "29079797b9ec6c8af15b0fbd62d520965887cf59f51954387060e08cbee6dd22",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105379"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2025.105378",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2025.105378",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2025.105378",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105378",
+        "fetched_at": "2026-09-17T13:19:50.173Z",
+        "body_sha256": "e8dd81eb5b023f7abf1a16f67addd0734804f3bcfb79836e0d1c0232848c3f19",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2025.105378"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105528",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105528",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105528",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105528",
+        "fetched_at": "2026-09-17T13:19:47.975Z",
+        "body_sha256": "c1eff4373a10e8ff0761cbfe9c3eee2f4cc1324693720136cdc8405034ab7c48",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105528"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105533",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105533",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105533",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105533",
+        "fetched_at": "2026-09-17T13:13:45.164Z",
+        "body_sha256": "18c0d7d3e8df82a26ccaa1078bbe543d1090614f00e0478c06c7314591c2d7d1",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105533"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105547",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105547",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105547",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105547",
+        "fetched_at": "2026-09-17T13:16:06.258Z",
+        "body_sha256": "3aea6b69af7b8e38bf77347065ae5845a504acb7a9ac8de5a530347d355a5856",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105547"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105534",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105534",
+      "status": "quota_exhausted",
+      "changed_fields": [],
+      "missing_fields": [
+        "identity"
+      ],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [
+        {
+          "source": "crossref",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "openalex",
+          "status": "no_new_fields"
+        },
+        {
+          "source": "semanticscholar",
+          "status": "RATE_LIMITED"
+        },
+        {
+          "source": "zhipu",
+          "status": "source_unavailable",
+          "called": false,
+          "stage": "search_not_called"
+        },
+        {
+          "source": "serpapi_scholar",
+          "status": "quota_exhausted",
+          "called": false,
+          "stage": "search_not_called"
+        }
+      ],
+      "identity_resolution": null,
+      "single_source_confirmation": null,
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2025.101617",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2025.101617",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2025.101617",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101617",
+        "fetched_at": "2026-09-17T13:26:04.924Z",
+        "body_sha256": "dfe6a88c99c79a9416cfc0eb7104b157d52ba1704a18467a99ef30cd402e7bcf",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101617"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105561",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105561",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105561",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105561",
+        "fetched_at": "2026-09-17T13:11:22.271Z",
+        "body_sha256": "5083349c40e690493903ad65cb762bd70c884da042e3c9718d080414f684fe84",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105561"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2025.101628",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2025.101628",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2025.101628",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101628",
+        "fetched_at": "2026-09-17T13:12:35.861Z",
+        "body_sha256": "e473ad2e4f508ad0ec3c138c19d755ea300b509ed3556c53e972890367931c16",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101628"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105549",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105549",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105549",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105549",
+        "fetched_at": "2026-09-17T13:13:21.042Z",
+        "body_sha256": "5694b9b5fc916fa9ffcdeb47b126cd88cd75bd151bb85f2a19950e11289b94c8",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105549"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2025.101618",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2025.101618",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2025.101618",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101618",
+        "fetched_at": "2026-09-17T13:22:25.887Z",
+        "body_sha256": "d2d932550e0bd1f4277286d99604758b33a08d994251fe13ece700239d31d1e7",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101618"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2025.101631",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2025.101631",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2025.101631",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101631",
+        "fetched_at": "2026-09-17T13:24:01.886Z",
+        "body_sha256": "01af7afab259616b3ac500a03acbd690dbe5c2590adfc3d21ca8dec7645ca478",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2025.101631"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2026.101655",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2026.101655",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2026.101655",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101655",
+        "fetched_at": "2026-09-17T13:13:23.243Z",
+        "body_sha256": "27d92448c1ba96ac48725074f11e8177e6f47dfe4f5bbb113ad7b881fc09435f",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101655"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105576",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105576",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "repec",
+        "source_id": "RePEc:eee:respol:v:55:y:2026:i:8:s0048733326001678",
+        "url": "https://ideas.repec.org/a/eee/respol/v55y2026i8s0048733326001678.html",
+        "fetched_at": "2026-09-17T14:12:09.153Z",
+        "body_sha256": "5c79934d34076afdacca0ff4ab49cf9463acf2cc3f3dd2488b94a9557ec1c0cc",
+        "method": "repec_journal_abstract",
+        "scope_url": "https://ideas.repec.org/a/eee/respol/v55y2026i8s0048733326001678.html"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.respol.2026.105527",
+      "journal_key": "RP",
+      "doi": "10.1016/j.respol.2026.105527",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.respol.2026.105527",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105527",
+        "fetched_at": "2026-09-17T13:14:09.435Z",
+        "body_sha256": "5d649a494923c15fcc01e23672f86b9f13b2888a2f539855bb5c6bc5eb40b2fb",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.respol.2026.105527"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    },
+    {
+      "paper_id": "doi:10.1016/j.aos.2026.101632",
+      "journal_key": "AOS",
+      "doi": "10.1016/j.aos.2026.101632",
+      "status": "resolved",
+      "changed_fields": [],
+      "missing_fields": [],
+      "requested_fields": [
+        "identity"
+      ],
+      "attempts": [],
+      "identity_resolution": null,
+      "single_source_confirmation": {
+        "source": "crossref",
+        "source_id": "10.1016/j.aos.2026.101632",
+        "url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101632",
+        "fetched_at": "2026-09-17T13:18:27.293Z",
+        "body_sha256": "39fd3e2ce86827d134f408b74a9f1ef5078ecb54133338f824140ae095cef92a",
+        "method": "crossref_api",
+        "scope_url": "https://api.crossref.org/works/10.1016%2Fj.aos.2026.101632"
+      },
+      "duplicate_candidates": [],
+      "duplicate_claims": []
+    }
+  ],
+  "unresolved": {
+    "unresolved_papers": 110,
+    "unresolved_issues": 149,
+    "by_status": {
+      "pending": 0,
+      "not_found": 0,
+      "quota_exhausted": 146,
+      "access_restricted": 0,
+      "source_unavailable": 2,
+      "identity_conflict": 1
+    }
+  },
+  "library_statistics": {
+    "total": 803,
+    "research_candidates": 764,
+    "lectures": 4,
+    "research_confirmed_inside_window": 418,
+    "research_uncertain_window": 116,
+    "research_outside_window": 230,
+    "missing_doi": 0,
+    "missing_authors": 28,
+    "missing_publication_month": 22,
+    "missing_abstract": 102,
+    "independent_source_union": 700,
+    "official_only": 103,
+    "confirmed_inside_window": 432,
+    "uncertain_window": 135,
+    "by_discovery_source": {
+      "crossref": 544,
+      "openalex": 358,
+      "semanticscholar": 340,
+      "publisher": 214
+    }
+  }
+}
