@@ -8,7 +8,7 @@ export async function removeApprovedWrongJournalPapers(config, { root, previous,
   if (!result.removed.length) return previous;
   const started = now(), checkedAt = now().toISOString(), runId = newRunId(started), runDate = dateInShanghai(started);
   const stats = { added: 0, removed: result.removed.length, abstracts_filled: 0, abstracts_checked: 0, pending_candidates: 0 };
-  const report = { schema_version: 1, removal_policy_version: 2, stage: 'journal_identity_correction', run_id: runId, status: 'success',
+  const report = { schema_version: 1, removal_policy_version: 3, stage: 'journal_identity_correction', run_id: runId, status: 'success',
     from_date: previous.masterList?.from_date || runDate, to_date: previous.masterList?.to_date || runDate,
     stats, journals: [], abstracts: [], removed: result.removed, checked_at: checkedAt };
   const log = { schema_version: 1, kind: 'journal_identity_correction', run_id: runId, run_date: runDate,
