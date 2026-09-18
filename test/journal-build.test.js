@@ -47,7 +47,7 @@ test('静态构建只含八个必要文件，原始页和正式版本目录不�
   const data = await validateSiteDirectory(result.directory, result.hashes);
   assert.equal(data.papers.length, 1); assert.equal(data.delivery_mode, 'static');
   assert.equal(data.papers[0].classification.kind, 'candidate');
-  assert.equal(data.classification_summary.version, 3);
+  assert.equal(data.classification_summary.version, 4);
   assert.equal(data.translation_eligibility.ready.paper_count, 1);
   assert.ok(!JSON.stringify(data).includes('RAW_NOT_FOR_SITE'));
   assert.equal(await pointer(options.root), before);

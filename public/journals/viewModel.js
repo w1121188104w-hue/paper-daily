@@ -2,9 +2,11 @@ export const RUN_LABELS = { success: '采集成功', no_updates: '采集完成�
   partial_failure: '部分来源失败', full_failure: '采集失败' };
 export const TRANSLATION_LABELS = { pending: '待翻译', done: '已翻译', failed: '翻译失败，待重试',
   outdated: '原文已更新，待重译', no_abstract: '来源未提供摘要' };
-export const DOCUMENT_LABELS = { candidate: '研究论文候选', all: '全部文献记录', administrative: '期刊资料',
+export const DOCUMENT_LABELS = { candidate: '研究论文候选', other: '其他', all: '全部文献记录',
   possible_correction: '疑似更正通知', possible_retraction: '疑似撤稿通知', needs_review: '待人工核查' };
 export const CLASSIFICATION_REASONS = {
+  named_lecture_or_address: '明确标为诺贝尔讲座或会长演讲，归入其他，原文及译文仍保留。',
+  confirmed_nonresearch_type: '现有来源一致标为社论或书评，归入其他；原始记录仍保留。',
   retain_by_default: '未命中已知非论文规则；仍是候选，不代表已人工确认。',
   exact_administrative_title: '标题与目录、编委会等期刊资料规则精确匹配。',
   issue_information_title: '标题明确标为期刊信息或其征稿附页。',
@@ -16,9 +18,9 @@ export const CLASSIFICATION_REASONS = {
   source_classification_disagreement: '来源的标题或类型分类不一致，暂不归为研究论文或期刊资料。',
   missing_title: '缺少可用标题，需要人工核查。'
 };
-export const documentKind = (paper) => Object.hasOwn(DOCUMENT_LABELS, paper.classification?.kind || '') &&
+export const documentKind = (paper) => paper.classification?.kind === 'administrative' ? 'other' : Object.hasOwn(DOCUMENT_LABELS, paper.classification?.kind || '') &&
   paper.classification.kind !== 'all' ? paper.classification.kind : 'needs_review';
-export const normalizeDocumentFilter = (value) => Object.hasOwn(DOCUMENT_LABELS, value || '') ? value : 'candidate';
+export const normalizeDocumentFilter = (value) => value === 'administrative' ? 'other' : Object.hasOwn(DOCUMENT_LABELS, value || '') ? value : 'candidate';
 
 export function beijingDay(now = new Date()) {
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
@@ -74,6 +76,7 @@ export function publicationMonthText(paper) {
     ? `${paper.publication_year}（月份待补全）` : '待补全';
 }
 export function filterPapers(papers, { journal = '', category = '', q = '', date = '', kind = 'all' } = {}) {
+  if (kind === 'administrative') kind = 'other'; // Old bookmarked URLs still work.
   const tokens = normalized(q).split(' ').filter(Boolean);
   return papers.filter((paper) => {
     if ((journal && paper.journal_key !== journal) || (category && paper.journal_category !== category) ||

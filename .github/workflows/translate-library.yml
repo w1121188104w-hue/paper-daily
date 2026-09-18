@@ -15,6 +15,8 @@
         { "name": "Set up Node.js 24", "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38", "with": { "node-version": "24", "package-manager-cache": false } },
         { "name": "Install locked dependencies without lifecycle scripts", "run": "npm ci --ignore-scripts" },
         { "name": "Run offline tests", "run": "npm test" },
+        { "name": "Remove only explicitly user-approved wrong-journal records", "env": { "DATA_BRANCH": "${{ github.event.repository.default_branch }}" },
+          "run": "node scripts/correct-journal-identities.js --save" },
         { "name": "Validate formal library and show pending automatic queue", "run": "node scripts/journal-library.js --validate\nnode scripts/translate-library.js --status" },
         { "name": "Translate existing library with durable reservations and automatic import", "id": "translate",
           "env": { "DEEPSEEK_API_KEY": "${{ secrets.DEEPSEEK_API_KEY }}", "JOURNAL_TRANSLATION_ENABLED": "${{ vars.JOURNAL_TRANSLATION_ENABLED }}", "DATA_BRANCH": "${{ github.event.repository.default_branch }}" },

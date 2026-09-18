@@ -88,7 +88,7 @@ test('v5正式库兼容回归：保留编委名单历史，只补真正论文，
     now: () => new Date('2026-09-18T01:00:00.000Z') });
   assert.equal(result.stats.papers_checked, 1); assert.equal(result.stats.abstracts_filled, 0);
   const after = await readJournalLibrary({ root, config });
-  assert.equal(after.manifest.master_policy_version, 6); assert.deepEqual(after.papers, before.papers);
+  assert.equal(after.manifest.master_policy_version, 7); assert.deepEqual(after.papers, before.papers);
   assert.equal(after.masterList.statistics.missing_abstract, 2);
   assert.ok(Object.values(after.repairState.issues).filter(i => i.paper_id === 'doi:10.9999/board').every(i => i.status === 'resolved' && i.attempt_count === 0));
   assert.equal(await fs.readFile(path.join(root, legacy.master_list.path), 'utf8'), oldMasterBytes);

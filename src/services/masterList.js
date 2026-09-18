@@ -101,11 +101,11 @@ function abstractProvenance(paper) {
 
 export function buildMasterList(papers, { generatedAt, fromDate = null, toDate = null, officialIds = new Set(), policyVersion = 1 } = {}) {
   assertLibrary(isIsoTime(generatedAt), '总名册生成时间无效');
-  assertLibrary([1, 2, 3, 4, 5, 6].includes(policyVersion), '不支持的总名册统计规则版本');
+  assertLibrary([1, 2, 3, 4, 5, 6, 7].includes(policyVersion), '不支持的总名册统计规则版本');
   const entries = [...papers].sort((a, b) => a.id.localeCompare(b.id)).map(paper => {
     const publication = publicationFor(paper), found = discoverySourcesFor(paper, officialIds);
     const titles = [...new Set(evidence(paper.source_records, 'title').map(record => identityTitle(record.title)))];
-    const classificationOptions = { historical: policyVersion < 4, includePrefixedBoards: policyVersion >= 6 };
+    const classificationOptions = { historical: policyVersion < 4, includePrefixedBoards: policyVersion >= 6, includeOther: policyVersion >= 7 };
     const classification = classifyPaper(paper, classificationOptions).kind;
     const resolution = policyVersion >= 3 ? titleConsensusFor(paper)?.summary || null : null;
     const titleConflict = titles.length > 1 && !resolution;
@@ -161,7 +161,7 @@ export function buildMasterList(papers, { generatedAt, fromDate = null, toDate =
 export function repairRequirements(master) {
   const requirements = [];
   for (const row of master.entries) {
-    if (row.classification === 'administrative') continue;
+    if (['administrative', 'other'].includes(row.classification)) continue;
     const problems = [...row.missing_fields.map(field => ({ field, reason: `missing_${field}` })),
       ...row.conflicts.map(reason => ({ field: ['title_conflict', 'possible_duplicate'].includes(reason) ? 'identity' : 'publication_month', reason })),
       ...(row.discovery_sources.length === 1 && !row.found_official_site ? [{ field: 'identity', reason: 'single_source_confirmation' }] : []),
