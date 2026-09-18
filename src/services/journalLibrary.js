@@ -221,7 +221,7 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   const prefix = `snapshots/${operationLog.run_id}`;
   const manifest = { schema_version: 1, run_id: operationLog.run_id, created_at: operationLog.finished_at,
     operation: run ? 'collection' : translationImport ? 'translation_import' : 'metadata_enrichment', parent: previous.pointer?.manifest || null,
-    papers: {}, runs: {}, translation_imports: {}, audit: null, raw, master_policy_version: 6 };
+    papers: {}, runs: {}, translation_imports: {}, audit: null, raw, master_policy_version: 7 };
   const nextWindow = masterWindow || (run ? { fromDate: run.from_date, toDate: run.to_date } : previous.manifest?.master_window);
   if (nextWindow) manifest.master_window = nextWindow;
   for (const [kind, items, oldItems, key] of [

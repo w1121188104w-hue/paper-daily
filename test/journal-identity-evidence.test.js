@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { knownJournalMismatch } from '../src/services/journalIdentity.js';
 import { semanticScholarJournalMatches } from '../src/services/semanticScholar.js';
-import { journalIdentityCorrection } from '../src/services/journalIdentityCorrection.js';
+import { journalIdentityCorrection, validateJournalIdentityCorrection } from '../src/services/journalIdentityCorrection.js';
 import { loadJournalConfig, findJournal } from '../src/services/journals.js';
 
 const cases = [
@@ -33,11 +33,28 @@ test('错刊证据限定已核实DOI和归属，不扩大到同出版商、未�
     assert.equal(knownJournalMismatch({ journal_key, doi, abstract_original: '' }), null);
 });
 
-test('新确认错刊先隔离，不扩张此前五条JAR的实体删除许可，全部历史记录保留', () => {
+test('旧授权只删五条JAR；新授权仅多删除指定IAEME论文，其他错刊仍隔离', () => {
   const papers = cases.map(([journal_key, doi]) => ({ id: `doi:${doi}`, journal_key, doi }));
   const previous = { papers, enrichmentState: { abstracts: Object.fromEntries(papers.map(p => [p.id, { status: 'missing' }])) } };
-  const result = journalIdentityCorrection(previous);
+  const result = journalIdentityCorrection(previous, { policyVersion: 1 });
   assert.deepEqual(result.papers, papers);
   assert.deepEqual(result.removed, []);
   assert.deepEqual(result.enrichmentState, previous.enrichmentState);
+  const current = journalIdentityCorrection(previous);
+  assert.deepEqual(current.removed.map(p => p.doi), ['10.34218/jom_13_02_005']);
+  assert.deepEqual(current.papers, papers.filter(p => p.journal_key !== 'JM'));
+  assert.ok(!Object.hasOwn(current.enrichmentState.abstracts, 'doi:10.34218/jom_13_02_005'));
+});
+
+test('旧JAR删除快照即使同时含IAEME也仍按v1验证，不扩大历史授权；新授权不能删除其他记录', () => {
+  const previous = { papers: [{ id: 'jar', doi: '10.67983/journaldialectica.v1i2.100', journal_key: 'JAR' },
+    { id: 'jm', doi: '10.34218/jom_13_02_005', journal_key: 'JM' },
+    { id: 'good', doi: '10.1177/01492063260000000', journal_key: 'JM' }], enrichmentState: { abstracts: {} } };
+  const old = journalIdentityCorrection(previous, { policyVersion: 1 });
+  const report = { removed: old.removed, stats: { removed: 1 } };
+  assert.doesNotThrow(() => validateJournalIdentityCorrection(previous, old.papers, report, old.enrichmentState));
+  const next = journalIdentityCorrection(previous), current = { removal_policy_version: 2, removed: next.removed, stats: { removed: 2 } };
+  assert.doesNotThrow(() => validateJournalIdentityCorrection(previous, next.papers, current, next.enrichmentState));
+  assert.throws(() => validateJournalIdentityCorrection(previous, [], current, next.enrichmentState));
+  assert.throws(() => validateJournalIdentityCorrection(previous, next.papers, report, next.enrichmentState));
 });

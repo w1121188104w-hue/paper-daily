@@ -225,10 +225,10 @@ test('默认只看研究候选，切换文献类型后日历列表同口径，�
     classification: { kind: 'administrative', rule: 'issue_information_title' } })] }) });
   assert.equal(ui.get('kind').value, 'candidate'); assert.equal(ui.get('paperList').children.length, 1);
   ui.get('kind').value = 'administrative'; await ui.get('kind').trigger('change');
-  assert.equal(ui.get('paperList').children.length, 1); assert.ok(ui.get('listMeta').textContent.includes('期刊资料'));
+  assert.equal(ui.get('paperList').children.length, 1); assert.ok(ui.get('listMeta').textContent.includes('其他'));
   assert.ok(ui.get('paperList').textContent.includes('为什么这样分类'));
-  assert.ok(ui.get('calendarGrid').children.find((cell) => cell.href?.includes('date=2026-09-07')).href.includes('kind=administrative'));
-  await ui.get('quickFilters').children[1].trigger('click'); assert.equal(ui.get('kind').value, 'administrative');
+  assert.ok(ui.get('calendarGrid').children.find((cell) => cell.href?.includes('date=2026-09-07')).href.includes('kind=other'));
+  await ui.get('quickFilters').children[1].trigger('click'); assert.equal(ui.get('kind').value, 'other');
   ui.get('kind').value = 'all'; await ui.get('kind').trigger('change'); assert.equal(ui.get('paperList').children.length, 2);
   await ui.get('reset').trigger('click'); assert.equal(ui.get('kind').value, 'candidate');
 });
@@ -244,7 +244,7 @@ test('通知明确警示，不认定关联原论文已撤稿；日期页保留�
 
 test('日期页首次读取失败仍保留文献类型，不用成功读取才准备返回链接', async (t) => {
   const ui = await app(t, { day: true, fail: true, search: '?date=2026-09-07&kind=administrative' });
-  assert.ok(ui.get('backToCalendar').href.includes('kind=administrative'));
+  assert.ok(ui.get('backToCalendar').href.includes('kind=other'));
   assert.equal(ui.get('kind').disabled, true);
 });
 
@@ -256,7 +256,7 @@ test('类型变化使分页回到第一页，总数用记录表述，不将资�
   ui.get('kind').value = 'administrative'; await ui.get('kind').trigger('change');
   assert.ok(ui.get('listMeta').textContent.includes('第 1/1 页')); assert.equal(ui.get('paperList').children.length, 1);
   assert.ok(ui.get('libraryMeta').textContent.includes('22 条文献记录'));
-  assert.ok(ui.get('libraryMeta').textContent.includes('期刊资料 1 条'));
+  assert.ok(ui.get('libraryMeta').textContent.includes('其他 1 条'));
 });
 
 test('卡片保留旧数据兼容，发表日期按月而首次发现仍按日显示', async (t) => {

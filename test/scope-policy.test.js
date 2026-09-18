@@ -13,6 +13,7 @@ import { runJournalCollection } from '../src/services/journalRun.js';
 import { readJournalLibrary, writeLibraryJson } from '../src/services/journalLibrary.js';
 import { reconcileCatalogDiscovery } from '../src/services/catalogDiscoveryRun.js';
 import { runIsolatedPilot } from '../scripts/search-pilot.js';
+import { emptyRepairState, reconcileRepairState } from '../src/services/repairState.js';
 
 const config = await loadJournalConfig(), journal = findJournal(config, 'AER'), at = '2026-09-14T01:00:00.000Z';
 const scope = (title, others = []) => paperDocumentType({ source_records: [title, ...others].map(title => ({ title, type: 'journal-article' })) });
@@ -29,7 +30,7 @@ test('演讲精分：只匹配明确标题前缀，保留记录，不根据缺�
   assert.equal(scope('The effects of Nobel lectures on research').document_type, 'research_candidate');
   assert.equal(scope('Economic growth without an abstract').research_candidate, true);
   assert.equal(scope('Correction: Nobel Lecture: Growth').document_type, 'possible_correction');
-  assert.equal(scope('Nobel Lecture: Growth', ['Growth']).document_type, 'uncertain');
+  assert.equal(scope('Nobel Lecture: Growth', ['Growth']).document_type, 'needs_review');
 });
 
 test('精确日只用于范围核对；不改变月份展示、论文原字段或旧版统计', () => {
@@ -78,8 +79,10 @@ test('历史版本兼容：按v1读取旧总名册，新写入采用当前规则
   const initial = await readJournalLibrary({ root, config });
   const prefix = `snapshots/${initial.manifest.run_id}`;
   const legacy = { ...initial.manifest }; delete legacy.master_policy_version;
-  legacy.master_list = await writeLibraryJson(root, `${prefix}/legacy-master-list.json`, buildMasterList(initial.papers, { generatedAt: legacy.created_at,
-    fromDate: initial.masterList.from_date, toDate: initial.masterList.to_date, policyVersion: 1 }));
+  const legacyMaster = buildMasterList(initial.papers, { generatedAt: legacy.created_at,
+    fromDate: initial.masterList.from_date, toDate: initial.masterList.to_date, policyVersion: 1 });
+  legacy.master_list = await writeLibraryJson(root, `${prefix}/legacy-master-list.json`, legacyMaster);
+  legacy.repair_state = await writeLibraryJson(root, `${prefix}/legacy-repair-state.json`, reconcileRepairState(emptyRepairState(), legacyMaster));
   // Construct a pre-upgrade fixture only in this fresh temp test directory.
   const legacyText = JSON.stringify(legacy);
   await fs.writeFile(path.join(root, `${prefix}/manifest.json`), legacyText);
@@ -90,7 +93,7 @@ test('历史版本兼容：按v1读取旧总名册，新写入采用当前规则
   const legacyBytes = await fs.readFile(path.join(root, legacy.master_list.path), 'utf8');
   await runJournalCollection(config, { root, journalKey: 'AER', clients, now: () => new Date('2026-09-15T01:00:00Z') });
   const after = await readJournalLibrary({ root, config });
-  assert.equal(after.manifest.master_policy_version, 6); assert.equal(after.masterList.statistics.research_candidates, 0);
+  assert.equal(after.manifest.master_policy_version, 7); assert.equal(after.masterList.statistics.research_candidates, 0);
   assert.equal(after.masterList.statistics.lectures, 1); assert.equal(after.papers[0].discovered_at, before.papers[0].discovered_at);
   assert.equal(await fs.readFile(path.join(root, legacy.master_list.path), 'utf8'), legacyBytes);
 });

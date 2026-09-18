@@ -63,7 +63,7 @@ export function reconcileCatalogDiscovery(discovery, journal, input, window, { c
       url: lead.url, evidence: lead.evidence, search_provider: lead.search_provider || null,
       ...paperDocumentType({ source_records: [record] }) };
     const classification = classifySourceRecord(record).kind;
-    if (classification !== 'candidate' || /^report of the editor\b|^acknowledg(?:e)?ments? to (?:the )?(?:referees|reviewers)\b/i.test(lead.title)) {
+    if (!['candidate', 'other'].includes(classification) || /^report of the editor\b|^acknowledg(?:e)?ments? to (?:the )?(?:referees|reviewers)\b/i.test(lead.title)) {
       entries.push({ ...entry, status: classification === 'needs_review' ? 'pending' : 'excluded', reason: classification }); continue;
     }
     // Reject all sides of a same-DOI/title conflict before adding either side.
@@ -166,7 +166,7 @@ export async function runCatalogDiscovery(config, { root, http, search, now = ()
       abstracts_checked: 0, pending_candidates: reports.reduce((sum, r) => sum + r.pending_count, 0) };
     const report = { schema_version: 1, run_id: runId, status: 'partial', from_date: window.fromDate, to_date: window.toDate,
       stage: 'official_catalog_search', stats, journals: reports, abstracts: [], search_queries: queries, search_calls: callCounts };
-    report.library_statistics = buildMasterList(papers, { generatedAt: checkedAt, ...window, policyVersion: 6,
+    report.library_statistics = buildMasterList(papers, { generatedAt: checkedAt, ...window, policyVersion: 7,
       officialIds: officialDiscoveries([...(previous.enrichmentReports || []), report]) }).statistics;
     const log = { schema_version: 1, run_id: runId, run_date: runDate, started_at: checkedAt, finished_at: now().toISOString(),
       from_date: window.fromDate, to_date: window.toDate, status: 'partial', stats, report: {} };

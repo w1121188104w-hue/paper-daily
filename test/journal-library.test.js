@@ -15,6 +15,7 @@ import { validatePapers, validateRuns, validateHistoryPreserved } from '../src/s
 import { collectionWindow, runJournalCollection, alreadyCoveredToday, safeRunError } from '../src/services/journalRun.js';
 import { readJournalLibrary, readLibraryRef, withLibraryLock, libraryPath } from '../src/services/journalLibrary.js';
 import { parseLibraryArgs, runLibraryCommand } from '../scripts/journal-library.js';
+import { runIdentityCorrectionCommand } from '../scripts/correct-journal-identities.js';
 
 const config = await loadJournalConfig();
 const journal = findJournal(config, 'AER');
@@ -82,6 +83,33 @@ test('用户确认的错刊从当前实体库和待办中删除，其他论文�
   assert.equal((await read(root)).enrichments.filter(r => r.kind === 'journal_identity_correction').length, 1);
 });
 
+test('新授权JM删除独立于采集和付费API，保留其他论文、旧账本及可恢复快照，重复运行不提交', async t => {
+  const { root } = await fixture(t), jm = findJournal(config, 'JM');
+  const metadata = { journal_key: jm.key, journal_name: jm.name, journal_category: jm.category,
+    journal_category_zh: jm.category_zh, print_issn: jm.print_issn, electronic_issn: jm.electronic_issn };
+  const bad = record('openalex', { ...metadata, doi: '10.34218/jom_13_02_005', source_id: 'W300' });
+  const good = record('openalex', { ...metadata, doi: '10.1177/01492063260000000', source_id: 'W301' });
+  await run(root, { journalKey: 'JM', clients: clients([bad, good], []) });
+  const before = await read(root), survivor = before.papers.find(p => p.doi === good.doi), outputs = [];
+  await runIdentityCorrectionCommand([], { root, log: x => outputs.push(JSON.parse(x)) });
+  assert.deepEqual(outputs[0].planned_dois, [bad.doi]); assert.equal(await pointerText(root), before.pointerText);
+  await assert.rejects(runIdentityCorrectionCommand(['--save'], { root, env: {}, log: () => {} }));
+  let commits = 0;
+  const options = { root, env: { GITHUB_ACTIONS: 'true', DATA_BRANCH: 'master', GITHUB_REF: 'refs/heads/master' },
+    log: () => {}, publisher: () => async ({ phase }) => { assert.equal(phase, 'settle'); commits++; } };
+  await runIdentityCorrectionCommand(['--save'], options);
+  const after = await read(root);
+  assert.deepEqual(after.papers, [survivor]); assert.equal(commits, 1);
+  assert.ok(after.queue.tasks.every(x => x.paper_id === survivor.id));
+  assert.ok(Object.values(after.repairState.issues).every(x => x.paper_id === survivor.id));
+  assert.equal(after.enrichmentReports.at(-1).removal_policy_version, 2);
+  assert.equal(after.enrichmentReports.at(-1).removed[0].evidence.actual_issn, '2347-3940');
+  const backup = await readLibraryRef(root, after.manifest.parent);
+  const oldPapers = (await Promise.all(Object.values(backup.papers).map(ref => readLibraryRef(root, ref)))).flat();
+  assert.deepEqual(oldPapers, before.papers);
+  await runIdentityCorrectionCommand(['--save'], options); assert.equal(commits, 1);
+});
+
 test('损坏OpenAlex摘要仍保存论文与原始警告，待补全队列存在且不产生摘要翻译', async t => {
   const { root } = await fixture(t), index = { We: [0], study: [2] };
   const work = { id: 'https://openalex.org/W1', doi: 'https://doi.org/10.1234/test', title: 'Credit markets and firms',
@@ -118,7 +146,7 @@ test('新采集规则排除明确期刊信息，原始页与排除理由仍持�
   const result = await run(root, { clients: clients([record('openalex', { title: 'Issue Information' })], []) });
   assert.equal(result.committed, true); assert.equal(result.papers.length, 0);
   const saved = await read(root);
-  assert.equal(saved.audit.excluded.length, 1); assert.equal(saved.audit.excluded[0].classification.version, 3);
+  assert.equal(saved.audit.excluded.length, 1); assert.equal(saved.audit.excluded[0].classification.version, 4);
   assert.ok(saved.manifest.raw.length === 2);
   assert.equal((await readLibraryRef(root, saved.manifest.raw[0])).pages[0].items[0].title, 'Issue Information');
 });

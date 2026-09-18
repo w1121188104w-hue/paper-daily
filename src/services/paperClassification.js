@@ -2,7 +2,7 @@ import { cleanText, normalizeTitleForMatch } from './paperModel.js';
 
 const ADMIN_TITLES = new Set(['front matter', 'back matter', 'table of contents', 'contents',
   'editorial board', 'masthead', 'cover', 'cover image', 'author index', 'subject index', 'copyright information']);
-export const CLASSIFICATION_VERSION = 3;
+export const CLASSIFICATION_VERSION = 4;
 // Independently checked against Crossref's exact DOI, title and journal ISSN.
 // These are full administrative titles, not a keyword-based exclusion rule.
 const PREFIXED_BOARDS = {
@@ -21,7 +21,7 @@ const result = (kind, rule) => ({ version: CLASSIFICATION_VERSION, kind,
   excluded: kind === 'administrative', rule });
 
 // Narrow, versioned rules: do not delete records simply because they lack an abstract.
-export function classifySourceRecord(record, { includePrefixedBoards = true } = {}) {
+export function classifySourceRecord(record, { includePrefixedBoards = true, includeOther = true } = {}) {
   const title = cleanText(record.title);
   const normalized = normalizeTitleForMatch(title);
   // Notice titles take precedence over administrative wording in the quoted original title.
@@ -47,6 +47,9 @@ export function classifySourceRecord(record, { includePrefixedBoards = true } = 
   const type = String(record.type || '').toLowerCase();
   if (type === 'retraction') return result('possible_retraction', 'source_notice_type');
   if (['erratum', 'correction'].includes(type)) return result('possible_correction', 'source_notice_type');
+  if (includeOther && /^(?:nobel lecture|presidential address)(?:\s|$)/.test(normalized)) {
+    return result('other', 'named_lecture_or_address');
+  }
   if (!title || ['paratext', 'editorial', 'book-review'].includes(type)) {
     return result('needs_review', !title ? 'missing_title' : 'source_type_needs_review');
   }
@@ -86,11 +89,16 @@ export function classificationRecords(paper) {
 }
 
 // A read-time overlay: historical Master List versions retain their original rules.
-export function classifyPaper(paper, { historical = false, includePrefixedBoards = true } = {}) {
+export function classifyPaper(paper, { historical = false, includePrefixedBoards = true, includeOther = true } = {}) {
   const records = paper.source_records?.length ? (historical ? paper.source_records : classificationRecords(paper)) :
     [{ title: paper.title_original, journal_key: paper.journal_key }];
-  const classes = records.map(row => classifySourceRecord(row, { includePrefixedBoards })), kinds = new Set(classes.map((item) => item.kind));
-  if (kinds.size === 1) return { ...classes[0] };
+  const classes = records.map(row => classifySourceRecord(row, { includePrefixedBoards, includeOther })), kinds = new Set(classes.map((item) => item.kind));
+  if (includeOther && kinds.size === 1 && kinds.has('needs_review') &&
+      records.every(row => cleanText(row.title) && ['editorial', 'book-review'].includes(String(row.type || '').toLowerCase()))) {
+    return result('other', 'confirmed_nonresearch_type');
+  }
+  if (kinds.size === 1) return includeOther && kinds.has('administrative')
+    ? result('other', classes[0].rule) : { ...classes[0] };
   if (kinds.has('possible_retraction')) return result('possible_retraction', 'source_disagreement_notice');
   if (kinds.has('possible_correction')) return result('possible_correction', 'source_disagreement_notice');
   // A disagreeing source is not enough to hide a potentially genuine paper as administrative.
