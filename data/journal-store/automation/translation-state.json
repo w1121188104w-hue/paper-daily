@@ -27598,7 +27598,7 @@
       "batch_id": "batch-2309820847a5e6973b40de651e8e7d3b8452bc53c422ce12a4b4f4ee7e4b33a7",
       "mode": "daily",
       "created_at": "2026-09-19T02:24:23.827Z",
-      "finished_at": null,
+      "finished_at": "2026-09-19T02:25:25.543Z",
       "items": [
         {
           "id": "doi:10.1086/744119",
@@ -27612,10 +27612,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 455,
+            "completion_tokens": 18,
+            "total_tokens": 473
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1093/rfs/hhag083",
@@ -27634,10 +27640,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 653,
+            "completion_tokens": 158,
+            "total_tokens": 811
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/rfs/hhag086",
@@ -27656,10 +27669,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 788,
+            "completion_tokens": 207,
+            "total_tokens": 995
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70085",
@@ -27678,10 +27698,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 836,
+            "completion_tokens": 351,
+            "total_tokens": 1187
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1111/1911-3846.70089",
@@ -27700,10 +27727,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 902,
+            "completion_tokens": 341,
+            "total_tokens": 1243
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2023.00580",
@@ -27722,10 +27756,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 700,
+            "completion_tokens": 175,
+            "total_tokens": 875
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
