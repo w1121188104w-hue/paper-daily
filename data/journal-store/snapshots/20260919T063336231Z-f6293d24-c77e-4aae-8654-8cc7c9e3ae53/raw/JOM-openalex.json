@@ -1,0 +1,2972 @@
+{
+  "source": "openalex",
+  "journal_key": "JOM",
+  "pages": [
+    {
+      "meta": {
+        "count": 4,
+        "db_response_time_ms": 18,
+        "page": null,
+        "per_page": 100,
+        "next_cursor": null,
+        "groups_count": null,
+        "x_query": {
+          "oql": "works where date >= (2026-07-22)\n  and source is (S142306484)\n  and date <= (2026-09-19)",
+          "oqo": {
+            "get_rows": "works",
+            "filter_rows": [
+              {
+                "column_id": "from_publication_date",
+                "value": "2026-07-22"
+              },
+              {
+                "column_id": "primary_location.source.id",
+                "value": "S142306484"
+              },
+              {
+                "column_id": "to_publication_date",
+                "value": "2026-09-19"
+              }
+            ]
+          },
+          "url": "/works?filter=from_publication_date:2026-07-22,primary_location.source.id:S142306484,to_publication_date:2026-09-19&per_page=100&cursor=%2A"
+        },
+        "cost_usd": 0.0001
+      },
+      "results": [
+        {
+          "id": "https://openalex.org/W7202396730",
+          "doi": "https://doi.org/10.1002/joom.70057",
+          "title": "Impact of Carbon Emission Trading Schemes on Firms' Environmental and Social Disclosure Under Institutional Pressure",
+          "display_name": "Impact of Carbon Emission Trading Schemes on Firms' Environmental and Social Disclosure Under Institutional Pressure",
+          "publication_year": 2026,
+          "publication_date": "2026-08-12",
+          "ids": {
+            "openalex": "https://openalex.org/W7202396730",
+            "doi": "https://doi.org/10.1002/joom.70057"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1002/joom.70057",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1002/joom.70057",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S142306484",
+              "display_name": "Journal of Operations Management",
+              "issn_l": "0272-6963",
+              "issn": [
+                "0272-6963",
+                "1873-1317"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320595",
+              "host_organization_name": "Wiley",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320595"
+              ],
+              "host_organization_lineage_names": [
+                "Wiley"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Operations Management",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5100608691",
+                "display_name": "Fu Jia",
+                "orcid": "https://orcid.org/0000-0002-9830-121X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I90259746",
+                  "display_name": "Capital University of Economics and Business",
+                  "ror": "https://ror.org/01r5sf951",
+                  "country_code": "CN",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I90259746"
+                  ]
+                }
+              ],
+              "countries": [
+                "CN"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Fu Jia",
+              "raw_affiliation_strings": [
+                "College of Business Administration, Capital University of Economics and Business  Beijing China"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-9830-121X",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "College of Business Administration, Capital University of Economics and Business  Beijing China",
+                  "institution_ids": [
+                    "https://openalex.org/I90259746"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5023442521",
+                "display_name": "Yingjie Ju",
+                "orcid": "https://orcid.org/0000-0001-8833-8441"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I34949971",
+                  "display_name": "University of Jinan",
+                  "ror": "https://ror.org/02mjz6f26",
+                  "country_code": "CN",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I34949971"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I4210097214",
+                  "display_name": "Shandong Management University",
+                  "ror": "https://ror.org/00vzprm14",
+                  "country_code": "CN",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I4210097214"
+                  ]
+                }
+              ],
+              "countries": [
+                "CN"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Yingjie Ju",
+              "raw_affiliation_strings": [
+                "School of Management Science and Engineering, University of Jinan  Jinan Shandong China"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "School of Management Science and Engineering, University of Jinan  Jinan Shandong China",
+                  "institution_ids": [
+                    "https://openalex.org/I34949971",
+                    "https://openalex.org/I4210097214"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5008600838",
+                "display_name": "Robert D. Klassen",
+                "orcid": "https://orcid.org/0000-0002-8650-137X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I125749732",
+                  "display_name": "Western University",
+                  "ror": "https://ror.org/02grkyz14",
+                  "country_code": "CA",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I125749732"
+                  ]
+                },
+                {
+                  "id": "https://openalex.org/I4405252500",
+                  "display_name": "Ivey Business School",
+                  "ror": "https://ror.org/05esnc164",
+                  "country_code": null,
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I125749732",
+                    "https://openalex.org/I4405252500"
+                  ]
+                }
+              ],
+              "countries": [
+                "CA"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Robert D. Klassen",
+              "raw_affiliation_strings": [
+                "Ivey Business School, University of Western Ontario  London Ontario Canada"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Ivey Business School, University of Western Ontario  London Ontario Canada",
+                  "institution_ids": [
+                    "https://openalex.org/I125749732",
+                    "https://openalex.org/I4405252500"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5114429864",
+                "display_name": "Lujie Chen",
+                "orcid": "https://orcid.org/0000-0002-4229-7194"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I69356397",
+                  "display_name": "Xi’an Jiaotong-Liverpool University",
+                  "ror": "https://ror.org/03zmrmn05",
+                  "country_code": "CN",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I69356397"
+                  ]
+                }
+              ],
+              "countries": [
+                "CN"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Lujie Chen",
+              "raw_affiliation_strings": [
+                "International Business School Suzhou, Xi'an Jiaotong‐Liverpool University  Suzhou Jiangsu China"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-4229-7194",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "International Business School Suzhou, Xi'an Jiaotong‐Liverpool University  Suzhou Jiangsu China",
+                  "institution_ids": [
+                    "https://openalex.org/I69356397"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5025602682",
+                "display_name": "Tobias Schoenherr",
+                "orcid": "https://orcid.org/0000-0003-4958-189X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I87216513",
+                  "display_name": "Michigan State University",
+                  "ror": "https://ror.org/05hs6h993",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I87216513"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Tobias Schoenherr",
+              "raw_affiliation_strings": [
+                "Department of Supply Chain Management, Broad College of Business Michigan State University  East Lansing Michigan USA"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Department of Supply Chain Management, Broad College of Business Michigan State University  East Lansing Michigan USA",
+                  "institution_ids": [
+                    "https://openalex.org/I87216513"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 3,
+          "institutions_distinct_count": 7,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [],
+          "apc_list": {
+            "value": 3520,
+            "currency": "USD",
+            "value_usd": 3520
+          },
+          "apc_paid": null,
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.90746735,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": null,
+            "last_page": null
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10115",
+            "display_name": "Corporate Social Responsibility Reporting",
+            "score": 0.9523000121116638,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1408",
+              "display_name": "Strategy and Management"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10115",
+              "display_name": "Corporate Social Responsibility Reporting",
+              "score": 0.9523000121116638,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1408",
+                "display_name": "Strategy and Management"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10880",
+              "display_name": "Environmental Sustainability in Business",
+              "score": 0.02160000056028366,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1406",
+                "display_name": "Marketing"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10081",
+              "display_name": "Auditing, Earnings Management, Governance",
+              "score": 0.003100000089034438,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/institutional-theory",
+              "display_name": "Institutional theory",
+              "score": 0.5641000270843506
+            },
+            {
+              "id": "https://openalex.org/keywords/legitimacy",
+              "display_name": "Legitimacy",
+              "score": 0.5048999786376953
+            },
+            {
+              "id": "https://openalex.org/keywords/sustainability",
+              "display_name": "Sustainability",
+              "score": 0.49970000982284546
+            },
+            {
+              "id": "https://openalex.org/keywords/corporate-social-responsibility",
+              "display_name": "Corporate social responsibility",
+              "score": 0.4465000033378601
+            },
+            {
+              "id": "https://openalex.org/keywords/corporate-sustainability",
+              "display_name": "Corporate sustainability",
+              "score": 0.4050000011920929
+            },
+            {
+              "id": "https://openalex.org/keywords/voluntary-disclosure",
+              "display_name": "Voluntary disclosure",
+              "score": 0.3993000090122223
+            },
+            {
+              "id": "https://openalex.org/keywords/carbon-offset",
+              "display_name": "Carbon offset",
+              "score": 0.3849000036716461
+            },
+            {
+              "id": "https://openalex.org/keywords/emissions-trading",
+              "display_name": "Emissions trading",
+              "score": 0.3424000144004822
+            },
+            {
+              "id": "https://openalex.org/keywords/compliance",
+              "display_name": "Compliance (psychology)",
+              "score": 0.33649998903274536
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.715499997138977
+            },
+            {
+              "id": "https://openalex.org/C147887874",
+              "wikidata": "https://www.wikidata.org/wiki/Q16252774",
+              "display_name": "Institutional theory",
+              "level": 2,
+              "score": 0.5641000270843506
+            },
+            {
+              "id": "https://openalex.org/C46295352",
+              "wikidata": "https://www.wikidata.org/wiki/Q207982",
+              "display_name": "Legitimacy",
+              "level": 3,
+              "score": 0.5048999786376953
+            },
+            {
+              "id": "https://openalex.org/C66204764",
+              "wikidata": "https://www.wikidata.org/wiki/Q219416",
+              "display_name": "Sustainability",
+              "level": 2,
+              "score": 0.49970000982284546
+            },
+            {
+              "id": "https://openalex.org/C141261163",
+              "wikidata": "https://www.wikidata.org/wiki/Q218600",
+              "display_name": "Corporate social responsibility",
+              "level": 2,
+              "score": 0.4465000033378601
+            },
+            {
+              "id": "https://openalex.org/C121955636",
+              "wikidata": "https://www.wikidata.org/wiki/Q4116214",
+              "display_name": "Accounting",
+              "level": 1,
+              "score": 0.4104999899864197
+            },
+            {
+              "id": "https://openalex.org/C2776667712",
+              "wikidata": "https://www.wikidata.org/wiki/Q5172498",
+              "display_name": "Corporate sustainability",
+              "level": 3,
+              "score": 0.4050000011920929
+            },
+            {
+              "id": "https://openalex.org/C2779055846",
+              "wikidata": "https://www.wikidata.org/wiki/Q7940976",
+              "display_name": "Voluntary disclosure",
+              "level": 2,
+              "score": 0.3993000090122223
+            },
+            {
+              "id": "https://openalex.org/C83227832",
+              "wikidata": "https://www.wikidata.org/wiki/Q1488967",
+              "display_name": "Carbon offset",
+              "level": 3,
+              "score": 0.3849000036716461
+            },
+            {
+              "id": "https://openalex.org/C100405246",
+              "wikidata": "https://www.wikidata.org/wiki/Q8348417",
+              "display_name": "Emissions trading",
+              "level": 3,
+              "score": 0.3424000144004822
+            },
+            {
+              "id": "https://openalex.org/C2781460075",
+              "wikidata": "https://www.wikidata.org/wiki/Q1399332",
+              "display_name": "Compliance (psychology)",
+              "level": 2,
+              "score": 0.33649998903274536
+            },
+            {
+              "id": "https://openalex.org/C147598955",
+              "wikidata": "https://www.wikidata.org/wiki/Q3427818",
+              "display_name": "Social responsibility",
+              "level": 2,
+              "score": 0.3346000015735626
+            },
+            {
+              "id": "https://openalex.org/C47737302",
+              "wikidata": "https://www.wikidata.org/wiki/Q167336",
+              "display_name": "Greenhouse gas",
+              "level": 2,
+              "score": 0.32420000433921814
+            },
+            {
+              "id": "https://openalex.org/C200707436",
+              "wikidata": "https://www.wikidata.org/wiki/Q1053211",
+              "display_name": "Principal–agent problem",
+              "level": 3,
+              "score": 0.31940001249313354
+            },
+            {
+              "id": "https://openalex.org/C40700",
+              "wikidata": "https://www.wikidata.org/wiki/Q1411783",
+              "display_name": "Industrial organization",
+              "level": 1,
+              "score": 0.3052000105381012
+            },
+            {
+              "id": "https://openalex.org/C29122968",
+              "wikidata": "https://www.wikidata.org/wiki/Q1414816",
+              "display_name": "Incentive",
+              "level": 2,
+              "score": 0.29750001430511475
+            },
+            {
+              "id": "https://openalex.org/C169900460",
+              "wikidata": "https://www.wikidata.org/wiki/Q2200417",
+              "display_name": "Cognition",
+              "level": 2,
+              "score": 0.2971000075340271
+            },
+            {
+              "id": "https://openalex.org/C2777950569",
+              "wikidata": "https://www.wikidata.org/wiki/Q17021836",
+              "display_name": "Stewardship (theology)",
+              "level": 3,
+              "score": 0.2921999990940094
+            },
+            {
+              "id": "https://openalex.org/C206757995",
+              "wikidata": "https://www.wikidata.org/wiki/Q1665188",
+              "display_name": "Institutional investor",
+              "level": 3,
+              "score": 0.290800005197525
+            },
+            {
+              "id": "https://openalex.org/C151392489",
+              "wikidata": "https://www.wikidata.org/wiki/Q5419946",
+              "display_name": "Executive compensation",
+              "level": 3,
+              "score": 0.2872999906539917
+            },
+            {
+              "id": "https://openalex.org/C39389867",
+              "wikidata": "https://www.wikidata.org/wiki/Q380767",
+              "display_name": "Corporate governance",
+              "level": 2,
+              "score": 0.28060001134872437
+            },
+            {
+              "id": "https://openalex.org/C2779777834",
+              "wikidata": "https://www.wikidata.org/wiki/Q4202277",
+              "display_name": "Enforcement",
+              "level": 2,
+              "score": 0.27889999747276306
+            },
+            {
+              "id": "https://openalex.org/C2780473208",
+              "wikidata": "https://www.wikidata.org/wiki/Q1668727",
+              "display_name": "Sustainability reporting",
+              "level": 3,
+              "score": 0.2761000096797943
+            },
+            {
+              "id": "https://openalex.org/C2780023022",
+              "wikidata": "https://www.wikidata.org/wiki/Q1338171",
+              "display_name": "Compensation (psychology)",
+              "level": 2,
+              "score": 0.2750000059604645
+            },
+            {
+              "id": "https://openalex.org/C166052673",
+              "wikidata": "https://www.wikidata.org/wiki/Q83021",
+              "display_name": "Empirical evidence",
+              "level": 2,
+              "score": 0.2711000144481659
+            },
+            {
+              "id": "https://openalex.org/C100001284",
+              "wikidata": "https://www.wikidata.org/wiki/Q2248246",
+              "display_name": "Public economics",
+              "level": 1,
+              "score": 0.2685000002384186
+            },
+            {
+              "id": "https://openalex.org/C107826830",
+              "wikidata": "https://www.wikidata.org/wiki/Q929380",
+              "display_name": "Environmental resource management",
+              "level": 1,
+              "score": 0.2538999915122986
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1002/joom.70057",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1002/joom.70057",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S142306484",
+                "display_name": "Journal of Operations Management",
+                "issn_l": "0272-6963",
+                "issn": [
+                  "0272-6963",
+                  "1873-1317"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320595",
+                "host_organization_name": "Wiley",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320595"
+                ],
+                "host_organization_lineage_names": [
+                  "Wiley"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Operations Management",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 111,
+          "referenced_works": [
+            "https://openalex.org/W1125272192",
+            "https://openalex.org/W1965278510",
+            "https://openalex.org/W1969274127",
+            "https://openalex.org/W1974390329",
+            "https://openalex.org/W1976710654",
+            "https://openalex.org/W1986905599",
+            "https://openalex.org/W1994067023",
+            "https://openalex.org/W1998939652",
+            "https://openalex.org/W2037131840",
+            "https://openalex.org/W2064803819",
+            "https://openalex.org/W2090898960",
+            "https://openalex.org/W2096570145",
+            "https://openalex.org/W2105570817",
+            "https://openalex.org/W2106392449",
+            "https://openalex.org/W2115981184",
+            "https://openalex.org/W2135997961",
+            "https://openalex.org/W2144190226",
+            "https://openalex.org/W2153784191",
+            "https://openalex.org/W2161415763",
+            "https://openalex.org/W2179496157",
+            "https://openalex.org/W2320369865",
+            "https://openalex.org/W2361954816",
+            "https://openalex.org/W2493101627",
+            "https://openalex.org/W2528182948",
+            "https://openalex.org/W2605981164",
+            "https://openalex.org/W2617030194",
+            "https://openalex.org/W2716828452",
+            "https://openalex.org/W2756358598",
+            "https://openalex.org/W2759261042",
+            "https://openalex.org/W2786993163",
+            "https://openalex.org/W2789424449",
+            "https://openalex.org/W2791859701",
+            "https://openalex.org/W2795002832",
+            "https://openalex.org/W2805902409",
+            "https://openalex.org/W2809382151",
+            "https://openalex.org/W2937994642",
+            "https://openalex.org/W2949138267",
+            "https://openalex.org/W2951959118",
+            "https://openalex.org/W2971578311",
+            "https://openalex.org/W2979586175",
+            "https://openalex.org/W2979932323",
+            "https://openalex.org/W2980606891",
+            "https://openalex.org/W3002582320",
+            "https://openalex.org/W3004789236",
+            "https://openalex.org/W3008947357",
+            "https://openalex.org/W3015634277",
+            "https://openalex.org/W3019664174",
+            "https://openalex.org/W3041452762",
+            "https://openalex.org/W3081016671",
+            "https://openalex.org/W3121948532",
+            "https://openalex.org/W3122404852",
+            "https://openalex.org/W3122421557",
+            "https://openalex.org/W3122607919",
+            "https://openalex.org/W3123195241",
+            "https://openalex.org/W3123282572",
+            "https://openalex.org/W3123608033",
+            "https://openalex.org/W3125092329",
+            "https://openalex.org/W3125156463",
+            "https://openalex.org/W3125262941",
+            "https://openalex.org/W3136982542",
+            "https://openalex.org/W3145604087",
+            "https://openalex.org/W3154068015",
+            "https://openalex.org/W3155787985",
+            "https://openalex.org/W3162872321",
+            "https://openalex.org/W3167180721",
+            "https://openalex.org/W3172735755",
+            "https://openalex.org/W3184790862",
+            "https://openalex.org/W3193329800",
+            "https://openalex.org/W3193802010",
+            "https://openalex.org/W3194161825",
+            "https://openalex.org/W3203526756",
+            "https://openalex.org/W3205446734",
+            "https://openalex.org/W3205873031",
+            "https://openalex.org/W3210907693",
+            "https://openalex.org/W3216306687",
+            "https://openalex.org/W3217542090",
+            "https://openalex.org/W4200101977",
+            "https://openalex.org/W4200280724",
+            "https://openalex.org/W4200452078",
+            "https://openalex.org/W4205100194",
+            "https://openalex.org/W4206268550",
+            "https://openalex.org/W4210307064",
+            "https://openalex.org/W4212778962",
+            "https://openalex.org/W4220841852",
+            "https://openalex.org/W4220935547",
+            "https://openalex.org/W4224287907",
+            "https://openalex.org/W4224322158",
+            "https://openalex.org/W4238779927",
+            "https://openalex.org/W4281401604",
+            "https://openalex.org/W4289520123",
+            "https://openalex.org/W4309879884",
+            "https://openalex.org/W4317506810",
+            "https://openalex.org/W4318214476",
+            "https://openalex.org/W4367669915",
+            "https://openalex.org/W4380360341",
+            "https://openalex.org/W4385287671",
+            "https://openalex.org/W4385458852",
+            "https://openalex.org/W4385792115",
+            "https://openalex.org/W4385803340",
+            "https://openalex.org/W4387018459",
+            "https://openalex.org/W4392740005",
+            "https://openalex.org/W4394868753",
+            "https://openalex.org/W4396915047",
+            "https://openalex.org/W4399220359",
+            "https://openalex.org/W4401836310",
+            "https://openalex.org/W4402529766",
+            "https://openalex.org/W4404196775",
+            "https://openalex.org/W4404645382",
+            "https://openalex.org/W4406555511",
+            "https://openalex.org/W4413121333",
+            "https://openalex.org/W7131394607"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "1682": [
+              82
+            ],
+            "2010": [
+              86
+            ],
+            "2013": [
+              64
+            ],
+            "2024": [
+              66
+            ],
+            "ABSTRACT": [
+              0
+            ],
+            "Carbon": [
+              1
+            ],
+            "emissions": [
+              2
+            ],
+            "trading": [
+              3
+            ],
+            "schemes": [
+              4
+            ],
+            "(CETS)": [
+              5
+            ],
+            "are": [
+              6
+            ],
+            "a": [
+              7,
+              30,
+              68,
+              73,
+              130,
+              147,
+              182
+            ],
+            "prominent": [
+              8
+            ],
+            "market‐based": [
+              9
+            ],
+            "instrument": [
+              10
+            ],
+            "for": [
+              11
+            ],
+            "addressing": [
+              12
+            ],
+            "climate": [
+              13
+            ],
+            "change,": [
+              14
+            ],
+            "yet": [
+              15
+            ],
+            "their": [
+              16
+            ],
+            "effects": [
+              17
+            ],
+            "on": [
+              18,
+              25,
+              135,
+              142
+            ],
+            "corporate": [
+              19,
+              241
+            ],
+            "disclosure": [
+              20,
+              43,
+              54,
+              123,
+              137,
+              180,
+              217
+            ],
+            "remain": [
+              21
+            ],
+            "insufficiently": [
+              22
+            ],
+            "understood.": [
+              23
+            ],
+            "Drawing": [
+              24
+            ],
+            "institutional": [
+              26,
+              46,
+              119,
+              213,
+              230
+            ],
+            "theory,": [
+              27
+            ],
+            "we": [
+              28,
+              71
+            ],
+            "develop": [
+              29
+            ],
+            "pressure–capability–cognition": [
+              31
+            ],
+            "framework": [
+              32
+            ],
+            "to": [
+              33,
+              114,
+              222,
+              239
+            ],
+            "examine": [
+              34
+            ],
+            "how": [
+              35,
+              45,
+              229
+            ],
+            "CETS": [
+              36,
+              62,
+              95,
+              109,
+              128,
+              168
+            ],
+            "influence": [
+              37,
+              107
+            ],
+            "firms'": [
+              38
+            ],
+            "environmental": [
+              39,
+              112,
+              143,
+              154,
+              172,
+              196
+            ],
+            "and": [
+              40,
+              44,
+              48,
+              65,
+              87,
+              173,
+              206,
+              236
+            ],
+            "social": [
+              41,
+              115,
+              136,
+              174
+            ],
+            "(E&S)": [
+              42
+            ],
+            "pressures": [
+              47,
+              120,
+              214,
+              231
+            ],
+            "internal": [
+              49,
+              204
+            ],
+            "organizational": [
+              50
+            ],
+            "factors": [
+              51
+            ],
+            "shape": [
+              52,
+              240
+            ],
+            "heterogeneous": [
+              53
+            ],
+            "responses.": [
+              55
+            ],
+            "Exploiting": [
+              56
+            ],
+            "the": [
+              57,
+              98,
+              106,
+              191,
+              210
+            ],
+            "staggered": [
+              58
+            ],
+            "implementation": [
+              59
+            ],
+            "of": [
+              60,
+              100,
+              108,
+              212
+            ],
+            "China's": [
+              61
+            ],
+            "between": [
+              63,
+              85
+            ],
+            "as": [
+              67,
+              181
+            ],
+            "quasi‐natural": [
+              69
+            ],
+            "experiment,": [
+              70
+            ],
+            "employ": [
+              72
+            ],
+            "multi‐period": [
+              74
+            ],
+            "difference‐in‐differences": [
+              75
+            ],
+            "design": [
+              76
+            ],
+            "using": [
+              77
+            ],
+            "16,348": [
+              78
+            ],
+            "firm‐year": [
+              79
+            ],
+            "observations": [
+              80
+            ],
+            "from": [
+              81
+            ],
+            "listed": [
+              83
+            ],
+            "firms": [
+              84,
+              152,
+              178
+            ],
+            "2024.": [
+              88
+            ],
+            "We": [
+              89
+            ],
+            "report": [
+              90
+            ],
+            "three": [
+              91
+            ],
+            "principal": [
+              92
+            ],
+            "findings.": [
+              93
+            ],
+            "First,": [
+              94
+            ],
+            "significantly": [
+              96,
+              169
+            ],
+            "increase": [
+              97
+            ],
+            "level": [
+              99
+            ],
+            "firm": [
+              101
+            ],
+            "E&S": [
+              102
+            ],
+            "disclosure,": [
+              103,
+              144,
+              175
+            ],
+            "indicating": [
+              104
+            ],
+            "that": [
+              105,
+              177,
+              203
+            ],
+            "extends": [
+              110
+            ],
+            "beyond": [
+              111
+            ],
+            "reporting": [
+              113
+            ],
+            "responsibility": [
+              116
+            ],
+            "disclosure.": [
+              117,
+              243
+            ],
+            "Second,": [
+              118
+            ],
+            "generate": [
+              121
+            ],
+            "distinct": [
+              122
+            ],
+            "strategies.": [
+              124
+            ],
+            "Under": [
+              125
+            ],
+            "coercive": [
+              126
+            ],
+            "participation,": [
+              127,
+              167
+            ],
+            "exhibits": [
+              129
+            ],
+            "marginally": [
+              131
+            ],
+            "significant": [
+              132,
+              140
+            ],
+            "positive": [
+              133
+            ],
+            "effect": [
+              134,
+              141
+            ],
+            "but": [
+              138
+            ],
+            "no": [
+              139
+            ],
+            "consistent": [
+              145
+            ],
+            "with": [
+              146,
+              233
+            ],
+            "legitimacy": [
+              148,
+              155
+            ],
+            "compensation": [
+              149
+            ],
+            "mechanism": [
+              150
+            ],
+            "whereby": [
+              151
+            ],
+            "offset": [
+              153
+            ],
+            "deficits": [
+              156
+            ],
+            "through": [
+              157
+            ],
+            "low‐cost,": [
+              158
+            ],
+            "highly": [
+              159
+            ],
+            "visible": [
+              160
+            ],
+            "symbolic": [
+              161
+            ],
+            "reporting.": [
+              162
+            ],
+            "By": [
+              163
+            ],
+            "contrast,": [
+              164
+            ],
+            "under": [
+              165
+            ],
+            "non‐coercive": [
+              166
+            ],
+            "promotes": [
+              170
+            ],
+            "both": [
+              171
+            ],
+            "suggesting": [
+              176
+            ],
+            "use": [
+              179
+            ],
+            "strategic": [
+              183
+            ],
+            "signaling": [
+              184
+            ],
+            "device.": [
+              185
+            ],
+            "Third,": [
+              186
+            ],
+            "operational": [
+              187,
+              234
+            ],
+            "efficiency": [
+              188
+            ],
+            "negatively": [
+              189
+            ],
+            "moderates": [
+              190,
+              199
+            ],
+            "CETS–disclosure": [
+              192
+            ],
+            "relationship,": [
+              193,
+              201
+            ],
+            "whereas": [
+              194
+            ],
+            "managerial": [
+              195,
+              207,
+              237
+            ],
+            "focus": [
+              197
+            ],
+            "positively": [
+              198
+            ],
+            "this": [
+              200
+            ],
+            "revealing": [
+              202
+            ],
+            "capabilities": [
+              205,
+              235
+            ],
+            "cognition": [
+              208,
+              238
+            ],
+            "condition": [
+              209
+            ],
+            "effectiveness": [
+              211
+            ],
+            "in": [
+              215
+            ],
+            "shaping": [
+              216
+            ],
+            "outcomes.": [
+              218
+            ],
+            "These": [
+              219
+            ],
+            "findings": [
+              220
+            ],
+            "contribute": [
+              221
+            ],
+            "sustainable": [
+              223
+            ],
+            "operations": [
+              224
+            ],
+            "management": [
+              225
+            ],
+            "research": [
+              226
+            ],
+            "by": [
+              227
+            ],
+            "demonstrating": [
+              228
+            ],
+            "interact": [
+              232
+            ],
+            "sustainability": [
+              242
+            ]
+          },
+          "counts_by_year": [],
+          "updated_date": "2026-08-21T09:56:20.448147",
+          "created_date": "2026-08-14T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7203780994",
+          "doi": "https://doi.org/10.1002/joom.70058",
+          "title": "Estimating Hierarchical Demand in Retail Operations",
+          "display_name": "Estimating Hierarchical Demand in Retail Operations",
+          "publication_year": 2026,
+          "publication_date": "2026-08-19",
+          "ids": {
+            "openalex": "https://openalex.org/W7203780994",
+            "doi": "https://doi.org/10.1002/joom.70058"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1002/joom.70058",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1002/joom.70058",
+            "pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/joom.70058",
+            "source": {
+              "id": "https://openalex.org/S142306484",
+              "display_name": "Journal of Operations Management",
+              "issn_l": "0272-6963",
+              "issn": [
+                "0272-6963",
+                "1873-1317"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320595",
+              "host_organization_name": "Wiley",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320595"
+              ],
+              "host_organization_lineage_names": [
+                "Wiley"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by-nc",
+            "license_id": "https://openalex.org/licenses/cc-by-nc",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Operations Management",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/joom.70058",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5082332071",
+                "display_name": "Blair Flicker",
+                "orcid": "https://orcid.org/0000-0003-0294-3400"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I155781252",
+                  "display_name": "University of South Carolina",
+                  "ror": "https://ror.org/02b6qw903",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I155781252"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Blair Flicker",
+              "raw_affiliation_strings": [
+                "Management Science University of South Carolina  Columbia South Carolina USA"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0003-0294-3400",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Management Science University of South Carolina  Columbia South Carolina USA",
+                  "institution_ids": [
+                    "https://openalex.org/I155781252"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5061298628",
+                "display_name": "Olga Perdikaki",
+                "orcid": "https://orcid.org/0000-0002-8784-0453"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I155781252",
+                  "display_name": "University of South Carolina",
+                  "ror": "https://ror.org/02b6qw903",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I155781252"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Olga Perdikaki",
+              "raw_affiliation_strings": [
+                "Management Science University of South Carolina  Columbia South Carolina USA"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-8784-0453",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Management Science University of South Carolina  Columbia South Carolina USA",
+                  "institution_ids": [
+                    "https://openalex.org/I155781252"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5025109188",
+                "display_name": "Mark Ferguson",
+                "orcid": "https://orcid.org/0000-0001-8317-138X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I155781252",
+                  "display_name": "University of South Carolina",
+                  "ror": "https://ror.org/02b6qw903",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I155781252"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Mark Ferguson",
+              "raw_affiliation_strings": [
+                "Management Science University of South Carolina  Columbia South Carolina USA"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0001-8317-138X",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Management Science University of South Carolina  Columbia South Carolina USA",
+                  "institution_ids": [
+                    "https://openalex.org/I155781252"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5006688198",
+                "display_name": "Su‐Ming Wu",
+                "orcid": "https://orcid.org/0000-0002-4850-9696"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I1342911587",
+                  "display_name": "Oracle (United States)",
+                  "ror": "https://ror.org/006c77m33",
+                  "country_code": "US",
+                  "type": "company",
+                  "lineage": [
+                    "https://openalex.org/I1342911587"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Su‐Ming Wu",
+              "raw_affiliation_strings": [
+                "Oracle Retail Science  Burlington Massachusetts USA"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-4850-9696",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Oracle Retail Science  Burlington Massachusetts USA",
+                  "institution_ids": [
+                    "https://openalex.org/I1342911587"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 1,
+          "institutions_distinct_count": 2,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5082332071"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I155781252"
+          ],
+          "apc_list": {
+            "value": 3520,
+            "currency": "USD",
+            "value_usd": 3520
+          },
+          "apc_paid": {
+            "value": 3520,
+            "currency": "USD",
+            "value_usd": 3520
+          },
+          "fwci": 0,
+          "has_fulltext": true,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.85407808,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": false
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "72",
+            "issue": "6",
+            "first_page": "831",
+            "last_page": "850"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T11161",
+            "display_name": "Consumer Market Behavior and Pricing",
+            "score": 0.751800000667572,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1406",
+              "display_name": "Marketing"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T11161",
+              "display_name": "Consumer Market Behavior and Pricing",
+              "score": 0.751800000667572,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1406",
+                "display_name": "Marketing"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T10328",
+              "display_name": "Supply Chain and Inventory Management",
+              "score": 0.09600000083446503,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1404",
+                "display_name": "Management Information Systems"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11918",
+              "display_name": "Forecasting Techniques and Applications",
+              "score": 0.04639999940991402,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1803",
+                "display_name": "Management Science and Operations Research"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/18",
+                "display_name": "Decision Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/stockout",
+              "display_name": "Stockout",
+              "score": 0.7261000275611877
+            },
+            {
+              "id": "https://openalex.org/keywords/aggregate",
+              "display_name": "Aggregate (composite)",
+              "score": 0.5304999947547913
+            },
+            {
+              "id": "https://openalex.org/keywords/profit",
+              "display_name": "Profit (economics)",
+              "score": 0.48339998722076416
+            },
+            {
+              "id": "https://openalex.org/keywords/tree",
+              "display_name": "Tree (set theory)",
+              "score": 0.47269999980926514
+            },
+            {
+              "id": "https://openalex.org/keywords/product",
+              "display_name": "Product (mathematics)",
+              "score": 0.454800009727478
+            },
+            {
+              "id": "https://openalex.org/keywords/hierarchical-database-model",
+              "display_name": "Hierarchical database model",
+              "score": 0.38429999351501465
+            },
+            {
+              "id": "https://openalex.org/keywords/substitution",
+              "display_name": "Substitution (logic)",
+              "score": 0.38109999895095825
+            },
+            {
+              "id": "https://openalex.org/keywords/partition",
+              "display_name": "Partition (number theory)",
+              "score": 0.3447999954223633
+            },
+            {
+              "id": "https://openalex.org/keywords/hierarchy",
+              "display_name": "Hierarchy",
+              "score": 0.3255000114440918
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C50601946",
+              "wikidata": "https://www.wikidata.org/wiki/Q962928",
+              "display_name": "Stockout",
+              "level": 2,
+              "score": 0.7261000275611877
+            },
+            {
+              "id": "https://openalex.org/C41008148",
+              "wikidata": "https://www.wikidata.org/wiki/Q21198",
+              "display_name": "Computer science",
+              "level": 0,
+              "score": 0.635200023651123
+            },
+            {
+              "id": "https://openalex.org/C4679612",
+              "wikidata": "https://www.wikidata.org/wiki/Q866298",
+              "display_name": "Aggregate (composite)",
+              "level": 2,
+              "score": 0.5304999947547913
+            },
+            {
+              "id": "https://openalex.org/C181622380",
+              "wikidata": "https://www.wikidata.org/wiki/Q26911",
+              "display_name": "Profit (economics)",
+              "level": 2,
+              "score": 0.48339998722076416
+            },
+            {
+              "id": "https://openalex.org/C113174947",
+              "wikidata": "https://www.wikidata.org/wiki/Q2859736",
+              "display_name": "Tree (set theory)",
+              "level": 2,
+              "score": 0.47269999980926514
+            },
+            {
+              "id": "https://openalex.org/C90673727",
+              "wikidata": "https://www.wikidata.org/wiki/Q901718",
+              "display_name": "Product (mathematics)",
+              "level": 2,
+              "score": 0.454800009727478
+            },
+            {
+              "id": "https://openalex.org/C126255220",
+              "wikidata": "https://www.wikidata.org/wiki/Q141495",
+              "display_name": "Mathematical optimization",
+              "level": 1,
+              "score": 0.4345000088214874
+            },
+            {
+              "id": "https://openalex.org/C149782125",
+              "wikidata": "https://www.wikidata.org/wiki/Q160039",
+              "display_name": "Econometrics",
+              "level": 1,
+              "score": 0.41999998688697815
+            },
+            {
+              "id": "https://openalex.org/C144986985",
+              "wikidata": "https://www.wikidata.org/wiki/Q871236",
+              "display_name": "Hierarchical database model",
+              "level": 2,
+              "score": 0.38429999351501465
+            },
+            {
+              "id": "https://openalex.org/C2778220771",
+              "wikidata": "https://www.wikidata.org/wiki/Q1522579",
+              "display_name": "Substitution (logic)",
+              "level": 2,
+              "score": 0.38109999895095825
+            },
+            {
+              "id": "https://openalex.org/C42812",
+              "wikidata": "https://www.wikidata.org/wiki/Q1082910",
+              "display_name": "Partition (number theory)",
+              "level": 2,
+              "score": 0.3447999954223633
+            },
+            {
+              "id": "https://openalex.org/C42475967",
+              "wikidata": "https://www.wikidata.org/wiki/Q194292",
+              "display_name": "Operations research",
+              "level": 1,
+              "score": 0.32739999890327454
+            },
+            {
+              "id": "https://openalex.org/C31170391",
+              "wikidata": "https://www.wikidata.org/wiki/Q188619",
+              "display_name": "Hierarchy",
+              "level": 2,
+              "score": 0.3255000114440918
+            },
+            {
+              "id": "https://openalex.org/C98045186",
+              "wikidata": "https://www.wikidata.org/wiki/Q205663",
+              "display_name": "Process (computing)",
+              "level": 2,
+              "score": 0.3122999966144562
+            },
+            {
+              "id": "https://openalex.org/C2778058735",
+              "wikidata": "https://www.wikidata.org/wiki/Q4692253",
+              "display_name": "Aggregate data",
+              "level": 2,
+              "score": 0.302700012922287
+            },
+            {
+              "id": "https://openalex.org/C124101348",
+              "wikidata": "https://www.wikidata.org/wiki/Q172491",
+              "display_name": "Data mining",
+              "level": 1,
+              "score": 0.2912999987602234
+            },
+            {
+              "id": "https://openalex.org/C96250715",
+              "wikidata": "https://www.wikidata.org/wiki/Q965330",
+              "display_name": "Estimation",
+              "level": 2,
+              "score": 0.2881999909877777
+            },
+            {
+              "id": "https://openalex.org/C177264268",
+              "wikidata": "https://www.wikidata.org/wiki/Q1514741",
+              "display_name": "Set (abstract data type)",
+              "level": 2,
+              "score": 0.28769999742507935
+            },
+            {
+              "id": "https://openalex.org/C163797641",
+              "wikidata": "https://www.wikidata.org/wiki/Q2067937",
+              "display_name": "Tree structure",
+              "level": 3,
+              "score": 0.28690001368522644
+            },
+            {
+              "id": "https://openalex.org/C147101817",
+              "wikidata": "https://www.wikidata.org/wiki/Q13443840",
+              "display_name": "Product category",
+              "level": 3,
+              "score": 0.2824000120162964
+            },
+            {
+              "id": "https://openalex.org/C2781437837",
+              "wikidata": "https://www.wikidata.org/wiki/Q2736296",
+              "display_name": "Safety stock",
+              "level": 3,
+              "score": 0.28119999170303345
+            },
+            {
+              "id": "https://openalex.org/C137836250",
+              "wikidata": "https://www.wikidata.org/wiki/Q984063",
+              "display_name": "Optimization problem",
+              "level": 2,
+              "score": 0.2800999879837036
+            },
+            {
+              "id": "https://openalex.org/C2778334786",
+              "wikidata": "https://www.wikidata.org/wiki/Q1586270",
+              "display_name": "Variation (astronomy)",
+              "level": 2,
+              "score": 0.2797999978065491
+            },
+            {
+              "id": "https://openalex.org/C2778813691",
+              "wikidata": "https://www.wikidata.org/wiki/Q1369832",
+              "display_name": "Purchasing",
+              "level": 2,
+              "score": 0.2702000141143799
+            },
+            {
+              "id": "https://openalex.org/C203379541",
+              "wikidata": "https://www.wikidata.org/wiki/Q1801078",
+              "display_name": "Aggregate demand",
+              "level": 3,
+              "score": 0.2612999975681305
+            },
+            {
+              "id": "https://openalex.org/C2781161759",
+              "wikidata": "https://www.wikidata.org/wiki/Q24451192",
+              "display_name": "Lost sales",
+              "level": 2,
+              "score": 0.2572999894618988
+            },
+            {
+              "id": "https://openalex.org/C108713360",
+              "wikidata": "https://www.wikidata.org/wiki/Q1824206",
+              "display_name": "Supply chain",
+              "level": 2,
+              "score": 0.2565999925136566
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1002/joom.70058",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1002/joom.70058",
+              "pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/joom.70058",
+              "source": {
+                "id": "https://openalex.org/S142306484",
+                "display_name": "Journal of Operations Management",
+                "issn_l": "0272-6963",
+                "issn": [
+                  "0272-6963",
+                  "1873-1317"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320595",
+                "host_organization_name": "Wiley",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320595"
+                ],
+                "host_organization_lineage_names": [
+                  "Wiley"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by-nc",
+              "license_id": "https://openalex.org/licenses/cc-by-nc",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Operations Management",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1002/joom.70058",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1002/joom.70058",
+            "pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/joom.70058",
+            "source": {
+              "id": "https://openalex.org/S142306484",
+              "display_name": "Journal of Operations Management",
+              "issn_l": "0272-6963",
+              "issn": [
+                "0272-6963",
+                "1873-1317"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320595",
+              "host_organization_name": "Wiley",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320595"
+              ],
+              "host_organization_lineage_names": [
+                "Wiley"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by-nc",
+            "license_id": "https://openalex.org/licenses/cc-by-nc",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Operations Management",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [
+            {
+              "id": "https://openalex.org/F4320310846",
+              "display_name": "University of South Carolina",
+              "ror": "https://ror.org/02b6qw903"
+            }
+          ],
+          "has_content": {
+            "pdf": true,
+            "grobid_xml": true
+          },
+          "content_urls": {
+            "pdf": "https://content.openalex.org/works/W7203780994.pdf",
+            "grobid_xml": "https://content.openalex.org/works/W7203780994.grobid-xml"
+          },
+          "referenced_works_count": 34,
+          "referenced_works": [
+            "https://openalex.org/W1848196498",
+            "https://openalex.org/W1976405900",
+            "https://openalex.org/W1977593285",
+            "https://openalex.org/W1978907431",
+            "https://openalex.org/W2022770562",
+            "https://openalex.org/W2033062719",
+            "https://openalex.org/W2052316683",
+            "https://openalex.org/W2057765060",
+            "https://openalex.org/W2093714429",
+            "https://openalex.org/W2102037914",
+            "https://openalex.org/W2105562458",
+            "https://openalex.org/W2107208425",
+            "https://openalex.org/W2115323510",
+            "https://openalex.org/W2118745427",
+            "https://openalex.org/W2120641488",
+            "https://openalex.org/W2120840732",
+            "https://openalex.org/W2120858031",
+            "https://openalex.org/W2126227802",
+            "https://openalex.org/W2129726380",
+            "https://openalex.org/W2148668476",
+            "https://openalex.org/W2160727270",
+            "https://openalex.org/W2319288514",
+            "https://openalex.org/W2905902520",
+            "https://openalex.org/W2994705373",
+            "https://openalex.org/W3094000877",
+            "https://openalex.org/W3121880455",
+            "https://openalex.org/W3123055029",
+            "https://openalex.org/W3154991697",
+            "https://openalex.org/W4281723882",
+            "https://openalex.org/W4408632195",
+            "https://openalex.org/W4414832767",
+            "https://openalex.org/W4415738717",
+            "https://openalex.org/W7102597269",
+            "https://openalex.org/W7130420858"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "ABSTRACT": [
+              0
+            ],
+            "A": [
+              1,
+              206
+            ],
+            "hierarchical": [
+              2
+            ],
+            "structure": [
+              3
+            ],
+            "over": [
+              4,
+              217
+            ],
+            "product": [
+              5,
+              13,
+              74
+            ],
+            "attributes": [
+              6
+            ],
+            "is": [
+              7,
+              166
+            ],
+            "a": [
+              8,
+              50,
+              78,
+              93,
+              106,
+              119,
+              144,
+              152,
+              169,
+              178
+            ],
+            "central": [
+              9,
+              200
+            ],
+            "input": [
+              10
+            ],
+            "to": [
+              11,
+              76,
+              85,
+              143,
+              168,
+              177
+            ],
+            "many": [
+              12
+            ],
+            "assortment": [
+              14,
+              245
+            ],
+            "and": [
+              15,
+              62,
+              69,
+              95,
+              129
+            ],
+            "inventory": [
+              16
+            ],
+            "optimization": [
+              17,
+              108,
+              246
+            ],
+            "models,": [
+              18
+            ],
+            "yet": [
+              19,
+              231,
+              254
+            ],
+            "no": [
+              20
+            ],
+            "existing": [
+              21
+            ],
+            "method": [
+              22,
+              165
+            ],
+            "can": [
+              23
+            ],
+            "recover": [
+              24,
+              77,
+              118
+            ],
+            "such": [
+              25
+            ],
+            "structures": [
+              26
+            ],
+            "from": [
+              27,
+              53,
+              213
+            ],
+            "the": [
+              28,
+              73,
+              86,
+              140,
+              164,
+              221
+            ],
+            "aggregate": [
+              29
+            ],
+            "sales": [
+              30,
+              223
+            ],
+            "data": [
+              31,
+              112,
+              184
+            ],
+            "that": [
+              32,
+              127
+            ],
+            "retailers": [
+              33
+            ],
+            "routinely": [
+              34
+            ],
+            "collect.": [
+              35
+            ],
+            "We": [
+              36
+            ],
+            "introduce": [
+              37
+            ],
+            "HASTERAD": [
+              38,
+              64
+            ],
+            "(hierarchical": [
+              39
+            ],
+            "attribute": [
+              40,
+              46
+            ],
+            "substitution": [
+              41,
+              51,
+              67
+            ],
+            "tree": [
+              42,
+              52,
+              120,
+              207
+            ],
+            "estimation": [
+              43
+            ],
+            "via": [
+              44
+            ],
+            "recursive": [
+              45
+            ],
+            "discovery),": [
+              47
+            ],
+            "which": [
+              48
+            ],
+            "recovers": [
+              49,
+              92
+            ],
+            "standard": [
+              54
+            ],
+            "SKU–store–week": [
+              55
+            ],
+            "scanner": [
+              56
+            ],
+            "data.": [
+              57
+            ],
+            "Leveraging": [
+              58
+            ],
+            "variation": [
+              59
+            ],
+            "in": [
+              60,
+              148
+            ],
+            "prices": [
+              61
+            ],
+            "promotions,": [
+              63
+            ],
+            "compares": [
+              65
+            ],
+            "attribute‐based": [
+              66
+            ],
+            "patterns": [
+              68
+            ],
+            "then": [
+              70
+            ],
+            "recursively": [
+              71
+            ],
+            "partitions": [
+              72
+            ],
+            "space": [
+              75
+            ],
+            "candidate": [
+              79
+            ],
+            "hierarchy": [
+              80
+            ],
+            "of": [
+              81,
+              139
+            ],
+            "attribute‐level": [
+              82
+            ],
+            "substitution.": [
+              83
+            ],
+            "Applied": [
+              84
+            ],
+            "IRI": [
+              87
+            ],
+            "Marketing": [
+              88
+            ],
+            "Data": [
+              89
+            ],
+            "Set,": [
+              90
+            ],
+            "it": [
+              91
+            ],
+            "stable": [
+              94
+            ],
+            "economically": [
+              96
+            ],
+            "interpretable": [
+              97
+            ],
+            "tree.": [
+              98
+            ],
+            "To": [
+              99
+            ],
+            "quantify": [
+              100
+            ],
+            "its": [
+              101
+            ],
+            "economic": [
+              102
+            ],
+            "value,": [
+              103
+            ],
+            "we": [
+              104,
+              117
+            ],
+            "execute": [
+              105
+            ],
+            "three‐step": [
+              107
+            ],
+            "process": [
+              109
+            ],
+            "on": [
+              110,
+              126,
+              248
+            ],
+            "synthetic": [
+              111
+            ],
+            "with": [
+              113,
+              121
+            ],
+            "known": [
+              114
+            ],
+            "ground": [
+              115
+            ],
+            "truth:": [
+              116
+            ],
+            "HASTERAD,": [
+              122
+            ],
+            "estimate": [
+              123
+            ],
+            "demand": [
+              124,
+              155,
+              250
+            ],
+            "parameters": [
+              125
+            ],
+            "tree,": [
+              128,
+              230
+            ],
+            "optimize": [
+              130
+            ],
+            "assortments.": [
+              131
+            ],
+            "HASTERAD's": [
+              132,
+              228
+            ],
+            "chosen": [
+              133,
+              208
+            ],
+            "assortments": [
+              134,
+              233,
+              252
+            ],
+            "forgo": [
+              135
+            ],
+            "less": [
+              136
+            ],
+            "than": [
+              137
+            ],
+            "11%": [
+              138
+            ],
+            "profit": [
+              141
+            ],
+            "available": [
+              142
+            ],
+            "clairvoyant": [
+              145
+            ],
+            "planner,": [
+              146
+            ],
+            "even": [
+              147
+            ],
+            "demanding": [
+              149
+            ],
+            "settings": [
+              150
+            ],
+            "where": [
+              151,
+              172,
+              183
+            ],
+            "traditional": [
+              153
+            ],
+            "flat": [
+              154
+            ],
+            "model": [
+              156,
+              204
+            ],
+            "forgoes": [
+              157
+            ],
+            "almost": [
+              158
+            ],
+            "100%.": [
+              159
+            ],
+            "Performance": [
+              160
+            ],
+            "remains": [
+              161
+            ],
+            "strong": [
+              162
+            ],
+            "whether": [
+              163
+            ],
+            "applied": [
+              167
+            ],
+            "multi‐store": [
+              170
+            ],
+            "panel,": [
+              171
+            ],
+            "stockouts": [
+              173,
+              188
+            ],
+            "are": [
+              174,
+              185,
+              189,
+              193,
+              237
+            ],
+            "unobservable,": [
+              175
+            ],
+            "or": [
+              176
+            ],
+            "single": [
+              179
+            ],
+            "store's": [
+              180
+            ],
+            "internal": [
+              181
+            ],
+            "records,": [
+              182
+            ],
+            "sparse": [
+              186
+            ],
+            "but": [
+              187,
+              244
+            ],
+            "observed.": [
+              190,
+              255
+            ],
+            "These": [
+              191
+            ],
+            "findings": [
+              192
+            ],
+            "robust": [
+              194
+            ],
+            "across": [
+              195
+            ],
+            "several": [
+              196
+            ],
+            "alternative": [
+              197
+            ],
+            "specifications.": [
+              198
+            ],
+            "Our": [
+              199
+            ],
+            "empirical": [
+              201
+            ],
+            "finding": [
+              202
+            ],
+            "concerns": [
+              203
+            ],
+            "selection.": [
+              205
+            ],
+            "by": [
+              209
+            ],
+            "best": [
+              210
+            ],
+            "in‐sample": [
+              211
+            ],
+            "fit,": [
+              212
+            ],
+            "an": [
+              214
+            ],
+            "exhaustive": [
+              215
+            ],
+            "search": [
+              216
+            ],
+            "simple": [
+              218
+            ],
+            "hierarchies,": [
+              219
+            ],
+            "fits": [
+              220
+            ],
+            "observed": [
+              222,
+              242
+            ],
+            "nearly": [
+              224
+            ],
+            "as": [
+              225,
+              227
+            ],
+            "well": [
+              226
+            ],
+            "recovered": [
+              229
+            ],
+            "prescribes": [
+              232
+            ],
+            "whose": [
+              234
+            ],
+            "expected": [
+              235
+            ],
+            "profits": [
+              236
+            ],
+            "substantially": [
+              238
+            ],
+            "lower.": [
+              239
+            ],
+            "Fit": [
+              240
+            ],
+            "evaluates": [
+              241
+            ],
+            "purchases,": [
+              243
+            ],
+            "depends": [
+              247
+            ],
+            "predicting": [
+              249
+            ],
+            "under": [
+              251
+            ],
+            "not": [
+              253
+            ]
+          },
+          "counts_by_year": [],
+          "updated_date": "2026-09-10T07:47:47.112893",
+          "created_date": "2026-08-20T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7211935787",
+          "doi": "https://doi.org/10.1002/joom.v72.6",
+          "title": null,
+          "display_name": null,
+          "publication_year": 2026,
+          "publication_date": "2026-09-01",
+          "ids": {
+            "openalex": "https://openalex.org/W7211935787",
+            "doi": "https://doi.org/10.1002/joom.v72.6"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1002/joom.v72.6",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1002/joom.v72.6",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S142306484",
+              "display_name": "Journal of Operations Management",
+              "issn_l": "0272-6963",
+              "issn": [
+                "0272-6963",
+                "1873-1317"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320595",
+              "host_organization_name": "Wiley",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320595"
+              ],
+              "host_organization_lineage_names": [
+                "Wiley"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Operations Management",
+            "raw_type": "journal-issue"
+          },
+          "type": "paratext",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [],
+          "institutions": [],
+          "countries_distinct_count": 0,
+          "institutions_distinct_count": 0,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [],
+          "apc_list": {
+            "value": 3520,
+            "currency": "USD",
+            "value_usd": 3520
+          },
+          "apc_paid": null,
+          "fwci": null,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": null,
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "72",
+            "issue": "6",
+            "first_page": null,
+            "last_page": null
+          },
+          "is_retracted": null,
+          "is_paratext": true,
+          "is_xpac": false,
+          "primary_topic": null,
+          "topics": [],
+          "keywords": [],
+          "concepts": [],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1002/joom.v72.6",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1002/joom.v72.6",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S142306484",
+                "display_name": "Journal of Operations Management",
+                "issn_l": "0272-6963",
+                "issn": [
+                  "0272-6963",
+                  "1873-1317"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320595",
+                "host_organization_name": "Wiley",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320595"
+                ],
+                "host_organization_lineage_names": [
+                  "Wiley"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Operations Management",
+              "raw_type": "journal-issue"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 0,
+          "referenced_works": [],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-09-09T07:26:56.047234",
+          "created_date": "2026-09-09T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7211970592",
+          "doi": "https://doi.org/10.1002/joom.70059",
+          "title": "Issue Information",
+          "display_name": "Issue Information",
+          "publication_year": 2026,
+          "publication_date": "2026-09-01",
+          "ids": {
+            "openalex": "https://openalex.org/W7211970592",
+            "doi": "https://doi.org/10.1002/joom.70059"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1002/joom.70059",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1002/joom.70059",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S142306484",
+              "display_name": "Journal of Operations Management",
+              "issn_l": "0272-6963",
+              "issn": [
+                "0272-6963",
+                "1873-1317"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "host_organization": "https://openalex.org/P4310320595",
+              "host_organization_name": "Wiley",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320595"
+              ],
+              "host_organization_lineage_names": [
+                "Wiley"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Operations Management",
+            "raw_type": "journal-article"
+          },
+          "type": "paratext",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [],
+          "institutions": [],
+          "countries_distinct_count": 0,
+          "institutions_distinct_count": 0,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [],
+          "apc_list": {
+            "value": 3520,
+            "currency": "USD",
+            "value_usd": 3520
+          },
+          "apc_paid": null,
+          "fwci": null,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": null,
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "72",
+            "issue": "6",
+            "first_page": "773",
+            "last_page": "775"
+          },
+          "is_retracted": false,
+          "is_paratext": true,
+          "is_xpac": false,
+          "primary_topic": null,
+          "topics": [],
+          "keywords": [],
+          "concepts": [],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1002/joom.70059",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1002/joom.70059",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S142306484",
+                "display_name": "Journal of Operations Management",
+                "issn_l": "0272-6963",
+                "issn": [
+                  "0272-6963",
+                  "1873-1317"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "host_organization": "https://openalex.org/P4310320595",
+                "host_organization_name": "Wiley",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320595"
+                ],
+                "host_organization_lineage_names": [
+                  "Wiley"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Operations Management",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "pdf": false,
+            "grobid_xml": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 0,
+          "referenced_works": [],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-09-09T07:26:56.047234",
+          "created_date": "2026-09-09T00:00:00"
+        }
+      ],
+      "group_by": []
+    }
+  ],
+  "rejected": [
+    {
+      "index": 2,
+      "code": "INVALID_RECORD",
+      "message": "期刊标识或论文必需字段校验失败"
+    }
+  ],
+  "warnings": []
+}
