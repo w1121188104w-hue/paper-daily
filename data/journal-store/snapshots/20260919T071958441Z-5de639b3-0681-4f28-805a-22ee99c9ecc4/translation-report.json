@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-fa5c057799396346133f0ad9707c9e923ab8f9e485dcbcd3503c253db21b20c5",
+  "stats": {
+    "completed_fields": 1,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1093/rfs/hhag025",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}

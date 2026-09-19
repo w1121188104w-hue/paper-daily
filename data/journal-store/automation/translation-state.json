@@ -27775,7 +27775,7 @@
       "batch_id": "batch-fa5c057799396346133f0ad9707c9e923ab8f9e485dcbcd3503c253db21b20c5",
       "mode": "daily",
       "created_at": "2026-09-19T07:19:12.751Z",
-      "finished_at": null,
+      "finished_at": "2026-09-19T07:20:03.402Z",
       "items": [
         {
           "id": "doi:10.1093/rfs/hhag025",
@@ -27789,10 +27789,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 451,
+            "completion_tokens": 11,
+            "total_tokens": 462
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
