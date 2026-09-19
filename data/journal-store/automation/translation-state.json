@@ -27769,6 +27769,32 @@
           ]
         }
       ]
+    },
+    {
+      "id": "775935e3-ed96-4b85-8c34-e2bf4e357006",
+      "batch_id": "batch-fa5c057799396346133f0ad9707c9e923ab8f9e485dcbcd3503c253db21b20c5",
+      "mode": "daily",
+      "created_at": "2026-09-19T07:19:12.751Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1093/rfs/hhag025",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "76fa4b063aee5ea71db7326b32674ee437d87ca904b0b4985cf3de4ca2de337e",
+              "task_id": "task:9c91007fbe3c1fef04ba472f298f849a1378f858ee086c2c77983356f2467979"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
