@@ -61,8 +61,23 @@ function renderStatus() {
   }
   const enrichment = data.enrichment;
   if ($('enrichmentStatus')) {
-    $('enrichmentStatus').textContent = enrichment?.latest ? `最近补全：${timeText(enrichment.latest.finished_at)}；本轮补入 ${enrichment.latest.stats.added} 篇，找到真实摘要 ${enrichment.latest.stats.abstracts_filled} 篇。库中仍有 ${enrichment.missing_abstracts} 条缺摘要，将按间隔重试。` : '官网核对与摘要补全尚未运行。';
+    $('enrichmentStatus').textContent = enrichment?.latest ? `最近补全：${timeText(enrichment.latest.finished_at)}；本轮补入 ${enrichment.latest.stats.added} 篇，找到真实摘要 ${enrichment.latest.stats.abstracts_filled} 篇。库中仍有 ${enrichment.missing_abstracts} 条缺摘要；不会因打开网页而启动搜索。` : '官网核对与摘要补全尚未运行。';
   }
+  renderWorkflow(data.collection_workflow);
+}
+
+function renderWorkflow(flow){
+  const target=$('workflowStatus');if(!target)return;target.replaceChildren();
+  if(!flow){target.append(node('p','本网站尚无正式任务清单。没有提醒不能当作没有更新。'));return;}
+  const stale=!flow.monitors.length||flow.monitors.some(m=>Date.now()-Date.parse(m.checked_at)>48*3600000);
+  target.append(node('p',flow.tasks.length?`有 ${flow.tasks.length} 个目录待检查。打开浏览器扩展 → 正式流程 → 日常增量采集。`:'目前没有未处理的新目录提醒；这不保证期刊没有更新。'));
+  if(stale)target.append(node('p','发现监测尚未运行或超过 48 小时未更新。当前不能依赖“没有提醒”判断；可手动全刊巡检。','notice'));
+  const failed=flow.monitors.filter(m=>['failed','partial','quota_exhausted'].includes(m.status));
+  if(failed.length)target.append(node('p',`有 ${failed.length} 项来源检查失败、不完整或额度不足，不代表没有新论文。`,'notice'));
+  for(const task of flow.tasks){const p=node('p',`${task.journal} · ${task.collection==='issue'?'卷期目录':'在线发表'} · ${task.confidence==='paper_detected'?'发现新论文线索':'疑似目录更新'} · `),a=node('a','查看官网目录');
+    try{const u=new URL(task.url);if(u.protocol==='https:'){a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';p.append(a);}}catch{}target.append(p);}
+  target.append(node('p',`待补论文 ${flow.pending_papers?.length||0} 篇；上次完成全刊目录巡检：${timeText(flow.full_audit_last_at)}。建议每周或每两周手动巡检一次；只重新读目录，不重复采集已完成详情。`,'meta'));
+  const latest=flow.receipts.at(-1);if(latest)target.append(node('p',`最近已发布批次：${timeText(latest.at)}；完成目录 ${latest.completed_catalogs} 个，未完成目录 ${latest.pending_catalogs} 个。`,'meta'));
 }
 
 function renderFilters({ syncQuery = true } = {}) {

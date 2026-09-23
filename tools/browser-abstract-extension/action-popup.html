@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>论文助手</title><link rel="stylesheet" href="style.css"></head>
+<body class="popup"><main><h2>论文采集助手</h2><p>目录、摘要和作者单位统一采集。自动打不开时，手动打开页面后点下方按钮。</p>
+<label for="task">本页是哪一种目录？</label><select id="task"></select>
+<p><a href="workflow.html" target="_blank"><strong>正式流程：日常增量 / 全刊巡检 / 发布</strong></a></p>
+<p><a href="catalog.html?mode=catalog-only" target="_blank"><strong>全部期刊目录测试（不采集摘要）</strong></a></p>
+<p><button id="read" disabled>读取本页并继续任务</button></p><p id="message" role="status"></p>
+<p><a href="catalog.html" target="_blank">打开统一采集面板</a></p><p><a href="dashboard.html?queue=catalog" target="_blank">继续详情补全</a></p><details><summary>旧版测试入口</summary><a href="dashboard.html" target="_blank">原 10 篇摘要测试（进度保留）</a></details><p><a href="review.html" target="_blank">原文 AI 核对</a></p>
+<script type="module" src="action-popup.js"></script></main></body></html>

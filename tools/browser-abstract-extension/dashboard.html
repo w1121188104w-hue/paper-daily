@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>论文摘要助手</title><link rel="stylesheet" href="style.css"></head>
+<body><main>
+<header><span class="tag">PAPER DAILY · 统一采集 0.11.4</span><h1>论文采集助手 · ② 详情补全</h1><p>目录 → 目录核对 → 详情摘要与作者单位 → 原文核对 → 统一导出。只保存页面原文，不生成缺失信息。JPE Just Accepted / 图片摘要已停用。</p><p><a href="catalog.html?mode=catalog-only">① 返回目录阶段（进度保留）</a> · <a href="review.html" target="_blank">配置与核对结果</a> · <a href="dashboard.html?queue=catalog-sample">原抽样详情</a></p></header>
+<section class="panel"><div id="status" role="status">正在恢复本地进度……</div><p id="sampling-info"></p><details><summary>各刊抽样覆盖</summary><p id="sampling-coverage"></p></details><p id="current"></p><p id="counts"></p>
+<div class="buttons"><button id="start" disabled>开始补摘要 / 继续</button><button id="pause" disabled>暂停</button><button id="skip" disabled>跳过当前篇</button><button id="retry" disabled>重试未成功项</button><button id="export" disabled>导出结果 JSON</button></div>
+<p><button id="recheck" disabled>重新读取本队列（保留旧结果）</button> <button id="jpe-ocr" disabled hidden>JPE 图片摘要已停用</button></p>
+<p><a id="supplement-link" href="dashboard.html?queue=catalog-supplement" hidden>专项补测：补足研究论文</a></p>
+<p><a id="manual-link" target="_blank" rel="noopener noreferrer" hidden>手动打开当前论文 ↗</a>；打开后点扩展图标 → “读取本页并继续任务”。</p>
+<p class="note">遇到验证：切到论文标签页手动完成，再回这里点击“开始补摘要 / 继续”。请保留本页；关闭本页会停止调度，再次打开可恢复。后台标签页被浏览器节流时运行可能较慢。</p></section>
+<section class="panel"><h2>采集后自动核对</h2><p id="ai-status" role="status">本轮采集结束后自动开始；请保留面板并启动本地核对服务。Key 只需配置一次。</p><button id="ai-run">继续待核对</button> <button id="ai-stop" disabled>本条结束后暂停核对</button><p class="note">只允许引用原文。单条临时失败不阻塞其他记录，同一证据最多3次；成功结果复用缓存。<a href="review.html" target="_blank">查看配置与逐条结果</a></p></section>
+<section><h2 id="queue-title">详情队列</h2><p class="note">作者与单位只在页面明确关联时配对；无法配对的单位单独保留，不猜测。原始记录与核对结果存本地，不改正式库。AI 核对会产生 DeepSeek API 费用。</p><div id="papers"></div></section>
+</main><script type="module" src="dashboard.js"></script></body></html>

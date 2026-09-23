@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "论文采集助手 · 目录与详情",
+  "version": "0.12.0",
+  "description": "正式增量与全刊巡检、原文核对、导入翻译发布。旧测试数据保留，密钥由本机服务保管。",
+  "permissions": ["storage", "scripting", "unlimitedStorage"],
+  "host_permissions": [
+    "https://doi.org/*",
+    "https://www.sciencedirect.com/*",
+    "https://link.springer.com/*",
+    "https://link.springernature.com/*",
+    "https://www.journals.uchicago.edu/*",
+    "https://onlinelibrary.wiley.com/*",
+    "https://academic.oup.com/*",
+    "https://publications.aaahq.org/*",
+    "https://www.aeaweb.org/*",
+    "https://pubsonline.informs.org/*",
+    "https://journals.sagepub.com/*",
+    "http://127.0.0.1/*"
+  ],
+  "action": { "default_title": "论文助手 · 读取本页或打开面板", "default_popup": "action-popup.html" },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'self' http://127.0.0.1:17327 http://127.0.0.1:17328" }
+}

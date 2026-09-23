@@ -1,4 +1,6 @@
 import fs from 'node:fs/promises';
+import path from 'node:path';
+import {readWorkflow,publicWorkflow} from './collectionWorkflow.js';
 import { DEFAULT_LIBRARY_ROOT, libraryPath, readJournalLibrary, readLibraryRef } from './journalLibrary.js';
 import { isIsoTime } from './libraryValidation.js';
 import { classifyPaper, CLASSIFICATION_VERSION } from './paperClassification.js';
@@ -150,5 +152,6 @@ export async function loadJournalPresentation(config, { root = DEFAULT_LIBRARY_R
     }
   }
   data.attempt_warning = await latestAttemptWarning(root, library);
+  data.collection_workflow=publicWorkflow(await readWorkflow(path.resolve(root,'../..')),{papers:library.papers});
   return data;
 }

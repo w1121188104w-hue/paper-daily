@@ -6,6 +6,7 @@ import { verdictOutput, canonicalEvidence } from '../../tools/browser-abstract-e
 import { CATALOG_TASKS, catalogUrl, articleUrl, titleKey } from '../../tools/browser-abstract-extension/catalog-core.js';
 import { disabledCatalogUrl, excludedJpeRecord } from '../../tools/browser-abstract-extension/collection-policy.js';
 import { detailOtherSource, catalogOtherSource } from '../../tools/browser-abstract-extension/article-type.js';
+import { applyAbstractAvailability } from '../../tools/browser-abstract-extension/abstract-availability.js';
 import { normalizeSourceRecord, normalizeDoi, cleanText } from './paperModel.js';
 import { knownJournalMismatch } from './journalIdentity.js';
 import { carTitlePrefix } from './carEnglish.js';
@@ -32,7 +33,7 @@ export async function readBrowserExport(file) {
     Array.isArray(data.catalog?.pages), '需要包含目录证据和详情核对结果的插件导出文件');
   return { data, sha256: hash(text) };
 }
-function verifiedPages(data) {
+export function verifiedPages(data) {
   return data.catalog.pages.filter(page => {
     const task = CATALOG_TASKS.find(t => t.id === page.task_id && t.journal === page.journal);
     if (!task || !catalogUrl(page.source_url, task) || disabledCatalogUrl(page.source_url) || !Array.isArray(page.items)) return false;
@@ -125,7 +126,7 @@ export async function prepareBrowserImport(data, config, inputHash = hash(JSON.s
       last_checked_at: capturedAt, url: job.input.source_url,
       type: typeEvidence ? 'other' : 'journal-article',
       raw_dates: { browser_import: { export_sha256: inputHash, request_sha256: job.hash, selected_fields: selected,
-        abstract_state: selected.abstract ? 'source_checked' : 'not_in_checked_source', scope: 'captured_details_only', type_evidence: typeEvidence } },
+        abstract_state: selected.abstract ? 'source_checked' : applyAbstractAvailability({...raw,abstract:null}).abstract_status === 'confirmed_absent' ? 'confirmed_absent' : 'not_in_checked_source', scope: 'captured_details_only', type_evidence: typeEvidence } },
       source_evidence: { url: job.input.source_url, scope_url: match.page.source_url, fetched_at: capturedAt,
         body_sha256: evidenceHash, method: 'browser_verified_source_spans' } });
     sources.push(source);
