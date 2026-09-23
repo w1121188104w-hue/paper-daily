@@ -185,8 +185,12 @@ export function automationSummary(library, state, now = new Date()) {
 /** Commit reservations remotely BEFORE paid calls, then commit accepted raw translations and receipts together.
  * A killed runner leaves reservations that prevent repeat billing on a new runner. No semantic editing occurs here. */
 export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_ROOT, mode = 'daily', apiKey,
-  publishCheckpoint, fetchImpl = fetch, now = () => new Date(), log = () => {} } = {}) {
+  publishCheckpoint, fetchImpl = fetch, now = () => new Date(), log = () => {}, maxRequests, paperIds } = {}) {
   assertLibrary(['daily', 'backfill'].includes(mode) && typeof publishCheckpoint === 'function', '自动翻译需要明确模式及持久保存步骤');
+  assertLibrary(maxRequests === undefined || Number.isInteger(maxRequests) && maxRequests > 0 && maxRequests <= 1000, '单次翻译请求上限无效');
+  assertLibrary(paperIds === undefined || Array.isArray(paperIds) && paperIds.every(id => typeof id === 'string'), '翻译论文范围无效');
+  const selectedIds = paperIds === undefined ? null : new Set(paperIds);
+  const scoped = value => selectedIds === null ? value : { ...value, papers: value.papers.filter(p => selectedIds.has(p.id)) };
   let library = await readJournalLibrary({ root, config }), state = await readTranslationState(root);
   const recovery = state.paused ? { recovered_fields: 0, committed: false }
     : await recoverHistoricalTranslations(config, { root, state, now });
@@ -194,12 +198,12 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
     await publishCheckpoint({ phase: 'settle' });
     library = await readJournalLibrary({ root, config });
   }
-  const initial = automationSummary(library, state, now());
+  const initial = automationSummary(scoped(library), state, now());
   if (state.paused || !initial.available_papers) return { ...initial, recovered_fields: recovery.recovered_fields,
     requested_this_run: 0, stop_reason: state.paused ? 'PAUSED' : 'NO_UNATTEMPTED_TASKS' };
   requireDeepSeekKey(apiKey);
   assertLibrary(!JSON.stringify(state).includes(apiKey), '状态文件不能包含密钥');
-  const started = now(), cap = mode === 'backfill' ? AUTOMATION_LIMITS.backfill_requests : AUTOMATION_LIMITS.daily_requests;
+  const started = now(), cap = Math.min(maxRequests ?? Infinity, mode === 'backfill' ? AUTOMATION_LIMITS.backfill_requests : AUTOMATION_LIMITS.daily_requests);
   const minutes = mode === 'backfill' ? AUTOMATION_LIMITS.backfill_minutes : AUTOMATION_LIMITS.daily_minutes;
   let requested = 0, failureStreak = 0, stopReason = 'QUEUE_FINISHED';
   while (requested < cap) {
@@ -208,7 +212,7 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
     if (state.paused) { stopReason = 'PAUSED'; break; }
     const remaining = mode === 'daily' ? Math.min(cap - requested, cap - dailyCount(state, dateInShanghai(now()))) : cap - requested;
     if (remaining <= 0) { stopReason = 'REQUEST_LIMIT'; break; }
-    const proposed = nextAutomationBatch(library, state, { limit: Math.min(10, remaining), now: now() });
+    const proposed = nextAutomationBatch(scoped(library), state, { limit: Math.min(10, remaining), now: now() });
     if (!proposed.items.length) break;
     assertLibrary(!JSON.stringify(proposed).includes(apiKey), '原文清单不能包含密钥');
     const batch = await keepBatch(root, proposed), reservedAt = now().toISOString();
@@ -274,6 +278,6 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
     if (stoppedCode) { stopReason = stoppedCode; break; }
   }
   if (requested >= cap) stopReason = 'REQUEST_LIMIT';
-  return { ...automationSummary(await readJournalLibrary({ root, config }), await readTranslationState(root), now()),
+  return { ...automationSummary(scoped(await readJournalLibrary({ root, config })), await readTranslationState(root), now()),
     recovered_fields: recovery.recovered_fields, requested_this_run: requested, stop_reason: stopReason };
 }

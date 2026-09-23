@@ -55,6 +55,16 @@ async function fixture(t, rows = [record(0)]) {
 const run = (root, options = {}) => runTranslationAutomation(config,
   { root, apiKey, mode: 'backfill', now, fetchImpl: async () => response(), publishCheckpoint: async () => {}, ...options });
 
+test('插件发布翻译限定本批论文和请求上限，不翻译库中其他待办', async t => {
+  const {root} = await fixture(t, [record(0),record(1)]); let calls=0;
+  const result=await run(root,{paperIds:['doi:10.1234/auto1'],maxRequests:1,fetchImpl:async()=>{calls++;return response();}});
+  assert.equal(calls,1); assert.equal(result.available_papers,0);
+  const papers=(await readJournalLibrary({root,config})).papers;
+  assert.equal(papers.find(p=>p.doi==='10.1234/auto0').title_zh,'');
+  assert.equal(papers.find(p=>p.doi==='10.1234/auto1').title_zh,zh.title_zh);
+  assert.equal((await run(root,{paperIds:[],fetchImpl:async()=>{throw Error('No selected papers');}})).requested_this_run,0);
+});
+
 test('自动翻译：分批原样保存机器译文，远端登记先于收费；重跑不重复调用', async (t) => {
   const { root } = await fixture(t, Array.from({ length: 14 }, (_, i) => record(i)));
   const before = await readJournalLibrary({ root, config });

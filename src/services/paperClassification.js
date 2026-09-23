@@ -45,6 +45,9 @@ export function classifySourceRecord(record, { includePrefixedBoards = true, inc
     return result('administrative', 'journal_prefixed_editorial_board');
   }
   const type = String(record.type || '').toLowerCase();
+  if (type === 'other' && record.source === 'publisher' && record.source_evidence?.method === 'browser_verified_source_spans') {
+    return result('other', 'browser_explicit_nonresearch_label');
+  }
   if (type === 'retraction') return result('possible_retraction', 'source_notice_type');
   if (['erratum', 'correction'].includes(type)) return result('possible_correction', 'source_notice_type');
   if (includeOther && /^(?:nobel lecture|presidential address)(?:\s|$)/.test(normalized)) {
