@@ -78,7 +78,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
     assertLibrary(['awaiting_publication','published'].includes(r.phase),'尚未提交发布');
     if(await checkPublication(id,r.export_hash,r.publication_id)){r.phase='published';r.message='网站已读取到本次发布回执；目录未完成项及缺失论文仍保留。'+(r.pending_translation_fields?` 仍有 ${r.pending_translation_fields} 个中文字段待处理，可继续翻译，无需重新采集。`:'');await store(r);}
     return {phase:r.phase};});}
-  return {status,start,submit,finish,check,sync:()=>exclusive(sync)};
+  return {status,start,submit,finish,check,run:async id=>({run:(await load(id)).run}),sync:()=>exclusive(sync)};
 }
 
 /** Fixed-origin loopback bridge. No credential, filesystem path, command or
@@ -95,11 +95,11 @@ export function collectionHttpServer(coordinator,{extensionId,port=17328}){
     if(req.headers['x-paper-workflow']!=='1'){reply(403,{message:'请求校验失败'});req.resume();return;}
     try {
       if(req.method==='GET'&&req.url==='/status'){reply(200,await coordinator.status());return;}
-      assertLibrary(req.method==='POST'&&['/start','/submit','/finish','/sync','/check-publication'].includes(req.url),'请求不支持');
+      assertLibrary(req.method==='POST'&&['/start','/run','/submit','/finish','/sync','/check-publication'].includes(req.url),'请求不支持');
       assertLibrary(req.headers['content-type']==='application/json','请求格式不支持');
       const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;assertLibrary(size<=(req.url==='/submit'?150*1024*1024:16384),'请求过大');chunks.push(chunk);}
       const body=JSON.parse(Buffer.concat(chunks).toString('utf8'));
-      const result=req.url==='/start'?await coordinator.start(body.mode):req.url==='/submit'?await coordinator.submit(body.id,body.data):
+      const result=req.url==='/run'?await coordinator.run(body.id):req.url==='/start'?await coordinator.start(body.mode):req.url==='/submit'?await coordinator.submit(body.id,body.data):
         req.url==='/finish'?await coordinator.finish(body.id):req.url==='/check-publication'?await coordinator.check(body.id):await coordinator.sync();
       reply(200,result||{ok:true});
     }catch{reply(409,{message:'正式流程未完成请求；保留原有数据。请确认没有其他任务运行、任务 ID 正确且 Git 同步可用。'});}

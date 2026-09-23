@@ -10,7 +10,8 @@ export async function workflowRequest(endpoint,body){
   const result=await response.json();if(!response.ok)throw Error(result.message||'正式流程服务未完成请求');return result;
 }
 export async function storedRun(id){
-  const run=(await chrome.storage.local.get(runKey(id)))[runKey(id)];
+  let run=(await chrome.storage.local.get(runKey(id)))[runKey(id)];
+  if(!run){run=(await workflowRequest('/run',{id})).run;await saveRun(run);}
   if(run?.id!==id||!Array.isArray(run.jobs)||run.jobs.some(j=>{const t=ACTIVE_CATALOG_TASKS.find(t=>t.id===j.catalog_id);return !t||catalogUrl(j.url,t)!==j.url;}))throw Error('正式任务清单缺失或无效；请回到正式流程入口');return run;
 }
 export function incrementalPapers(papers,run,now=Date.now()){
@@ -22,7 +23,8 @@ export function incrementalPapers(papers,run,now=Date.now()){
 }
 export async function saveRun(run){
   await chrome.storage.local.setAccessLevel({accessLevel:'TRUSTED_CONTEXTS'});
-  await chrome.storage.local.set({[runKey(run.id)]:run,[catalogKey(run.id)]:{schema_version:1,mode:'paused',reason:'正式任务已建立；不会清除网站提醒。',cursor:0,
+  const existing=(await chrome.storage.local.get(catalogKey(run.id)))[catalogKey(run.id)];
+  await chrome.storage.local.set({[runKey(run.id)]:run,...(!existing?{[catalogKey(run.id)]:{schema_version:1,mode:'paused',reason:'正式任务已建立；不会清除网站提醒。',cursor:0,
     run_started_at:run.created_at,scope_task_ids:[...new Set(run.jobs.map(j=>j.catalog_id))],
-    queue:run.jobs.map(j=>({task_id:j.catalog_id,url:j.url,depth:0})),pages:[],history:[]}});
+    queue:run.jobs.map(j=>({task_id:j.catalog_id,url:j.url,depth:0})),pages:[],history:[]}}:{})});
 }
