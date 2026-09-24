@@ -16,9 +16,13 @@ export function directedQuery(journal,catalogs,mode){
   const task=catalogs.find(t=>t.collection===mode);
   assertLibrary(!!task,'Missing catalog target');
   const url=new URL(task.url);
-  const scope=url.hostname+url.pathname;
-  const query=`site:${scope} ${mode==='issue'?'latest issue':'latest articles'}`;
-  return query.length<=70?query:`site:${url.hostname} "${journal.name}"`.slice(0,70);
+  // The adapter turns a trailing host-only site operator into the provider's
+  // domain filter. A path-prefixed operator is not reliably honored by Pro.
+  const suffix=` site:${url.hostname.replace(/^www\./,'')}`;
+  const name=journal.name.replace(/^The /,'');
+  const intent=mode==='issue'?' current issue':' early view';
+  const room=70-suffix.length;
+  return (name+intent).slice(0,room)+suffix;
 }
 export async function runDiscoveryProbe({env=process.env,local=false,now=new Date(),configLoader=loadJournalConfig,libraryLoader=readJournalLibrary,
   sourceFactory=makeSearchSources,ledgerFactory=makeSearchBudgetGitHub,save=async()=>{},log=console.log}={}){
@@ -40,7 +44,7 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
     assertLibrary(o.provider==='zhipu'&&!seen.has(o.taskId+'|'+o.provider)&&seen.size<6,'Probe cap reached');seen.add(o.taskId+'|'+o.provider);
     const result=await budget.run(o);
     report.requests.push({provider:o.provider,query:o.query,task_id:o.taskId,called:result.called,reason:result.reason||null,
-      diagnostic:result.diagnostic||null,leads:(result.result?.leads||[]).map(l=>({title:l.title,url:l.url,snippet:l.snippet.slice(0,1000)}))});
+      diagnostic:result.diagnostic||null,leads:(result.result?.leads||[]).map(l=>({title:l.title,url:l.url,snippet:l.snippet}))});
     await checkpoint();return result;
   };
   async function checkpoint(){
