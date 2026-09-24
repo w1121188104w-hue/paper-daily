@@ -6,7 +6,7 @@ import {readJournalLibrary} from '../src/services/journalLibrary.js';
 import {emptyWorkflow} from '../src/services/collectionWorkflow.js';
 import {discoverCollectionTasks} from '../src/services/collectionDiscovery.js';
 import {makeSearchSources} from '../src/services/searchSources.js';
-import {makeBudgetedSearch,searchAllowance} from '../src/services/searchBudget.js';
+import {makeDiscoveryTestBudget} from '../src/services/discoveryTestBudget.js';
 import {makeSearchBudgetGitHub} from '../src/services/searchBudgetGitHub.js';
 import {assertLibrary} from '../src/services/libraryValidation.js';
 
@@ -18,14 +18,16 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
   assertLibrary(typeof env.ZHIPU_DISCOVERY_API_KEY==='string'&&env.ZHIPU_DISCOVERY_API_KEY.length>=8,'Missing discovery-only search credential');
   const config=await configLoader(),library=await libraryLoader({config});
   const sources=sourceFactory({zhipuKey:env.ZHIPU_DISCOVERY_API_KEY,serpapiKey:'',zhipuEngine:'search_pro',timeoutMs:25000});
-  const ledger=ledgerFactory({token:env.GITHUB_TOKEN,repositoryName:'w1121188104w-hue/paper-daily'});
-  const budget=makeBudgetedSearch({initialState:await ledger.read(),persist:s=>ledger.persist(s),request:o=>sources.request(o)});
+  const ledger=ledgerFactory({token:env.GITHUB_TOKEN,repositoryName:'w1121188104w-hue/paper-daily',scope:'discovery-test-20260924'});
+  const initialState=await ledger.read({initialize:true});
+  if(!initialState.requests.length)await ledger.persist(initialState);
+  const budget=makeDiscoveryTestBudget({initialState,persist:s=>ledger.persist(s),request:o=>sources.request(o)});
   const report={version:1,at:now.toISOString(),mode:'live_search_only',structured_sources:'intentionally_not_run',
     journals:PROBE_JOURNALS,requests:[],lead_assessments:[],tasks:[],papers_changed:0,translation_calls:0,website_deployed:false};
   const seen=new Set();
   const search=async o=>{
     assertLibrary(o.provider==='zhipu'&&!seen.has(o.taskId+'|'+o.provider)&&seen.size<6,'Probe cap reached');seen.add(o.taskId+'|'+o.provider);
-    const result=await budget.run({...o,zhipuMonthlyLimit:2000});
+    const result=await budget.run(o);
     report.requests.push({provider:o.provider,query:o.query,task_id:o.taskId,called:result.called,reason:result.reason||null,
       diagnostic:result.diagnostic||null,leads:(result.result?.leads||[]).map(l=>({title:l.title,url:l.url,snippet:l.snippet.slice(0,1000)}))});
     await checkpoint();return result;
@@ -39,7 +41,7 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
     now,collect:async()=>({source_results:[]}),search,searchProviders:['zhipu'],onLead:async a=>{report.lead_assessments.push(a);await checkpoint();}});
   report.tasks=state.tasks;report.search_monitors=state.monitors.filter(m=>m.source==='search');
   report.actual_search_calls=report.requests.filter(r=>r.called).length;
-  report.zhipu_allowance=searchAllowance(budget.state(),{provider:'zhipu',zhipuMonthlyLimit:2000});
+  report.test_allowance=budget.allowance();
   await checkpoint();log(JSON.stringify({actual_search_calls:report.actual_search_calls,proposed_catalog_tasks:report.tasks.length,papers_changed:0}));
   return report;
 }

@@ -8,8 +8,11 @@ const repository = 'w1121188104w-hue/paper-daily';
 // Separate ledger branch: reservation commits cannot make the production data push stale.
 // Contents SHA is a compare-and-swap: competing/stale writers fail before billing.
 // No retries for uncertain writes, no forced ref updates, no secret/error-body logging.
-export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetch, timeoutMs = 20000 }) {
+export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetch, timeoutMs = 20000, scope='production' }) {
   assertLibrary(repositoryName === repository && typeof token === 'string' && token.length >= 8, '搜索记账仓库或认证无效');
+  assertLibrary(['production','discovery-test-20260924'].includes(scope),'Unknown budget scope');
+  const ledgerBranch=scope==='production'?SEARCH_LEDGER_BRANCH:'codex/discovery-test-20260924';
+  const ledgerPath=scope==='production'?SEARCH_LEDGER_PATH:'data/discovery-test-budget-20260924.json';
   let fileSha = null, initialized = false;
   async function api(endpoint, method = 'GET', body) {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -32,21 +35,21 @@ export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetc
     } catch { const error = new Error('SEARCH_LEDGER_CHECKPOINT_FAILED'); error.code = 'SEARCH_LEDGER_CHECKPOINT_FAILED'; throw error; }
     finally { clearTimeout(timer); }
   }
-  const contentEndpoint = `contents/${SEARCH_LEDGER_PATH}`;
+  const contentEndpoint = `contents/${ledgerPath}`;
   return {
     async read({ initialize = false } = {}) {
-      let branch = await api(`git/ref/heads/${SEARCH_LEDGER_BRANCH}`);
+      let branch = await api(`git/ref/heads/${ledgerBranch}`);
       let createdHere = false;
       if (!branch && initialize) {
         const repo = await api('');
         assertLibrary(repo?.default_branch === 'master', '默认分支变更，停止建立搜索账本');
         const base = await api('git/ref/heads/master');
         assertLibrary(/^[a-f0-9]{40}$/.test(base?.object?.sha), '搜索账本起始版本无效');
-        branch = await api('git/refs', 'POST', { ref: `refs/heads/${SEARCH_LEDGER_BRANCH}`, sha: base.object.sha });
+        branch = await api('git/refs', 'POST', { ref: `refs/heads/${ledgerBranch}`, sha: base.object.sha });
         createdHere = true;
       }
       assertLibrary(branch, '搜索账本分支不存在');
-      const file = await api(`${contentEndpoint}?ref=${encodeURIComponent(SEARCH_LEDGER_BRANCH)}`);
+      const file = await api(`${contentEndpoint}?ref=${encodeURIComponent(ledgerBranch)}`);
       if (!file) { assertLibrary(createdHere, '搜索账本缺失，不能当作零用量'); fileSha = null; initialized = true; return emptySearchBudget(); }
       assertLibrary(/^[a-f0-9]{40}$/.test(file.sha), '搜索账本内容无效');
       let blob = file;
@@ -67,7 +70,7 @@ export function makeSearchBudgetGitHub({ token, repositoryName, fetchImpl = fetc
     },
     async persist(state) {
       assertLibrary(initialized, '必须先读取搜索账本'); validateSearchBudget(state);
-      const result = await api(contentEndpoint, 'PUT', { branch: SEARCH_LEDGER_BRANCH,
+      const result = await api(contentEndpoint, 'PUT', { branch: ledgerBranch,
         message: 'data: checkpoint search usage without credentials',
         content: Buffer.from(`${JSON.stringify(state)}\n`, 'utf8').toString('base64'), ...(fileSha ? { sha: fileSha } : {}) });
       assertLibrary(/^[a-f0-9]{40}$/.test(result?.content?.sha), '搜索记账写入未确认'); fileSha = result.content.sha;
