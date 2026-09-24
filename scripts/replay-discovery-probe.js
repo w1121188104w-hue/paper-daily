@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {assessDiscoveryLead} from '../src/services/discoveryLead.js';
+import {assessDiscoveryLead,issueRank} from '../src/services/discoveryLead.js';
 import {ACTIVE_CATALOG_TASKS,cleanDoi} from '../tools/browser-abstract-extension/catalog-core.js';
 import {emptyWorkflow} from '../src/services/collectionWorkflow.js';
 export function replayDiscoveryProbe(catalog,report){
@@ -12,10 +12,11 @@ for(const page of catalog.pages){
  if(!task||!page.items?.length)continue;
  if(task.collection==='issue'){
   const text=[page.issue_heading,page.page_title,...page.items.slice(0,1).map(i=>i.evidence?.text)].join(' ');
-  let m=text.match(/Volume\s+(\d+)[,\s]+(?:Issue|Number)\s+(\d+)/i);
+  let m=text.match(/Vol(?:ume)?\.?\s+(\d+)[,\s]+(?:Issue|Number|No\.?)\s+(\d+)/i);
   // AAA places the verified issue numbers in its article route.
   if(!m&&task.journal==='TAR')m=page.items[0].url?.match(/\/article\/(\d+)\/(\d+)\//);
-  if(m)baselines.push({catalog_id:task.id,rank:[+m[1],+m[2]],source_url:page.source_url});
+  const rank=m?[+m[1],+m[2]]:issueRank(page.source_url,task);
+  if(rank)baselines.push({catalog_id:task.id,rank,source_url:page.source_url});
  }
  for(const item of page.items)papers.push({journal_key:page.journal,title_original:item.title,url:item.url,
   doi:cleanDoi(item.doi||item.evidence?.text?.match(/10\.\d{4,9}\/[^\s]+?(?=Research|Erratum|Review|Editorial|\s|$)/)?.[0])});

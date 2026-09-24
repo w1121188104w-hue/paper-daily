@@ -18,7 +18,7 @@ export function issueRank(value,task){
   const safe=catalogUrl(value,task);if(!safe)return null;
   const p=new URL(safe).pathname;let m;
   if((m=p.match(/\/volumes-and-issues\/(\d+)-(\d+)(?:-\d+)?\/?$/)))return [+m[1],+m[2]];
-  if((m=p.match(/\/vol\/(\d+)(?:\/issue\/(\d+))?\/?$/)))return [+m[1],+(m[2]||0)];
+  if((m=p.match(/\/vol\/(\d+)(?:\/issue\/(\d+)|\/suppl\/C)?\/?$/)))return [+m[1],+(m[2]||0)];
   if((m=p.match(/\/toc\/[^/]+\/(?:\d{4}\/)?(\d+)\/(\d+)\/?$/))&&+m[1]>0)return [+m[1],+m[2]];
   if((m=p.match(/\/issue\/(\d+)\/(\d+)\/?$/)))return [+m[1],+m[2]];
   return null;
@@ -32,7 +32,7 @@ export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baseline
   }
   const exact=catalogs.find(t=>catalogUrl(lead.url,t)===catalogUrl(t.url,t));
   let textRank=null;
-  const issueSurface=exact?.collection==='issue'?exact:catalogs.find(t=>t.collection==='issue'&&
+  const issueSurface=exact?.collection==='issue'?exact:catalogs.find(t=>t.collection==='issue'&&t.family==='aea'&&catalogUrl(lead.url,t))||catalogs.find(t=>t.collection==='issue'&&
     url.origin===new URL(t.url).origin&&url.pathname===new URL(t.url).pathname.replace(/\/issue\/?$/,'')&&
     titleKey(lead.title).includes(titleKey(journal.name)));
   if(issueSurface){
@@ -43,7 +43,7 @@ export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baseline
   if(exact&&!textRank)return {reason:exact.collection==='online'?'online_directory_without_change_evidence':'generic_directory_without_change_evidence',collection:exact.collection};
   const issue=textRank?issueSurface:catalogs.find(t=>t.collection==='issue'&&issueRank(lead.url,t));
   if(issue){
-    const rank=textRank||issueRank(lead.url,issue),baselines=verifiedBaselines.filter(b=>b.catalog_id===issue.id&&Array.isArray(b.rank)&&b.rank.length===2&&b.rank.every(n=>Number.isInteger(n)&&n>0)).map(b=>b.rank);
+    const rank=textRank||issueRank(lead.url,issue),baselines=verifiedBaselines.filter(b=>b.catalog_id===issue.id&&Array.isArray(b.rank)&&b.rank.length===2&&b.rank.every(Number.isInteger)&&b.rank[0]>0&&b.rank[1]>=0).map(b=>b.rank);
     for(const t of state.tasks.filter(t=>t.catalog_id===issue.id&&t.status==='processed'))baselines.push(issueRank(t.url,issue));
     for(const p of papers.filter(p=>p.journal_key===journal.key))for(const m of p.catalog_memberships||[])
       if(m.task_id===issue.id)baselines.push(issueRank(m.catalog_url,issue));
@@ -55,7 +55,7 @@ export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baseline
   // Non-concrete catalog pages are not article evidence.
   if(catalogs.some(t=>catalogUrl(lead.url,t)))return {reason:'unresolved_catalog_route'};
   let decoded;try{decoded=decodeURIComponent(decodeURIComponent(lead.url));}catch{return {reason:'invalid_encoding'};}
-  const doi=cleanDoi(decoded.match(/10\.\d{4,9}\/(?:qje\/)?[^/?#\s]+/i)?.[0]);
+  const doi=cleanDoi(taskDoiFromUrl(url,decoded));
   const task=catalogs.find(t=>t.collection==='online'&&articleUrl(lead.url,t)&&titleKey(lead.snippet||'').includes(titleKey(journal.name)));
   if(!task)return {reason:'not_verified_journal_article'};
   const journalDoi={JAR:/^10\.1111\/(?:j\.)?1475-679x\./,JM:/^10\.1177\/01492063/,MS:/^10\.1287\/mnsc\./,RP:/^10\.1016\/j\.respol\./,
@@ -71,4 +71,8 @@ export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baseline
   const age=now.getTime()-published;
   if(age< -86400000||age>60*86400000)return {reason:'old_or_future_article'};
   return {reason:'new_article_candidate',task,doi,catalog_url:task.url};
+}
+function taskDoiFromUrl(url,decoded){
+  if(url.hostname==='www.aeaweb.org'&&url.pathname==='/articles')return url.searchParams.get('id');
+  return decoded.match(/10\.\d{4,9}\/(?:(?:qje|restud|rfs)\/)?[^/?#&\s]+/i)?.[0];
 }

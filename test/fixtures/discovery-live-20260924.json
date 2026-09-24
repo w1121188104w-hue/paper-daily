@@ -1,0 +1,13 @@
+{
+  "description": "Minimal live positive evidence; not a production catalog or paper library.",
+  "baseline_source": "user export paper-catalog-trial-2026-09-21 (4).json",
+  "provider_run": "https://github.com/w1121188104w-hue/paper-daily/actions/runs/35956037407",
+  "official_checked_at": "2026-09-24",
+  "journal": {"key": "JF", "name": "The Journal of Finance", "enabled": true},
+  "baseline": {"catalog_id": "catalog-jf-issue", "rank": [81, 4]},
+  "lead": {
+    "url": "https://onlinelibrary.wiley.com/toc/15406261/current",
+    "title": "The Journal of Finance: Volume 81, Issue 5",
+    "snippet": "October 2026"
+  }
+}

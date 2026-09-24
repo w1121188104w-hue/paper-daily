@@ -23,7 +23,11 @@ export function directedQuery(journal,catalogs,mode,now=new Date()){
   const task=catalogs.find(t=>t.collection===collection);
   assertLibrary(!!task,'Missing catalog target');
   const url=new URL(task.url);
-  if(mode.startsWith('url_'))return task.url.slice(0,70);
+  if(mode.startsWith('url_')){
+    const query=task.url.replace(/^https:\/\//,'');
+    assertLibrary(query.length<=70,'Catalog URL exceeds Pro query limit; do not truncate the path');
+    return query;
+  }
   // The adapter turns a trailing host-only site operator into the provider's
   // domain filter. A path-prefixed operator is not reliably honored by Pro.
   const suffix=` site:${url.hostname.replace(/^www\./,'')}`;

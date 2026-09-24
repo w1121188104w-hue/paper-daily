@@ -11,6 +11,13 @@ test('directed queries use the target publisher and remain within Pro length lim
   assert.ok(query.includes(catalogs[0].name.replace(/^The /,'').slice(0,20)));
  }
 });
+test('URL probes retain complete paths or reject overlong queries',()=>{
+ const catalogs=ACTIVE_CATALOG_TASKS.filter(t=>t.journal==='TAR');
+ const query=directedQuery({key:'TAR',name:catalogs[0].name},catalogs,'url_online');
+ assert.equal(query,'publications.aaahq.org/accounting-review/publish-ahead-of-print');
+ assert.throws(()=>directedQuery({key:'TAR'},[{collection:'online',url:'https://example.com/'+ 'a'.repeat(80)}],'url_online'),/do not truncate/);
+});
+
 test('manual probe is bounded, uses Pro, checkpoints quota, never imports or translates',async()=>{
   let calls=0,checkpoints=0,saved;
   const report=await runDiscoveryProbe({env:{GITHUB_ACTIONS:'true',GITHUB_EVENT_NAME:'workflow_dispatch',GITHUB_REPOSITORY:'w1121188104w-hue/paper-daily',ZHIPU_DISCOVERY_API_KEY:'dummy-key-for-test'},
