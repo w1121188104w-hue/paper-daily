@@ -8,7 +8,7 @@ import {assessDiscoveryLead} from './discoveryLead.js';
 // Discovery never calls a translator or writes a fabricated paper/abstract.
 // search() MUST be a durably budgeted adapter. It is optional and disabled by default.
 export async function discoverCollectionTasks(config, state, papers, {now=new Date(), collect=collectJournals,
-  search=null, searchProviders=['zhipu','serpapi_scholar','serpapi_google'], queryBuilder=null, onLead=async()=>{}, sourceOptions={}, onJournal=async()=>{}}={}) {
+  search=null, searchProviders=['zhipu','serpapi_scholar','serpapi_google'], queryBuilder=null, baselines=[], onLead=async()=>{}, sourceOptions={}, onJournal=async()=>{}}={}) {
   let next=structuredClone(validateWorkflow(state));
   const at=now.toISOString(),{fromDate,toDate}=collectionWindow({now,lookbackDays:60});
   const known=p=>papers.some(x=>x.journal_key===p.journal_key&&((x.doi&&x.doi===p.doi)||(!p.doi&&titleKey(x.title_original)===titleKey(p.title))));
@@ -41,11 +41,11 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
         if(!response.result){failed=true;continue;}
         const leads=response.result?.leads||[];
         for(const lead of leads){
-          const assessment=assessDiscoveryLead(lead,{journal,catalogs,papers,state:next,now});
+          const assessment=assessDiscoveryLead(lead,{journal,catalogs,papers,state:next,now,baselines});
           await onLead({journal:journal.key,provider,url:lead.url,reason:assessment.reason,collection:assessment.task?.collection||assessment.collection||null});
           if(!assessment.task)continue;
           next=addDiscoverySignals(next,[{catalog_id:assessment.task.id,source:provider,title:lead.title,doi:assessment.doi,
-            source_url:lead.url,catalog_url:assessment.catalog_url}],{now});usable=true;
+            source_url:lead.url,catalog_url:assessment.catalog_url,change_key:assessment.rank?.join(':')||''}],{now});usable=true;
         }
         if(usable)break;
       }

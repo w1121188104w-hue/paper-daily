@@ -2,6 +2,10 @@ name: Discovery Pro verification v2 (six calls, isolated key)
 on:
   workflow_dispatch:
     inputs:
+      journal_group:
+        type: choice
+        default: pilot
+        options: [pilot, second, third]
       query_mode:
         type: choice
         default: general
@@ -37,6 +41,7 @@ jobs:
       - name: Six Pro queries only; no SerpAPI, translation, import or publishing
         env:
           PROBE_QUERY_MODE: ${{ inputs.query_mode }}
+          PROBE_GROUP: ${{ inputs.journal_group }}
           ZHIPU_DISCOVERY_API_KEY: ${{ secrets.ZHIPU_DISCOVERY_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/discovery-search-probe.js --run

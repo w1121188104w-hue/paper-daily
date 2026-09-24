@@ -11,6 +11,7 @@ import { classifyPaper } from './paperClassification.js';
 import { verifiedPages } from './browserImport.js';
 import { excludedJpePaper } from '../../tools/browser-abstract-extension/collection-policy.js';
 import { writeWorkflowJson } from './workflowStorage.js';
+import { discoveryCatalogEvidenceUrl } from './discoveryLead.js';
 
 export const WORKFLOW_PATH = 'data/collection-workflow/state.json';
 const sha = x => createHash('sha256').update(JSON.stringify(x)).digest('hex');
@@ -59,7 +60,7 @@ export function addDiscoverySignals(input, observations, { now = new Date() } = 
     const catalog = taskFor(o.catalog_id); if(!catalog) continue;
     const url = catalogUrl(o.catalog_url || catalog.url,catalog);
     if(!url || typeof o.title !== 'string' || !o.title.trim() || o.title.length > 1500) continue;
-    const doi = cleanDoi(o.doi), sourceUrl = o.source_url && (catalogUrl(o.source_url,catalog) || articleUrl(o.source_url,catalog));
+    const doi = cleanDoi(o.doi), sourceUrl = o.source_url && (catalogUrl(o.source_url,catalog) || articleUrl(o.source_url,catalog) || discoveryCatalogEvidenceUrl(o.source_url,catalog));
     if(!['crossref','openalex','semanticscholar'].includes(o.source) && !sourceUrl) continue;
     const signal = { key:sha([doi || sourceUrl,doi?'':titleKey(o.title),o.change_key || '']), source:o.source,
       title:o.title, doi, source_url:sourceUrl || null, discovered_at:at,

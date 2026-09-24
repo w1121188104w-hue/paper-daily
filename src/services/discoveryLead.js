@@ -1,5 +1,17 @@
 import {catalogUrl,articleUrl,titleKey,cleanDoi} from '../../tools/browser-abstract-extension/catalog-core.js';
 
+export function discoveryCatalogEvidenceUrl(value,task){
+  try{
+    const u=new URL(value),expected=new URL(task.url);
+    if(u.protocol!=='https:'||u.username||u.password||u.port||u.origin!==expected.origin)return null;
+    if(task.journal==='JM'&&/^\/toc\/JOM\//.test(u.pathname)){
+      const alias=new URL(u);alias.pathname=alias.pathname.replace('/toc/JOM/','/toc/joma/');
+      if(!catalogUrl(alias.href,task))return null;
+    }else if(!/\/issue\/?$/.test(expected.pathname)||u.pathname!==expected.pathname.replace(/\/issue\/?$/,''))return null;
+    u.search='';u.hash='';return u.href;
+  }catch{return null;}
+}
+
 // Compare only within a journal's allowlisted catalog route, never URL digits
 // belonging to another publisher or an article ID.
 export function issueRank(value,task){
@@ -46,7 +58,10 @@ export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baseline
   const doi=cleanDoi(decoded.match(/10\.\d{4,9}\/(?:qje\/)?[^/?#\s]+/i)?.[0]);
   const task=catalogs.find(t=>t.collection==='online'&&articleUrl(lead.url,t)&&titleKey(lead.snippet||'').includes(titleKey(journal.name)));
   if(!task)return {reason:'not_verified_journal_article'};
-  const journalDoi={JAR:/^10\.1111\/1475-679x\./,JM:/^10\.1177\/01492063/,MS:/^10\.1287\/mnsc\./,RP:/^10\.1016\/j\.respol\./};
+  const journalDoi={JAR:/^10\.1111\/(?:j\.)?1475-679x\./,JM:/^10\.1177\/01492063/,MS:/^10\.1287\/mnsc\./,RP:/^10\.1016\/j\.respol\./,
+    JF:/^10\.1111\/jofi\./,CAR:/^10\.1111\/1911-3846\./,JOM:/^10\.1002\/joom\./,
+    AOS:/^10\.1016\/j\.aos\./,JAE:/^10\.1016\/j\.jacceco\./,JFE:/^10\.1016\/j\.jfineco\./,JCF:/^10\.1016\/j\.jcorpfin\./,
+    RAS:/^10\.1007\/s11142-/,JIBS:/^10\.1057\/s41267-/};
   // A reference to the target journal in another journal's bibliography is not identity.
   if(journalDoi[journal.key]&&!journalDoi[journal.key].test(doi||''))return {reason:'article_identity_unconfirmed'};
   if(papers.some(p=>p.journal_key===journal.key&&((doi&&cleanDoi(p.doi)===doi)||p.url===lead.url||titleKey(p.title_original)===titleKey(lead.title))))return {reason:'known_article'};
