@@ -1,0 +1,39 @@
+name: Manual discovery search verification (six journals, no publication)
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: read
+concurrency:
+  group: discovery-search-probe
+  cancel-in-progress: false
+jobs:
+  probe:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts
+      - run: node --test test/discovery-search-probe.test.js test/collection-workflow.test.js
+      - name: Six-journal search using existing secrets and durable quota ledger
+        env:
+          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/discovery-search-probe.js --run
+      - name: Keep search evidence only, never publisher captures or keys
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: discovery-search-probe
+          path: ${{ runner.temp }}/discovery-search-probe/report.json
+          retention-days: 7
+          if-no-files-found: warn
