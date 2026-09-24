@@ -1,7 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {runDiscoveryProbe,PROBE_JOURNALS} from '../scripts/discovery-search-probe.js';
+import {runDiscoveryProbe,PROBE_JOURNALS,directedQuery} from '../scripts/discovery-search-probe.js';
+import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-core.js';
 import {emptySearchBudget} from '../src/services/searchBudget.js';
+test('directed queries use the target publisher and remain within Pro length limit',()=>{
+ for(const key of PROBE_JOURNALS)for(const mode of ['issue','online']){
+  const catalogs=ACTIVE_CATALOG_TASKS.filter(t=>t.journal===key);
+  const query=directedQuery({key,name:catalogs[0].name},catalogs,mode);
+  assert.ok(query.startsWith('site:'));assert.ok(query.length<=70);
+ }
+});
 test('manual probe is bounded, uses Pro, checkpoints quota, never imports or translates',async()=>{
   let calls=0,checkpoints=0,saved;
   const report=await runDiscoveryProbe({env:{GITHUB_ACTIONS:'true',GITHUB_EVENT_NAME:'workflow_dispatch',GITHUB_REPOSITORY:'w1121188104w-hue/paper-daily',ZHIPU_DISCOVERY_API_KEY:'dummy-key-for-test'},

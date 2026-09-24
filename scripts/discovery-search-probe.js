@@ -11,11 +11,22 @@ import {makeSearchBudgetGitHub} from '../src/services/searchBudgetGitHub.js';
 import {assertLibrary} from '../src/services/libraryValidation.js';
 
 export const PROBE_JOURNALS=['RP','JAR','QJE','MS','TAR','JM'];
+export function directedQuery(journal,catalogs,mode){
+  assertLibrary(['issue','online'].includes(mode),'Unsupported directed query');
+  const task=catalogs.find(t=>t.collection===mode);
+  assertLibrary(!!task,'Missing catalog target');
+  const url=new URL(task.url);
+  const scope=url.hostname+url.pathname;
+  const query=`site:${scope} ${mode==='issue'?'latest issue':'latest articles'}`;
+  return query.length<=70?query:`site:${url.hostname} "${journal.name}"`.slice(0,70);
+}
 export async function runDiscoveryProbe({env=process.env,local=false,now=new Date(),configLoader=loadJournalConfig,libraryLoader=readJournalLibrary,
   sourceFactory=makeSearchSources,ledgerFactory=makeSearchBudgetGitHub,save=async()=>{},log=console.log}={}){
   assertLibrary(local?env.PAPER_DISCOVERY_LOCAL_TEST==='1'&&!!env.LOCALAPPDATA:
     env.GITHUB_ACTIONS==='true'&&env.GITHUB_EVENT_NAME==='workflow_dispatch'&&env.GITHUB_REPOSITORY==='w1121188104w-hue/paper-daily','Explicit manual test only');
   assertLibrary(typeof env.ZHIPU_DISCOVERY_API_KEY==='string'&&env.ZHIPU_DISCOVERY_API_KEY.length>=8,'Missing discovery-only search credential');
+  const queryMode=env.PROBE_QUERY_MODE||'general';
+  assertLibrary(['general','issue','online'].includes(queryMode),'Invalid query mode');
   const config=await configLoader(),library=await libraryLoader({config});
   const sources=sourceFactory({zhipuKey:env.ZHIPU_DISCOVERY_API_KEY,serpapiKey:'',zhipuEngine:'search_pro',timeoutMs:25000});
   const ledger=ledgerFactory({token:env.GITHUB_TOKEN,repositoryName:'w1121188104w-hue/paper-daily',scope:'discovery-test-20260924'});
@@ -23,7 +34,7 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
   if(!initialState.requests.length)await ledger.persist(initialState);
   const budget=makeDiscoveryTestBudget({initialState,persist:s=>ledger.persist(s),request:o=>sources.request(o)});
   const report={version:1,at:now.toISOString(),mode:'live_search_only',structured_sources:'intentionally_not_run',
-    journals:PROBE_JOURNALS,requests:[],lead_assessments:[],tasks:[],papers_changed:0,translation_calls:0,website_deployed:false};
+    query_mode:queryMode,journals:PROBE_JOURNALS,requests:[],lead_assessments:[],tasks:[],papers_changed:0,translation_calls:0,website_deployed:false};
   const seen=new Set();
   const search=async o=>{
     assertLibrary(o.provider==='zhipu'&&!seen.has(o.taskId+'|'+o.provider)&&seen.size<6,'Probe cap reached');seen.add(o.taskId+'|'+o.provider);
@@ -38,7 +49,7 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
     await save(report);
   }
   const state=await discoverCollectionTasks({...config,journals:config.journals.filter(j=>PROBE_JOURNALS.includes(j.key))},emptyWorkflow(),library.papers,{
-    now,collect:async()=>({source_results:[]}),search,searchProviders:['zhipu'],onLead:async a=>{report.lead_assessments.push(a);await checkpoint();}});
+    now,collect:async()=>({source_results:[]}),search,searchProviders:['zhipu'],queryBuilder:queryMode==='general'?null:(j,c)=>directedQuery(j,c,queryMode),onLead:async a=>{report.lead_assessments.push(a);await checkpoint();}});
   report.tasks=state.tasks;report.search_monitors=state.monitors.filter(m=>m.source==='search');
   report.actual_search_calls=report.requests.filter(r=>r.called).length;
   report.test_allowance=budget.allowance();

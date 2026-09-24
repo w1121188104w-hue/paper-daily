@@ -8,7 +8,7 @@ import {assessDiscoveryLead} from './discoveryLead.js';
 // Discovery never calls a translator or writes a fabricated paper/abstract.
 // search() MUST be a durably budgeted adapter. It is optional and disabled by default.
 export async function discoverCollectionTasks(config, state, papers, {now=new Date(), collect=collectJournals,
-  search=null, searchProviders=['zhipu','serpapi_scholar','serpapi_google'], onLead=async()=>{}, sourceOptions={}, onJournal=async()=>{}}={}) {
+  search=null, searchProviders=['zhipu','serpapi_scholar','serpapi_google'], queryBuilder=null, onLead=async()=>{}, sourceOptions={}, onJournal=async()=>{}}={}) {
   let next=structuredClone(validateWorkflow(state));
   const at=now.toISOString(),{fromDate,toDate}=collectionWindow({now,lookbackDays:60});
   const known=p=>papers.some(x=>x.journal_key===p.journal_key&&((x.doi&&x.doi===p.doi)||(!p.doi&&titleKey(x.title_original)===titleKey(p.title))));
@@ -34,7 +34,7 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
       let usable=false, failed=false, quota=false;
       for(const provider of searchProviders) {
         // One catalog-discovery query per provider per journal, NOT per missing abstract.
-        const query=`${journal.name} ${toDate.slice(0,7)} latest issue online first`.slice(0,provider==='zhipu'?70:500);
+        const query=(queryBuilder?queryBuilder(journal,catalogs):`${journal.name} ${toDate.slice(0,7)} latest issue online first`).slice(0,provider==='zhipu'?70:500);
         let response;try {response=await search({provider,query,taskId:`catalog-watch:${journal.key}:${toDate}`});}
         catch {failed=true;continue;}
         if(!response.called){quota ||= /quota|limit|budget/.test(response.reason||'');continue;}
