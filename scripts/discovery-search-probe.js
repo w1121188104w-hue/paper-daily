@@ -11,13 +11,14 @@ import {makeSearchBudgetGitHub} from '../src/services/searchBudgetGitHub.js';
 import {assertLibrary} from '../src/services/libraryValidation.js';
 
 export const PROBE_JOURNALS=['RP','JAR','QJE','MS','TAR','JM'];
-export async function runDiscoveryProbe({env=process.env,now=new Date(),configLoader=loadJournalConfig,libraryLoader=readJournalLibrary,
+export async function runDiscoveryProbe({env=process.env,local=false,now=new Date(),configLoader=loadJournalConfig,libraryLoader=readJournalLibrary,
   sourceFactory=makeSearchSources,ledgerFactory=makeSearchBudgetGitHub,save=async()=>{},log=console.log}={}){
-  assertLibrary(env.GITHUB_ACTIONS==='true'&&env.GITHUB_EVENT_NAME==='workflow_dispatch'&&env.GITHUB_REPOSITORY==='w1121188104w-hue/paper-daily','Manual fixed-repository test only');
+  assertLibrary(local?env.PAPER_DISCOVERY_LOCAL_TEST==='1'&&!!env.LOCALAPPDATA:
+    env.GITHUB_ACTIONS==='true'&&env.GITHUB_EVENT_NAME==='workflow_dispatch'&&env.GITHUB_REPOSITORY==='w1121188104w-hue/paper-daily','Explicit manual test only');
   assertLibrary(typeof env.ZHIPU_API_KEY==='string'&&env.ZHIPU_API_KEY.length>=8,'Missing search credential');
   const config=await configLoader(),library=await libraryLoader({config});
   const sources=sourceFactory({zhipuKey:env.ZHIPU_API_KEY,serpapiKey:env.SERPAPI_API_KEY||'',zhipuEngine:'search_pro',timeoutMs:25000});
-  const ledger=ledgerFactory({token:env.GITHUB_TOKEN,repositoryName:env.GITHUB_REPOSITORY});
+  const ledger=ledgerFactory({token:env.GITHUB_TOKEN,repositoryName:'w1121188104w-hue/paper-daily'});
   const budget=makeBudgetedSearch({initialState:await ledger.read(),persist:s=>ledger.persist(s),request:o=>sources.request(o)});
   const report={version:1,at:now.toISOString(),mode:'live_search_only',structured_sources:'intentionally_not_run',
     journals:PROBE_JOURNALS,requests:[],tasks:[],papers_changed:0,translation_calls:0,website_deployed:false};
@@ -26,7 +27,8 @@ export async function runDiscoveryProbe({env=process.env,now=new Date(),configLo
     assertLibrary(!seen.has(o.taskId+'|'+o.provider)&&seen.size<18,'Probe cap reached');seen.add(o.taskId+'|'+o.provider);
     let account=null,result;
     if(o.provider.startsWith('serpapi_')){
-      try{account=await sources.account();}catch{result={called:false,reason:'free_account_unverified'};}
+      if(local)result={called:false,reason:'local_probe_zhipu_only'};
+      else try{account=await sources.account();}catch{result={called:false,reason:'free_account_unverified'};}
     }
     if(!result)result=await budget.run({...o,zhipuMonthlyLimit:2000,account});
     report.requests.push({provider:o.provider,query:o.query,task_id:o.taskId,called:result.called,reason:result.reason||null,
@@ -47,8 +49,9 @@ export async function runDiscoveryProbe({env=process.env,now=new Date(),configLo
   return report;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){
-  if(process.argv.slice(2).join(' ')!=='--run')throw Error('Explicit --run required');
-  const file=path.join(process.env.RUNNER_TEMP||'.','discovery-search-probe','report.json');
-  runDiscoveryProbe({save:async report=>{await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,JSON.stringify(report,null,2));}})
+  const option=process.argv.slice(2).join(' ');if(!['--run','--run-local'].includes(option))throw Error('Explicit run mode required');
+  const local=option==='--run-local';
+  const file=local?path.join(process.env.LOCALAPPDATA||'.','PaperDailySearchProbe','report.json'):path.join(process.env.RUNNER_TEMP||'.','discovery-search-probe','report.json');
+  runDiscoveryProbe({local,save:async report=>{await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,JSON.stringify(report,null,2));}})
     .catch(()=>{console.error('DISCOVERY_PROBE_INCOMPLETE: no credentials or provider error body printed.');process.exitCode=1;});
 }

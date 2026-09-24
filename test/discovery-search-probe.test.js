@@ -15,3 +15,13 @@ test('manual probe is bounded, uses Pro, checkpoints quota, never imports or tra
 test('probe refuses accidental local or scheduled invocation before credential use',async()=>{
   await assert.rejects(runDiscoveryProbe({env:{},sourceFactory:()=>{throw Error('must not execute');}}));
 });
+test('explicit local probe is Pro-only; failed ledger blocks every paid request',async()=>{
+  let requests=0;
+  const base={local:true,env:{PAPER_DISCOVERY_LOCAL_TEST:'1',LOCALAPPDATA:'local-test',ZHIPU_API_KEY:'dummy-local-key'},
+    configLoader:async()=>({journals:PROBE_JOURNALS.map(key=>({key,name:'Journal '+key,enabled:true}))}),libraryLoader:async()=>({papers:[]}),
+    sourceFactory:()=>({account:async()=>{throw Error('must not check SerpAPI');},request:async o=>{assert.equal(o.provider,'zhipu');requests++;return {charged:1,leads:[]};}}),log:()=>{}};
+  await assert.rejects(runDiscoveryProbe({...base,ledgerFactory:()=>({read:async()=>{throw Error('ledger unavailable');}})}));
+  assert.equal(requests,0);
+  const report=await runDiscoveryProbe({...base,ledgerFactory:()=>({read:async()=>emptySearchBudget(),persist:async()=>{}})});
+  assert.equal(requests,6);assert.equal(report.requests.filter(r=>r.reason==='local_probe_zhipu_only').length,12);
+});
