@@ -137,7 +137,7 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
       // Do not log or persist data: /account.json includes the private API key.
       return safeSerpAccount(await readAccount(), now().toISOString());
     },
-    async request({ provider, query, extraction, article, reader }) {
+    async request({ provider, query, extraction, article, reader, searchDomainFilter='', searchRecencyFilter='noLimit' }) {
       fail(typeof query === 'string' && query.trim() && query.length <= 2000, 'INVALID_SEARCH_QUERY');
       let data;
       if (reader) {
@@ -187,12 +187,15 @@ export function makeSearchSources({ zhipuKey = '', serpapiKey = '', zhipuEngine 
       }
       if (provider === 'zhipu') {
         fail(credential(zhipuKey), 'MISSING_ZHIPU_KEY'); fail([...query].length <= 70, 'SEARCH_QUERY_TOO_LONG');
+        fail(!searchDomainFilter||/^[a-z0-9.-]+\.[a-z]{2,}$/.test(searchDomainFilter),'INVALID_SEARCH_DOMAIN');
+        fail(['oneDay','oneWeek','oneMonth','oneYear','noLimit'].includes(searchRecencyFilter),'INVALID_SEARCH_RECENCY');
         const site = /\s+site:([a-z0-9.-]+\.[a-z]{2,})$/i.exec(query);
+        const domain=searchDomainFilter||site?.[1];
         data = await json('https://open.bigmodel.cn/api/paas/v4/web_search', { method: 'POST',
           headers: { Authorization: `Bearer ${zhipuKey}`, 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ search_engine: zhipuEngine, search_query: site ? query.slice(0, site.index).trim() : query,
-            ...(site ? { search_domain_filter: site[1] } : {}), search_intent: false,
-            count: 10, search_recency_filter: 'noLimit', content_size: 'high' }) }, provider);
+            ...(domain ? { search_domain_filter: domain } : {}), search_intent: false,
+            count: 10, search_recency_filter: searchRecencyFilter, content_size: 'high' }) }, provider);
       } else {
         fail(['serpapi_scholar', 'serpapi_google'].includes(provider), 'INVALID_SEARCH_PROVIDER');
         fail(credential(serpapiKey), 'MISSING_SERPAPI_KEY');

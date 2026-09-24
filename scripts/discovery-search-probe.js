@@ -9,11 +9,13 @@ import {makeSearchSources} from '../src/services/searchSources.js';
 import {makeDiscoveryTestBudget} from '../src/services/discoveryTestBudget.js';
 import {makeSearchBudgetGitHub} from '../src/services/searchBudgetGitHub.js';
 import {assertLibrary} from '../src/services/libraryValidation.js';
+import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-core.js';
 
 export const PROBE_JOURNALS=['RP','JAR','QJE','MS','TAR','JM'];
 export const PROBE_GROUPS={pilot:PROBE_JOURNALS,second:['AOS','JAE','CAR','RAS','AER','RES'],third:['JF','JFE','RFS','JCF','JIBS','JOM']};
+export const PROBE_MODES=['general','issue','online','year_issue','year_online','url_issue','url_online','issn','native_issue','native_online','recent_issue','recent_online'];
 export function directedQuery(journal,catalogs,mode,now=new Date()){
-  assertLibrary(['issue','online','year_issue','year_online','url_issue','url_online','issn'].includes(mode),'Unsupported directed query');
+  assertLibrary(PROBE_MODES.includes(mode)&&mode!=='general','Unsupported directed query');
   const collection=mode.includes('online')?'online':'issue';
   const task=catalogs.find(t=>t.collection===collection);
   assertLibrary(!!task,'Missing catalog target');
@@ -24,6 +26,7 @@ export function directedQuery(journal,catalogs,mode,now=new Date()){
   const suffix=` site:${url.hostname.replace(/^www\./,'')}`;
   const name=journal.name.replace(/^The /,'');
   const online={RP:'in press',TAR:'Early Access',QJE:'Advance Articles',MS:'Articles in Advance',JM:'OnlineFirst',JAR:'Early View'};
+  if(/^(native|recent)_/.test(mode))return `${name} ${now.getUTCFullYear()} ${collection==='issue'?'latest issue':online[journal.key]||task.label}`.slice(0,70);
   if(mode==='issn')return `${task.issns[0]} ${now.getUTCFullYear()} latest articles${suffix}`;
   const intent=(mode.startsWith('year_')?' '+now.getUTCFullYear():'')+(collection==='issue'?' issue':' '+(online[journal.key]||'online first'));
   const room=70-suffix.length;
@@ -38,7 +41,7 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
   const queryMode=env.PROBE_QUERY_MODE||'general',group=env.PROBE_GROUP||'pilot';
   assertLibrary(Object.hasOwn(PROBE_GROUPS,group),'Invalid journal group');
   const journalKeys=PROBE_GROUPS[group];
-  assertLibrary(['general','issue','online','year_issue','year_online','url_issue','url_online','issn'].includes(queryMode),'Invalid query mode');
+  assertLibrary(PROBE_MODES.includes(queryMode),'Invalid query mode');
   const config=await configLoader(),library=await libraryLoader({config});
   const sources=sourceFactory({zhipuKey:env.ZHIPU_DISCOVERY_API_KEY,serpapiKey:'',zhipuEngine:'search_pro',timeoutMs:25000});
   const ledger=ledgerFactory({token:env.GITHUB_TOKEN,repositoryName:'w1121188104w-hue/paper-daily',scope:'discovery-test-20260924'});
@@ -50,9 +53,11 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
   const seen=new Set();
   const search=async o=>{
     assertLibrary(o.provider==='zhipu'&&!seen.has(o.taskId+'|'+o.provider)&&seen.size<6,'Probe cap reached');seen.add(o.taskId+'|'+o.provider);
-    const result=await budget.run(o);
+    const task=ACTIVE_CATALOG_TASKS.find(t=>t.journal===o.taskId.split(':')[1]);
+    const filters=/^(native|recent)_/.test(queryMode)?{searchDomainFilter:new URL(task.url).hostname,searchRecencyFilter:queryMode.startsWith('recent_')?'oneMonth':'noLimit'}:{};
+    const result=await budget.run({...o,...filters});
     report.requests.push({provider:o.provider,query:o.query,task_id:o.taskId,called:result.called,reason:result.reason||null,
-      diagnostic:result.diagnostic||null,leads:(result.result?.leads||[]).map(l=>({title:l.title,url:l.url,snippet:l.snippet}))});
+      filters,diagnostic:result.diagnostic||null,leads:(result.result?.leads||[]).map(l=>({title:l.title,url:l.url,snippet:l.snippet}))});
     await checkpoint();return result;
   };
   async function checkpoint(){
