@@ -1,13 +1,14 @@
 import { collectJournals } from './collectJournals.js';
-import { ACTIVE_CATALOG_TASKS, catalogUrl, articleUrl, titleKey, cleanDoi } from '../../tools/browser-abstract-extension/catalog-core.js';
+import { ACTIVE_CATALOG_TASKS, titleKey } from '../../tools/browser-abstract-extension/catalog-core.js';
 import { addDiscoverySignals, validateWorkflow } from './collectionWorkflow.js';
 import { knownJournalMismatch } from './journalIdentity.js';
 import {collectionWindow} from './journalRun.js';
+import {assessDiscoveryLead} from './discoveryLead.js';
 
 // Discovery never calls a translator or writes a fabricated paper/abstract.
 // search() MUST be a durably budgeted adapter. It is optional and disabled by default.
 export async function discoverCollectionTasks(config, state, papers, {now=new Date(), collect=collectJournals,
-  search=null, sourceOptions={}, onJournal=async()=>{}}={}) {
+  search=null, searchProviders=['zhipu','serpapi_scholar','serpapi_google'], onLead=async()=>{}, sourceOptions={}, onJournal=async()=>{}}={}) {
   let next=structuredClone(validateWorkflow(state));
   const at=now.toISOString(),{fromDate,toDate}=collectionWindow({now,lookbackDays:60});
   const known=p=>papers.some(x=>x.journal_key===p.journal_key&&((x.doi&&x.doi===p.doi)||(!p.doi&&titleKey(x.title_original)===titleKey(p.title))));
@@ -31,7 +32,7 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
     if(!search)monitor(journal.key,'search','disabled');
     else {
       let usable=false, failed=false, quota=false;
-      for(const provider of ['zhipu','serpapi_scholar','serpapi_google']) {
+      for(const provider of searchProviders) {
         // One catalog-discovery query per provider per journal, NOT per missing abstract.
         const query=`${journal.name} ${toDate.slice(0,7)} latest issue online first`.slice(0,provider==='zhipu'?70:500);
         let response;try {response=await search({provider,query,taskId:`catalog-watch:${journal.key}:${toDate}`});}
@@ -40,16 +41,11 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
         if(!response.result){failed=true;continue;}
         const leads=response.result?.leads||[];
         for(const lead of leads){
-          const t=catalogs.find(t=>catalogUrl(lead.url,t));
-          // A dated volume/issue URL is positive evidence; an unchanged generic
-          // "current" search result is NOT a new issue signal.
-          const concrete=t && catalogUrl(lead.url,t)!==catalogUrl(t.url,t) && /\/(?:vol|issue|toc)\//.test(new URL(lead.url).pathname);
-          const doi=cleanDoi(decodeURI(lead.url).match(/10\.\d{4,9}\/[^?#\s]+/i)?.[0]);
-          const articleTask=!t&&catalogs.find(c=>articleUrl(lead.url,c)&&titleKey(lead.snippet||'').includes(titleKey(journal.name)));
-          if(!concrete&&!articleTask)continue;
-          if(articleTask&&known({journal_key:journal.key,doi,title:lead.title}))continue;
-          next=addDiscoverySignals(next,[{catalog_id:(t||articleTask).id,source:provider,title:lead.title,doi,
-            source_url:lead.url,catalog_url:concrete?lead.url:articleTask.url}],{now});usable=true;
+          const assessment=assessDiscoveryLead(lead,{journal,catalogs,papers,state:next});
+          await onLead({journal:journal.key,provider,url:lead.url,reason:assessment.reason,collection:assessment.task?.collection||assessment.collection||null});
+          if(!assessment.task)continue;
+          next=addDiscoverySignals(next,[{catalog_id:assessment.task.id,source:provider,title:lead.title,doi:assessment.doi,
+            source_url:lead.url,catalog_url:assessment.catalog_url}],{now});usable=true;
         }
         if(usable)break;
       }

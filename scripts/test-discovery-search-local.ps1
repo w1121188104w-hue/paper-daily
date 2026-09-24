@@ -7,7 +7,7 @@ try {
   $secret=Read-Host 'Paste Zhipu API key here (hidden, not saved)' -AsSecureString
   if ($secret.Length -lt 8) {throw 'INVALID_KEY'}
   $ptr=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
-  try {$env:ZHIPU_API_KEY=[Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)}
+  try {$env:ZHIPU_DISCOVERY_API_KEY=[Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)}
   finally {[Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr);$secret.Dispose()}
   $credentialLines=@("protocol=https`nhost=github.com`n`n" | git -c credential.interactive=never credential fill)
   if ($LASTEXITCODE -ne 0) {throw 'LOGIN_UNAVAILABLE'}
@@ -24,6 +24,6 @@ try {
 } catch {Write-Host 'TEST NOT COMPLETE. No key or remote error body printed. Do not repeatedly retry uncertain paid requests.'}
 finally {
   $credentialLines=$null;$secretLine=$null
-  Remove-Item Env:ZHIPU_API_KEY,Env:GITHUB_TOKEN,Env:PAPER_DISCOVERY_LOCAL_TEST -ErrorAction SilentlyContinue
+  Remove-Item Env:ZHIPU_DISCOVERY_API_KEY,Env:GITHUB_TOKEN,Env:PAPER_DISCOVERY_LOCAL_TEST -ErrorAction SilentlyContinue
   Read-Host 'Press Enter to close'
 }

@@ -1,0 +1,39 @@
+name: Discovery Pro verification v2 (six calls, isolated key)
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: read
+concurrency:
+  group: discovery-probe-v2
+  cancel-in-progress: false
+jobs:
+  probe:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      # Public repository: no token or credential is used to fetch source.
+      # No external Actions, so the old queued checkout remains disallowed.
+      - name: Fetch this exact public commit without credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin https://github.com/w1121188104w-hue/paper-daily.git
+          git -c credential.helper= fetch --depth=1 origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --version
+          node -e "if (Number(process.versions.node.split('.')[0]) < 20) process.exit(1)"
+      - run: npm ci --ignore-scripts
+      - run: node --test test/discovery-search-probe.test.js test/discovery-lead.test.js test/collection-workflow.test.js
+      - name: Six Pro queries only; no SerpAPI, translation, import or publishing
+        env:
+          ZHIPU_DISCOVERY_API_KEY: ${{ secrets.ZHIPU_DISCOVERY_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/discovery-search-probe.js --run
+      - name: Print the credential-checked report for retrieval
+        if: always()
+        run: node --input-type=module -e 'import fs from "node:fs";import path from "node:path";const p=path.join(process.env.RUNNER_TEMP,"discovery-search-probe/report.json");if(fs.existsSync(p))console.log("PROBE_REPORT_JSON "+JSON.stringify(JSON.parse(fs.readFileSync(p,"utf8"))));else console.log("PROBE_REPORT_NOT_CREATED");'

@@ -1,4 +1,4 @@
-name: Manual discovery search verification (six journals, no publication)
+name: Retired discovery search probe (disabled)
 on:
   workflow_dispatch: {}
 permissions:
@@ -8,7 +8,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   probe:
-    if: github.ref == 'refs/heads/master'
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -22,11 +22,9 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - run: npm ci --ignore-scripts
-      - run: node --test test/discovery-search-probe.test.js test/collection-workflow.test.js
+      - run: node --test test/discovery-search-probe.test.js test/discovery-lead.test.js test/collection-workflow.test.js
       - name: Six-journal search using existing secrets and durable quota ledger
         env:
-          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
-          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/discovery-search-probe.js --run
       - name: Keep search evidence only, never publisher captures or keys
