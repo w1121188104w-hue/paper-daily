@@ -13,9 +13,12 @@ import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-
 
 export const PROBE_JOURNALS=['RP','JAR','QJE','MS','TAR','JM'];
 export const PROBE_GROUPS={pilot:PROBE_JOURNALS,second:['AOS','JAE','CAR','RAS','AER','RES'],third:['JF','JFE','RFS','JCF','JIBS','JOM']};
-export const PROBE_MODES=['general','issue','online','year_issue','year_online','url_issue','url_online','issn','native_issue','native_online','recent_issue','recent_online'];
+export const PROBE_MODES=['general','issue','online','year_issue','year_online','url_issue','url_online','issn','native_issue','native_online','recent_issue','recent_online','doi_control'];
+// Positive controls from the user's 2026-09-21 catalog export; NOT discovery queries.
+export const DOI_CONTROLS={RP:'10.1016/j.respol.2026.105603',JAR:'10.1111/1475-679x.70085',QJE:'10.1093/qje/qjag047',MS:'10.1287/mnsc.2023.00580',TAR:'10.2308/tar-2024-0518',JM:'10.1177/01492063261480612'};
 export function directedQuery(journal,catalogs,mode,now=new Date()){
   assertLibrary(PROBE_MODES.includes(mode)&&mode!=='general','Unsupported directed query');
+  if(mode==='doi_control'){assertLibrary(!!DOI_CONTROLS[journal.key],'No positive control for journal');return DOI_CONTROLS[journal.key];}
   const collection=mode.includes('online')?'online':'issue';
   const task=catalogs.find(t=>t.collection===collection);
   assertLibrary(!!task,'Missing catalog target');
@@ -42,6 +45,7 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
   assertLibrary(Object.hasOwn(PROBE_GROUPS,group),'Invalid journal group');
   const journalKeys=PROBE_GROUPS[group];
   assertLibrary(PROBE_MODES.includes(queryMode),'Invalid query mode');
+  assertLibrary(queryMode!=='doi_control'||group==='pilot','Controls limited to pilot journals');
   const config=await configLoader(),library=await libraryLoader({config});
   const sources=sourceFactory({zhipuKey:env.ZHIPU_DISCOVERY_API_KEY,serpapiKey:'',zhipuEngine:'search_pro',timeoutMs:25000});
   const ledger=ledgerFactory({token:env.GITHUB_TOKEN,repositoryName:'w1121188104w-hue/paper-daily',scope:'discovery-test-20260924'});
@@ -49,7 +53,7 @@ export async function runDiscoveryProbe({env=process.env,local=false,now=new Dat
   if(!initialState.requests.length)await ledger.persist(initialState);
   const budget=makeDiscoveryTestBudget({initialState,persist:s=>ledger.persist(s),request:o=>sources.request(o)});
   const report={version:1,at:now.toISOString(),mode:'live_search_only',structured_sources:'intentionally_not_run',
-    query_mode:queryMode,journal_group:group,journals:journalKeys,requests:[],lead_assessments:[],tasks:[],papers_changed:0,translation_calls:0,website_deployed:false};
+    query_mode:queryMode,positive_control_only:queryMode==='doi_control',journal_group:group,journals:journalKeys,requests:[],lead_assessments:[],tasks:[],papers_changed:0,translation_calls:0,website_deployed:false};
   const seen=new Set();
   const search=async o=>{
     assertLibrary(o.provider==='zhipu'&&!seen.has(o.taskId+'|'+o.provider)&&seen.size<6,'Probe cap reached');seen.add(o.taskId+'|'+o.provider);

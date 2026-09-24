@@ -49,7 +49,9 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
         }
         if(usable)break;
       }
-      monitor(journal.key,'search',usable?'ok':quota?'quota_exhausted':failed?'failed':'ok');
+      // A successful HTTP response with no verified signal is incomplete coverage,
+      // not proof that this journal has no update.
+      monitor(journal.key,'search',usable?'ok':quota?'quota_exhausted':failed?'failed':'partial');
     }
     next.updated_at=at;validateWorkflow(next);await onJournal(next);
   }

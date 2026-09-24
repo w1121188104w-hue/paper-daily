@@ -19,6 +19,16 @@ test('搜索诊断区分接口、来源过滤和页面错误，禁止输出任�
 const at = '2026-09-12T01:00:00.000Z';
 const response = data => new Response(JSON.stringify(data));
 const lead = { title: 'Published research paper', link: 'https://www.aeaweb.org/articles?id=10.1257/example', content: 'This is a search snippet, not an original abstract.' };
+test('native filters preserve complete query and validate before network calls',async()=>{
+ let payload,calls=0;
+ const api=makeSearchSources({zhipuKey:'dummy-search-key',fetchImpl:async(url,init)=>{calls++;payload=JSON.parse(init.body);return response({search_result:[]});}});
+ const query='Journal of Accounting Research 2026 Early View';
+ await api.request({provider:'zhipu',query,searchDomainFilter:'onlinelibrary.wiley.com',searchRecencyFilter:'oneMonth'});
+ assert.equal(payload.search_query,query);assert.equal(payload.search_domain_filter,'onlinelibrary.wiley.com');assert.equal(payload.search_recency_filter,'oneMonth');
+ await assert.rejects(api.request({provider:'zhipu',query,searchDomainFilter:'https://example.com/path'}));
+ await assert.rejects(api.request({provider:'zhipu',query,searchRecencyFilter:'unbounded'}));
+ assert.equal(calls,1);
+});
 
 test('搜索来源：智谱固定官方接口，不调用聊天模型，只有显式传入密钥才请求', async () => {
   let request, calls = 0;

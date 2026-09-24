@@ -9,7 +9,7 @@ on:
       query_mode:
         type: choice
         default: general
-        options: [general, issue, online, year_issue, year_online, url_issue, url_online, issn, native_issue, native_online, recent_issue, recent_online]
+        options: [general, issue, online, year_issue, year_online, url_issue, url_online, issn, native_issue, native_online, recent_issue, recent_online, doi_control]
 permissions:
   contents: read
 concurrency:

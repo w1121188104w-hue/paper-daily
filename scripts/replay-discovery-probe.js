@@ -1,12 +1,11 @@
 // Read-only offline replay: no API calls, credentials or production writes.
 import fs from 'node:fs';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {assessDiscoveryLead} from '../src/services/discoveryLead.js';
 import {ACTIVE_CATALOG_TASKS,cleanDoi} from '../tools/browser-abstract-extension/catalog-core.js';
 import {emptyWorkflow} from '../src/services/collectionWorkflow.js';
-const [catalogFile,reportFile]=process.argv.slice(2);
-if(!catalogFile||!reportFile)throw Error('Usage: replay-discovery-probe.js catalog-export.json probe-report.json');
-const catalog=JSON.parse(fs.readFileSync(catalogFile,'utf8'));
-const report=JSON.parse(fs.readFileSync(reportFile,'utf8'));
+export function replayDiscoveryProbe(catalog,report){
 const baselines=[],papers=[];
 for(const page of catalog.pages){
  const task=ACTIVE_CATALOG_TASKS.find(t=>t.id===page.task_id);
@@ -30,4 +29,10 @@ const rows=report.requests.map(request=>{
   signals:assessments.filter(x=>x.task).map(({task,...a})=>({...a,catalog_id:task.id})),
   issue_evidence:assessments.filter(x=>x.rank).map(({task,...a})=>a)};
 });
-console.log(JSON.stringify({allowance:report.test_allowance,baseline_issues:baselines,rows},null,2));
+return {allowance:report.test_allowance,baseline_issues:baselines,rows};
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){
+ const [catalogFile,reportFile]=process.argv.slice(2);
+ if(!catalogFile||!reportFile)throw Error('Usage: replay-discovery-probe.js catalog-export.json probe-report.json');
+ console.log(JSON.stringify(replayDiscoveryProbe(JSON.parse(fs.readFileSync(catalogFile,'utf8')),JSON.parse(fs.readFileSync(reportFile,'utf8'))),null,2));
+}

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {assessDiscoveryLead,issueRank} from '../src/services/discoveryLead.js';
 import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-core.js';
 import {emptyWorkflow} from '../src/services/collectionWorkflow.js';
+import {discoverCollectionTasks} from '../src/services/collectionDiscovery.js';
 function assess(key,url,baseline){
  const catalogs=ACTIVE_CATALOG_TASKS.filter(t=>t.journal===key),issue=catalogs.find(t=>t.collection==='issue');
  return assessDiscoveryLead({url,title:'Example',snippet:''},{journal:{key,name:issue.name},catalogs,state:emptyWorkflow(),papers:baseline?[{journal_key:key,catalog_memberships:[{task_id:issue.id,catalog_url:baseline}]}]:[]});
@@ -51,4 +52,17 @@ test('bibliography journal mentions and old articles cannot trigger new paper re
 test('missing dates and incomplete identities remain unconfirmed, not new',()=>{
  const c=context('MS');
  assert.equal(assessDiscoveryLead({url:'https://pubsonline.informs.org/doi/abs/10.1287/mnsc.32.5.622',title:'Old article',snippet:'Management Science'},c).reason,'article_recency_unconfirmed');
+});
+test('real catalog shapes produce scoped reminders and empty search is partial coverage',async()=>{
+ const config={journals:[{key:'JM',name:'Journal of Management',enabled:true},{key:'TAR',name:'The Accounting Review',enabled:true}]};
+ const leads={JM:{url:'https://journals.sagepub.com/toc/JOM/current',title:'Journal of Management - Volume 52, Number 7',snippet:''},
+ TAR:{url:'https://publications.aaahq.org/accounting-review',title:'The Accounting Review',snippet:'Current Issue Volume 101, Issue 5 September 2026'}};
+ const options={now:new Date('2026-09-24T00:00:00Z'),collect:async()=>({source_results:[]}),searchProviders:['zhipu'],
+ baselines:[{catalog_id:'catalog-jm-issue',rank:[52,6]},{catalog_id:'catalog-tar-issue',rank:[101,4]}],
+ search:async o=>({called:true,result:{leads:[leads[o.taskId.split(':')[1]]]}})};
+ const s=await discoverCollectionTasks(config,emptyWorkflow(),[],options);
+ assert.equal(s.tasks.length,2);assert.ok(s.tasks.every(t=>t.collection==='issue'&&t.status==='pending'));
+ const repeated=await discoverCollectionTasks(config,s,[],options);assert.ok(repeated.tasks.every(t=>t.signals.length===1));
+ const empty=await discoverCollectionTasks(config,emptyWorkflow(),[],{...options,search:async()=>({called:true,result:{leads:[]}})});
+ assert.ok(empty.monitors.filter(m=>m.source==='search').every(m=>m.status==='partial'));assert.equal(empty.tasks.length,0);
 });
