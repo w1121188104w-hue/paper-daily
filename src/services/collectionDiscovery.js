@@ -41,7 +41,7 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
         if(!response.result){failed=true;continue;}
         const leads=response.result?.leads||[];
         for(const lead of leads){
-          const assessment=assessDiscoveryLead(lead,{journal,catalogs,papers,state:next});
+          const assessment=assessDiscoveryLead(lead,{journal,catalogs,papers,state:next,now});
           await onLead({journal:journal.key,provider,url:lead.url,reason:assessment.reason,collection:assessment.task?.collection||assessment.collection||null});
           if(!assessment.task)continue;
           next=addDiscoverySignals(next,[{catalog_id:assessment.task.id,source:provider,title:lead.title,doi:assessment.doi,

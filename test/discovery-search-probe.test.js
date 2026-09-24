@@ -8,7 +8,7 @@ test('directed queries use the target publisher and remain within Pro length lim
   const catalogs=ACTIVE_CATALOG_TASKS.filter(t=>t.journal===key);
   const query=directedQuery({key,name:catalogs[0].name},catalogs,mode);
   assert.match(query,/ site:[a-z.]+$/);assert.ok(query.length<=70);
-  assert.ok(query.includes(catalogs[0].name.replace(/^The /,'')));
+  assert.ok(query.includes(catalogs[0].name.replace(/^The /,'').slice(0,20)));
  }
 });
 test('manual probe is bounded, uses Pro, checkpoints quota, never imports or translates',async()=>{

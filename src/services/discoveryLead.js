@@ -12,27 +12,48 @@ export function issueRank(value,task){
   return null;
 }
 const compare=(a,b)=>a[0]-b[0]||a[1]-b[1];
-export function assessDiscoveryLead(lead,{journal,catalogs,papers,state}){
+export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baselines:verifiedBaselines=[],now=new Date()}){
   let url;try{url=new URL(lead.url);}catch{return {reason:'invalid_url'};}
+  // SAGE search indexes the historical JOM alias; never broaden other journals.
+  if(journal.key==='JM'&&url.hostname==='journals.sagepub.com'&&/^\/toc\/JOM\//.test(url.pathname)){
+    url.pathname=url.pathname.replace('/toc/JOM/','/toc/joma/');lead={...lead,url:url.href};
+  }
   const exact=catalogs.find(t=>catalogUrl(lead.url,t)===catalogUrl(t.url,t));
-  if(exact)return {reason:exact.collection==='online'?'online_directory_without_change_evidence':'generic_directory_without_change_evidence',collection:exact.collection};
-  const issue=catalogs.find(t=>t.collection==='issue'&&issueRank(lead.url,t));
+  let textRank=null;
+  const issueSurface=exact?.collection==='issue'?exact:catalogs.find(t=>t.collection==='issue'&&
+    url.origin===new URL(t.url).origin&&url.pathname===new URL(t.url).pathname.replace(/\/issue\/?$/,'')&&
+    titleKey(lead.title).includes(titleKey(journal.name)));
+  if(issueSurface){
+    const matches=[...(lead.title+' '+lead.snippet).matchAll(/Vol(?:ume)?\.?\s+(\d+)[,\s]+(?:Issue|Number|No\.?)\s+(\d+)/gi)];
+    const ranks=[...new Set(matches.map(m=>m[1]+','+m[2]))];
+    if(ranks.length===1)textRank=ranks[0].split(',').map(Number);
+  }
+  if(exact&&!textRank)return {reason:exact.collection==='online'?'online_directory_without_change_evidence':'generic_directory_without_change_evidence',collection:exact.collection};
+  const issue=textRank?issueSurface:catalogs.find(t=>t.collection==='issue'&&issueRank(lead.url,t));
   if(issue){
-    const rank=issueRank(lead.url,issue),baselines=[];
+    const rank=textRank||issueRank(lead.url,issue),baselines=verifiedBaselines.filter(b=>b.catalog_id===issue.id&&Array.isArray(b.rank)&&b.rank.length===2&&b.rank.every(n=>Number.isInteger(n)&&n>0)).map(b=>b.rank);
     for(const t of state.tasks.filter(t=>t.catalog_id===issue.id&&t.status==='processed'))baselines.push(issueRank(t.url,issue));
     for(const p of papers.filter(p=>p.journal_key===journal.key))for(const m of p.catalog_memberships||[])
       if(m.task_id===issue.id)baselines.push(issueRank(m.catalog_url,issue));
     const baseline=baselines.filter(Boolean).sort(compare).at(-1);
-    if(!baseline)return {reason:'issue_baseline_missing',collection:'issue'};
-    if(compare(rank,baseline)<=0)return {reason:'known_or_older_issue',collection:'issue'};
-    return {reason:'newer_issue_candidate',task:issue,catalog_url:catalogUrl(lead.url,issue),doi:null};
+    if(!baseline)return {reason:'issue_baseline_missing',collection:'issue',rank};
+    if(compare(rank,baseline)<=0)return {reason:'known_or_older_issue',collection:'issue',rank,baseline};
+    return {reason:'newer_issue_candidate',task:issue,catalog_url:catalogUrl(lead.url,issue)||issue.url,doi:null,rank,baseline};
   }
   // Non-concrete catalog pages are not article evidence.
   if(catalogs.some(t=>catalogUrl(lead.url,t)))return {reason:'unresolved_catalog_route'};
-  let decoded;try{decoded=decodeURI(lead.url);}catch{return {reason:'invalid_encoding'};}
-  const doi=cleanDoi(decoded.match(/10\.\d{4,9}\/[^?#\s]+/i)?.[0]);
+  let decoded;try{decoded=decodeURIComponent(decodeURIComponent(lead.url));}catch{return {reason:'invalid_encoding'};}
+  const doi=cleanDoi(decoded.match(/10\.\d{4,9}\/(?:qje\/)?[^/?#\s]+/i)?.[0]);
   const task=catalogs.find(t=>t.collection==='online'&&articleUrl(lead.url,t)&&titleKey(lead.snippet||'').includes(titleKey(journal.name)));
   if(!task)return {reason:'not_verified_journal_article'};
-  if(papers.some(p=>p.journal_key===journal.key&&((doi&&cleanDoi(p.doi)===doi)||titleKey(p.title_original)===titleKey(lead.title))))return {reason:'known_article'};
+  const journalDoi={JAR:/^10\.1111\/1475-679x\./,JM:/^10\.1177\/01492063/,MS:/^10\.1287\/mnsc\./,RP:/^10\.1016\/j\.respol\./};
+  // A reference to the target journal in another journal's bibliography is not identity.
+  if(journalDoi[journal.key]&&!journalDoi[journal.key].test(doi||''))return {reason:'article_identity_unconfirmed'};
+  if(papers.some(p=>p.journal_key===journal.key&&((doi&&cleanDoi(p.doi)===doi)||p.url===lead.url||titleKey(p.title_original)===titleKey(lead.title))))return {reason:'known_article'};
+  const dateMatch=(lead.snippet||'').slice(0,1600).match(/(?:First published(?: online)?|Published(?: Online)?|Available online|Version of Record online)\s*:?\s*((?:\d{1,2}\s+[A-Za-z]+\s+\d{4})|(?:[A-Za-z]+\s+\d{1,2},?\s+\d{4})|(?:\d{4}-\d{2}-\d{2}))/i);
+  const published=dateMatch?Date.parse(dateMatch[1]+' UTC'):NaN;
+  if(!Number.isFinite(published))return {reason:'article_recency_unconfirmed'};
+  const age=now.getTime()-published;
+  if(age< -86400000||age>60*86400000)return {reason:'old_or_future_article'};
   return {reason:'new_article_candidate',task,doi,catalog_url:task.url};
 }

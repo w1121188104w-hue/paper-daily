@@ -5,7 +5,7 @@ on:
       query_mode:
         type: choice
         default: general
-        options: [general, issue, online]
+        options: [general, issue, online, year_issue, year_online, url_issue, url_online, issn]
 permissions:
   contents: read
 concurrency:
