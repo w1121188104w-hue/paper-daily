@@ -20,18 +20,23 @@ export function safeProcess(command,args,{cwd,env=process.env,input='',timeout=1
     child.on('close',code=>{clearTimeout(timer);if(code||bad)reject(Error('PROCESS_FAILED'));else resolve(Buffer.concat(chunks).toString('utf8'));});child.stdin.end(input);
   });
 }
+export async function allowedWorkflowDirty(config,{root,repositoryRoot,git,plan=journalGitFiles}){
+  assertLibrary(!(await git(['diff','--cached','--name-only','-z'])),'暂存区已有改动');
+  const dirty=(await git(['diff','HEAD','--name-only','-z'])).split('\0').filter(Boolean);
+  // Synchronizing an unchanged checkout must not reparse all historical payloads.
+  // Every actual data commit still performs the full closure/hash validation.
+  if(!dirty.length)return new Set();
+  const allowed=new Set([...(await plan(config,{root,repositoryRoot})).files,WORKFLOW_PATH,STATE_GIT_PATH]);
+  assertLibrary(dirty.every(p=>allowed.has(p)),'存在未提交代码改动，停止正式流程');
+  return allowed;
+}
 export async function startCollectionService({env=process.env}={}){
   const repositoryRoot=fileURLToPath(new URL('../',import.meta.url)),root=path.join(repositoryRoot,'data/journal-store');
   assertLibrary(env.LOCALAPPDATA&&env.PAPER_EXTENSION_ID,'本机配置缺失');
   const stateDir=path.join(env.LOCALAPPDATA,'PaperDailyWorkflow'),config=await loadJournalConfig();
   const childEnv={...env};delete childEnv.DEEPSEEK_API_KEY;
   const git=(args,options={})=>safeProcess('git',args,{cwd:repositoryRoot,env:childEnv,...options});
-  async function allowedDirty(){const plan=await journalGitFiles(config,{root,repositoryRoot});
-    const allowed=new Set([...plan.files,WORKFLOW_PATH,STATE_GIT_PATH]);
-    const dirty=(await git(['diff','HEAD','--name-only','-z'])).split('\0').filter(Boolean);
-    assertLibrary(dirty.every(p=>allowed.has(p)),'存在未提交代码改动，停止正式流程');
-    assertLibrary(!(await git(['diff','--cached','--name-only','-z'])),'暂存区已有改动');
-    return allowed;}
+  const allowedDirty=()=>allowedWorkflowDirty(config,{root,repositoryRoot,git});
   async function sync(){
     assertLibrary((await git(['remote','get-url','origin'])).trim()==='https://github.com/w1121188104w-hue/paper-daily.git','正式仓库不匹配');
     await allowedDirty();await git(['fetch','origin','master']);
