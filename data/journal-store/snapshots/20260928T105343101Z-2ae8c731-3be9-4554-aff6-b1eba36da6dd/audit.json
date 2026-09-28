@@ -1,0 +1,85 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7171966016",
+      "doi": "10.1257/aer.116.8.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204559224",
+      "doi": "10.1257/aer.116.9.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.8.i",
+      "doi": "10.1257/aer.116.8.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.9.i",
+      "doi": "10.1257/aer.116.9.i",
+      "journal_key": "AER",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "source": "openalex",
+      "source_id": "W7204519381",
+      "doi": "10.1257/aer.116.9.3197",
+      "journal_key": "AER",
+      "title": "Presidential Address: Neighborhood Effects and Missing Markets for Opportunity",
+      "classification": {
+        "version": 4,
+        "kind": "other",
+        "excluded": false,
+        "rule": "named_lecture_or_address"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1257/aer.116.9.3197",
+      "doi": "10.1257/aer.116.9.3197",
+      "journal_key": "AER",
+      "title": "Presidential Address: Neighborhood Effects and Missing Markets for Opportunity",
+      "classification": {
+        "version": 4,
+        "kind": "other",
+        "excluded": false,
+        "rule": "named_lecture_or_address"
+      }
+    }
+  ]
+}

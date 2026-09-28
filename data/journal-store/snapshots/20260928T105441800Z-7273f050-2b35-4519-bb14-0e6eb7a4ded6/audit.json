@@ -1,0 +1,84 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7213975927",
+      "doi": "10.1111/jofi.70019",
+      "journal_key": "JF",
+      "title": "ANNOUNCEMENTS",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7213986251",
+      "doi": "10.1111/jofi.13353",
+      "journal_key": "JF",
+      "title": "ISSUE INFORMATION",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7213988094",
+      "doi": "10.1111/jofi.13354",
+      "journal_key": "JF",
+      "title": "AMERICAN FINANCE ASSOCIATION",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1111/jofi.13353",
+      "doi": "10.1111/jofi.13353",
+      "journal_key": "JF",
+      "title": "ISSUE INFORMATION",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1111/jofi.13354",
+      "doi": "10.1111/jofi.13354",
+      "journal_key": "JF",
+      "title": "AMERICAN FINANCE ASSOCIATION",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1111/jofi.70019",
+      "doi": "10.1111/jofi.70019",
+      "journal_key": "JF",
+      "title": "ANNOUNCEMENTS",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    }
+  ],
+  "notices": []
+}

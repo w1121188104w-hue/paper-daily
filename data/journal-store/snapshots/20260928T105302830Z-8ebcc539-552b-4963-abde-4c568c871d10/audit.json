@@ -1,0 +1,72 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7204557895",
+      "doi": "10.1016/j.jacceco.2026.101939",
+      "journal_key": "JAE",
+      "title": "Editorial data",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7208773452",
+      "doi": "10.1016/s0165-4101(26)00087-x",
+      "journal_key": "JAE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.jacceco.2026.101915",
+      "doi": "10.1016/j.jacceco.2026.101915",
+      "journal_key": "JAE",
+      "title": "Editorial data",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0165-4101(26)00065-0",
+      "doi": "10.1016/s0165-4101(26)00065-0",
+      "journal_key": "JAE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "source": "openalex",
+      "source_id": "W7172385481",
+      "doi": "10.1016/j.jacceco.2026.101931",
+      "journal_key": "JAE",
+      "title": "Retraction notice to “Lost in standardization: Effects of financial statement database discrepancies on inference” [J. Account. Econ. 76/1 (2023) 101573]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_retraction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    }
+  ]
+}
