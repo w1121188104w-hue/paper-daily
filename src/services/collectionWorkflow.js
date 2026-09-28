@@ -12,16 +12,19 @@ import { verifiedPages } from './browserImport.js';
 import { excludedJpePaper } from '../../tools/browser-abstract-extension/collection-policy.js';
 import { writeWorkflowJson } from './workflowStorage.js';
 import { discoveryCatalogEvidenceUrl } from './discoveryLead.js';
+import {validateBaselines,recordCatalogBaseline,catalogChecks,AUDIT_INTERVAL_DAYS} from './catalogBaseline.js';
 
 export const WORKFLOW_PATH = 'data/collection-workflow/state.json';
 const sha = x => createHash('sha256').update(JSON.stringify(x)).digest('hex');
 const time = x => typeof x === 'string' && Number.isFinite(Date.parse(x));
 const taskFor = id => ACTIVE_CATALOG_TASKS.find(t => t.id === id);
-export const emptyWorkflow = () => ({ schema_version: 1, updated_at: null, tasks: [], monitors: [], receipts: [], checked_papers: [] });
+export const emptyWorkflow = () => ({ schema_version: 1, updated_at: null, tasks: [], monitors: [], receipts: [], checked_papers: [], catalog_baselines: [], audit_interval_days:AUDIT_INTERVAL_DAYS });
 
 export function validateWorkflow(s) {
   assertLibrary(s?.schema_version === 1 && ['tasks','monitors','receipts','checked_papers'].every(k => Array.isArray(s[k])), '任务账本格式无效');
   assertLibrary(s.tasks.length <= 20000 && s.receipts.length <= 10000, '任务账本需要归档，不能截断历史');
+  validateBaselines(s.catalog_baselines);
+  assertLibrary(s.audit_interval_days===undefined||[7,14].includes(s.audit_interval_days),'巡检间隔只支持7或14天');
   const ids = new Set();
   for (const t of s.tasks) {
     const c = taskFor(t.catalog_id);
@@ -77,6 +80,7 @@ export function addDiscoverySignals(input, observations, { now = new Date() } = 
 export function publicWorkflow(state, { now = new Date(), papers = [] } = {}) {
   validateWorkflow(state);
   return {schema_version:1,updated_at:state.updated_at,coverage:'signals_are_not_complete_catalogs',
+    audit_interval_days:state.audit_interval_days||AUDIT_INTERVAL_DAYS,catalog_checks:catalogChecks(state,{now}),
     tasks:state.tasks.filter(t=>t.status==='pending').map(t=>({id:t.id,catalog_id:t.catalog_id,journal:t.journal,collection:t.collection,
       url:t.url,signal_count:t.signals.length,confidence:t.signals.some(s=>s.confidence==='paper_detected')?'paper_detected':'possible_update',
       updated_at:t.updated_at,titles:t.signals.slice(-5).map(s=>s.title)})),
@@ -143,10 +147,14 @@ export async function applyCollectionReceipt(input, run, data, prepared, library
     const task=taskFor(job.catalog_id), captured=pages.filter(p=>p.task_id===job.catalog_id && p.captured_at>=run.created_at &&
       catalogUrl(p.source_url,task) && ['catalog_candidates','catalog_empty','catalog_landing'].includes(p.status));
     const root=captured.find(p=>[p.requested_url,p.source_url].includes(job.url));
-    const unfinished=(data.catalog.queue||[]).slice(data.catalog.cursor).some(j=>j.task_id===job.catalog_id);
+    const unfinished=(data.catalog.queue||[]).filter(j=>j.task_id===job.catalog_id).some((j)=>
+      !captured.some(p=>[p.requested_url,p.source_url].includes(j.url)))||
+      (data.catalog.queue||[]).slice(data.catalog.cursor).some(j=>j.task_id===job.catalog_id);
     const unreviewed=checked.some(p=>p.catalog_memberships?.some(m=>m.task_id===job.catalog_id)&&p.review_status!=='source_checked_candidate'&&p.type!=='other'&&!excludedJpePaper(p));
-    if(!root || unfinished || unreviewed || repair.some(j=>j.task_id===job.catalog_id) || captured.some(p=>p.more_controls?.length || p.pagination_unresolved || p.pagination_note ||
-      p.warnings?.some(w=>/not_stable|limit|unresolved/i.test(w)))) pending.push(job);
+    const missingLinkedPage=captured.some(p=>[...(p.next_links||[]),...(p.issue_target?[p.issue_target]:[])].some(u=>
+      !captured.some(q=>[q.requested_url,q.source_url].includes(u))));
+    if(!root || unfinished || missingLinkedPage || unreviewed || repair.some(j=>j.task_id===job.catalog_id) || captured.some(p=>p.more_controls?.length || p.pagination_unresolved || p.pagination_note ||
+      p.warnings?.some(w=>/not_stable|limit|unresolved|unmatched_article_links/i.test(w)))) pending.push(job);
     else completeJobs.push(job);
   }
   const lib=new Map(library.papers.map(p=>[p.doi,p]));
@@ -169,6 +177,8 @@ export async function applyCollectionReceipt(input, run, data, prepared, library
     }
   }
   for(const captured of completeJobs) {
+    recordCatalogBaseline(state,captured,pages.filter(p=>p.captured_at>=run.created_at),checked,
+      {receiptId:run.id,inputHash:prepared.input_sha256});
     const task=state.tasks.find(t=>t.catalog_id===captured.catalog_id&&t.url===captured.url);
     const version=task&&run.task_versions.find(t=>t.id===task.id);
     if(!task || !version) continue;

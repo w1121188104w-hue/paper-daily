@@ -14,6 +14,7 @@ class Element {
   replaceChildren(...children) { this._text = ''; this.children = children; }
   setAttribute(key, value) { this.attributes[key] = String(value); }
   getAttribute(key) { return this.attributes[key]; }
+  querySelector(selector) { return selector==='details'?this.children.find(c=>c.tagName==='details')||null:null; }
   addEventListener(event, callback) { (this.listeners[event] ||= []).push(callback); }
   async trigger(event) {
     if (this.disabled && event === 'click') return;
@@ -41,7 +42,7 @@ function payload(overrides = {}) {
 }
 let sequence = 0;
 async function app(t, { data = payload(), day = false, search = '?month=2026-09', fail = false } = {}) {
-  const commonIds = ['main', 'statusTitle', 'statusBadge', 'statusText', 'attemptWarning', 'libraryMeta', 'enrichmentStatus', 'reload',
+  const commonIds = ['main', 'workflowStatus', 'statusTitle', 'statusBadge', 'statusText', 'attemptWarning', 'libraryMeta', 'enrichmentStatus', 'reload',
     'filterTitle', 'filters', 'query', 'category', 'journal', 'kind', 'reset', 'quickFilters', 'listTitle', 'listMeta', 'paperList', 'pagination'];
   const ids = new Map([...commonIds, ...(day ? ['dayTitle', 'backToCalendar', 'dayCoverage'] :
     ['monthTitle', 'prevMonth', 'nextMonth', 'calendarMeta', 'thisMonth', 'calendarGrid'])].map((id) => [id, new Element('div')]));
@@ -75,6 +76,16 @@ test('两页HTML控件ID唯一、模块引用相对，不加载旧设置或第�
     for (const forbidden of ['settings.js', 'home.js', 'src="/', 'fonts.googleapis', 'llmApiKey', 'fetchDayBtn', 'enrichmentJournals', '官网漏收核对明细']) assert.ok(!text.includes(forbidden));
   }
 });
+test('提醒和巡检分开展示，未建基线不显示零篇，刷新保留展开状态',async t=>{
+  const collection_workflow={tasks:[],monitors:[],receipts:[],catalog_checks:[{catalog_id:'test',journal:'JF',collection:'issue',checked_at:null,paper_count:0}],audit_interval_days:14};
+  const ui=await app(t,{data:payload({collection_workflow})});
+  const text=ui.get('workflowStatus').textContent;
+  assert.match(text,/发现更新/);assert.match(text,/到期巡检/);assert.match(text,/1 个目录尚无核对基线/);
+  assert.match(text,/目录数量未确认/);assert.doesNotMatch(text,/0 篇目录记录/);
+  ui.get('workflowStatus').querySelector('details').open=true;
+  await ui.get('reload').trigger('click');assert.equal(ui.get('workflowStatus').querySelector('details').open,true);
+});
+
 test('真实渲染函数生成日历、全部19刊、双语卡片及双源徽章', async (t) => {
   const ui = await app(t);
   assert.equal(ui.get('journal').children.length, 20); assert.equal(ui.get('category').children.length, 5);

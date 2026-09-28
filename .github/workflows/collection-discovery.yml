@@ -1,8 +1,8 @@
-name: Lightweight discovery and collection reminders
+name: Three-source discovery and collection reminders (no paid search)
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '17 0,5 * * *'
+    - cron: '17 0,4 * * *'
 permissions:
   contents: read
 concurrency:
@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: master
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
@@ -27,17 +27,10 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Offline regression tests
         run: npm test
-      - name: Independent sources plus optional budgeted discovery search
+      - name: Independent Crossref OpenAlex Semantic Scholar only
         env:
           SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
-          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
-          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
-          GITHUB_TOKEN: ${{ github.token }}
-          SEARCH_ENABLED: ${{ vars.JOURNAL_DISCOVERY_SEARCH_ENABLED }}
-        run: |
-          args=(--run --save-sources)
-          if [ "$SEARCH_ENABLED" = 'true' ]; then args+=(--search); fi
-          node scripts/discover-collection.js "${args[@]}"
+        run: node scripts/discover-collection.js --run --save-sources
       - name: Save formal library and reminders only
         run: |
           node scripts/stage-collection-discovery.js

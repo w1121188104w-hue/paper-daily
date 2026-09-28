@@ -3,7 +3,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import {emptyWorkflow,addDiscoverySignals,createCollectionRun,applyCollectionReceipt,saveWorkflow,readWorkflow,publicWorkflow} from '../src/services/collectionWorkflow.js';
+import {emptyWorkflow,validateWorkflow,addDiscoverySignals,createCollectionRun,applyCollectionReceipt,saveWorkflow,readWorkflow,publicWorkflow} from '../src/services/collectionWorkflow.js';
+import {seedCatalogBaselines} from '../scripts/seed-catalog-baselines.js';
+import {catalogChecks,capturedIssueRank,recordCatalogBaseline} from '../src/services/catalogBaseline.js';
+import {workflowAuditChecks} from '../public/journals/viewModel.js';
+import {replaySavedDiscovery} from '../scripts/replay-saved-discovery.js';
 import {discoverCollectionTasks} from '../src/services/collectionDiscovery.js';
 import {createCollectionCoordinator,collectionHttpServer} from '../src/services/collectionCoordinator.js';
 import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-core.js';
@@ -140,4 +144,105 @@ test('loopback service rejects wrong origin, missing guard and arbitrary routes'
   assert.equal((await fetch(`http://127.0.0.1:${port}/status`,{headers:{...good,Origin:'https://evil.example'}})).status,403);
   assert.equal((await fetch(`http://127.0.0.1:${port}/status`,{headers:{Origin:good.Origin}})).status,403);
   assert.equal((await fetch(`http://127.0.0.1:${port}/shell`,{headers:good})).status,409);assert.equal(calls,1);
+});
+
+test('legacy ledger is readable but never invents a verified catalog baseline',()=>{
+  const old=emptyWorkflow();delete old.catalog_baselines;delete old.audit_interval_days;
+  validateWorkflow(old);const publicState=publicWorkflow(old,{now});
+  assert.equal(publicState.audit_interval_days,14);assert.equal(publicState.catalog_checks.length,ACTIVE_CATALOG_TASKS.length);
+  assert.ok(publicState.catalog_checks.every(c=>c.status==='baseline_missing'));
+  assert.equal(createCollectionRun(old,[],{now}).jobs.length,0);
+  assert.throws(()=>validateWorkflow({...old,audit_interval_days:0}));
+});
+
+test('verified receipt persists issue, DOI set and capture time independently of abstract completion',async t=>{
+  const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now});
+  const data=await capture(run,{missing:true});data.catalog.pages[0].issue_heading='Volume 55, Issue 10';
+  const prepared=await prepareBrowserImport(data,config),out=await applyCollectionReceipt(s,run,data,prepared,{papers:[]},{now:new Date('2026-09-25T00:00:00Z')});
+  const b=out.catalog_baselines[0];assert.deepEqual(b.rank,[55,10]);assert.equal(b.papers[0].doi,doi);
+  assert.equal(b.checked_at,later);assert.equal(b.input_sha256,prepared.input_sha256);assert.equal(out.receipts[0].pending_papers.length,1);
+  const repo=await temp(t);await saveWorkflow(repo,out);assert.deepEqual((await readWorkflow(repo)).catalog_baselines,out.catalog_baselines);
+  const pub=publicWorkflow(out,{now});assert.equal(pub.catalog_checks.find(c=>c.catalog_id===task.id).paper_count,1);
+  assert.equal(JSON.stringify(pub).includes('input_sha256":"'+prepared.input_sha256),true); // receipt digest, no original page
+  assert.equal(JSON.stringify(pub).includes('source_urls'),false);
+});
+
+test('partial or wrong-identity linked pages cannot advance the baseline or clear a reminder',async()=>{
+  for(const bad of ['missing','identity','unreviewed']){
+    const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now}),data=await capture(run);
+    const child=task.url+'?page=2';data.catalog.pages[0].next_links=[child];
+    data.catalog.queue.push({task_id:task.id,url:child,depth:1});data.catalog.cursor=2;
+    if(bad!=='missing'){
+      const p=structuredClone(data.catalog.pages[0]);p.source_url=child;p.requested_url=child;p.job_key=task.id+'|'+child;p.next_links=[];
+      if(bad==='identity')p.identity_evidence={observed_issns:['0021-8456']};
+      else {p.items[0].title='A different unreviewed paper';p.items[0].url=url+'1';p.items[0].doi=doi+'1';}
+      data.catalog.pages.push(p);
+    }
+    const prepared=await prepareBrowserImport(data,config),out=await applyCollectionReceipt(s,run,data,prepared,{papers:[]},{now});
+    assert.equal(out.catalog_baselines.length,0,bad);assert.equal(out.tasks[0].status,'pending',bad);
+  }
+});
+
+test('offline seed replays original proof, preserves reminders and uses original date; duplicate is free and idempotent',async()=>{
+  const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now}),data=await capture(run);
+  data.catalog.pages[0].issue_heading='Volume 55, Issue 10';
+  const seeded=await seedCatalogBaselines(s,data,'b'.repeat(64),{now:new Date(later)});
+  assert.equal(seeded.catalog_baselines.length,1);assert.deepEqual(seeded.tasks,s.tasks);assert.deepEqual(seeded.receipts,[]);
+  assert.equal(seeded.catalog_baselines[0].checked_at,later);
+  assert.deepEqual(await seedCatalogBaselines(seeded,data,'b'.repeat(64),{now:new Date('2026-09-30T00:00:00Z')}),seeded);
+  const bad=structuredClone(data);bad.catalog_review_results={};
+  assert.equal((await seedCatalogBaselines(s,bad,'c'.repeat(64),{now:new Date(later)})).catalog_baselines.length,0);
+});
+
+test('audit deadlines update on static site, do not bulk-enqueue daily run, and accept 7/14 day intervals',async()=>{
+  const s=emptyWorkflow(),run=createCollectionRun(s,[],{mode:'full',now}),data=await capture(run,{empty:true});
+  const out=await seedCatalogBaselines(s,data,'d'.repeat(64),{now:new Date(later)}),publicState=publicWorkflow(out,{now:new Date(later)});
+  const deadline=Date.parse(later)+14*86400000;
+  assert.equal(workflowAuditChecks(publicState,deadline-1).find(c=>c.catalog_id===task.id).status,'recently_checked');
+  assert.equal(workflowAuditChecks(publicState,deadline).find(c=>c.catalog_id===task.id).status,'audit_due');
+  assert.equal(createCollectionRun(out,[],{now:new Date(deadline)}).jobs.length,0);
+  out.audit_interval_days=7;
+  assert.equal(catalogChecks(out,{now:new Date(deadline)}).find(c=>c.catalog_id===task.id).next_audit_at,new Date(Date.parse(later)+7*86400000).toISOString());
+  assert.equal(out.catalog_baselines[0].papers.length,0); // explicit empty online/current list is valid evidence
+});
+
+test('saved baselines suppress indexed known catalog papers even when missing abstracts prevented library import',async()=>{
+  const s=emptyWorkflow(),run=createCollectionRun(s,[],{mode:'full',now}),data=await capture(run,{missing:true});
+  const seeded=await seedCatalogBaselines(s,data,'e'.repeat(64),{now:new Date(later)});
+  const next=await discoverCollectionTasks({...config,journals:config.journals.filter(j=>j.key==='RP')},seeded,[],{now,
+    collect:async()=>({source_results:[{source:'crossref',ok:true,complete:true,records:[{journal_key:'RP',doi,title,url}]}]})});
+  assert.equal(next.tasks.length,0);assert.equal(next.catalog_baselines.length,1);
+});
+
+test('persisted issue baseline feeds discovery automatically; only the changed directory is queued',async()=>{
+  const fixture=JSON.parse(await fs.readFile(new URL('./fixtures/discovery-live-20260924.json',import.meta.url),'utf8'));
+  const s=emptyWorkflow(),catalog=ACTIVE_CATALOG_TASKS.find(t=>t.id===fixture.baseline.catalog_id);
+  recordCatalogBaseline(s,{catalog_id:catalog.id,url:catalog.url},[{task_id:catalog.id,source_url:catalog.url,captured_at:at,issue_heading:'Volume 81, Issue 4'}],[],{receiptId:'fixture',inputHash:'f'.repeat(64)});
+  const out=await discoverCollectionTasks({journals:[fixture.journal]},s,[],{now,collect:async()=>({source_results:[]}),
+    searchProviders:['zhipu'],search:async()=>({called:true,result:{leads:[fixture.lead]}})});
+  assert.equal(out.tasks.length,1);assert.equal(createCollectionRun(out,[],{now}).jobs[0].catalog_id,catalog.id);
+  assert.equal(out.catalog_baselines[0].rank[1],4); // search cannot promote the verified baseline
+});
+
+test('older captures/issues cannot refresh baseline deadlines; conflicting heading cannot invent an issue',()=>{
+  const s=emptyWorkflow(),job={catalog_id:task.id,url:task.url};
+  const page={task_id:task.id,source_url:task.url,captured_at:later,issue_heading:'Volume 55, Issue 10'};
+  recordCatalogBaseline(s,job,[page],[],{receiptId:'first',inputHash:'a'.repeat(64)});
+  for(const patch of [{captured_at:at},{captured_at:'2026-09-25T00:00:00Z',issue_heading:'Volume 55, Issue 9'}])
+    recordCatalogBaseline(s,job,[{...page,...patch}],[],{receiptId:'stale',inputHash:'b'.repeat(64)});
+  assert.equal(s.catalog_baselines[0].receipt_id,'first');
+  assert.equal(capturedIssueRank([{...page,page_title:'Volume 55, Issue 8'}],task),null);
+  assert.equal(catalogChecks({...s,catalog_baselines:[{...s.catalog_baselines[0],url:'https://www.sciencedirect.com/journal/research-policy/vol/55/issue/10'}]},{now}).find(c=>c.catalog_id===task.id).status,'baseline_missing');
+});
+
+test('saved paid evidence replays offline, never promotes a baseline or treats controls/old reports as discovery',async()=>{
+  const fixture=JSON.parse(await fs.readFile(new URL('./fixtures/discovery-live-20260924.json',import.meta.url),'utf8'));
+  const s=emptyWorkflow(),catalog=ACTIVE_CATALOG_TASKS.find(t=>t.id===fixture.baseline.catalog_id);
+  recordCatalogBaseline(s,{catalog_id:catalog.id,url:catalog.url},[{task_id:catalog.id,source_url:catalog.url,captured_at:at,issue_heading:'Volume 81, Issue 4'}],[],{receiptId:'fixture',inputHash:'f'.repeat(64)});
+  const report={mode:'live_search_only',at,requests:[{provider:'zhipu',called:true,reason:null,task_id:'catalog-watch:JF:2026-09-23',leads:[fixture.lead]}]};
+  const next=replaySavedDiscovery(s,report,{now});assert.equal(next.tasks.length,1);assert.deepEqual(next.catalog_baselines,s.catalog_baselines);
+  assert.equal(replaySavedDiscovery(next,report,{now}).tasks[0].signals.length,1);
+  assert.deepEqual(replaySavedDiscovery(s,{...report,requests:[{...report.requests[0],reason:'request_outcome_unknown'}]},{now}),s);
+  assert.throws(()=>replaySavedDiscovery(s,{...report,positive_control_only:true},{now}));
+  assert.throws(()=>replaySavedDiscovery(s,report,{now:new Date('2026-10-10T00:00:00Z')}));
 });

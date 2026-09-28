@@ -1,7 +1,7 @@
 import { RUN_LABELS, TRANSLATION_LABELS, DOCUMENT_LABELS, CLASSIFICATION_REASONS, documentKind, normalizeDocumentFilter,
   beijingDay, validDay, validMonth, shiftMonth, monthCells,
   filterPapers, countsByDay, selectedJournalKeys, coverageForDay, paperTitle, doiHref, pageHref,
-  sourceLabel, publicationDateText, publicationMonthText, ABSTRACT_LABELS, abstractSourceHref } from './viewModel.js';
+  sourceLabel, publicationDateText, publicationMonthText, ABSTRACT_LABELS, abstractSourceHref, workflowAuditChecks } from './viewModel.js';
 
 const $ = (id) => document.getElementById(id);
 const node = (tag, text = '', className = '') => {
@@ -67,18 +67,30 @@ function renderStatus() {
 }
 
 function renderWorkflow(flow){
-  const target=$('workflowStatus');if(!target)return;target.replaceChildren();
+  const target=$('workflowStatus');if(!target)return;const expanded=!!target.querySelector('details')?.open;target.replaceChildren();
   if(!flow){target.append(node('p','本网站尚无正式任务清单。没有提醒不能当作没有更新。'));return;}
   const stale=!flow.monitors.length||flow.monitors.some(m=>Date.now()-Date.parse(m.checked_at)>48*3600000);
-  target.append(node('p',flow.tasks.length?`有 ${flow.tasks.length} 个目录待检查。打开浏览器扩展 → 正式流程 → 日常增量采集。`:'目前没有未处理的新目录提醒；这不保证期刊没有更新。'));
   if(stale)target.append(node('p','发现监测尚未运行或超过 48 小时未更新。当前不能依赖“没有提醒”判断；可手动全刊巡检。','notice'));
   const failed=flow.monitors.filter(m=>['failed','partial','quota_exhausted'].includes(m.status));
   if(failed.length)target.append(node('p',`有 ${failed.length} 项来源检查失败、不完整或额度不足，不代表没有新论文。`,'notice'));
+  target.append(node('h3','发现更新'));
+  target.append(node('p','三源自动发现 → 插件定向采集 → 原文核对与翻译。外部付费搜索已停用；每周或半月手动全刊巡检兜底。','meta'));
+  target.append(node('p',flow.tasks.length?`有 ${flow.tasks.length} 个目录待检查。打开浏览器扩展 → 正式流程 → 日常增量采集。`:'目前没有未处理的新目录提醒；这不保证期刊没有更新。'));
   for(const task of flow.tasks){const p=node('p',`${task.journal} · ${task.collection==='issue'?'卷期目录':'在线发表'} · ${task.confidence==='paper_detected'?'发现新论文线索':'疑似目录更新'} · `),a=node('a','查看官网目录');
     try{const u=new URL(task.url);if(u.protocol==='https:'){a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';p.append(a);}}catch{}target.append(p);}
-  target.append(node('p',`待补论文 ${flow.pending_papers?.length||0} 篇；上次完成全刊目录巡检：${timeText(flow.full_audit_last_at)}。建议每周或每两周手动巡检一次；只重新读目录，不重复采集已完成详情。`,'meta'));
+  const checks=workflowAuditChecks(flow),due=checks.filter(c=>c.status!=='recently_checked');
+  target.append(node('h3','到期巡检'));
+  target.append(node('p',due.length?`${due.length} 个目录尚无核对基线或已到巡检时间（间隔 ${flow.audit_interval_days||14} 天）。这是巡检提醒，不代表发现了新论文；请在扩展中手动选择“全刊巡检”。`:
+    checks.length?'目录均在巡检周期内；这不保证期间没有更新。':'尚无逐目录基线，不能确认巡检是否到期。'));
+  const details=node('details');details.open=expanded;details.append(node('summary','查看各目录核对时间与已采卷期'));
+  for(const c of checks)details.append(node('p',`${c.journal} · ${c.collection==='issue'?'最新一期':'在线发表'} · ${c.rank?`卷 ${c.rank[0]}${c.rank[1]?` 期 ${c.rank[1]}`:''} · `:''}${c.checked_at?`${c.paper_count} 篇目录记录`:'目录数量未确认'} · 上次核对 ${timeText(c.checked_at)} · ${c.status==='baseline_missing'?'待建立基线':c.status==='audit_due'?'已到期':`下次巡检 ${timeText(c.next_audit_at)}`}`,'meta'));
+  target.append(details);
+  target.append(node('p',`待补论文 ${flow.pending_papers?.length||0} 篇；上次完成全刊目录巡检：${timeText(flow.full_audit_last_at)}。日常增量不会自动扩成全刊巡检；已完成详情不重复采集。`,'meta'));
   const latest=flow.receipts.at(-1);if(latest)target.append(node('p',`最近已发布批次：${timeText(latest.at)}；完成目录 ${latest.completed_catalogs} 个，未完成目录 ${latest.pending_catalogs} 个。`,'meta'));
 }
+
+const workflowTimer=setInterval(()=>{if(state.data)renderWorkflow(state.data.collection_workflow);},60000);
+workflowTimer.unref?.(); // DOM unit tests must not be kept alive by the browser clock.
 
 function renderFilters({ syncQuery = true } = {}) {
   const journals = state.data.journals, categories = [...new Map(journals.map((item) => [item.category, item.category_zh]))];

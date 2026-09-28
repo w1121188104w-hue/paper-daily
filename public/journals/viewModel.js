@@ -131,3 +131,9 @@ export function pageHref(page, filters = {}, extra = {}) {
   for (const [key, value] of Object.entries({ ...filters, ...extra })) if (value) params.set(key, value);
   return `${page}${params.size ? `?${params}` : ''}`;
 }
+// Recompute deadlines in the browser: a static Pages build must still become
+// due with time, without fetching a paid API or waiting for another deployment.
+export function workflowAuditChecks(flow,now=Date.now()) {
+  return (flow?.catalog_checks||[]).map(c=>({...c,status:!c.checked_at?'baseline_missing':
+    !Number.isFinite(Date.parse(c.next_audit_at))||Date.parse(c.next_audit_at)<=now?'audit_due':'recently_checked'}));
+}

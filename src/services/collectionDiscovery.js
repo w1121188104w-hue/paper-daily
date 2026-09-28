@@ -4,14 +4,23 @@ import { addDiscoverySignals, validateWorkflow } from './collectionWorkflow.js';
 import { knownJournalMismatch } from './journalIdentity.js';
 import {collectionWindow} from './journalRun.js';
 import {assessDiscoveryLead} from './discoveryLead.js';
+import {baselineKnownPapers} from './catalogBaseline.js';
+
+// Production entry point: deliberately allowlist options. Old probe adapters,
+// environment switches and search callbacks cannot turn paid search back on.
+export function discoverIndexedCollectionTasks(config,state,papers,{now,collect,sourceOptions,onJournal}={}) {
+  return discoverCollectionTasks(config,state,papers,{now,collect,sourceOptions,onJournal,search:null});
+}
 
 // Discovery never calls a translator or writes a fabricated paper/abstract.
-// search() MUST be a durably budgeted adapter. It is optional and disabled by default.
+// Legacy search injection is retained ONLY for historical offline probe replay/tests.
+// Production must use discoverIndexedCollectionTasks above.
 export async function discoverCollectionTasks(config, state, papers, {now=new Date(), collect=collectJournals,
   search=null, searchProviders=['zhipu','serpapi_scholar','serpapi_google'], queryBuilder=null, baselines=[], onLead=async()=>{}, sourceOptions={}, onJournal=async()=>{}}={}) {
   let next=structuredClone(validateWorkflow(state));
   const at=now.toISOString(),{fromDate,toDate}=collectionWindow({now,lookbackDays:60});
-  const known=p=>papers.some(x=>x.journal_key===p.journal_key&&((x.doi&&x.doi===p.doi)||(!p.doi&&titleKey(x.title_original)===titleKey(p.title))));
+  const seenPapers=[...papers,...baselineKnownPapers(next)];
+  const known=p=>seenPapers.some(x=>x.journal_key===p.journal_key&&((x.doi&&x.doi===p.doi)||(!p.doi&&titleKey(x.title_original)===titleKey(p.title))));
   const monitor=(journal,source,status)=>{next.monitors=next.monitors.filter(m=>m.journal!==journal||m.source!==source);
     next.monitors.push({journal,source,status,checked_at:at});};
   for(const journal of config.journals.filter(j=>j.enabled)) {
@@ -41,7 +50,7 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
         if(!response.result){failed=true;continue;}
         const leads=response.result?.leads||[];
         for(const lead of leads){
-          const assessment=assessDiscoveryLead(lead,{journal,catalogs,papers,state:next,now,baselines});
+          const assessment=assessDiscoveryLead(lead,{journal,catalogs,papers:seenPapers,state:next,now,baselines:[...(next.catalog_baselines||[]),...baselines]});
           await onLead({journal:journal.key,provider,url:lead.url,reason:assessment.reason,collection:assessment.task?.collection||assessment.collection||null});
           if(!assessment.task)continue;
           next=addDiscoverySignals(next,[{catalog_id:assessment.task.id,source:provider,title:lead.title,doi:assessment.doi,
