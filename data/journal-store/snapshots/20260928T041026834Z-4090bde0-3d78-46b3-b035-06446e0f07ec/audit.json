@@ -1,0 +1,149 @@
+{
+  "duplicates": [
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1016/j.jfineco.2026.104323",
+        "semanticscholar:4bb67f00302dbf667aed2567d3cf6e6680329de1"
+      ],
+      "dois": [
+        "10.1016/j.jfineco.2026.104323",
+        "10.2139/ssrn.2939994"
+      ],
+      "journal_key": "JFE"
+    }
+  ],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7211918428",
+      "doi": "10.1016/s0304-405x(26)00139-x",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0304-405x(26)00087-5",
+      "doi": "10.1016/s0304-405x(26)00087-5",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0304-405x(26)00113-3",
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "05a723edd1fba1553eccd49979ad1fa10d21678e",
+      "doi": "10.1016/s0304-405x(26)00032-2",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "107dedec64951fd1f958ae0fbac4ae48362c214d",
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "431cd4b846b56db123aa2a156f4601502bab7999",
+      "doi": "10.1016/s0304-405x(25)00221-1",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "a265565b1c97fe2e077c8463a3628a9f1cf692cf",
+      "doi": "10.1016/s0304-405x(26)00087-5",
+      "journal_key": "JFE",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "adaf8fe7ced10e64e08806c59ec3c367075d3d0b",
+      "doi": "10.1016/s0304-405x(26)00016-4",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "d9864b6bf8d9ef2ed56a2f46f46cbd6be238efd4",
+      "doi": "10.1016/s0304-405x(26)00004-8",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "f2578234e70f3095824c1db544cbc11b894ee179",
+      "doi": "10.1016/s0304-405x(26)00041-3",
+      "journal_key": "JFE",
+      "title": "Journal of Financial Economics: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    }
+  ],
+  "notices": []
+}

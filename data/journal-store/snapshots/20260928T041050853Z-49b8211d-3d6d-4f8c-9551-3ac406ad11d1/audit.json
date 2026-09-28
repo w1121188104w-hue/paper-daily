@@ -1,0 +1,84 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7204646313",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0929-1199(26)00143-4",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "5e9563297e1902cbc75fb37169e14ba907de3d04",
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "journal_key": "JCF",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "66f20db5adfe17d5a58552400e9ffff874c03dab",
+      "doi": "10.1016/s0929-1199(26)00005-2",
+      "journal_key": "JCF",
+      "title": "Journal of Corporate Finance: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "8e7167d1140a71c19786cc4bef90c1420fadc4f3",
+      "doi": "10.1016/s0929-1199(26)00042-8",
+      "journal_key": "JCF",
+      "title": "Journal of Corporate Finance: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "d1ed9e73c39bd3695d6adabf2de4822c5adf9278",
+      "doi": "10.1016/s0929-1199(25)00192-0",
+      "journal_key": "JCF",
+      "title": "Journal of Corporate Finance: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    }
+  ],
+  "notices": []
+}

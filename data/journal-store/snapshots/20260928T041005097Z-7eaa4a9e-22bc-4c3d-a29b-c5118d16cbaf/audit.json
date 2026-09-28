@@ -1,0 +1,30 @@
+{
+  "duplicates": [
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1093/restud/rdag091",
+        "semanticscholar:8881eec6683e8b03651a5cef9b2bc4ace833208b"
+      ],
+      "dois": [
+        "10.1093/restud/rdag091",
+        "10.4324/9780080553948-34"
+      ],
+      "journal_key": "RES"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "openalex:W7204011459",
+        "semanticscholar:8881eec6683e8b03651a5cef9b2bc4ace833208b"
+      ],
+      "dois": [
+        "10.1093/restud/rdag091",
+        "10.4324/9780080553948-34"
+      ],
+      "journal_key": "RES"
+    }
+  ],
+  "excluded": [],
+  "notices": []
+}
