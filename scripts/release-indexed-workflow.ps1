@@ -24,7 +24,7 @@ try {
  }
  function CheckRetired {
   $flows=(Api '/actions/workflows').workflows;$variables=(Api '/actions/variables').variables
-  foreach($file in $retired){if(($flows|Where-Object path -eq ('.github/workflows/'+$file)).state-ne 'disabled_manually'){throw 'LEGACY_WORKFLOW_NOT_DISABLED'}}
+  foreach($file in $retired){$item=$flows|Where-Object path -eq ('.github/workflows/'+$file);if($item -and $item.state-ne 'disabled_manually' -and $item.state-ne 'deleted'){throw 'LEGACY_WORKFLOW_NOT_DISABLED'}}
   foreach($name in $off){if(($variables|Where-Object name -eq $name).value-ne 'false'){throw 'LEGACY_SWITCH_NOT_OFF'}}
   foreach($status in @('queued','in_progress','waiting','pending','requested')){
    $runs=(Api ('/actions/runs?per_page=100&status='+$status)).workflow_runs
@@ -47,7 +47,7 @@ try {
  }
  if($Mode-eq 'Prepare'){
   $before=(Api '/actions/workflows').workflows
-  foreach($file in $retired){if(($before|Where-Object path -eq ('.github/workflows/'+$file)).state -ne 'disabled_manually'){Api ('/actions/workflows/'+$file+'/disable') 'Put'|Out-Null}}
+  foreach($file in $retired){$item=$before|Where-Object path -eq ('.github/workflows/'+$file);if($item -and $item.state -ne 'disabled_manually' -and $item.state -ne 'deleted'){Api ('/actions/workflows/'+$file+'/disable') 'Put'|Out-Null}}
   foreach($name in ($off+@('JOURNAL_DISCOVERY_ENABLED'))){Api ('/actions/variables/'+$name) 'Patch' @{name=$name;value='false'}|Out-Null}
   foreach($status in @('queued','in_progress','waiting','pending','requested')){
    $runs=(Api ('/actions/runs?per_page=100&status='+$status)).workflow_runs

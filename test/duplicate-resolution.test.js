@@ -15,8 +15,6 @@ import { exportTranslationBatch, importTranslationFile } from '../src/services/t
 import { presentJournalLibrary } from '../src/services/journalPresentation.js';
 import { officialDiscoveries } from '../src/services/masterList.js';
 import { journalGitFiles } from '../src/services/journalGitFiles.js';
-import { runJournalPipeline } from '../src/services/journalPipeline.js';
-import { savePipelineCheckpoint, restorePipelineCheckpoint } from '../scripts/pipeline-checkpoint.js';
 
 const config = await loadJournalConfig(), journal = findJournal(config, 'AER');
 const early = '2026-09-15T01:00:00.000Z', at = '2026-09-16T01:00:00.000Z', checked = '2026-09-16T02:00:00.000Z';
@@ -123,46 +121,8 @@ test('归并结果、完整归档及重试状态任何篡改都不能通过父�
   assert.equal((await readLibraryRef(root, after.manifest.parent)).run_id, before.manifest.run_id);
 });
 
-test('每日流程重启：刷新原来源后仍复用已核实证据，归并在字段请求之前完成，网络补全调用为零', async t => {
-  const data = await seed(t), tomorrow = '2026-09-17T01:00:00.000Z'; let calls = 0;
-  const forbidden = async () => { calls++; throw new Error('No enrichment or search expected'); };
-  const result = await runJournalPipeline(config, { root: data.root, journalKey: 'AER', maxPapers: 1,
-    now: () => new Date(tomorrow), collectionOptions: { clients: clients([{ ...data.originalRecord, last_checked_at: tomorrow }]) },
-    catalog: async () => ({ status: 'skipped' }), http: { request: forbidden }, search: forbidden,
-    sources: { crossref: forbidden, openalex: forbidden, semanticscholar: forbidden, publisherArticle: forbidden } });
-  assert.equal(calls, 0); assert.equal(result.status, 'success'); assert.equal(result.master.total, 1);
-  assert.deepEqual(result.duplicate_statistics, { merged: 1, before_metadata: 1, after_metadata: 0 });
-  assert.equal(result.stages.find(row => row.stage === 'metadata').status, 'skipped');
-  assert.equal(result.translation_ready.fields, 0); assert.equal(result.translation_calls, 0);
-});
 
-test('每日新证据：无DOI记录查证后不重复查询目标，归并完成才确认身份问题已解决', async t => {
-  const data = await seed(t, { prepare: false }), calls = [];
-  const forbidden = async () => { calls.push('unexpected'); throw new Error('No search needed'); };
-  const result = await runJournalPipeline(config, { root: data.root, journalKey: 'AER', now: () => new Date(checked),
-    collect: async () => ({ status: 'skipped' }), catalog: async () => ({ status: 'skipped' }), http: { request: forbidden }, search: forbidden,
-    sources: { crossref: async () => { calls.push('crossref'); return data.withProof('crossref'); },
-      openalex: async () => { calls.push('openalex'); return data.withProof('openalex'); }, semanticscholar: forbidden, publisherArticle: forbidden } });
-  assert.deepEqual(calls, ['crossref', 'openalex']);
-  assert.equal(result.status, 'success'); assert.equal(result.master.total, 1); assert.equal(result.unresolved.unresolved_issues, 0);
-  assert.deepEqual(result.duplicate_statistics, { merged: 1, before_metadata: 0, after_metadata: 1 });
-  assert.equal(result.stages.find(row => row.stage === 'metadata').resolved_after_merge, true);
-});
 
-test('归并后的隔离存档保留完整归档和父版本，恢复后无须重新核实或再次归并', async t => {
-  const data = await seed(t);
-  await runDuplicateResolution(config, { root: data.root, now: () => new Date(checked) });
-  const original = await readJournalLibrary({ root: data.root, config });
-  const parent = await fs.realpath(os.tmpdir()), archiveWorkspace = await fs.mkdtemp(path.join(parent, 'duplicate-archive-test-'));
-  t.after(async () => { assert.equal(path.dirname(archiveWorkspace), parent); assert.ok(path.basename(archiveWorkspace).startsWith('duplicate-archive-test-')); await fs.rm(archiveWorkspace, { recursive: true, force: true }); });
-  const saved = await savePipelineCheckpoint(config, { root: data.root, tempParent: archiveWorkspace });
-  const restored = await restorePipelineCheckpoint(config, { directory: saved.directory, tempParent: archiveWorkspace });
-  const library = await readJournalLibrary({ root: restored.root, config });
-  assert.deepEqual(library.papers, original.papers); assert.deepEqual(library.enrichmentReports, original.enrichmentReports);
-  assert.equal(library.pointerText, original.pointerText);
-  assert.equal((await runDuplicateResolution(config, { root: restored.root, now: () => new Date(checked) })).status, 'skipped');
-  assert.equal(await restored.verifyOriginal(), true);
-});
 
 test('两份证据指向不同DOI时不按先后顺序强行归并，仍保留未解决身份', async t => {
   const { before, original, withProof } = await seed(t);

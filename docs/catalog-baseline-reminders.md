@@ -29,15 +29,7 @@ node scripts/seed-catalog-baselines.js --input "导出的详情结果.json" --in
 
 可重复传 `--input`，按原始采集时间合并。程序从 `catalog.pages` 重放目录证据及缓存核对，不信任导出的顶层 `papers` 或成功标志；不读取 Key、不重新调用 DeepSeek、不导入正式论文。
 
-复用最近七天内的真实搜索探针结果：
-
-```powershell
-node scripts/replay-saved-discovery.js --input "已保存的搜索报告.json" --save
-```
-
-只处理成功的智谱实测响应，拒绝 DOI 对照组和过期报告，不调用新的付费请求。不修改来源监测时间，不能伪装成刚刚运行了三源。重复证据去重。
-
-基线和提醒保存在 `data/collection-workflow/state.json`，沿用原工作流写入锁，与代码一并纳入正式发布。上面的历史报告重放仅作离线工具，不在定时流程运行。
+基线和提醒保存在 `data/collection-workflow/state.json`，沿用原工作流写入锁，与代码一并纳入正式发布。此前已导入的有效提醒保留；旧搜索报告重放入口现已删除。
 
 ## 2026-09-24 本地验证
 

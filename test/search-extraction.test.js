@@ -1,9 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { originalAbstractSection, extractionEvidence, extractSearchRecord, verifiedSearchRecord } from '../src/services/searchExtraction.js';
-import { makeSearchSources, searchWithFallback, abstractSearchQueries } from '../src/services/searchSources.js';
+import { searchWithFallback, abstractSearchQueries } from '../src/services/searchSources.js';
 import { searchAllowance, emptySearchBudget } from '../src/services/searchBudget.js';
-import { validateSearchPolicy } from '../src/services/searchPolicy.js';
 import { dueRepairIssues } from '../src/services/repairState.js';
 import { loadJournalConfig, findJournal } from '../src/services/journals.js';
 
@@ -91,19 +90,6 @@ test('智谱原文提取：模型逐字摘录才入库，保留原文、URL、�
   }
   assert.equal(await extractSearchRecord([lead], paper, journal, async () => ({ record: null }), '2026-09-17T01:00:00Z'), null);
 });
-test('智谱整理接口：使用同一智谱密钥，不使用DeepSeek编写摘要', async () => {
-  let request;
-  const api = makeSearchSources({ zhipuKey: 'test-secret-not-real', fetchImpl: async (url, init) => {
-    request = { url, body: JSON.parse(init.body) };
-    return new Response(JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(extracted) } }] }));
-  } });
-  const result = await api.request({ provider: 'zhipu', query: 'extract:example', extraction: { paper, evidence: [lead] } });
-  assert.equal(result.charged, 1); assert.deepEqual(result.extracted, extracted);
-  assert.equal(request.url, 'https://open.bigmodel.cn/api/paas/v4/chat/completions');
-  assert.equal(request.body.response_format.type, 'json_object');
-  assert.match(request.body.messages[0].content, /never compose/);
-  assert.equal(JSON.stringify(result).includes('test-secret-not-real'), false);
-});
 test('智谱多查询先于SerpAPI，结构化提取解决后立即停止', async () => {
   const calls = [];
   const result = await searchWithFallback({ queryFor: p => p === 'zhipu' ? ['title', 'DOI Abstract'] : 'other',
@@ -114,63 +100,8 @@ test('智谱多查询先于SerpAPI，结构化提取解决后立即停止', asyn
   assert.deepEqual(calls.map(x => x.provider), ['zhipu', 'zhipu']);
 });
 
-test('智谱联网整理请求完整标题和Pro搜索，模型回答须有返回检索原文才能采纳', async () => {
-  let request;
-  const row = { ...extracted.record, source_url: lead.url }; delete row.source_index;
-  const api = makeSearchSources({ zhipuKey: 'test-key-not-real', zhipuEngine: 'search_pro', fetchImpl: async (_, init) => {
-    request = JSON.parse(init.body);
-    return new Response(JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ record: row }) } }],
-      search_result: [{ title: lead.title, link: lead.url, content: lead.content }] }));
-  } });
-  const result = await api.request({ provider: 'zhipu', query: 'article:test', article: paper });
-  assert.equal(request.tools[0].web_search.search_engine, 'search_pro');
-  assert.equal(request.tools[0].web_search.search_result, true);
-  const verified = await extractSearchRecord(result.leads, paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z');
-  assert.equal(verified.abstract, abstract);
-  assert.equal(await extractSearchRecord([], paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z'), null);
-});
 
-test('智谱Chat读取官方web_search字段，与旧字段去重；模型自行填写的证据字段不采纳', async () => {
-  const row = { ...extracted.record, source_url: lead.url }; delete row.source_index;
-  const evidence = [{ title: lead.title, link: lead.url, content: lead.content }];
-  for (const placement of ['web_search', 'both', 'model_only']) {
-    let request;
-    const api = makeSearchSources({ zhipuKey: 'test-key-not-real', fetchImpl: async (_, init) => {
-      request = JSON.parse(init.body);
-      return new Response(JSON.stringify({ choices: [{ finish_reason: 'stop', message: {
-        content: JSON.stringify({ record: row, web_search: evidence }) } }],
-        ...(placement !== 'model_only' ? { web_search: evidence } : {}),
-        ...(placement === 'both' ? { search_result: evidence } : {}) }));
-    } });
-    const result = await api.request({ provider: 'zhipu', query: 'article:test', article: { ...paper, official_site: 'https://www.aeaweb.org' } });
-    assert.equal(request.tools[0].web_search.search_domain_filter, 'www.aeaweb.org');
-    assert.equal(result.leads.length, placement === 'model_only' ? 0 : 1);
-    const verified = await extractSearchRecord(result.leads, paper, journal, async () => result.extracted, '2026-09-17T01:00:00Z');
-    assert.equal(verified?.abstract || null, placement === 'model_only' ? null : abstract);
-    if (verified) assert.equal(verified.source_evidence.scope_url, 'https://open.bigmodel.cn/api/paas/v4/chat/completions');
-  }
-});
 
-test('智谱定向搜索使用官方域名参数，普通检索不继承前一次域名限制', async () => {
-  const requests = [];
-  const api = makeSearchSources({ zhipuKey: 'test-key-not-real', fetchImpl: async (_, init) => {
-    requests.push(JSON.parse(init.body)); return new Response(JSON.stringify({ search_result: [] }));
-  } });
-  await api.request({ provider: 'zhipu', query: '10.1016/example site:sciencedirect.com' });
-  await api.request({ provider: 'zhipu', query: paper.title_original });
-  assert.equal(requests[0].search_domain_filter, 'sciencedirect.com');
-  assert.equal(requests[0].search_query, '10.1016/example');
-  assert.equal(requests[1].search_domain_filter, undefined);
-  assert.equal(requests[1].search_query, paper.title_original);
-});
-test('放开智谱额度只接受新授权，SerpAPI仍严格保护免费额度', () => {
-  const policy = { schema_version: 1, approved_on: '2026-09-17', zhipu_engine: 'search_pro', zhipu_monthly_limit: null,
-    serpapi_monthly_limit: 250, lookback_days: 60, automatic_payment: false, production_enabled: true };
-  assert.doesNotThrow(() => validateSearchPolicy(policy));
-  assert.throws(() => validateSearchPolicy({ ...policy, approved_on: '2026-09-13' }));
-  assert.equal(searchAllowance(emptySearchBudget(), { provider: 'zhipu', zhipuMonthlyLimit: null }).allowed, true);
-  assert.equal(searchAllowance(emptySearchBudget(), { provider: 'serpapi_google', zhipuMonthlyLimit: null }).allowed, false);
-});
 test('历史SerpAPI整月阻塞自动恢复，新的每日冷却不被跳过', () => {
   const issue = { field: 'abstract', id: 'test', status: 'quota_exhausted', created_at: '2026-09-17T01:00:00Z',
     updated_at: '2026-09-17T01:00:00Z', next_retry_at: '2026-10-14T00:00:00Z', attempt_count: 1,

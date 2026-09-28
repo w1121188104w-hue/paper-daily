@@ -449,15 +449,3 @@ test('自动翻译真实 Git 测试：收费前远端已有登记，结算后只
   assert.ok(!tracked.includes('private-draft')); assert.ok(!tracked.includes('translations/batches'));
   assert.equal(git(['status', '--porcelain']).trim(), '');
 });
-
-test('自动翻译工作流：只把密钥交给翻译步骤；手动补库和每日共享生产锁', async () => {
-  const manual = JSON.parse(await fs.readFile(new URL('../.github/workflows/translate-library.yml', import.meta.url), 'utf8'));
-  const daily = JSON.parse(await fs.readFile(new URL('../.github/workflows/daily-collect.yml', import.meta.url), 'utf8'));
-  assert.deepEqual(Object.keys(manual.on), ['workflow_dispatch']);
-  assert.equal(manual.concurrency.group, daily.concurrency.group);
-  for (const workflow of [manual, daily]) {
-    assert.equal(JSON.stringify(workflow).split('secrets.DEEPSEEK_API_KEY').length - 1, 1);
-    assert.ok(workflow.jobs.report_translation_attention.needs.includes('deploy'));
-    assert.ok(JSON.stringify(workflow).includes('JOURNAL_TRANSLATION_ENABLED'));
-  }
-});

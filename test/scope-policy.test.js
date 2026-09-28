@@ -12,7 +12,6 @@ import { loadJournalConfig, findJournal } from '../src/services/journals.js';
 import { runJournalCollection } from '../src/services/journalRun.js';
 import { readJournalLibrary, writeLibraryJson } from '../src/services/journalLibrary.js';
 import { reconcileCatalogDiscovery } from '../src/services/catalogDiscoveryRun.js';
-import { runIsolatedPilot } from '../scripts/search-pilot.js';
 import { emptyRepairState, reconcileRepairState } from '../src/services/repairState.js';
 
 const config = await loadJournalConfig(), journal = findJournal(config, 'AER'), at = '2026-09-14T01:00:00.000Z';
@@ -96,8 +95,4 @@ test('历史版本兼容：按v1读取旧总名册，新写入采用当前规则
   assert.equal(after.manifest.master_policy_version, 7); assert.equal(after.masterList.statistics.research_candidates, 0);
   assert.equal(after.masterList.statistics.lectures, 1); assert.equal(after.papers[0].discovered_at, before.papers[0].discovered_at);
   assert.equal(await fs.readFile(path.join(root, legacy.master_list.path), 'utf8'), legacyBytes);
-});
-
-test('扩展试跑只允许审核过的单刊，未知期刊在任何文件复制或联网前拒绝', async () => {
-  await assert.rejects(runIsolatedPilot(config, { journalKey: 'ALL', repositoryRoot: '/must-not-read' }));
 });

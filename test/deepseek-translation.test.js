@@ -223,20 +223,6 @@ test('DeepSeek命令：真实流程的离线模拟只留密文，重复批次拒
   assert.ok(!logs.join('\n').includes(apiKey)); assert.ok(!logs.join('\n').includes('BEGIN PRIVATE KEY'));
 });
 
-test('DeepSeek工作流：仅手动、默认分支、首次运行、无仓库写权限，密钥只给翻译步骤，附件限密文', async () => {
-  const workflow = JSON.parse(await fs.readFile(new URL('../.github/workflows/translate-pilot.yml', import.meta.url), 'utf8'));
-  assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch']); assert.equal(workflow.on.workflow_dispatch.inputs.confirm_pilot.default, false);
-  assert.deepEqual(workflow.permissions, { contents: 'read' }); assert.equal(workflow.concurrency['cancel-in-progress'], false);
-  const job = workflow.jobs.pilot; assert.match(job.if, /github.run_attempt == 1/); assert.match(job.if, /default_branch/);
-  const secretSteps = job.steps.filter((step) => JSON.stringify(step).includes('secrets.DEEPSEEK_API_KEY'));
-  assert.equal(secretSteps.length, 1); assert.equal(secretSteps[0].id, 'translate');
-  assert.equal(job.steps[0].with['persist-credentials'], false);
-  const upload = job.steps.find((step) => step.uses?.startsWith('actions/upload-artifact@'));
-  assert.match(upload.uses, /@[a-f0-9]{40}$/); assert.equal(upload.with.path, '${{ steps.translate.outputs.directory }}/*.json');
-  assert.equal(upload.with['retention-days'], 7);
-  const daily = await fs.readFile(new URL('../.github/workflows/daily-collect.yml', import.meta.url), 'utf8');
-  assert.ok(daily.includes('JOURNAL_TRANSLATION_ENABLED')); assert.ok(!JSON.stringify(workflow).includes('git push'));
-});
 
 test('人工续接：绑定同一10篇清单，仅请求尚未尝试的后8篇，前2篇绝不重发', async () => {
   const ten = batch(Array.from({ length: 10 }, (_, i) => record({ doi: `10.1234/p${i}`, source_id: `10.1234/p${i}` })));

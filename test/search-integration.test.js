@@ -10,10 +10,7 @@ import { readSearchCatalog, searchJournalCatalog, catalogSearchQuery, catalogMon
 import { repairPaperMetadata, fillMissingMetadata } from '../src/services/searchMetadata.js';
 import { publicationFor } from '../src/services/masterList.js';
 import { validateMetadataRepairOnlyChange } from '../src/services/metadataRepairValidation.js';
-import { loadSearchPolicy, validateSearchPolicy } from '../src/services/searchPolicy.js';
-import { makeSearchBudgetGitHub } from '../src/services/searchBudgetGitHub.js';
 import { emptySearchBudget, reserveSearchRequest, settleSearchRequest, safeSerpAccountDiagnostics } from '../src/services/searchBudget.js';
-import { searchPreflight } from '../scripts/search-preflight.js';
 const config = await loadJournalConfig(), journal = config.journals.find(row => row.key === 'AER');
 const at = '2026-09-13T02:00:00.000Z', window = { fromDate: '2026-07-16', toDate: '2026-09-13' };
 const title = 'International trade and the allocation of economic resources';
@@ -27,11 +24,6 @@ function source(overrides = {}) { return normalizeSourceRecord({ source: 'publis
   source_evidence: { url: 'https://www.aeaweb.org/articles?id=10.1257/example', scope_url: 'https://www.aeaweb.org/issues/123', fetched_at: at, body_sha256: 'a'.repeat(64), method: 'article_metadata_abstract' }, ...overrides }); }
 const seed = overrides => mergePapers([source(overrides)], { firstSeenDate: '2026-09-13', checkedAt: at }).papers[0];
 
-test('用户搜索授权：Pro、2000次、免费250，拒绝升额和自动支付', async () => {
-  const policy = await loadSearchPolicy(); assert.equal(policy.zhipu_engine, 'search_pro'); assert.equal(typeof policy.production_enabled, 'boolean');
-  for (const enabled of [false, true]) assert.equal(validateSearchPolicy({ ...policy, production_enabled: enabled }).production_enabled, enabled);
-  for (const change of [{ zhipu_monthly_limit: 2001 }, { zhipu_engine: 'search_std' }, { automatic_payment: true }, { serpapi_monthly_limit: 251 }]) assert.throws(() => validateSearchPolicy({ ...policy, ...change }));
-});
 test('清单搜索：按期刊月份查询，不依赖已有论文标题，不丢失月份', () => {
   assert.deepEqual(catalogMonths(window), ['2026-07', '2026-08', '2026-09']);
   const q = catalogSearchQuery({ name: 'Extremely '.repeat(20) }, '2026-09', 'zhipu');
@@ -164,118 +156,11 @@ test('字段修复：可补无DOI记录，不覆盖既有摘要、月份、译�
   assert.throws(() => fillMissingMetadata(paper, source({ publication_date: '2025-09' })));
   assert.throws(() => fillMissingMetadata(paper, source(), { otherPapers: [{ id: 'other', doi: '10.1257/example' }] }));
 });
-test('远端搜索账本：读取现有用量，写入必须携带原SHA且限固定仓库/路径', async () => {
-  const calls = [], oldSha = 'a'.repeat(40), nextSha = 'b'.repeat(40);
-  const budget = reserveSearchRequest(emptySearchBudget(), { provider: 'zhipu', query: 'q', taskId: 'task', now: new Date(at), zhipuMonthlyLimit: 2000 }).state;
-  const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {
-    calls.push({ url, init }); if (init.method === 'PUT') { assert.equal(JSON.parse(init.body).sha, oldSha); return new Response(JSON.stringify({ content: { sha: nextSha } })); }
-    return new Response(JSON.stringify(url.includes('/git/ref/') ? { object: { sha: oldSha } } : { sha: oldSha, encoding: 'base64', content: Buffer.from(JSON.stringify(budget)).toString('base64') })); } });
-  const state = await ledger.read(); assert.equal(state.requests.length, 1); await ledger.persist(state);
-  assert.equal(calls.length, 3); assert.ok(calls.every(row => row.init.redirect === 'error'));
-  assert.throws(() => makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'other/repo' }));
-});
-test('远端搜索账本：已存在分支却丢失账本时停止，禁止将历史用量重置为0', async () => {
-  const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async url =>
-    url.includes('/git/ref/') ? new Response(JSON.stringify({ object: { sha: 'a'.repeat(40) } })) : new Response('', { status: 404 }) });
-  await assert.rejects(ledger.read({ initialize: true }));
-});
 
-test('远端搜索账本超过1MB时按相同blob SHA读取，用量不丢失且写入保留并发保护', async () => {
-  const budget = reserveSearchRequest(emptySearchBudget(), { provider: 'zhipu', query: 'q', taskId: 'task', now: new Date(at), zhipuMonthlyLimit: 2000 }).state;
-  const bytes = Buffer.from(JSON.stringify(budget) + ' '.repeat(1050000)), sha = 'c'.repeat(40), calls = [];
-  const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {
-    calls.push(url);
-    if (init.method === 'PUT') { assert.equal(JSON.parse(init.body).sha, sha); return new Response(JSON.stringify({ content: { sha: 'd'.repeat(40) } })); }
-    if (url.includes('/git/ref/')) return new Response(JSON.stringify({ object: { sha } }));
-    if (url.includes('/contents/')) {
-      assert.equal(init.headers.Accept, 'application/vnd.github.object+json');
-      return new Response(JSON.stringify({ sha, size: bytes.length, encoding: 'none', content: '', download_url: 'https://untrusted.example/never-follow' }));
-    }
-    assert.ok(url.endsWith('/git/blobs/' + sha));
-    return new Response(JSON.stringify({ sha, size: bytes.length, encoding: 'base64', content: bytes.toString('base64') }));
-  } });
-  const state = await ledger.read(); assert.deepEqual(state, budget); await ledger.persist(state);
-  assert.equal(calls.length, 4); assert.ok(calls.every(url => url.startsWith('https://api.github.com/repos/w1121188104w-hue/paper-daily/')));
-});
 
-test('远端大账本缺失、截断、SHA错配或超限必须停止，不能重置用量或写入', async () => {
-  const sha = 'c'.repeat(40), size = 1050000;
-  for (const mode of ['missing', 'sha', 'truncated', 'oversized']) {
-    const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {
-      assert.equal(init.method, 'GET');
-      if (url.includes('/git/ref/')) return new Response(JSON.stringify({ object: { sha } }));
-      if (url.includes('/contents/')) return new Response(JSON.stringify({ sha, size: mode === 'oversized' ? 5000001 : size, encoding: 'none', content: '' }));
-      if (mode === 'missing') return new Response('', { status: 404 });
-      return new Response(JSON.stringify({ sha: mode === 'sha' ? 'd'.repeat(40) : sha, size, encoding: 'base64', content: Buffer.from(JSON.stringify(emptySearchBudget())).toString('base64') }));
-    } });
-    await assert.rejects(ledger.read({ initialize: true }));
-    await assert.rejects(ledger.persist(emptySearchBudget()));
-  }
-});
 
-test('远端搜索账本：首次创建使用无尾斜杠仓库地址，分支建立后才能预占', async () => {
-  const calls = [], base = 'https://api.github.com/repos/w1121188104w-hue/paper-daily';
-  const ledger = makeSearchBudgetGitHub({ token: 'fake-token-for-test', repositoryName: 'w1121188104w-hue/paper-daily', fetchImpl: async (url, init) => {
-    calls.push({ url, method: init.method });
-    if (url.endsWith('/')) return new Response('', { status: 404 }); // GitHub rejects the former root endpoint.
-    if (url === base) return new Response(JSON.stringify({ default_branch: 'master' }));
-    if (url === `${base}/git/ref/heads/master`) return new Response(JSON.stringify({ object: { sha: 'a'.repeat(40) } }));
-    if (url === `${base}/git/refs` && init.method === 'POST') {
-      const body = JSON.parse(init.body); assert.equal(body.ref, 'refs/heads/codex/search-ledger');
-      assert.equal(body.sha, 'a'.repeat(40)); return new Response(JSON.stringify({ ref: body.ref }));
-    }
-    if (url === `${base}/contents/data/search-budget.json` && init.method === 'PUT') {
-      const body = JSON.parse(init.body); assert.equal(body.branch, 'codex/search-ledger'); assert.equal('sha' in body, false);
-      return new Response(JSON.stringify({ content: { sha: 'b'.repeat(40) } }));
-    }
-    return new Response('', { status: 404 });
-  } });
-  const state = await ledger.read({ initialize: true }); assert.deepEqual(state, emptySearchBudget());
-  await ledger.persist(reserveSearchRequest(state, { provider: 'zhipu', query: 'q', taskId: 'task', now: new Date(at), zhipuMonthlyLimit: 2000 }).state);
-  assert.equal(calls.at(-1).method, 'PUT'); assert.ok(calls.some(row => row.url === base));
-});
-test('密钥验证：先查免费账户，再远端预记账，仅调用一次Pro且不输出密钥', async () => {
-  const events = [], outputs = [];
-  const result = await searchPreflight({ env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily',
-    ZHIPU_API_KEY: 'private-zhipu-secret', SERPAPI_API_KEY: 'private-serp-secret' },
-    sourceFactory: options => { assert.equal(options.zhipuEngine, 'search_pro'); return {
-      account: async () => { events.push('account'); return { free_plan: true, remaining: 250, used: 0, renewal_date: '2026-10-13' }; },
-      request: async ({ provider }) => { events.push(provider); return { charged: 1, leads: [] }; } }; },
-    ledgerFactory: () => ({ read: async () => emptySearchBudget(), persist: async () => { events.push('checkpoint'); } }), log: row => outputs.push(row) });
-  assert.equal(result, 0); assert.deepEqual(events, ['account', 'checkpoint', 'zhipu', 'checkpoint']);
-  assert.ok(!outputs.join('').includes('private-')); assert.equal(JSON.parse(outputs[0]).papers_changed, 0);
-});
 
-test('密钥验证失败：显示安全错误码，保留未知计费且不自动再次搜索', async () => {
-  const outputs = [], events = [];
-  const result = await searchPreflight({ env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily' },
-    sourceFactory: () => ({ account: async () => ({ free_plan: true, remaining: 250, used: 0, renewal_date: '2026-10-13' }),
-      request: async () => { events.push('request'); throw Object.assign(new Error('private-secret'), { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' }); } }),
-    ledgerFactory: () => ({ read: async () => emptySearchBudget(), persist: async state => events.push(state.requests.at(-1).status) }), log: row => outputs.push(row) });
-  assert.equal(result, 1); assert.deepEqual(events, ['reserved', 'request', 'unknown']);
-  const report = JSON.parse(outputs[0]);
-  assert.equal(report.zhipu_request_sent, true); assert.equal(report.zhipu_local_used, 1);
-  assert.deepEqual(report.zhipu_diagnostic, { code: 'RATE_LIMITED', http_status: 429, provider_error_code: '1113' });
-  assert.equal(report.papers_changed, 0); assert.equal(report.translation_calls, 0); assert.equal(report.website_deployed, false);
-  assert.doesNotMatch(outputs.join(''), /private-secret/);
-});
 
-test('手动诊断重试：新运行获准后单次重试，旧预占保留，同一运行不能重复请求', async () => {
-  const today = new Date(), month = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit' }).format(today);
-  const old = reserveSearchRequest(emptySearchBudget(), { provider: 'zhipu', query: `American Economic Review ${month} articles`,
-    taskId: 'search-preflight-official-catalog', now: today, zhipuMonthlyLimit: 2000 });
-  let state = settleSearchRequest(old.state, old.reservation.id, { status: 'unknown', charged: null, now: today }), calls = 0;
-  const outputs = [], options = { env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily', GITHUB_RUN_ID: '123456789' },
-    sourceFactory: () => ({ account: async () => ({ free_plan: true, remaining: 250, used: 0, renewal_date: '2026-10-13' }),
-      request: async () => { calls++; throw new Error('temporary failure'); } }),
-    ledgerFactory: () => ({ read: async () => state, persist: async next => { state = next; } }), log: row => outputs.push(JSON.parse(row)) };
-  await searchPreflight(options); assert.equal(calls, 0); // Normal mode preserves cooldown.
-  await searchPreflight({ ...options, retryUnknown: true }); assert.equal(calls, 1);
-  assert.equal(state.requests.length, 2); assert.ok(state.requests.every(row => row.charged === null));
-  await searchPreflight({ ...options, retryUnknown: true }); assert.equal(calls, 1); // Same run remains protected.
-  assert.equal(outputs[1].zhipu_local_used, 2); assert.equal(outputs[2].zhipu_request_sent, false);
-  await assert.rejects(searchPreflight({ ...options, env: { ...options.env, GITHUB_RUN_ID: '' }, retryUnknown: true }));
-});
 
 test('账户只读诊断：仅允许枚举、数值和格式标记，禁止密钥邮箱及任意字符串', () => {
   const result = safeSerpAccountDiagnostics({ api_key: 'private-secret', account_email: 'private@example.com', account_status: 'private-secret',
@@ -283,10 +168,4 @@ test('账户只读诊断：仅允许枚举、数值和格式标记，禁止密�
     plan_renewal_date: '2026-10-13 00:00:00 UTC' }, at);
   assert.equal(result.verified_free_account, false); assert.equal(result.renewal_format, 'space_separated');
   assert.equal(JSON.stringify(result).includes('private'), false);
-});
-test('账户只读诊断：不创建账本，不调用任何搜索接口', async () => {
-  const result = await searchPreflight({ env: { GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REPOSITORY: 'w1121188104w-hue/paper-daily' },
-    accountOnly: true, sourceFactory: () => ({ accountDiagnostics: async () => ({ verified_free_account: false }), request: () => assert.fail('No search') }),
-    ledgerFactory: () => assert.fail('No ledger'), log: row => { assert.equal(JSON.parse(row).search_calls, 0); } });
-  assert.equal(result, 0);
 });

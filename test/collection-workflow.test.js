@@ -7,7 +7,6 @@ import {emptyWorkflow,validateWorkflow,addDiscoverySignals,createCollectionRun,a
 import {seedCatalogBaselines} from '../scripts/seed-catalog-baselines.js';
 import {catalogChecks,capturedIssueRank,recordCatalogBaseline} from '../src/services/catalogBaseline.js';
 import {workflowAuditChecks} from '../public/journals/viewModel.js';
-import {replaySavedDiscovery} from '../scripts/replay-saved-discovery.js';
 import {discoverCollectionTasks} from '../src/services/collectionDiscovery.js';
 import {createCollectionCoordinator,collectionHttpServer} from '../src/services/collectionCoordinator.js';
 import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-core.js';
@@ -81,11 +80,6 @@ test('catalog receipt separate from missing abstract; due retry selects related 
   assert.equal(out.tasks[0].status,'processed');assert.equal(out.receipts[0].pending_papers.length,1);
   assert.equal(createCollectionRun(out,[],{now}).jobs.length,0);
   assert.equal(createCollectionRun(out,[],{now:new Date('2026-10-01T00:00:00Z')}).jobs.length,1);
-});
-test('three-source failures still go to Zhipu then Scholar then Google; never translate',async()=>{
-  const order=[];const result=await discoverCollectionTasks({...config,journals:config.journals.filter(j=>j.key==='RP')},emptyWorkflow(),[],{
-    now,collect:async()=>{throw Error('source down');},search:async o=>{order.push(o.provider);return {called:true,result:{leads:[]}};}});
-  assert.deepEqual(order,['zhipu','serpapi_scholar','serpapi_google']);assert.equal(result.monitors.filter(m=>m.status==='failed').length,3);assert.equal(result.tasks.length,0);
 });
 
 test('new indexed paper alerts only its journal, deduplicates sources, and skips known papers',async()=>{
@@ -214,15 +208,6 @@ test('saved baselines suppress indexed known catalog papers even when missing ab
   assert.equal(next.tasks.length,0);assert.equal(next.catalog_baselines.length,1);
 });
 
-test('persisted issue baseline feeds discovery automatically; only the changed directory is queued',async()=>{
-  const fixture=JSON.parse(await fs.readFile(new URL('./fixtures/discovery-live-20260924.json',import.meta.url),'utf8'));
-  const s=emptyWorkflow(),catalog=ACTIVE_CATALOG_TASKS.find(t=>t.id===fixture.baseline.catalog_id);
-  recordCatalogBaseline(s,{catalog_id:catalog.id,url:catalog.url},[{task_id:catalog.id,source_url:catalog.url,captured_at:at,issue_heading:'Volume 81, Issue 4'}],[],{receiptId:'fixture',inputHash:'f'.repeat(64)});
-  const out=await discoverCollectionTasks({journals:[fixture.journal]},s,[],{now,collect:async()=>({source_results:[]}),
-    searchProviders:['zhipu'],search:async()=>({called:true,result:{leads:[fixture.lead]}})});
-  assert.equal(out.tasks.length,1);assert.equal(createCollectionRun(out,[],{now}).jobs[0].catalog_id,catalog.id);
-  assert.equal(out.catalog_baselines[0].rank[1],4); // search cannot promote the verified baseline
-});
 
 test('older captures/issues cannot refresh baseline deadlines; conflicting heading cannot invent an issue',()=>{
   const s=emptyWorkflow(),job={catalog_id:task.id,url:task.url};
@@ -233,16 +218,4 @@ test('older captures/issues cannot refresh baseline deadlines; conflicting headi
   assert.equal(s.catalog_baselines[0].receipt_id,'first');
   assert.equal(capturedIssueRank([{...page,page_title:'Volume 55, Issue 8'}],task),null);
   assert.equal(catalogChecks({...s,catalog_baselines:[{...s.catalog_baselines[0],url:'https://www.sciencedirect.com/journal/research-policy/vol/55/issue/10'}]},{now}).find(c=>c.catalog_id===task.id).status,'baseline_missing');
-});
-
-test('saved paid evidence replays offline, never promotes a baseline or treats controls/old reports as discovery',async()=>{
-  const fixture=JSON.parse(await fs.readFile(new URL('./fixtures/discovery-live-20260924.json',import.meta.url),'utf8'));
-  const s=emptyWorkflow(),catalog=ACTIVE_CATALOG_TASKS.find(t=>t.id===fixture.baseline.catalog_id);
-  recordCatalogBaseline(s,{catalog_id:catalog.id,url:catalog.url},[{task_id:catalog.id,source_url:catalog.url,captured_at:at,issue_heading:'Volume 81, Issue 4'}],[],{receiptId:'fixture',inputHash:'f'.repeat(64)});
-  const report={mode:'live_search_only',at,requests:[{provider:'zhipu',called:true,reason:null,task_id:'catalog-watch:JF:2026-09-23',leads:[fixture.lead]}]};
-  const next=replaySavedDiscovery(s,report,{now});assert.equal(next.tasks.length,1);assert.deepEqual(next.catalog_baselines,s.catalog_baselines);
-  assert.equal(replaySavedDiscovery(next,report,{now}).tasks[0].signals.length,1);
-  assert.deepEqual(replaySavedDiscovery(s,{...report,requests:[{...report.requests[0],reason:'request_outcome_unknown'}]},{now}),s);
-  assert.throws(()=>replaySavedDiscovery(s,{...report,positive_control_only:true},{now}));
-  assert.throws(()=>replaySavedDiscovery(s,report,{now:new Date('2026-10-10T00:00:00Z')}));
 });

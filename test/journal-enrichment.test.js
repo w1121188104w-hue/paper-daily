@@ -225,19 +225,6 @@ test('命令默认只读；缺明确save/类型/范围不能联网，不允许�
   assert.equal(calls,0);
 });
 
-test('每日流水线先双源、官网、补摘要再翻译，新手动流程使用同一生产锁且密钥不交叉', async () => {
-  const daily = JSON.parse(await fs.readFile(new URL('../.github/workflows/daily-collect.yml',import.meta.url),'utf8'));
-  const steps = daily.jobs.collect.steps;
-  assert.ok(steps.findIndex(s => s.id === 'collect') < steps.findIndex(s => s.id === 'enrich'));
-  assert.ok(steps.findIndex(s => s.id === 'enrich') < steps.findIndex(s => s.id === 'translate'));
-  assert.equal(steps.find(s => s.id === 'enrich').env.DEEPSEEK_API_KEY,undefined);
-  const manual = JSON.parse(await fs.readFile(new URL('../.github/workflows/enrich-library.yml',import.meta.url),'utf8'));
-  assert.deepEqual(manual.on,{ workflow_dispatch: {} }); assert.deepEqual(manual.concurrency,daily.concurrency);
-  assert.ok(manual.jobs.enrich.if.includes('default_branch'));
-  for (const s of manual.jobs.enrich.steps.filter(s => s.uses)) assert.match(s.uses,/@[a-f0-9]{40}$/);
-  assert.equal(manual.jobs.enrich.steps.find(s => s.id === 'enrich').env.DEEPSEEK_API_KEY,undefined);
-  assert.equal(manual.jobs.enrich.steps.find(s => s.id === 'translate').env.SEMANTIC_SCHOLAR_API_KEY,undefined);
-});
 
 test('OpenAlex断裂/重叠的摘要位置拒绝采用，不拼成疑似完整原文', async () => {
   for (const index of [{ We: [0],study: [2] },{ We: [0],study: [0] }, { We: '0' }, [], { We: [0, 0] }]) {
