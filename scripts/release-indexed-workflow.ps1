@@ -81,9 +81,9 @@ try {
    'actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b',
    'actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9',
    'actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e',
-   'actions/upload-artifact@v4'
+   'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
   )}|Out-Null
-  Api '/actions/workflows/collection-discovery.yml/enable' 'Put'|Out-Null
+  if((Api '/actions/workflows/collection-discovery.yml').state -ne 'active'){Api '/actions/workflows/collection-discovery.yml/enable' 'Put'|Out-Null}
   Api '/actions/variables/JOURNAL_DISCOVERY_ENABLED' 'Patch' @{name='JOURNAL_DISCOVERY_ENABLED';value='true'}|Out-Null
   CheckRetired
   Write-Output 'ACTIVATED: three-source discovery only; search and legacy workflows remain off.'
@@ -104,7 +104,11 @@ try {
  if($Mode-eq 'Status'){
   if($RunId){
    Api ('/actions/runs/'+$RunId)|Select-Object id,path,status,conclusion,head_sha,html_url|ConvertTo-Json
-   (Api ('/actions/runs/'+$RunId+'/jobs')).jobs|Select-Object id,name,status,conclusion,steps|ConvertTo-Json -Depth 7
+   $jobs=(Api ('/actions/runs/'+$RunId+'/jobs')).jobs
+   $jobs|Select-Object id,name,status,conclusion,steps|ConvertTo-Json -Depth 7
+   foreach($job in $jobs){if($job.conclusion -eq 'failure' -and $job.check_run_url.StartsWith($base)){
+    foreach($note in (Api ($job.check_run_url.Substring($base.Length)+'/annotations'))){$note|Select-Object annotation_level,message|ConvertTo-Json -Depth 4}
+   }}
    (Api ('/actions/runs/'+$RunId+'/pending_deployments'))|Select-Object environment,wait_timer,reviewers|ConvertTo-Json -Depth 4
   }else{(Api '/actions/runs?per_page=6').workflow_runs|Select-Object id,path,status,conclusion,head_sha,html_url|ConvertTo-Json}
  }
