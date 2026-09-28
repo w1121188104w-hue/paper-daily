@@ -36,7 +36,8 @@ try {
   }
  }
  function IsBlockedHistoricalRun($run){
-  if($run.id -ne 35945650331 -or $run.head_sha -ne '7a9a2947c37a0f194b4705f67e9a647a3b4f4ad5' -or $run.status -ne 'queued'){return $false}
+  $blocked=@{'35945650331'='7a9a2947c37a0f194b4705f67e9a647a3b4f4ad5';'35873380116'='aff7d99f957a1196f1b53b091a2c9ec44722f884';'35851898631'='2f0fc9ee35eb5eb2ddbaeff779539885d6d29fb0'}
+  if($blocked[[string]$run.id] -ne $run.head_sha -or $run.status -ne 'queued'){return $false}
   if((Api ('/actions/runs/'+$run.id+'/jobs')).total_count -ne 0){return $false}
   $policy=Api '/actions/permissions'
   if($policy.allowed_actions-eq 'local_only'){return $true}
@@ -90,7 +91,10 @@ try {
  if($Mode-in @('Publish','Discover')){
   $file=if($Mode-eq 'Publish'){'deploy-pages.yml'}else{'collection-discovery.yml'}
   $prior=(Api ('/actions/workflows/'+$file+'/runs?per_page=20')).workflow_runs
-  if(@($prior|Where-Object status -ne 'completed').Count){throw 'WORKFLOW_ALREADY_RUNNING'}
+  foreach($run in @($prior|Where-Object status -ne 'completed')){
+   if(IsBlockedHistoricalRun $run){Write-Output ('SKIPPED_ISOLATED_HISTORICAL_RUN '+$run.id);continue}
+   throw 'WORKFLOW_ALREADY_RUNNING'
+  }
   Api ('/actions/workflows/'+$file+'/dispatches') 'Post' @{ref='master'}|Out-Null
   Write-Output ('DISPATCHED '+$file+' '+$ExpectedCommit)
  }
