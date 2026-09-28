@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
+import { pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { loadJournalConfig, findJournal } from '../src/services/journals.js';
 import { normalizeSourceRecord } from '../src/services/paperModel.js';
@@ -129,6 +131,23 @@ test('旧历史文件缺失或损坏也会拒绝Git提交，即使当前网页�
   await fs.appendFile(oldFile, ' ');
   assert.equal((await readJournalLibrary({ root: options.root, config })).papers.length, 1);
   await assert.rejects(journalGitFiles(config, options));
+});
+
+test('历史原始页总量超过进程堆上限时仍能逐文件校验，不缓存整个历史正文', async (t) => {
+  const options = await fixture(t), library = await readJournalLibrary({ root: options.root, config });
+  const runId = newRunId(), raw = [];
+  for (let i = 0; i < 40; i++) raw.push(await writeLibraryJson(options.root,
+    `snapshots/${runId}/raw/page-${i}.json`, { text: 'x'.repeat(2 * 1024 * 1024) }));
+  const content = JSON.stringify({ ...library.manifest, raw });
+  await fs.writeFile(path.join(options.root, library.pointer.manifest.path), content);
+  const manifest = { path: library.pointer.manifest.path, sha256: createHash('sha256').update(content).digest('hex') };
+  await fs.writeFile(path.join(options.root, 'current.json'), JSON.stringify({ schema_version: 1, manifest }));
+  const moduleUrl = pathToFileURL(path.resolve('src/services/journalGitFiles.js')).href;
+  const code = `import {journalGitFiles} from ${JSON.stringify(moduleUrl)};
+    const plan=await journalGitFiles(${JSON.stringify(config)},${JSON.stringify(options)});
+    if(plan.versions!==1 || plan.files.filter(p=>p.includes('/raw/page-')).length!==40)process.exit(2);`;
+  execFileSync(process.execPath, ['--max-old-space-size=64', '--input-type=module', '-e', code],
+    { windowsHide: true, timeout: 60000, stdio: 'pipe' });
 });
 test('Git清单拒绝把整个data目录或其他文件夹当论文库', async (t) => {
   const options = await fixture(t);

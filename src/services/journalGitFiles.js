@@ -14,28 +14,35 @@ export async function journalGitFiles(config, { root = DEFAULT_LIBRARY_ROOT, rep
   assertLibrary(library.pointer, '尚无可保存到Git的正式版本');
   const files = new Set(['current.json']), visited = new Set();
   const checked = new Map();
-  async function read(ref) {
+  async function read(ref, returnValue = false) {
     assertLibrary(ref && typeof ref.path === 'string', '历史引用缺失');
-    if (checked.has(ref.path)) { assertLibrary(checked.get(ref.path).hash === ref.sha256, '同一路径出现不同校验值'); return checked.get(ref.path).data; }
-    const data = await readLibraryRef(root, ref); files.add(ref.path); checked.set(ref.path, { hash: ref.sha256, data }); return data;
+    if (checked.has(ref.path)) {
+      assertLibrary(checked.get(ref.path) === ref.sha256, '同一路径出现不同校验值');
+      if (!returnValue) return;
+    }
+    // Retain hashes, not every historical paper/raw payload. Otherwise a growing
+    // valid history exhausts the runner heap while preparing an ordinary commit.
+    const data = await readLibraryRef(root, ref);
+    files.add(ref.path); checked.set(ref.path, ref.sha256);
+    return returnValue ? data : undefined;
   }
   let ref = library.pointer.manifest;
   while (ref) {
     assertLibrary(!visited.has(ref.path), '历史版本链存在循环'); visited.add(ref.path);
-    const manifest = await read(ref);
+    const manifest = await read(ref, true);
     assertLibrary(manifest.schema_version === 1 && ref.path === `snapshots/${manifest.run_id}/manifest.json` &&
       isObject(manifest.papers) && isObject(manifest.runs) && Array.isArray(manifest.raw), '历史版本结构无效');
     for (const bucket of Object.values(manifest.papers)) await read(bucket);
     for (const bucket of Object.values(manifest.runs)) await read(bucket);
     for (const bucket of Object.values(manifest.enrichment_runs || {})) {
-      const logs = await read(bucket); assertLibrary(Array.isArray(logs), '历史补全日志结构无效');
+      const logs = await read(bucket, true); assertLibrary(Array.isArray(logs), '历史补全日志结构无效');
       for (const log of logs) await read(log.report);
     }
     if (manifest.enrichment_state) await read(manifest.enrichment_state);
     if (manifest.master_list) await read(manifest.master_list);
     if (manifest.repair_state) await read(manifest.repair_state);
     for (const bucket of Object.values(manifest.translation_imports || {})) {
-      const logs = await read(bucket); assertLibrary(Array.isArray(logs), '历史翻译日志结构无效');
+      const logs = await read(bucket, true); assertLibrary(Array.isArray(logs), '历史翻译日志结构无效');
       for (const log of logs) await read(log.report);
     }
     await read(manifest.audit); for (const raw of manifest.raw) await read(raw);
