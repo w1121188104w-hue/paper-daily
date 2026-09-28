@@ -95,10 +95,11 @@ export function collectionHttpServer(coordinator,{extensionId,port=17328}){
     if(req.headers['x-paper-workflow']!=='1'){reply(403,{message:'请求校验失败'});req.resume();return;}
     try {
       if(req.method==='GET'&&req.url==='/status'){reply(200,await coordinator.status());return;}
-      assertLibrary(req.method==='POST'&&['/start','/run','/submit','/finish','/sync','/check-publication'].includes(req.url),'请求不支持');
+      assertLibrary(req.method==='POST'&&['/status','/start','/run','/submit','/finish','/sync','/check-publication'].includes(req.url),'请求不支持');
       assertLibrary(req.headers['content-type']==='application/json','请求格式不支持');
       const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;assertLibrary(size<=(req.url==='/submit'?150*1024*1024:16384),'请求过大');chunks.push(chunk);}
       const body=JSON.parse(Buffer.concat(chunks).toString('utf8'));
+      if(req.url==='/status'){reply(200,await coordinator.status());return;}
       const result=req.url==='/run'?await coordinator.run(body.id):req.url==='/start'?await coordinator.start(body.mode):req.url==='/submit'?await coordinator.submit(body.id,body.data):
         req.url==='/finish'?await coordinator.finish(body.id):req.url==='/check-publication'?await coordinator.check(body.id):await coordinator.sync();
       reply(200,result||{ok:true});

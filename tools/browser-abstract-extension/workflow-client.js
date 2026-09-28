@@ -4,10 +4,20 @@ export const runKey=id=>`paper_workflow_run_${id}`;
 export const catalogKey=id=>`paper_workflow_catalog_${id}`;
 export const detailKey=id=>`paper_workflow_detail_${id}`;
 export function workflowId(){const id=new URL(location.href).searchParams.get('run');if(id&&!/^[a-f0-9-]{36}$/.test(id))throw Error('任务 ID 无效');return id;}
-export async function workflowRequest(endpoint,body){
-  const response=await fetch(WORKFLOW_ORIGIN+endpoint,{method:body?'POST':'GET',headers:{'X-Paper-Workflow':'1',...(body?{'Content-Type':'application/json'}:{})},
-    ...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(30000)});
-  const result=await response.json();if(!response.ok)throw Error(result.message||'正式流程服务未完成请求');return result;
+export async function workflowRequest(endpoint,body,fetchImpl=fetch){
+  // Like bridgeHealth: extension GET can omit Origin; use POST even for status.
+  // The service continues to reject requests without the configured Origin.
+  let response;
+  try{response=await fetchImpl(WORKFLOW_ORIGIN+endpoint,{method:'POST',headers:{'X-Paper-Workflow':'1','Content-Type':'application/json'},
+    body:JSON.stringify(body??{}),signal:AbortSignal.timeout(30000)});}
+  catch{throw Object.assign(Error('无法连接本机正式流程服务；请确认 start-workflow.cmd 已运行。'),{code:'WORKFLOW_CONNECTION'});}
+  if(!response.ok)throw Object.assign(Error(response.status===403?'本地服务拒绝扩展来源，请核对扩展 ID；不是 API Key 错误。':`正式流程服务返回 HTTP ${response.status}；原有数据保留。`),{code:`WORKFLOW_HTTP_${response.status}`});
+  try{return await response.json();}
+  catch{throw Object.assign(Error('服务已响应，但返回格式无法读取；请检查插件与服务版本。'),{code:'WORKFLOW_RESPONSE'});}
+}
+export function workflowFailure(error,stage='request'){
+  if(stage==='render')return '服务已连接，但任务页面显示失败；不是服务未启动。请保留页面并反馈此提示。';
+  return /^WORKFLOW_(CONNECTION|RESPONSE|HTTP_\d+)$/.test(error?.code||'')?error.message:'正式流程请求未完成；请保留原有数据并反馈。';
 }
 export async function storedRun(id){
   let run=(await chrome.storage.local.get(runKey(id)))[runKey(id)];

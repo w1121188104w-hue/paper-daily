@@ -138,6 +138,14 @@ test('loopback service rejects wrong origin, missing guard and arbitrary routes'
   assert.equal((await fetch(`http://127.0.0.1:${port}/status`,{headers:{...good,Origin:'https://evil.example'}})).status,403);
   assert.equal((await fetch(`http://127.0.0.1:${port}/status`,{headers:{Origin:good.Origin}})).status,403);
   assert.equal((await fetch(`http://127.0.0.1:${port}/shell`,{headers:good})).status,409);assert.equal(calls,1);
+  const post={method:'POST',headers:{...good,'Content-Type':'application/json'},body:'{}'};
+  assert.equal((await fetch(`http://127.0.0.1:${port}/status`,post)).status,200);
+  assert.equal(calls,2);
+  for(const Origin of [undefined,'null','https://evil.example','chrome-extension://'+'a'.repeat(32)]){
+    const headers={...post.headers};delete headers.Origin;if(Origin!==undefined)headers.Origin=Origin;
+    assert.equal((await fetch(`http://127.0.0.1:${port}/status`,{...post,headers})).status,403);
+  }
+  assert.equal(calls,2);
 });
 
 test('legacy ledger is readable but never invents a verified catalog baseline',()=>{
