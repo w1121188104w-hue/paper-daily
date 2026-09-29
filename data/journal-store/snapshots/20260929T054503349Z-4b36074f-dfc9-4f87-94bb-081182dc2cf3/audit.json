@@ -1,0 +1,239 @@
+{
+  "duplicates": [
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1016/j.respol.2026.105588",
+        "semanticscholar:efbdc1442085c6589691270a63a75f9af4747aab"
+      ],
+      "dois": [
+        "10.1016/j.respol.2026.105542",
+        "10.1016/j.respol.2026.105588"
+      ],
+      "journal_key": "RP"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "crossref:10.1016/j.respol.2026.105588",
+        "repec:https://ideas.repec.org/a/eee/respol/v55y2026i8s0048733326001332.html"
+      ],
+      "dois": [
+        "10.1016/j.respol.2026.105542",
+        "10.1016/j.respol.2026.105588"
+      ],
+      "journal_key": "RP"
+    },
+    {
+      "type": "doi_conflict",
+      "records": [
+        "openalex:W7212134732",
+        "repec:https://ideas.repec.org/a/eee/respol/v55y2026i8s0048733326001332.html"
+      ],
+      "dois": [
+        "10.1016/j.respol.2026.105542",
+        "10.1016/j.respol.2026.105588"
+      ],
+      "journal_key": "RP"
+    }
+  ],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7201983954",
+      "doi": "10.1016/s0048-7333(26)00185-x",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7212155837",
+      "doi": "10.1016/s0048-7333(26)00207-6",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/s0048-7333(26)00145-9",
+      "doi": "10.1016/s0048-7333(26)00145-9",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "1c8368faa651c4b9f7fdcc9dc6fc3a158009fc4f",
+      "doi": "10.1016/s0048-7333(26)00006-5",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "32b1f5c2ec44b65ea6211404c4f514b360894f08",
+      "doi": "10.1016/s0048-7333(26)00059-4",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "71c261386648701663424c242e3e5dbedba51b88",
+      "doi": "10.1016/s0048-7333(26)00145-9",
+      "journal_key": "RP",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "854121b871379d7c36423e60ea16603cd0dd3e4b",
+      "doi": "10.1016/s0048-7333(25)00217-3",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "e57cb324ae8aabe5cb43540acbae52b85ac10ab8",
+      "doi": "10.1016/s0048-7333(26)00032-6",
+      "journal_key": "RP",
+      "title": "Research Policy: Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_prefixed_editorial_board"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "source": "openalex",
+      "source_id": "W7203822458",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204757638",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105589",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105606",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1016/j.respol.2026.105588",
+      "doi": "10.1016/j.respol.2026.105588",
+      "journal_key": "RP",
+      "title": "Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "source_notice_type"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "9122ba0645b21eb8250e2e123bff09f029046ef1",
+      "doi": "10.1016/j.respol.2026.105589",
+      "journal_key": "RP",
+      "title": "Corrigendum to “Connectivity infrastructure and innovation: The effects of headquarters versus subsidiary management” [Res. Policy Volume 55, Issue 8, 2026, 105542]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    },
+    {
+      "source": "semanticscholar",
+      "source_id": "afb0cdb10bc61ef41d3ba9252001f4338c6879a3",
+      "doi": "10.1016/j.respol.2026.105606",
+      "journal_key": "RP",
+      "title": "Corrigendum to “How do within-industry CVC investments shape industry concentration?” [Res. Policy (2026) 105567]",
+      "classification": {
+        "version": 4,
+        "kind": "possible_correction",
+        "excluded": false,
+        "rule": "notice_title"
+      }
+    }
+  ]
+}

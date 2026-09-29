@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "run_id": "20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f",
+  "created_at": "2026-09-29T05:44:15.253Z",
+  "operation": "collection",
+  "parent": {
+    "path": "snapshots/20260929T054349354Z-2842b15f-51b5-4936-a7c2-1e5d3cd3ab99/manifest.json",
+    "sha256": "1e986c9404683aa721fbc182d3f16d9a90c1dcc31a3c1a0c3cf4bf81a1742b44"
+  },
+  "papers": {
+    "2026": {
+      "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/papers/2026.json",
+      "sha256": "4d934a3072d2d7157005b05b38493a749658dd22daf1cc5972c8aec328931389",
+      "count": 887
+    }
+  },
+  "runs": {
+    "2026-09": {
+      "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/runs/2026-09.json",
+      "sha256": "8a876311c9d78384e2eb19d6f7a5912563eb19fdbcd57d8d89d773c82f218d12",
+      "count": 79
+    }
+  },
+  "translation_imports": {
+    "2026-09": {
+      "path": "snapshots/20260923T105759381Z-ac25aac6-665b-45ba-81a6-2f39052b7a07/translation_imports/2026-09.json",
+      "sha256": "05c1e0a2c3f1e60976c702b398bd0caf992126b585462070c841bd6ca568cf90",
+      "count": 132
+    }
+  },
+  "audit": {
+    "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/audit.json",
+    "sha256": "94d44594b0aa278ec74c8cf34ee169edb2409b3c3a8e3ff4958e820336de8959"
+  },
+  "raw": [
+    {
+      "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/raw/JFE-openalex.json",
+      "sha256": "ebccb8497a7d1b8595080a9d3873ad3dc7881a9dcff6961796dd556f77536223"
+    },
+    {
+      "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/raw/JFE-crossref.json",
+      "sha256": "46658798fba189d1d188e578e7f798151edeada2e2f99518f42fdac329017f77"
+    },
+    {
+      "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/raw/JFE-semanticscholar.json",
+      "sha256": "844133928822231fa02173ff93b7e682ce03f8ac69d7b59da26f4377a3225161"
+    }
+  ],
+  "master_policy_version": 7,
+  "master_window": {
+    "fromDate": "2026-08-01",
+    "toDate": "2026-09-29"
+  },
+  "enrichment_runs": {
+    "2026-09": {
+      "path": "snapshots/20260923T104209727Z-ee00f634-5e69-4543-945b-f144faebdf59/enrichment_runs/2026-09.json",
+      "sha256": "72e0885be3671ce52dfeba80d4ec9001ac9e0f3a5ad1d07fb36c61bbfede53a4",
+      "count": 30
+    }
+  },
+  "enrichment_state": {
+    "path": "snapshots/20260919T013908658Z-c5aff3f0-4d8d-43c8-8ff4-0e406d7c3931/enrichment-state.json",
+    "sha256": "7b6cb5bb18e355b7da309e16053bb910e4aa4fade1ce0f6eb1d3ea49a1fef428"
+  },
+  "translation_queue": {
+    "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/translation-queue.json",
+    "sha256": "f805af9285230d4f9468664c00b658af064d71841c678738c4db3199d3890463"
+  },
+  "master_list": {
+    "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/master-list.json",
+    "sha256": "fb6a7375800ba6ec57238d2b6250f612798537db71c2e894adbde492d6f0bd16"
+  },
+  "repair_state": {
+    "path": "snapshots/20260929T054401930Z-9e7abc00-ba2b-4c34-8a32-85fc57b1964f/repair-state.json",
+    "sha256": "760d5415fb0d4e600d6c5906b2e2351644c59aa393a2fa70af13bb17b914e7e4"
+  }
+}

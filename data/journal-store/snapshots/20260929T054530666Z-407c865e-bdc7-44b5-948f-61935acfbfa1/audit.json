@@ -1,0 +1,72 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7172506715",
+      "doi": "10.1287/mnsc.2026.eb.v72n8",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7212280933",
+      "doi": "10.1287/mnsc.2026.eb.v72n9",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1287/mnsc.2026.eb.v72n8",
+      "doi": "10.1287/mnsc.2026.eb.v72n8",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1287/mnsc.2026.eb.v72n9",
+      "doi": "10.1287/mnsc.2026.eb.v72n9",
+      "journal_key": "MS",
+      "title": "Editorial Board",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    }
+  ],
+  "notices": [
+    {
+      "source": "openalex",
+      "source_id": "W7213560318",
+      "doi": "10.1287/mnsc.2024.05008",
+      "journal_key": "MS",
+      "title": "Index-Based Yield Protection for Smallholder Farmers",
+      "classification": {
+        "version": 4,
+        "kind": "needs_review",
+        "excluded": false,
+        "rule": "source_type_needs_review"
+      }
+    }
+  ]
+}

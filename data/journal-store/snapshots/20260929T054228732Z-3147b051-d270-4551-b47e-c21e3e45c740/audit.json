@@ -1,0 +1,32 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7213982925",
+      "doi": "10.1111/1911-3846.70086",
+      "journal_key": "CAR",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1111/1911-3846.70086",
+      "doi": "10.1111/1911-3846.70086",
+      "journal_key": "CAR",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    }
+  ],
+  "notices": []
+}

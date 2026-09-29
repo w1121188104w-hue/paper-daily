@@ -1,0 +1,32 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7211970592",
+      "doi": "10.1002/joom.70059",
+      "journal_key": "JOM",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1002/joom.70059",
+      "doi": "10.1002/joom.70059",
+      "journal_key": "JOM",
+      "title": "Issue Information",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "issue_information_title"
+      }
+    }
+  ],
+  "notices": []
+}

@@ -1,0 +1,123 @@
+{
+  "duplicates": [],
+  "excluded": [
+    {
+      "source": "openalex",
+      "source_id": "W7204257144",
+      "doi": "10.1086/743444",
+      "journal_key": "JPE",
+      "title": "JPE Turnaround Times",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204270199",
+      "doi": "10.1086/743795",
+      "journal_key": "JPE",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "openalex",
+      "source_id": "W7204276168",
+      "doi": "10.1086/743796",
+      "journal_key": "JPE",
+      "title": "Recent Referees",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743444",
+      "doi": "10.1086/743444",
+      "journal_key": "JPE",
+      "title": "JPE Turnaround Times",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743795",
+      "doi": "10.1086/743795",
+      "journal_key": "JPE",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743796",
+      "doi": "10.1086/743796",
+      "journal_key": "JPE",
+      "title": "Recent Referees",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/743929",
+      "doi": "10.1086/743929",
+      "journal_key": "JPE",
+      "title": "JPE Turnaround Times",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/744158",
+      "doi": "10.1086/744158",
+      "journal_key": "JPE",
+      "title": "Front Matter",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "exact_administrative_title"
+      }
+    },
+    {
+      "source": "crossref",
+      "source_id": "10.1086/744159",
+      "doi": "10.1086/744159",
+      "journal_key": "JPE",
+      "title": "Recent Referees",
+      "classification": {
+        "version": 4,
+        "kind": "administrative",
+        "excluded": true,
+        "rule": "journal_specific_administrative_title"
+      }
+    }
+  ],
+  "notices": []
+}
