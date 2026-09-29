@@ -31461,7 +31461,7 @@
       "batch_id": "batch-a6014c59a00dd8e0894434a0e467f449e94fbdb5a919b556d251cc12f33c4359",
       "mode": "backfill",
       "created_at": "2026-09-29T13:44:56.990Z",
-      "finished_at": null,
+      "finished_at": "2026-09-29T13:46:13.766Z",
       "items": [
         {
           "id": "doi:10.1016/j.jacceco.2026.101929",
@@ -31480,10 +31480,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 675,
+            "completion_tokens": 196,
+            "total_tokens": 871
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jacceco.2026.101930",
@@ -31502,10 +31509,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 769,
+            "completion_tokens": 270,
+            "total_tokens": 1039
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag030",
@@ -31524,10 +31538,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 900,
+            "completion_tokens": 268,
+            "total_tokens": 1168
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag031",
@@ -31546,10 +31567,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 667,
+            "completion_tokens": 203,
+            "total_tokens": 870
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag032",
@@ -31568,10 +31596,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 664,
+            "completion_tokens": 188,
+            "total_tokens": 852
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag033",
@@ -31590,10 +31625,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 689,
+            "completion_tokens": 234,
+            "total_tokens": 923
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag024",
@@ -31610,12 +31652,20 @@
             }
           ],
           "retry_of": {},
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "NUMERIC_MARKER_MISMATCH"
+          },
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
-          "completed_fields": []
+          "status": "partial",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 948,
+            "completion_tokens": 259,
+            "total_tokens": 1207
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag047",
@@ -31634,10 +31684,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 721,
+            "completion_tokens": 197,
+            "total_tokens": 918
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag051",
@@ -31656,10 +31713,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 688,
+            "completion_tokens": 165,
+            "total_tokens": 853
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag052",
@@ -31678,10 +31742,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 656,
+            "completion_tokens": 171,
+            "total_tokens": 827
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
