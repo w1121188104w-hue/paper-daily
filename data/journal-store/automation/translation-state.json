@@ -32658,7 +32658,7 @@
       "batch_id": "batch-e4d3fccab58466356aed5f5338d4a0bb913ed4b7e48b2e782a6ea777fad45d79",
       "mode": "backfill",
       "created_at": "2026-09-29T13:54:02.578Z",
-      "finished_at": null,
+      "finished_at": "2026-09-29T13:55:10.331Z",
       "items": [
         {
           "id": "doi:10.1257/aer.20230557",
@@ -32677,10 +32677,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 690,
+            "completion_tokens": 166,
+            "total_tokens": 856
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1257/aer.20231684",
@@ -32699,10 +32706,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 692,
+            "completion_tokens": 152,
+            "total_tokens": 844
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1257/aer.20240491",
@@ -32721,10 +32735,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 579,
+            "completion_tokens": 106,
+            "total_tokens": 685
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1257/aer.20250781",
@@ -32743,10 +32764,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 605,
+            "completion_tokens": 157,
+            "total_tokens": 762
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
