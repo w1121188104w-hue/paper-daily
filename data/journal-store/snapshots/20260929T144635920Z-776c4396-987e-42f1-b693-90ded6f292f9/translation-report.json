@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-884e02e4e4cf6e5cc7445fdcce8849247f505587c972c4dd03d21793baaee552",
+  "stats": {
+    "completed_fields": 12,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 6
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.2308/tar-2023-0226",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 0,
+      "id": "doi:10.2308/tar-2023-0226",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.2308/tar-2024-0095",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.2308/tar-2024-0095",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.2308/tar-2024-0166",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.2308/tar-2024-0166",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.2308/tar-2024-0427",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.2308/tar-2024-0427",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.2308/tar-2025-0068",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.2308/tar-2025-0068",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "doi:10.2308/tar-2025-0280",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "doi:10.2308/tar-2025-0280",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
