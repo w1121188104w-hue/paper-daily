@@ -1,0 +1,2203 @@
+{
+  "schema_version": 1,
+  "run_id": "20260929T110122662Z-d78e5dfa-0568-4479-bac1-3317880ca580",
+  "status": "partial",
+  "from_date": "2026-09-29",
+  "to_date": "2026-09-29",
+  "stats": {
+    "added": 103,
+    "abstracts_filled": 8,
+    "abstracts_checked": 8,
+    "pending_candidates": 31
+  },
+  "journals": [
+    {
+      "journal_key": "JF",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 39,
+      "official_in_window_count": 0,
+      "matched_count": 1,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 2,
+      "entries": [
+        {
+          "doi": "10.1111/jofi.70063",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70063",
+          "paper_id": "doi:10.1111/jofi.70063",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70019",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70019",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.13354",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.13354",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "TAR",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 39,
+      "official_in_window_count": 0,
+      "matched_count": 0,
+      "missing_count": 8,
+      "added_count": 8,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.2308/tar-2024-0166",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2024-0166/27968/Employee-Level-Real-Activities-Management-Employee",
+          "paper_id": "doi:10.2308/tar-2024-0166",
+          "status": "added"
+        },
+        {
+          "doi": "10.2308/tar-2023-0226",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2023-0226/27947/Tax-Induced-Shifts-in-Risk-Taking-Incentives-and",
+          "paper_id": "doi:10.2308/tar-2023-0226",
+          "status": "added"
+        },
+        {
+          "doi": "10.2308/tar-2023-0208",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2023-0208/27948/The-Consequences-of-Regulating-Ownership-for",
+          "paper_id": "doi:10.2308/tar-2023-0208",
+          "status": "added"
+        },
+        {
+          "doi": "10.2308/tar-2025-0280",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2025-0280/27942/The-Evolving-Make-or-Buy-Decision-Strategic",
+          "paper_id": "doi:10.2308/tar-2025-0280",
+          "status": "added"
+        },
+        {
+          "doi": "10.2308/tar-2019-0605",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2019-0605/27937/Government-Brokerage-Analysts-and-Market",
+          "paper_id": "doi:10.2308/tar-2019-0605",
+          "status": "added"
+        },
+        {
+          "doi": "10.2308/tar-2024-0427",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2024-0427/27933/Auditing-in-the-Digital-Age-Determinants-and",
+          "paper_id": "doi:10.2308/tar-2024-0427",
+          "status": "added"
+        },
+        {
+          "doi": "10.2308/tar-2025-0068",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2025-0068/27931/Inequality-Grows-in-Silence-The-Impact-of",
+          "paper_id": "doi:10.2308/tar-2025-0068",
+          "status": "added"
+        },
+        {
+          "doi": "10.2308/tar-2024-0095",
+          "journal_key": "TAR",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2024-0095/27519/A-New-Wave-of-Talent-Big-4-Response-to-New-Partner",
+          "paper_id": "doi:10.2308/tar-2024-0095",
+          "status": "added"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JAE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 28,
+      "official_in_window_count": 0,
+      "matched_count": 1,
+      "missing_count": 18,
+      "added_count": 18,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1016/j.jacceco.2026.101901",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000443",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101901",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101902",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000455",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101902",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101903",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000467",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101903",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101904",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000479",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101904",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101905",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000480",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101905",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101906",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000492",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101906",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101907",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000509",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101907",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101908",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000510",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101908",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101909",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000522",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101909",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101910",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000534",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101910",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101912",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000558",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101912",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101952",
+          "journal_key": "JAE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000960",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101952",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101928",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000716",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101928",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101929",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000728",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101929",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101930",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S016541012600073X",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101930",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101916",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000595",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101916",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101914",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000571",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101914",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101911",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000546",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101911",
+          "status": "added"
+        },
+        {
+          "doi": "10.1016/j.jacceco.2026.101913",
+          "journal_key": "JAE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S016541012600056X",
+          "paper_id": "doi:10.1016/j.jacceco.2026.101913",
+          "status": "added"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "RAS",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 17,
+      "official_in_window_count": 0,
+      "matched_count": 2,
+      "missing_count": 22,
+      "added_count": 22,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1007/s11142-026-09961-4",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09961-4",
+          "paper_id": "doi:10.1007/s11142-026-09961-4",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09959-y",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09959-y",
+          "paper_id": "doi:10.1007/s11142-026-09959-y",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09963-2",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09963-2",
+          "paper_id": "doi:10.1007/s11142-026-09963-2",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09960-5",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09960-5",
+          "paper_id": "doi:10.1007/s11142-026-09960-5",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09966-z",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09966-z",
+          "paper_id": "doi:10.1007/s11142-026-09966-z",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09964-1",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09964-1",
+          "paper_id": "doi:10.1007/s11142-026-09964-1",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09968-x",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09968-x",
+          "paper_id": "doi:10.1007/s11142-026-09968-x",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09974-z",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09974-z",
+          "paper_id": "doi:10.1007/s11142-026-09974-z",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09972-1",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09972-1",
+          "paper_id": "doi:10.1007/s11142-026-09972-1",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09956-1",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09956-1",
+          "paper_id": "doi:10.1007/s11142-026-09956-1",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09965-0",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09965-0",
+          "paper_id": "doi:10.1007/s11142-026-09965-0",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09962-3",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09962-3",
+          "paper_id": "doi:10.1007/s11142-026-09962-3",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-025-09890-8",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-025-09890-8",
+          "paper_id": "doi:10.1007/s11142-025-09890-8",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09980-1",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09980-1",
+          "paper_id": "doi:10.1007/s11142-026-09980-1",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09969-w",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09969-w",
+          "paper_id": "doi:10.1007/s11142-026-09969-w",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09973-0",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09973-0",
+          "paper_id": "doi:10.1007/s11142-026-09973-0",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09977-w",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09977-w",
+          "paper_id": "doi:10.1007/s11142-026-09977-w",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09978-9",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09978-9",
+          "paper_id": "doi:10.1007/s11142-026-09978-9",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09976-x",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09976-x",
+          "paper_id": "doi:10.1007/s11142-026-09976-x",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09979-8",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09979-8",
+          "paper_id": "doi:10.1007/s11142-026-09979-8",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09994-9",
+          "journal_key": "RAS",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09994-9",
+          "paper_id": "doi:10.1007/s11142-026-09994-9",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1007/s11142-026-09985-w",
+          "journal_key": "RAS",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09985-w",
+          "paper_id": "doi:10.1007/s11142-026-09985-w",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1007/s11142-026-09934-7",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09934-7",
+          "paper_id": "doi:10.1007/s11142-026-09934-7",
+          "status": "added"
+        },
+        {
+          "doi": "10.1007/s11142-026-09935-6",
+          "journal_key": "RAS",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://link.springer.com/article/10.1007/s11142-026-09935-6",
+          "paper_id": "doi:10.1007/s11142-026-09935-6",
+          "status": "added"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "AER",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 39,
+      "official_in_window_count": 0,
+      "matched_count": 0,
+      "missing_count": 40,
+      "added_count": 40,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1257/aer.20251660",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251660",
+          "paper_id": "doi:10.1257/aer.20251660",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20250578",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250578",
+          "paper_id": "doi:10.1257/aer.20250578",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240041",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240041",
+          "paper_id": "doi:10.1257/aer.20240041",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20221434",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221434",
+          "paper_id": "doi:10.1257/aer.20221434",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20230421",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230421",
+          "paper_id": "doi:10.1257/aer.20230421",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20221562",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221562",
+          "paper_id": "doi:10.1257/aer.20221562",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20231640",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231640",
+          "paper_id": "doi:10.1257/aer.20231640",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240108",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240108",
+          "paper_id": "doi:10.1257/aer.20240108",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240584",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240584",
+          "paper_id": "doi:10.1257/aer.20240584",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20241592",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241592",
+          "paper_id": "doi:10.1257/aer.20241592",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240338",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240338",
+          "paper_id": "doi:10.1257/aer.20240338",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20231366",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231366",
+          "paper_id": "doi:10.1257/aer.20231366",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20241072",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241072",
+          "paper_id": "doi:10.1257/aer.20241072",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20250446",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250446",
+          "paper_id": "doi:10.1257/aer.20250446",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20241283",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241283",
+          "paper_id": "doi:10.1257/aer.20241283",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20231717",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231717",
+          "paper_id": "doi:10.1257/aer.20231717",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240410",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240410",
+          "paper_id": "doi:10.1257/aer.20240410",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240699",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240699",
+          "paper_id": "doi:10.1257/aer.20240699",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240137",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240137",
+          "paper_id": "doi:10.1257/aer.20240137",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20251879",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251879",
+          "paper_id": "doi:10.1257/aer.20251879",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20231651",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231651",
+          "paper_id": "doi:10.1257/aer.20231651",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20241027",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241027",
+          "paper_id": "doi:10.1257/aer.20241027",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20230586",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230586",
+          "paper_id": "doi:10.1257/aer.20230586",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20230714",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230714",
+          "paper_id": "doi:10.1257/aer.20230714",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20231417",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231417",
+          "paper_id": "doi:10.1257/aer.20231417",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20250051",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250051",
+          "paper_id": "doi:10.1257/aer.20250051",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20250081",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250081",
+          "paper_id": "doi:10.1257/aer.20250081",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20251956",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251956",
+          "paper_id": "doi:10.1257/aer.20251956",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240179",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240179",
+          "paper_id": "doi:10.1257/aer.20240179",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240393",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240393",
+          "paper_id": "doi:10.1257/aer.20240393",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240766",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240766",
+          "paper_id": "doi:10.1257/aer.20240766",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240666",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240666",
+          "paper_id": "doi:10.1257/aer.20240666",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20241561",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241561",
+          "paper_id": "doi:10.1257/aer.20241561",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20230448",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230448",
+          "paper_id": "doi:10.1257/aer.20230448",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20250115",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250115",
+          "paper_id": "doi:10.1257/aer.20250115",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20231486",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231486",
+          "paper_id": "doi:10.1257/aer.20231486",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20240651",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240651",
+          "paper_id": "doi:10.1257/aer.20240651",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20250206",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250206",
+          "paper_id": "doi:10.1257/aer.20250206",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20231368",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231368",
+          "paper_id": "doi:10.1257/aer.20231368",
+          "status": "added"
+        },
+        {
+          "doi": "10.1257/aer.20241596",
+          "journal_key": "AER",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241596",
+          "paper_id": "doi:10.1257/aer.20241596",
+          "status": "added"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JPE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 49,
+      "official_in_window_count": 0,
+      "matched_count": 5,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1086/742710",
+          "journal_key": "JPE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742710",
+          "paper_id": "doi:10.1086/742710",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742724",
+          "journal_key": "JPE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742724",
+          "paper_id": "doi:10.1086/742724",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742714",
+          "journal_key": "JPE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742714",
+          "paper_id": "doi:10.1086/742714",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742421",
+          "journal_key": "JPE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742421",
+          "paper_id": "doi:10.1086/742421",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742423",
+          "journal_key": "JPE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742423",
+          "paper_id": "doi:10.1086/742423",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "QJE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 27,
+      "official_in_window_count": 0,
+      "matched_count": 1,
+      "missing_count": 4,
+      "added_count": 4,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1093/qje/qjag036",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag036/8742218",
+          "paper_id": "doi:10.1093/qje/qjag036",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag033",
+          "journal_key": "QJE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag033/8725759",
+          "paper_id": "doi:10.1093/qje/qjag033",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/qje/qjag030",
+          "journal_key": "QJE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag030/8723919",
+          "paper_id": "doi:10.1093/qje/qjag030",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/qje/qjag031",
+          "journal_key": "QJE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag031/8713481",
+          "paper_id": "doi:10.1093/qje/qjag031",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/qje/qjag032",
+          "journal_key": "QJE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag032/8711394",
+          "paper_id": "doi:10.1093/qje/qjag032",
+          "status": "added"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "RES",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 51,
+      "official_in_window_count": 0,
+      "matched_count": 0,
+      "missing_count": 11,
+      "added_count": 11,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1093/restud/rdag071",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag071/8725429",
+          "paper_id": "doi:10.1093/restud/rdag071",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag068",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag068/8719022",
+          "paper_id": "doi:10.1093/restud/rdag068",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag067",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag067/8709777",
+          "paper_id": "doi:10.1093/restud/rdag067",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag060",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag060/8709761",
+          "paper_id": "doi:10.1093/restud/rdag060",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag061",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag061/8709751",
+          "paper_id": "doi:10.1093/restud/rdag061",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag064",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag064/8709732",
+          "paper_id": "doi:10.1093/restud/rdag064",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag057",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag057/8706269",
+          "paper_id": "doi:10.1093/restud/rdag057",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag024",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag024/8703771",
+          "paper_id": "doi:10.1093/restud/rdag024",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag051",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag051/8700903",
+          "paper_id": "doi:10.1093/restud/rdag051",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag052",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag052/8694101",
+          "paper_id": "doi:10.1093/restud/rdag052",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/restud/rdag047",
+          "journal_key": "RES",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag047/8688845",
+          "paper_id": "doi:10.1093/restud/rdag047",
+          "status": "added"
+        }
+      ],
+      "attempts": []
+    }
+  ],
+  "abstracts": [
+    {
+      "paper_id": "doi:10.1016/j.jacceco.2026.101952",
+      "journal_key": "JAE",
+      "doi": "10.1016/j.jacceco.2026.101952",
+      "status": "found",
+      "abstract_source": "publisher"
+    },
+    {
+      "paper_id": "doi:10.1007/s11142-026-09994-9",
+      "journal_key": "RAS",
+      "doi": "10.1007/s11142-026-09994-9",
+      "status": "found",
+      "abstract_source": "publisher"
+    },
+    {
+      "paper_id": "doi:10.1007/s11142-026-09985-w",
+      "journal_key": "RAS",
+      "doi": "10.1007/s11142-026-09985-w",
+      "status": "found",
+      "abstract_source": "publisher"
+    },
+    {
+      "paper_id": "doi:10.1086/742710",
+      "journal_key": "JPE",
+      "doi": "10.1086/742710",
+      "status": "found",
+      "abstract_source": "publisher"
+    },
+    {
+      "paper_id": "doi:10.1086/742724",
+      "journal_key": "JPE",
+      "doi": "10.1086/742724",
+      "status": "found",
+      "abstract_source": "publisher"
+    },
+    {
+      "paper_id": "doi:10.1086/742714",
+      "journal_key": "JPE",
+      "doi": "10.1086/742714",
+      "status": "found",
+      "abstract_source": "publisher"
+    },
+    {
+      "paper_id": "doi:10.1086/742421",
+      "journal_key": "JPE",
+      "doi": "10.1086/742421",
+      "status": "found",
+      "abstract_source": "publisher"
+    },
+    {
+      "paper_id": "doi:10.1086/742423",
+      "journal_key": "JPE",
+      "doi": "10.1086/742423",
+      "status": "found",
+      "abstract_source": "publisher"
+    }
+  ],
+  "decisions": [
+    {
+      "doi": "10.1016/j.jacceco.2026.101934",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101935",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101933",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101927",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101926",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101932",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101925",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101917",
+      "journal_key": "JAE",
+      "action": "skipped",
+      "reason": "review_not_complete"
+    },
+    {
+      "doi": "10.1257/aer.20231684",
+      "journal_key": "AER",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/qje/qjag034",
+      "journal_key": "QJE",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag076",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag075",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag074",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag070",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag063",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag065",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag056",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag062",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag066",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag058",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag059",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag055",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag054",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag021",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag035",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag053",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag033",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag043",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1093/restud/rdag041",
+      "journal_key": "RES",
+      "action": "skipped",
+      "reason": "article_identity_unconfirmed"
+    },
+    {
+      "doi": "10.1111/jofi.70063",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70063"
+    },
+    {
+      "doi": "10.1111/jofi.70019",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70019"
+    },
+    {
+      "doi": "10.1111/jofi.13354",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.13354"
+    },
+    {
+      "doi": "10.2308/tar-2024-0166",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2024-0166/27968/Employee-Level-Real-Activities-Management-Employee"
+    },
+    {
+      "doi": "10.2308/tar-2023-0226",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2023-0226/27947/Tax-Induced-Shifts-in-Risk-Taking-Incentives-and"
+    },
+    {
+      "doi": "10.2308/tar-2023-0208",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2023-0208/27948/The-Consequences-of-Regulating-Ownership-for"
+    },
+    {
+      "doi": "10.2308/tar-2025-0280",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2025-0280/27942/The-Evolving-Make-or-Buy-Decision-Strategic"
+    },
+    {
+      "doi": "10.2308/tar-2019-0605",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2019-0605/27937/Government-Brokerage-Analysts-and-Market"
+    },
+    {
+      "doi": "10.2308/tar-2024-0427",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2024-0427/27933/Auditing-in-the-Digital-Age-Determinants-and"
+    },
+    {
+      "doi": "10.2308/tar-2025-0068",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2025-0068/27931/Inequality-Grows-in-Silence-The-Impact-of"
+    },
+    {
+      "doi": "10.2308/tar-2024-0095",
+      "journal_key": "TAR",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2024-0095/27519/A-New-Wave-of-Talent-Big-4-Response-to-New-Partner"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101901",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000443"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101902",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000455"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101903",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000467"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101904",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000479"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101905",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000480"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101906",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000492"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101907",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000509"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101908",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000510"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101909",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000522"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101910",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000534"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101912",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000558"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101952",
+      "journal_key": "JAE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000960"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101928",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000716"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101929",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000728"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101930",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S016541012600073X"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101916",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000595"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101914",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000571"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101911",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0165410126000546"
+    },
+    {
+      "doi": "10.1016/j.jacceco.2026.101913",
+      "journal_key": "JAE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S016541012600056X"
+    },
+    {
+      "doi": "10.1007/s11142-026-09961-4",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09961-4"
+    },
+    {
+      "doi": "10.1007/s11142-026-09959-y",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09959-y"
+    },
+    {
+      "doi": "10.1007/s11142-026-09963-2",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09963-2"
+    },
+    {
+      "doi": "10.1007/s11142-026-09960-5",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09960-5"
+    },
+    {
+      "doi": "10.1007/s11142-026-09966-z",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09966-z"
+    },
+    {
+      "doi": "10.1007/s11142-026-09964-1",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09964-1"
+    },
+    {
+      "doi": "10.1007/s11142-026-09968-x",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09968-x"
+    },
+    {
+      "doi": "10.1007/s11142-026-09974-z",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09974-z"
+    },
+    {
+      "doi": "10.1007/s11142-026-09972-1",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09972-1"
+    },
+    {
+      "doi": "10.1007/s11142-026-09956-1",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09956-1"
+    },
+    {
+      "doi": "10.1007/s11142-026-09965-0",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09965-0"
+    },
+    {
+      "doi": "10.1007/s11142-026-09962-3",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09962-3"
+    },
+    {
+      "doi": "10.1007/s11142-025-09890-8",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-025-09890-8"
+    },
+    {
+      "doi": "10.1007/s11142-026-09980-1",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09980-1"
+    },
+    {
+      "doi": "10.1007/s11142-026-09969-w",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09969-w"
+    },
+    {
+      "doi": "10.1007/s11142-026-09973-0",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09973-0"
+    },
+    {
+      "doi": "10.1007/s11142-026-09977-w",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09977-w"
+    },
+    {
+      "doi": "10.1007/s11142-026-09978-9",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09978-9"
+    },
+    {
+      "doi": "10.1007/s11142-026-09976-x",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09976-x"
+    },
+    {
+      "doi": "10.1007/s11142-026-09979-8",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09979-8"
+    },
+    {
+      "doi": "10.1007/s11142-026-09994-9",
+      "journal_key": "RAS",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09994-9"
+    },
+    {
+      "doi": "10.1007/s11142-026-09985-w",
+      "journal_key": "RAS",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09985-w"
+    },
+    {
+      "doi": "10.1007/s11142-026-09934-7",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09934-7"
+    },
+    {
+      "doi": "10.1007/s11142-026-09935-6",
+      "journal_key": "RAS",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://link.springer.com/article/10.1007/s11142-026-09935-6"
+    },
+    {
+      "doi": "10.1257/aer.20251660",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251660"
+    },
+    {
+      "doi": "10.1257/aer.20250578",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250578"
+    },
+    {
+      "doi": "10.1257/aer.20240041",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240041"
+    },
+    {
+      "doi": "10.1257/aer.20221434",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221434"
+    },
+    {
+      "doi": "10.1257/aer.20230421",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230421"
+    },
+    {
+      "doi": "10.1257/aer.20221562",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221562"
+    },
+    {
+      "doi": "10.1257/aer.20231640",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231640"
+    },
+    {
+      "doi": "10.1257/aer.20240108",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240108"
+    },
+    {
+      "doi": "10.1257/aer.20240584",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240584"
+    },
+    {
+      "doi": "10.1257/aer.20241592",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241592"
+    },
+    {
+      "doi": "10.1257/aer.20240338",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240338"
+    },
+    {
+      "doi": "10.1257/aer.20231366",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231366"
+    },
+    {
+      "doi": "10.1257/aer.20241072",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241072"
+    },
+    {
+      "doi": "10.1257/aer.20250446",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250446"
+    },
+    {
+      "doi": "10.1257/aer.20241283",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241283"
+    },
+    {
+      "doi": "10.1257/aer.20231717",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231717"
+    },
+    {
+      "doi": "10.1257/aer.20240410",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240410"
+    },
+    {
+      "doi": "10.1257/aer.20240699",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240699"
+    },
+    {
+      "doi": "10.1257/aer.20240137",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240137"
+    },
+    {
+      "doi": "10.1257/aer.20251879",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251879"
+    },
+    {
+      "doi": "10.1257/aer.20231651",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231651"
+    },
+    {
+      "doi": "10.1257/aer.20241027",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241027"
+    },
+    {
+      "doi": "10.1257/aer.20230586",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230586"
+    },
+    {
+      "doi": "10.1257/aer.20230714",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230714"
+    },
+    {
+      "doi": "10.1257/aer.20231417",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231417"
+    },
+    {
+      "doi": "10.1257/aer.20250051",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250051"
+    },
+    {
+      "doi": "10.1257/aer.20250081",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250081"
+    },
+    {
+      "doi": "10.1257/aer.20251956",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251956"
+    },
+    {
+      "doi": "10.1257/aer.20240179",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240179"
+    },
+    {
+      "doi": "10.1257/aer.20240393",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240393"
+    },
+    {
+      "doi": "10.1257/aer.20240766",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240766"
+    },
+    {
+      "doi": "10.1257/aer.20240666",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240666"
+    },
+    {
+      "doi": "10.1257/aer.20241561",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241561"
+    },
+    {
+      "doi": "10.1257/aer.20230448",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230448"
+    },
+    {
+      "doi": "10.1257/aer.20250115",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250115"
+    },
+    {
+      "doi": "10.1257/aer.20231486",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231486"
+    },
+    {
+      "doi": "10.1257/aer.20240651",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240651"
+    },
+    {
+      "doi": "10.1257/aer.20250206",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250206"
+    },
+    {
+      "doi": "10.1257/aer.20231368",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231368"
+    },
+    {
+      "doi": "10.1257/aer.20241596",
+      "journal_key": "AER",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241596"
+    },
+    {
+      "doi": "10.1086/742710",
+      "journal_key": "JPE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742710"
+    },
+    {
+      "doi": "10.1086/742724",
+      "journal_key": "JPE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742724"
+    },
+    {
+      "doi": "10.1086/742714",
+      "journal_key": "JPE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742714"
+    },
+    {
+      "doi": "10.1086/742421",
+      "journal_key": "JPE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742421"
+    },
+    {
+      "doi": "10.1086/742423",
+      "journal_key": "JPE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742423"
+    },
+    {
+      "doi": "10.1093/qje/qjag036",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag036/8742218"
+    },
+    {
+      "doi": "10.1093/qje/qjag033",
+      "journal_key": "QJE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag033/8725759"
+    },
+    {
+      "doi": "10.1093/qje/qjag030",
+      "journal_key": "QJE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag030/8723919"
+    },
+    {
+      "doi": "10.1093/qje/qjag031",
+      "journal_key": "QJE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag031/8713481"
+    },
+    {
+      "doi": "10.1093/qje/qjag032",
+      "journal_key": "QJE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag032/8711394"
+    },
+    {
+      "doi": "10.1093/restud/rdag071",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag071/8725429"
+    },
+    {
+      "doi": "10.1093/restud/rdag068",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag068/8719022"
+    },
+    {
+      "doi": "10.1093/restud/rdag067",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag067/8709777"
+    },
+    {
+      "doi": "10.1093/restud/rdag060",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag060/8709761"
+    },
+    {
+      "doi": "10.1093/restud/rdag061",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag061/8709751"
+    },
+    {
+      "doi": "10.1093/restud/rdag064",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag064/8709732"
+    },
+    {
+      "doi": "10.1093/restud/rdag057",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag057/8706269"
+    },
+    {
+      "doi": "10.1093/restud/rdag024",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag024/8703771"
+    },
+    {
+      "doi": "10.1093/restud/rdag051",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag051/8700903"
+    },
+    {
+      "doi": "10.1093/restud/rdag052",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag052/8694101"
+    },
+    {
+      "doi": "10.1093/restud/rdag047",
+      "journal_key": "RES",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag047/8688845"
+    }
+  ],
+  "input_sha256": "bdb55d95e051169578ec0be59afec1684c64cee1c37864369c4ef36665551e39",
+  "scope": "captured_details_only",
+  "stage": "browser_import",
+  "note": "Capture import date, not publication window; does not establish complete journal coverage."
+}
