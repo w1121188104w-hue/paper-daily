@@ -28807,6 +28807,225 @@
           ]
         }
       ]
+    },
+    {
+      "id": "5930b1d8-93e7-4f4f-8eea-9291ffd1fbe4",
+      "batch_id": "batch-224733024e21209bdc916b9afd165eea61aec38a6aa2b6ea00c87a84ae38f3d8",
+      "mode": "backfill",
+      "created_at": "2026-09-29T11:07:47.271Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1007/s11142-026-09994-9",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "be5e2ad1698c873400b3b55fc6954622d86ddfaef68797622011aa12c616a5f0",
+              "task_id": "task:49a25a490dc75abe27e04f882cb29d1e7356bd8d059705f72f650209f0b2b0eb"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "d15e002edf1716faed503c49c1bfff8599c82cacd6a3f58e4fcc2529a1b0a02d",
+              "task_id": "task:4858690da4f09fd3776965178bd1918e6ad02fe06b283cd86fdba3615218464e"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jacceco.2026.101950",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "eb977a0ac6f82c6f53eadc7df426456db800938d326dbc187fd264c37e9fb55f",
+              "task_id": "task:0659237552d732770486734461d6566b8ad97c3d42f2df82b588ca85903eaf19"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "d26e0f5530702a0b9bb1133998089266052b1b30887589947920dac3cda22737",
+              "task_id": "task:1aeee3033befd2a84e4b12d805695fdbd973d759ec25544c2fe0b57d8e94c8f7"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jacceco.2026.101952",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "dc4c6c684139de2619c9984ac2963ff9154703f1ecc440acf016e7be6ed2b3dc",
+              "task_id": "task:32186b3c7a8fc1fcab4f04365bfc9a312e90df47228838299a6c510c2b202b95"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "5df4774f06bb9748b3479710898bb8f9ff4a8eb39e6c71cd1866f26c0190dc6d",
+              "task_id": "task:52b85fbe1dd4f176b9e791dd840afcde0b738cf0199dc47737d7a6b7d3b3d2d9"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jcorpfin.2026.103079",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "cd990526e5c45127798f28eb30f3f761c7c63a0c60737233ba1518d2907407f7",
+              "task_id": "task:bf48f06d470d2e5ff63d74ba35a8317964196f0be5721aceb66d0028d2a5adb7"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jcorpfin.2026.103096",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "f164beaf4990e9ded90a82c23349fc76e9ee278ca625511a5ff361046fe71018",
+              "task_id": "task:7a8e4a57a8d22f7493d48ba455f3dd3893394338c91c95ab57fbc282f7615d32"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jcorpfin.2026.103098",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "a1eafb5f98d7010d714a513aae5df92f3106d043f8334ba1dcaf59cc7d723658",
+              "task_id": "task:1c6bc844228c032d6478a8714ae6851291add6203452d031fa7e4432cc1a88db"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "42915f5e94d329ceb02d54e3b17aa759e7eb626962627edb8230b2b84f1e37d8",
+              "task_id": "task:bd3b6095764ac4ce244e818ace3de711ed909fc2d37f82a9850faf0ab90bb473"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jcorpfin.2026.103099",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "f3d71492fdca502b5f21d8afcc1e8e6c0aeb55cb45292abe3f39afa633307fac",
+              "task_id": "task:273d393c782c589ab713b02a571fb55649aa7cfa4e0acb49b833f950161939ad"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "bd24000d0e29a9dd19094d534f9d972a6d8e63e23930e1568c70e3d63039857e",
+              "task_id": "task:1dabef163900e32af091f845ab8eaab70637ada22d84fe7f6b9d65712867009f"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jfineco.2026.104357",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "e7bf0f70bf4cd35b287b7ad74d5094cf0d1e53668995d7e9e0012bb4dc6fc55c",
+              "task_id": "task:cff6252d4ffa449dd79efffc96991e2a204e46b0d3d0087d6b20c39818995b09"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "2547f3da53270c4a9839758a41bf845b5cba7e1b1f5eb295c3788db261c95985",
+              "task_id": "task:1db04c3027bbdfae084a34c4357355a061f5d1a1a71fb7a2475e87ce9ed31b90"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jfineco.2026.104360",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "7f05a75ce16d7cf9aeca028b8363bf3ee8910debe4c1b740c10d76317ceffb82",
+              "task_id": "task:56845bbd8678c904b09dd014506f377c633da44a9ef1a20784ebc59d1380f548"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "c6494f98f5dbbfa808b18c51827948d0759707f194a273914e73d24380740001",
+              "task_id": "task:26170159b80c861df5b3f6af8989efe9fa22f90c4815e920242f3eb2927a7bfc"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1016/j.jfineco.2026.104361",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "e42b5f91e9cc048339235fff0aaa4771a1bc78f74a21031fc222a1a960cbeaea",
+              "task_id": "task:bd0347fda5bb654c303acef950262c46fdc236d3d8cd27aed80d849221fc5258"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "6c73b5fbbf7710a7deb017cd686acefa2926cd51cfe041a32a17acb6957d0a03",
+              "task_id": "task:6e6e63b45ae3e2e0d513124e80414a463906a71adbc86cf6c5596d9902f07fe4"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
