@@ -8,6 +8,9 @@ import {assertLibrary} from '../src/services/libraryValidation.js';
 import {fileURLToPath} from 'node:url';
 import {collectJournals} from '../src/services/collectJournals.js';
 import {runJournalCollection} from '../src/services/journalRun.js';
+import {collectOfficialCatalogs} from '../src/services/officialCatalog.js';
+import {enqueuePublication,publicationInputHash} from '../src/services/cloudPublication.js';
+import {randomUUID} from 'node:crypto';
 const repositoryRoot=fileURLToPath(new URL('../',import.meta.url));
 async function main(){
   const {values:v}=parseArgs({options:{run:{type:'boolean'},'save-sources':{type:'boolean'}}});
@@ -15,13 +18,21 @@ async function main(){
   const config=await loadJournalConfig(),root=path.join(repositoryRoot,'data/journal-store');
   const library=await readJournalLibrary({root,config});
   await withLibraryLock(path.join(repositoryRoot,'data/collection-workflow'),async()=>{
-    const collect=v['save-sources']?async(c,opts)=>{let result;
-      await runJournalCollection(c,{...opts,root,collect:async(c,o)=>{result=await collectJournals(c,o);return result;}});
-      return result;
-    }:collectJournals;
-    const state=await discoverIndexedCollectionTasks(config,await readWorkflow(repositoryRoot),library.papers,{collect,
-      sourceOptions:{maxPages:10,timeoutMs:15000,pageDelayMs:1000,semanticScholarKey:process.env.SEMANTIC_SCHOLAR_API_KEY},
+    const sourceOptions={maxPages:10,timeoutMs:15000,pageDelayMs:1000,semanticScholarKey:process.env.SEMANTIC_SCHOLAR_API_KEY};
+    // One validated snapshot per run, not nineteen copies of the entire library.
+    const indexed=v['save-sources']?await runJournalCollection(config,{...sourceOptions,root,withSemanticScholar:true}):null;
+    const collect=indexed?async(_c,opts)=>({source_results:indexed.source_results.filter(r=>r.journal_key===opts.journalKey)}):collectJournals;
+    let state=await discoverIndexedCollectionTasks(config,await readWorkflow(repositoryRoot),library.papers,{collect,
+      sourceOptions,
       onJournal:s=>saveWorkflow(repositoryRoot,s)});
+    if(v['save-sources']){
+      const official=await collectOfficialCatalogs(config,state,{repositoryRoot,root,onProgress:row=>console.log(JSON.stringify(row))});
+      state=official.state;await saveWorkflow(repositoryRoot,state);
+      const current=await readJournalLibrary({root,config});
+      const changed=current.papers.filter(p=>{const old=library.papers.find(x=>x.id===p.id);return !old||!old.abstract_original&&p.abstract_original;}).map(p=>p.id);
+      if(changed.length)await enqueuePublication(repositoryRoot,{id:randomUUID(),publicationId:randomUUID(),paperIds:changed,
+        inputHash:publicationInputHash(current.papers.filter(p=>changed.includes(p.id)).map(p=>[p.id,p.title_original,p.abstract_original]))});
+    }
     console.log(JSON.stringify({pending_catalogs:state.tasks.filter(t=>t.status==='pending').length,
       failed_checks:state.monitors.filter(m=>m.status!=='ok'&&m.status!=='disabled').length,paid_search_enabled:false,abstract_search:false}));
   });

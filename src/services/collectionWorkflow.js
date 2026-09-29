@@ -33,7 +33,7 @@ export function validateWorkflow(s) {
       time(t.created_at) && time(t.updated_at), '目录任务身份无效');
     ids.add(t.id);
     for (const signal of t.signals) assertLibrary(/^[a-f0-9]{64}$/.test(signal.key) &&
-      ['crossref','openalex','semanticscholar','zhipu','serpapi_scholar','serpapi_google','manual'].includes(signal.source) &&
+      ['crossref','openalex','semanticscholar','official','zhipu','serpapi_scholar','serpapi_google','manual'].includes(signal.source) &&
       typeof signal.title === 'string' && signal.title.length <= 1500 && (!signal.doi || cleanDoi(signal.doi) === signal.doi), '目录提醒证据无效');
   }
   for (const p of s.checked_papers) assertLibrary(cleanDoi(p.doi) === p.doi && typeof p.journal === 'string' &&
@@ -42,7 +42,7 @@ export function validateWorkflow(s) {
   for (const r of s.receipts) assertLibrary(typeof r.id === 'string' && time(r.at) && ['daily','full'].includes(r.mode) &&
     ['completed_catalogs','pending_catalogs'].every(k=>Number.isInteger(r[k]) && r[k]>=0) && Array.isArray(r.pending_papers), '批次回执无效');
   for (const m of s.monitors) assertLibrary(typeof m.journal === 'string' && time(m.checked_at) &&
-    ['crossref','openalex','semanticscholar','search'].includes(m.source) && ['ok','partial','failed','disabled','quota_exhausted'].includes(m.status), '发现状态无效');
+    ['crossref','openalex','semanticscholar','official','search'].includes(m.source) && ['ok','partial','failed','disabled','quota_exhausted'].includes(m.status), '发现状态无效');
   return s;
 }
 export async function readWorkflow(repositoryRoot) {
@@ -85,9 +85,9 @@ export function publicWorkflow(state, { now = new Date(), papers = [] } = {}) {
       url:t.url,signal_count:t.signals.length,confidence:t.signals.some(s=>s.confidence==='paper_detected')?'paper_detected':'possible_update',
       updated_at:t.updated_at,titles:t.signals.slice(-5).map(s=>s.title)})),
     pending_papers:pendingWorkflowPapers(state,papers),
-    monitors:state.monitors.map(m=>({journal:m.journal,source:m.source,status:m.status,checked_at:m.checked_at})), receipts:state.receipts.slice(-20).map(r=>({id:r.id,at:r.at,mode:r.mode,
+    monitors:state.monitors.map(m=>({journal:m.journal,source:m.source,status:m.status,checked_at:m.checked_at,catalog_id:m.catalog_id||null,code:m.code||null})), receipts:state.receipts.slice(-20).map(r=>({id:r.id,at:r.at,mode:r.mode,
       completed_catalogs:r.completed_catalogs,pending_catalogs:r.pending_catalogs,pending_papers:r.pending_papers.length,input_sha256:r.input_sha256,
-      publication_id:r.publication_id||null,pending_translation_fields:r.pending_translation_fields||0})),
+      publication_id:r.publication_id||null,pending_translation_fields:r.pending_translation_fields??null,translation_status:r.translation_status||null,translation_code:r.translation_code||null,cloud_processed_at:r.cloud_processed_at||null})),
     full_audit_last_at:[...state.receipts].reverse().find(r=>r.mode==='full'&&r.pending_catalogs===0)?.at || null,
     known_papers:papers.map(p=>{const checked=state.checked_papers.find(x=>x.doi===p.doi&&x.journal===p.journal_key);
       return {doi:p.doi,journal:p.journal_key,title:p.title_original,complete:!!p.abstract_original || checked?.status==='confirmed_absent' || classifyPaper(p).kind==='other',
@@ -106,7 +106,7 @@ export function createCollectionRun(state, papers, { mode='daily', now=new Date(
     for(const m of p.catalog_memberships||[]) {const task=taskFor(m.task_id),url=task&&catalogUrl(m.catalog_url,task);
       if(url&&!jobs.some(j=>j.catalog_id===task.id&&j.url===url))jobs.push({catalog_id:task.id,url});}
   return {version:1,id:randomUUID(),mode,created_at:now.toISOString(),max_requests:maxRequests,
-    jobs, task_versions:active.map(t=>({id:t.id,signals:t.signals.map(s=>s.key)})),
+    jobs:jobs.map(j=>({...j,signal_at:active.find(t=>t.catalog_id===j.catalog_id&&t.url===j.url)?.updated_at||null})), task_versions:active.map(t=>({id:t.id,signals:t.signals.map(s=>s.key)})),
     known_papers:publicWorkflow(state,{papers,now}).known_papers};
 }
 
@@ -141,10 +141,14 @@ export async function applyCollectionReceipt(input, run, data, prepared, library
   assertLibrary(data.workflow_run_id===run.id && Array.isArray(data.catalog?.pages) && time(run.created_at),'回执不属于当前任务');
   if(state.receipts.some(r=>r.id===run.id&&r.input_sha256===prepared.input_sha256)) return state;
   const pages=verifiedPages(data), pending=[], completeJobs=[];
+  const inRun=p=>p.captured_at>=run.created_at||(run.direct_pages||[]).some(d=>canonicalEvidence(d)===canonicalEvidence(p));
   const checked=await checkedCatalogPapers(data);
-  const repair=catalogRepairJobs(data.catalog);
+  // Fresh browser pages plus byte-equivalent server-supplied cached pages are
+  // the only eligible evidence. Do not let the engine's time-only freshness
+  // check reject an authenticated pre-run direct capture.
+  const repair=catalogRepairJobs({...data.catalog,pages:pages.filter(inRun),run_started_at:null});
   for(const job of run.jobs) {
-    const task=taskFor(job.catalog_id), captured=pages.filter(p=>p.task_id===job.catalog_id && p.captured_at>=run.created_at &&
+    const task=taskFor(job.catalog_id), captured=pages.filter(p=>p.task_id===job.catalog_id && inRun(p) &&
       catalogUrl(p.source_url,task) && ['catalog_candidates','catalog_empty','catalog_landing'].includes(p.status));
     const root=captured.find(p=>[p.requested_url,p.source_url].includes(job.url));
     const unfinished=(data.catalog.queue||[]).filter(j=>j.task_id===job.catalog_id).some((j)=>
@@ -177,7 +181,7 @@ export async function applyCollectionReceipt(input, run, data, prepared, library
     }
   }
   for(const captured of completeJobs) {
-    recordCatalogBaseline(state,captured,pages.filter(p=>p.captured_at>=run.created_at),checked,
+    recordCatalogBaseline(state,captured,pages.filter(inRun),checked,
       {receiptId:run.id,inputHash:prepared.input_sha256});
     const task=state.tasks.find(t=>t.catalog_id===captured.catalog_id&&t.url===captured.url);
     const version=task&&run.task_versions.find(t=>t.id===task.id);

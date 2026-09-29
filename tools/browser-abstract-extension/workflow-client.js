@@ -34,7 +34,9 @@ export function incrementalPapers(papers,run,now=Date.now()){
 export async function saveRun(run){
   await chrome.storage.local.setAccessLevel({accessLevel:'TRUSTED_CONTEXTS'});
   const existing=(await chrome.storage.local.get(catalogKey(run.id)))[catalogKey(run.id)];
-  await chrome.storage.local.set({[runKey(run.id)]:run,...(!existing?{[catalogKey(run.id)]:{schema_version:1,mode:'paused',reason:'正式任务已建立；不会清除网站提醒。',cursor:0,
+  const pages=run.direct_pages||[],directJobs=[...new Map(pages.map(p=>[p.task_id+'|'+p.requested_url,{task_id:p.task_id,url:p.requested_url,depth:0}])).values()];
+  const browserJobs=run.jobs.filter(j=>!directJobs.some(d=>d.task_id===j.catalog_id&&d.url===j.url)).map(j=>({task_id:j.catalog_id,url:j.url,depth:0}));
+  await chrome.storage.local.set({[runKey(run.id)]:run,...(!existing?{[catalogKey(run.id)]:{schema_version:1,mode:'paused',reason:'正式任务已建立；不会清除网站提醒。',
     run_started_at:run.created_at,scope_task_ids:[...new Set(run.jobs.map(j=>j.catalog_id))],
-    queue:run.jobs.map(j=>({task_id:j.catalog_id,url:j.url,depth:0})),pages:[],history:[]}}:{})});
+    queue:[...directJobs,...browserJobs],cursor:directJobs.length,pages,history:[]}}:{})});
 }

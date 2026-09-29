@@ -1,0 +1,66 @@
+name: Translate queued collections and publish
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '43 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: journal-production
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: vars.JOURNAL_CLOUD_PUBLICATION_ENABLED == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.queue.outputs.pending }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: master
+      - name: Check durable queue without credentials
+        id: queue
+        run: |
+          node --input-type=module -e "import fs from 'node:fs';const p='data/collection-workflow/publication-queue.json';const q=fs.existsSync(p)?JSON.parse(fs.readFileSync(p)): {requests:[]};fs.appendFileSync(process.env.GITHUB_OUTPUT,'pending='+(process.env.GITHUB_EVENT_NAME==='workflow_dispatch'||q.requests.some(r=>['pending','processing'].includes(r.status)&&(!r.next_at||Date.parse(r.next_at)<=Date.now())))+'\n')"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        if: steps.queue.outputs.pending == 'true'
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - if: steps.queue.outputs.pending == 'true'
+        run: npm ci --ignore-scripts
+      - name: Translate only queued paper IDs with durable billing guards
+        if: steps.queue.outputs.pending == 'true'
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: node scripts/publish-collection.js
+      - name: Validate formal data and build site
+        if: steps.queue.outputs.pending == 'true'
+        id: build
+        run: |
+          node scripts/journal-library.js --validate
+          node scripts/build-journal-site.js --github-output
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+        if: steps.queue.outputs.pending == 'true'
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        if: steps.queue.outputs.pending == 'true'
+        with:
+          path: ${{ steps.build.outputs.directory }}
+          include-hidden-files: true
+  deploy:
+    if: vars.JOURNAL_PAGES_ENABLED == 'true' && needs.publish.outputs.changed == 'true'
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+        id: deployment

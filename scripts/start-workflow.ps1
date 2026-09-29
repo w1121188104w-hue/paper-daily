@@ -18,9 +18,10 @@ if (-not $Worker) {
 try {
   . (Join-Path $project 'tools/browser-abstract-extension/review-config.ps1')
   $config = Read-PaperReviewConfig -Path (Join-Path $env:LOCALAPPDATA 'PaperDailyReviewBridge/config.clixml')
-  $ptr=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($config.Secret)
-  try { $env:DEEPSEEK_API_KEY=[Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) }
-  finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr);$config.Secret.Dispose() }
+  # The local workflow never decrypts a translation key. The separate source
+  # review bridge still uses its existing encrypted configuration.
+  $config.Secret.Dispose()
+  Remove-Item Env:DEEPSEEK_API_KEY -ErrorAction SilentlyContinue
   $env:PAPER_EXTENSION_ID=$config.ExtensionId
   $env:GIT_CONFIG_COUNT='3'
   $env:GIT_CONFIG_KEY_0='http.sslBackend';$env:GIT_CONFIG_VALUE_0='schannel'

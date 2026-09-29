@@ -38,13 +38,14 @@ export class QueueEngine {
     this.env.render(this.s);
   }
   async start() {
+    this.s.awaiting_verification=false;
     if (this.s.mode === 'running') return;
     if (!this.current()) { this.s.mode = 'done'; this.s.reason = '队列已完成，可导出结果或重试未成功项。'; await this.persist(); return; }
     this.epoch++; this.s.mode = 'running'; this.s.attempts = 0; this.nextAt = this.env.now() + 1000;
     this.s.reason = '运行中；只使用助手自己的论文标签页。'; await this.persist();
   }
-  async pause(reason = '已暂停。点击继续可从当前论文接着读。') {
-    this.epoch++; this.s.mode = 'paused'; this.s.reason = reason; await this.persist();
+  async pause(reason = '已暂停。点击继续可从当前论文接着读。', {verification=false}={}) {
+    this.epoch++; this.s.mode = 'paused'; this.s.awaiting_verification=verification;this.s.reason = reason; await this.persist();
   }
   async finish(result) {
     const paper = this.current(); if (!paper) return;
@@ -102,6 +103,13 @@ export class QueueEngine {
     if (this.current()) await this.pause('论文标签页已关闭，队列暂停。点击继续会创建新的论文标签页。');
   }
   async tick() {
+    if(!this.busy&&this.s.mode==='paused'&&this.s.awaiting_verification&&this.env.autoResumeVerification&&this.owned&&this.env.now()>=this.nextAt){
+      this.busy=true;const epoch=this.epoch;this.nextAt=this.env.now()+15000;
+      try{const tab=await this.env.getTab(this.owned.tabId);
+        if(tab.status!=='loading'){const r=await this.env.peek(this.owned.tabId,this.current());
+          if(epoch===this.epoch&&this.s.awaiting_verification&&r.identity?.ok&&r.status!=='needs_user_verification')await this.start();}
+      }catch{}finally{this.busy=false;}return;
+    }
     if (this.busy || this.s.mode !== 'running' || this.env.now() < this.nextAt) return;
     this.busy = true; const epoch = this.epoch;
     const live = () => epoch === this.epoch && this.s.mode === 'running';
@@ -140,8 +148,8 @@ export class QueueEngine {
       if (['candidate_extracted', 'no_abstract_stated'].includes(result.status) && (!result.pending_affiliations || this.s.attempts>=3)) { await this.finish(result); return; }
       if (['needs_user_verification', 'doi_conflict', 'unsupported_page'].includes(result.status)) {
         await this.pause(result.status === 'needs_user_verification'
-          ? '遇到网页验证，已暂停。请在论文标签页手动通过，再点击“继续 / 已通过验证”。'
-          : '当前页面身份冲突或不是支持的论文页，已暂停；确认页面后继续，或跳过。'); return;
+          ? '遇到网页验证，已暂停。请在论文标签页手动完成；程序会自动检测并继续。'
+          : '当前页面身份冲突或不是支持的论文页，已暂停；确认页面后继续，或跳过。',{verification:result.status==='needs_user_verification'}); return;
       }
       if (this.s.attempts >= 3) { await this.finish(result); return; }
       this.nextAt = this.env.now() + 10000;

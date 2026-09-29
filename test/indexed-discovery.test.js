@@ -20,9 +20,10 @@ test('removed search CLI flag fails before sources or library mutation',()=>{
  const child=spawnSync(process.execPath,['scripts/discover-collection.js','--run','--search'],{cwd:new URL('../',import.meta.url),encoding:'utf8'});
  assert.equal(child.status,1);assert.match(child.stderr,/DISCOVERY_NOT_COMPLETE/);
 });
-test('only indexed discovery workflow is enabled by deployment; no paid credentials mounted',async()=>{
+test('discovery excludes paid search; only the separate cloud translation step mounts DeepSeek',async()=>{
  const text=await fs.readFile(new URL('../.github/workflows/collection-discovery.yml',import.meta.url),'utf8');
- assert.doesNotMatch(text,/ZHIPU|SERPAPI|DEEPSEEK|--search|SEARCH_ENABLED/);
+ assert.doesNotMatch(text,/ZHIPU|SERPAPI|--search|SEARCH_ENABLED/);
+ assert.match(text,/DEEPSEEK_API_KEY: \$\{\{ secrets.DEEPSEEK_API_KEY \}\}/);
  assert.match(text,/cron: '17 0,4/);assert.match(text,/discover-collection.js --run --save-sources/);
  assert.doesNotMatch(text,/checkout@d23441/);
  const cli=await fs.readFile(new URL('../scripts/discover-collection.js',import.meta.url),'utf8');

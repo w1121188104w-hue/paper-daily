@@ -1,21 +1,32 @@
-import {workflowRequest,workflowFailure,saveRun} from './workflow-client.js';
-const $=id=>document.getElementById(id);
-async function refresh(){
-  let stage='request';
-  try{const s=await workflowRequest('/status');stage='render';$('status').textContent=`正式流程已连接。待检查目录 ${s.workflow.tasks.length} 个；待补论文 ${s.workflow.pending_papers.length} 篇。${s.busy?'正在导入/翻译/发布，请稍候。':''}`;
-    $('daily').disabled=s.busy;$('full').disabled=s.busy;
-    const due=(s.workflow.catalog_checks||[]).filter(c=>c.status!=='recently_checked');
-    $('audit').textContent=due.length?`${due.length} 个目录待建立基线或已到 ${s.workflow.audit_interval_days||14} 天巡检期限。按需手动选择“全刊巡检”；日常增量不会自动加入这些目录。`:'当前没有到期目录；无更新提醒不等于没有新论文。';
-    $('tasks').replaceChildren(...s.workflow.tasks.map(t=>{const p=document.createElement('p');p.textContent=`${t.journal} · ${t.collection==='issue'?'卷期目录':'在线发表'} · ${t.confidence==='paper_detected'?'数据源发现新论文':'疑似更新待核实'}`;return p;}));
-    $('runs').replaceChildren(...s.runs.map(r=>{const box=document.createElement('article'),p=document.createElement('p');p.textContent=`${r.mode==='full'?'全刊巡检':'日常增量'} · ${r.created_at} · ${r.message||r.phase}`;box.append(p);
-      const a=document.createElement('a');a.href=`catalog.html?run=${r.id}`;a.textContent='继续本批次目录';box.append(a);
-      const detail=document.createElement('a');detail.href=`dashboard.html?queue=catalog&run=${r.id}`;detail.textContent=' · 继续详情/提交结果';box.append(detail);
-      if(r.phase==='awaiting_publication'){const c=document.createElement('button');c.textContent='核验网站是否已上线';c.onclick=async()=>{try{await workflowRequest('/check-publication',{id:r.id});await refresh();}catch(e){$('status').textContent=e.message;}};box.append(c);}
-      if(r.has_export){const b=document.createElement('button');b.textContent=r.phase==='published'&&r.pending_translation_fields?'继续待翻译字段并发布':'导入、翻译并发布';b.disabled=s.busy||r.phase==='awaiting_publication'||(r.phase==='published'&&!r.pending_translation_fields);b.onclick=async()=>{if(!confirm('将核对合格的本批次结果合并到正式库，最多调用 100 次 DeepSeek 翻译并发布网站？原文缺失项保留；旧付费搜索不会恢复，线上只保留三源发现。'))return;
-        try{await workflowRequest('/finish',{id:r.id});await refresh();}catch(e){$('status').textContent=e.message;}};box.append(b);}return box;}));
-  }catch(e){$('status').textContent=workflowFailure(e,stage);$('daily').disabled=true;$('full').disabled=true;}
+import {workflowRequest,workflowFailure,saveRun,detailKey} from './workflow-client.js';
+const $=id=>document.getElementById(id);let refreshing=false,starting=false;
+async function continueRun(id){
+  const details=(await chrome.storage.local.get(detailKey(id)))[detailKey(id)];
+  location.href=details?`dashboard.html?queue=catalog&autostart=1&run=${id}`:`catalog.html?autostart=1&run=${id}`;
 }
-for(const mode of ['daily','full'])$(mode).onclick=async()=>{try{const {run}=await workflowRequest('/start',{mode});await saveRun(run);
-  if(!run.jobs.length){$('status').textContent='目前没有待检查目录或到期补采项。可选择全刊巡检兜底。';return;}
-  location.href=`catalog.html?run=${run.id}`;}catch(e){$('status').textContent=e.message;}};
-$('refresh').onclick=async()=>{try{await workflowRequest('/sync',{});await refresh();}catch(e){$('status').textContent=e.message;}};void refresh();setInterval(refresh,15000);
+async function refresh(){
+  if(refreshing)return;refreshing=true;let stage='request';
+  try{const s=await workflowRequest('/status');stage='render';
+    if(s.version!==2)throw Object.assign(Error('请重启 start-workflow.cmd 更新本地服务，Key 不需要重配。'),{code:'VERSION'});
+    $('status').textContent=`已连接。待处理目录 ${s.workflow.tasks.length} 个；待补论文 ${s.workflow.pending_papers.length} 篇。${s.busy?'后台正在安全处理已提交结果。':''}`;
+    $('daily').disabled=s.busy||starting;$('full').disabled=s.busy||starting;
+    const due=(s.workflow.catalog_checks||[]).filter(c=>c.status!=='recently_checked');
+    $('audit').textContent=due.length?`${due.length} 个目录尚无基线或已到巡检期；可按需全刊巡检。`:'暂无到期目录。没有提醒不代表没有新论文，定期巡检用于补漏。';
+    $('tasks').replaceChildren(...s.workflow.tasks.map(t=>{const p=document.createElement('p');p.textContent=`${t.journal} · ${t.collection==='issue'?'最新一期':'在线发表'} · ${t.signal_count} 条发现线索`;return p;}));
+    $('runs').replaceChildren(...s.runs.map(r=>{const box=document.createElement('article'),p=document.createElement('p');
+      p.textContent=`${r.mode==='full'?'全刊巡检':'增量采集'} · ${new Date(r.created_at).toLocaleString()} · ${r.message||r.phase}`;box.append(p);
+      if(!r.has_export){const b=document.createElement('button');b.textContent='继续这次采集';b.disabled=s.busy;b.onclick=()=>continueRun(r.id);box.append(b);}
+      if(r.phase==='failed'){const b=document.createElement('button');b.textContent='恢复后台处理';b.disabled=s.busy;b.onclick=async()=>{await workflowRequest('/finish',{id:r.id});await refresh();};box.append(b);}
+      return box;}));
+  }catch(e){$('status').textContent=e.code==='VERSION'?e.message:workflowFailure(e,stage);$('daily').disabled=true;$('full').disabled=true;}
+  finally{refreshing=false;}
+}
+for(const mode of ['daily','full'])$(mode).onclick=async()=>{
+  if(starting)return;starting=true;$('daily').disabled=true;$('full').disabled=true;$('status').textContent='同步正式库，建立去重后的增量任务……';
+  try{const {run}=await workflowRequest('/start',{mode});await saveRun(run);
+    if(!run.jobs.length){$('status').textContent='目前没有需要浏览器处理的目录。官网直读和 GitHub 翻译在后台自动运行。';return;}
+    location.href=`catalog.html?autostart=1&run=${run.id}`;
+  }catch(e){$('status').textContent=e.message;}finally{starting=false;$('daily').disabled=false;$('full').disabled=false;}
+};
+$('refresh').onclick=async()=>{try{await workflowRequest('/sync',{});await refresh();}catch(e){$('status').textContent=e.message;}};
+void refresh();setInterval(()=>void refresh(),15000);

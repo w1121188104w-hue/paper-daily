@@ -16,7 +16,8 @@ import { readJournalLibrary, withLibraryLock, newRunId, writeLibraryJson, publis
 import { assertLibrary, isIsoTime, validatePapers, stableJson } from './libraryValidation.js';
 
 const hash = value => createHash('sha256').update(value).digest('hex');
-const kinds = new Set(['paper_catalog_sample_trial', 'paper_catalog_supplement_trial', 'paper_project_trial']);
+// Older exports remain readable; production exports use paper_project.
+const kinds = new Set(['paper_project','paper_catalog_sample_trial', 'paper_catalog_supplement_trial', 'paper_project_trial']);
 function articleIdentityUrl(value) {
   try {
     const u = new URL(value);

@@ -74,8 +74,12 @@ function renderWorkflow(flow){
   const failed=flow.monitors.filter(m=>['failed','partial','quota_exhausted'].includes(m.status));
   if(failed.length)target.append(node('p',`有 ${failed.length} 项来源检查失败、不完整或额度不足，不代表没有新论文。`,'notice'));
   target.append(node('h3','发现更新'));
-  target.append(node('p','三源自动发现 → 插件定向采集 → 原文核对与翻译。外部付费搜索已停用；每周或半月手动全刊巡检兜底。','meta'));
-  target.append(node('p',flow.tasks.length?`有 ${flow.tasks.length} 个目录待检查。打开浏览器扩展 → 正式流程 → 日常增量采集。`:'目前没有未处理的新目录提醒；这不保证期刊没有更新。'));
+  target.append(node('p','三源发现＋官网目录直读 → 插件补全剩余内容并核对 → 自动上传 → GitHub 统一翻译发布。外部付费搜索已停用；每周或半月手动全刊巡检兜底。','meta'));
+  target.append(node('p',flow.tasks.length?`有 ${flow.tasks.length} 个目录待处理。打开浏览器扩展 → 开始增量采集，已由官网完整读取的目录不重复打开。`:'目前没有未处理的新目录提醒；这不保证期刊没有更新。'));
+  const official=flow.monitors.filter(m=>m.source==='official'&&m.catalog_id);
+  if(official.length)target.append(node('p',`官网直读：完整读取 ${official.filter(m=>m.status==='ok').length} / ${official.length} 个目录；受限或不完整的仍需浏览器处理，不当作空目录。`,'meta'));
+  const feeds=flow.monitors.filter(m=>m.source==='official'&&!m.catalog_id);
+  if(feeds.length)target.append(node('p',`公开 RSS：${feeds.filter(m=>m.status==='partial').length} 本期刊取得部分清单；用于发现和补原文，不代表目录完整。`,'meta'));
   for(const task of flow.tasks){const p=node('p',`${task.journal} · ${task.collection==='issue'?'卷期目录':'在线发表'} · ${task.confidence==='paper_detected'?'发现新论文线索':'疑似目录更新'} · `),a=node('a','查看官网目录');
     try{const u=new URL(task.url);if(u.protocol==='https:'){a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';p.append(a);}}catch{}target.append(p);}
   const checks=workflowAuditChecks(flow),due=checks.filter(c=>c.status!=='recently_checked');
@@ -86,7 +90,7 @@ function renderWorkflow(flow){
   for(const c of checks)details.append(node('p',`${c.journal} · ${c.collection==='issue'?'最新一期':'在线发表'} · ${c.rank?`卷 ${c.rank[0]}${c.rank[1]?` 期 ${c.rank[1]}`:''} · `:''}${c.checked_at?`${c.paper_count} 篇目录记录`:'目录数量未确认'} · 上次核对 ${timeText(c.checked_at)} · ${c.status==='baseline_missing'?'待建立基线':c.status==='audit_due'?'已到期':`下次巡检 ${timeText(c.next_audit_at)}`}`,'meta'));
   target.append(details);
   target.append(node('p',`待补论文 ${flow.pending_papers?.length||0} 篇；上次完成全刊目录巡检：${timeText(flow.full_audit_last_at)}。日常增量不会自动扩成全刊巡检；已完成详情不重复采集。`,'meta'));
-  const latest=flow.receipts.at(-1);if(latest)target.append(node('p',`最近已发布批次：${timeText(latest.at)}；完成目录 ${latest.completed_catalogs} 个，未完成目录 ${latest.pending_catalogs} 个。`,'meta'));
+  const latest=flow.receipts.at(-1);if(latest)target.append(node('p',`最近已上线批次：${timeText(latest.at)}；完成目录 ${latest.completed_catalogs} 个，未完成目录 ${latest.pending_catalogs} 个。${latest.translation_status==='pending'?' GitHub 翻译正在排队。':latest.translation_status==='attention'?' 部分翻译暂缓，已完成内容保留。':latest.translation_status==='translated'?' 本批次翻译已处理。':''}`,'meta'));
 }
 
 const workflowTimer=setInterval(()=>{if(state.data)renderWorkflow(state.data.collection_workflow);},60000);

@@ -7,9 +7,10 @@ import {createCollectionCoordinator,collectionHttpServer} from '../src/services/
 import {stageJournalFiles,journalGitFiles} from '../src/services/journalGitFiles.js';
 import {assertLibrary} from '../src/services/libraryValidation.js';
 import {WORKFLOW_PATH,readWorkflow} from '../src/services/collectionWorkflow.js';
-import {runTranslationAutomation,readTranslationState} from '../src/services/translationAutomation.js';
-import {makeTranslationPublisher,STATE_GIT_PATH} from '../src/services/translationAutomationGit.js';
-import {buildJournalSite} from '../src/services/journalSiteBuild.js';
+import {readTranslationState} from '../src/services/translationAutomation.js';
+import {STATE_GIT_PATH} from '../src/services/translationAutomationGit.js';
+import {CLOUD_QUEUE_PATH,readCloudQueue} from '../src/services/cloudPublication.js';
+import {hydrateRunFromOfficial} from '../src/services/officialCatalog.js';
 
 export function safeProcess(command,args,{cwd,env=process.env,input='',timeout=120000}={}){
   return new Promise((resolve,reject)=>{
@@ -26,7 +27,7 @@ export async function allowedWorkflowDirty(config,{root,repositoryRoot,git,plan=
   // Synchronizing an unchanged checkout must not reparse all historical payloads.
   // Every actual data commit still performs the full closure/hash validation.
   if(!dirty.length)return new Set();
-  const allowed=new Set([...(await plan(config,{root,repositoryRoot})).files,WORKFLOW_PATH,STATE_GIT_PATH]);
+  const allowed=new Set([...(await plan(config,{root,repositoryRoot})).files,WORKFLOW_PATH,STATE_GIT_PATH,CLOUD_QUEUE_PATH]);
   assertLibrary(dirty.every(p=>allowed.has(p)),'存在未提交代码改动，停止正式流程');
   return allowed;
 }
@@ -49,23 +50,24 @@ export async function startCollectionService({env=process.env}={}){
     await stageJournalFiles(config,{root,repositoryRoot,runGit:(args,options)=>git(args,options)});
     await git(['add','-f','--',STATE_GIT_PATH]);
     try{await fs.stat(path.join(repositoryRoot,WORKFLOW_PATH));await readWorkflow(repositoryRoot);await git(['add','-f','--',WORKFLOW_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
+    try{await fs.stat(path.join(repositoryRoot,CLOUD_QUEUE_PATH));await readCloudQueue(repositoryRoot);await git(['add','-f','--',CLOUD_QUEUE_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
     if((await git(['diff','--cached','--name-only'])).trim())await git(['-c','user.name=paper-daily','-c','user.email=paper-daily@users.noreply.github.com','commit','-m','data: save browser collection and workflow receipts']);
     await git(['push','origin','HEAD:refs/heads/master']);
   }
   const release=(mode,id,hash,publicationId)=>safeProcess('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',path.join(repositoryRoot,'scripts/collection-release.ps1'),'-Mode',mode,
     ...(id?['-BatchId',id,'-ExportHash',hash,'-PublicationId',publicationId]:[])],{cwd:repositoryRoot,env:childEnv,timeout:45000}).then(JSON.parse);
   const coordinator=createCollectionCoordinator({repositoryRoot,stateDir,config,sync,checkpoint,
-    translate:opts=>runTranslationAutomation(config,{...opts,mode:'backfill',apiKey:env.DEEPSEEK_API_KEY,
-      publishCheckpoint:makeTranslationPublisher(config,{root,repositoryRoot,branch:'master',env,gitImpl:git}),log:()=>{}}),
-    build:opts=>buildJournalSite(config,{...opts,outputRoot:path.join(repositoryRoot,'data/workflow-site-builds')}),
-    publish:async()=>{await checkpoint();return release('Publish');},
-    checkPublication:async(id,hash,publicationId)=>(await release('Check',id,hash,publicationId)).published===true});
+    prepareRun:run=>hydrateRunFromOfficial(repositoryRoot,run),
+    publish:()=>release('Publish'),
+    checkPublication:(id,hash,publicationId)=>release('Check',id,hash,publicationId)});
   await fs.mkdir(stateDir,{recursive:true});
-  // An OS listener is the one-writer guard. No paid work starts on boot.
+  // One local writer; only recover submitted work, never open new publisher tabs.
   const server=collectionHttpServer(coordinator,{extensionId:env.PAPER_EXTENSION_ID});
   server.requestTimeout=120000;server.headersTimeout=15000;
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(17328,'127.0.0.1',resolve);});
+  const timer=setInterval(()=>void coordinator.pulse().catch(()=>{}),15000);timer.unref();
+  server.on('close',()=>clearInterval(timer));
   return server;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href)
-  startCollectionService().then(()=>console.log('Workflow ready on 127.0.0.1:17328; no automatic paid work started.')).catch(()=>{console.error('WORKFLOW_START_FAILED');process.exitCode=1;});
+  startCollectionService().then(()=>console.log('Workflow ready on 127.0.0.1:17328; translation runs only on GitHub.')).catch(()=>{console.error('WORKFLOW_START_FAILED');process.exitCode=1;});

@@ -80,7 +80,7 @@ export class CatalogEngine {
       if (saved.schema_version !== 1 || !Array.isArray(saved.queue) || saved.queue.length > CATALOG_TASKS.length * (MAX_CATALOG_PAGES + 1) ||
         !Array.isArray(saved.pages) || !Array.isArray(saved.history) || !Number.isInteger(saved.cursor) || saved.cursor < 0 || saved.cursor > saved.queue.length ||
         saved.queue.some(j => { const t = CATALOG_TASKS.find(t => t.id === j.task_id); return !t || !catalogUrl(j.url, t) || !Number.isInteger(j.depth) || j.depth < 0 || j.depth > taskPageLimit(t); }) ||
-        new Set(saved.queue.map(key)).size !== saved.queue.length) throw Error('目录试验进度格式不匹配，未覆盖原数据。');
+        new Set(saved.queue.map(key)).size !== saved.queue.length) throw Error('目录进度格式不匹配，未覆盖原数据。');
       const complete = saved.cursor === saved.queue.length && saved.pages.length > 0;
       this.s = { ...saved, mode: complete ? 'done' : 'paused', reason: complete ? '目录采集已完成；正在恢复待核对进度，无需重新采集。' : '已恢复目录进度；点击继续。' };
     }
@@ -91,6 +91,7 @@ export class CatalogEngine {
     await this.persist();
   }
   async start() {
+    this.s.awaiting_verification=false;
     if (this.s.mode === 'running') return;
     if (!this.current()) return;
     this.epoch++; this.reads = 0; this.lastSignature = null;
@@ -110,7 +111,7 @@ export class CatalogEngine {
     this.s.mode = 'running'; this.nextAt = this.env.now() + 1000;
     this.s.reason = '正在自动读取目录；本轮采集结束后自动进行 AI 原文核对。'; await this.persist();
   }
-  async pause(reason = '已暂停，已保存的目录保留。') { this.epoch++; this.s.mode = 'paused'; this.s.reason = reason; await this.persist(); }
+  async pause(reason = '已暂停，已保存的目录保留。',{verification=false}={}) { this.epoch++; this.s.mode = 'paused'; this.s.awaiting_verification=verification;this.s.reason = reason; await this.persist(); }
   async adoptManual(tabId, taskId) {
     await this.pause('正在核对你选择的目录页……');
     if (this.busy) throw Error('上一轮读取正在结束，请稍后再点一次。');
@@ -201,6 +202,13 @@ export class CatalogEngine {
     if (this.current()) await this.pause('目录标签页被关闭，已暂停；点击继续会重新打开。');
   }
   async tick() {
+    if(!this.busy&&this.s.mode==='paused'&&this.s.awaiting_verification&&this.env.autoResumeVerification&&this.owned&&this.env.now()>=this.nextAt){
+      this.busy=true;const epoch=this.epoch;this.nextAt=this.env.now()+15000;
+      try{const tab=await this.env.getTab(this.owned.tabId),task=this.task();
+        if(tab.status!=='loading'&&task&&catalogUrl(tab.url,task)){const result=assessCatalog(task,await this.env.inspect(tab.id));
+          if(epoch===this.epoch&&this.s.awaiting_verification&&['catalog_candidates','catalog_empty','catalog_landing'].includes(result.status))await this.start();}
+      }catch{}finally{this.busy=false;}return;
+    }
     if (this.busy || this.s.mode !== 'running' || this.env.now() < this.nextAt) return;
     this.busy = true; const epoch = this.epoch, live = () => this.epoch === epoch && this.s.mode === 'running';
     try {
@@ -231,7 +239,7 @@ export class CatalogEngine {
       const result = assessCatalog(task, raw); this.reads++;
       if (['needs_user_verification', 'journal_conflict', 'wrong_catalog'].includes(result.status)) {
         this.s.last_problem = { task_id: task.id, status: result.status };
-        await this.pause(result.status === 'needs_user_verification' ? '遇到网页验证，已暂停。请手动完成验证，再回来点击继续。' : '期刊身份不符，已暂停；请检查或跳过。'); return;
+        await this.pause(result.status === 'needs_user_verification' ? '遇到网页验证，已暂停。手动完成后将自动检测并继续。' : '期刊身份不符，已暂停；请检查或跳过。',{verification:result.status==='needs_user_verification'}); return;
       }
       const sig = JSON.stringify(result.items.map(x => [x.title, x.doi, x.url]));
       if (this.reads < 3 && (result.status !== 'catalog_candidates' || sig !== this.lastSignature)) {

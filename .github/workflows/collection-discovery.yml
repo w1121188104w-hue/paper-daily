@@ -1,4 +1,4 @@
-name: Three-source discovery and collection reminders (no paid search)
+name: Official catalogs and three-source discovery (no paid search)
 on:
   workflow_dispatch: {}
   schedule:
@@ -27,7 +27,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Offline regression tests
         run: npm test
-      - name: Independent Crossref OpenAlex Semantic Scholar only
+      - name: Independent indexes and official static catalogs; browser fallback on restriction
         env:
           SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
         run: node scripts/discover-collection.js --run --save-sources
@@ -38,7 +38,12 @@ jobs:
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'data: save discovery signals and independent source collection'
             git push origin HEAD:refs/heads/master
           fi
-      - name: Build website with reminders, no translation or abstract search
+      - name: Translate newly collected fields using the shared GitHub queue
+        if: vars.JOURNAL_CLOUD_PUBLICATION_ENABLED == 'true'
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: node scripts/publish-collection.js
+      - name: Build website with direct-read status and browser reminders
         id: build
         run: node scripts/build-journal-site.js --github-output
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b

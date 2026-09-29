@@ -146,6 +146,7 @@ export function parsePublisherArticle(response, journal, expected = {}) {
   for (const selector of ['#abstract', '.article-abstract', '.article-information .abstract', '.abstractInFull', '[role="doc-abstract"]', 'section.abstract', 'div.abstract']) {
     if (authenticAbstract(rawAbstract)) break;
     const nodes = $(selector); if (nodes.length !== 1) continue;
+    if(nodes.find('h2,h3,h4,.title,.boxTitle').toArray().some(n=>/highlights|graphical abstract|introduction|references/i.test($(n).text())))continue;
     const node = nodes.clone(); node.find('script,style,nav,.related-articles,.recommendations').remove();
     node.find('h2,h3,h4,.title,.boxTitle').each((i,n) => { if (/^abstract\s*$/i.test($(n).text().trim())) $(n).remove(); });
     rawAbstract = node.text().trim(); method = 'article_dom_abstract';

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "论文采集助手 · 目录与详情",
-  "version": "0.12.2",
-  "description": "正式增量与全刊巡检、原文核对、导入翻译发布。旧测试数据保留，密钥由本机服务保管。",
+  "version": "1.0.0",
+  "description": "官网直读优先、浏览器增量补全、原文自动核对与上传，GitHub 统一翻译发布。",
   "permissions": ["storage", "scripting", "unlimitedStorage"],
   "host_permissions": [
     "https://doi.org/*",

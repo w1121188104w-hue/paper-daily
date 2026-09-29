@@ -74,6 +74,16 @@ test('explicit empty catalog can finish; newer concurrent signal is never cleare
   const newer=addDiscoverySignals(s,[{...signal,doi:'10.1016/j.respol.2026.106666'}]);
   assert.equal((await applyCollectionReceipt(newer,run,data,prepared,{papers:[]})).tasks[0].status,'pending');
 });
+test('authenticated pre-run direct capture can finish; changed cached content remains pending',async()=>{
+  const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now});
+  const data=await capture(run,{empty:true});data.catalog.pages[0].captured_at='2026-09-23T07:00:00Z';
+  run.direct_pages=[structuredClone(data.catalog.pages[0])];
+  data.catalog.pages[0]=Object.fromEntries(Object.entries(data.catalog.pages[0]).reverse());
+  const prepared=await prepareBrowserImport(data,config);
+  assert.equal((await applyCollectionReceipt(s,run,data,prepared,{papers:[]})).receipts[0].completed_catalogs,1);
+  data.catalog.pages[0].captured_at='2026-09-23T06:00:00Z';
+  assert.equal((await applyCollectionReceipt(s,run,data,prepared,{papers:[]})).receipts[0].pending_catalogs,1);
+});
 test('catalog receipt separate from missing abstract; due retry selects related directory',async()=>{
   const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now}),data=await capture(run,{missing:true});
   const prepared=await prepareBrowserImport(data,config),out=await applyCollectionReceipt(s,run,data,prepared,{papers:[]},{now});
@@ -93,42 +103,40 @@ test('new indexed paper alerts only its journal, deduplicates sources, and skips
   assert.equal(known.tasks.length,0);
 });
 
-test('remaining translations resume without recapture and require a fresh publication receipt',async t=>{
+test('automatic submission queues GitHub work, never invokes a local translator, duplicate is idempotent',async t=>{
   const repo=await temp(t),stateDir=path.join(repo,'private-runs');
-  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));let calls=0,liveToken=null;
-  let failure;
+  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));
+  let paid=0,pushed=0,dispatched=0,failure,live=false;
   const c=createCollectionCoordinator({repositoryRoot:repo,stateDir,config,sync:async()=>{},onFailure:e=>failure=e,
-    translate:async()=>({available_fields:++calls===1?1:0,held_fields:0}),build:async()=>{},publish:async()=>({}),
-    checkPublication:async(_id,_hash,token)=>token===liveToken});
+    translate:async()=>{paid++;throw Error('LOCAL_TRANSLATION_FORBIDDEN');},checkpoint:async()=>pushed++,
+    publish:async()=>{dispatched++;return {dispatched:true};},checkPublication:async()=>live});
   const {run}=await c.start('daily'),data=await capture(run);data.catalog.pages[0].captured_at=new Date(Date.now()+1000).toISOString();
-  await c.submit(run.id,data);await c.finish(run.id);
-  await assert.rejects(c.finish(run.id));
-  while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));assert.ifError(failure);
-  let receipt=(await readWorkflow(repo)).receipts[0];liveToken=receipt.publication_id;
-  assert.equal((await c.check(run.id)).phase,'published');assert.equal((await c.status()).runs[0].pending_translation_fields,1);
-  await c.finish(run.id);while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));assert.ifError(failure);
-  assert.equal(calls,2);assert.equal((await c.check(run.id)).phase,'awaiting_publication');
-  receipt=(await readWorkflow(repo)).receipts[0];assert.notEqual(receipt.publication_id,liveToken);liveToken=receipt.publication_id;
-  assert.equal((await c.check(run.id)).phase,'published');await c.finish(run.id);assert.equal(calls,2);
+  await c.submit(run.id,data);
+  while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));
+  assert.ifError(failure);assert.equal(paid,0);assert.equal(pushed,1);assert.equal(dispatched,1);
+  assert.equal((await c.status()).runs[0].phase,'awaiting_publication');
+  const q=JSON.parse(await fs.readFile(path.join(repo,'data/collection-workflow/publication-queue.json'),'utf8'));
+  assert.deepEqual(q.requests[0].paper_ids,['doi:'+doi]);assert.equal(q.requests[0].status,'pending');
+  assert.ok(!JSON.stringify(q).includes(abstract));
+  await c.submit(run.id,data);await c.finish(run.id);assert.equal(dispatched,1);
+  assert.equal((await c.check(run.id)).phase,'awaiting_publication');
+  live=true;await c.pulse();assert.equal((await c.status()).runs[0].phase,'published');
 });
-test('end-to-end: scoped capture → import → translate callback → build → receipt → verify deployment',async t=>{
+test('scoped source import preserves data; cloud receipt is required to confirm deployment',async t=>{
   const repo=await temp(t),root=path.join(repo,'data/journal-store'),stateDir=path.join(repo,'private-runs');
-  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));let paid=0,live=false,buildData;
-  let failure;
+  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));let failure,live=false;
   const c=createCollectionCoordinator({repositoryRoot:repo,stateDir,config,sync:async()=>{},onFailure:e=>failure=e,
-    translate:async({paperIds})=>{assert.deepEqual(paperIds,['doi:'+doi]);paid++;return {requests:0};},
-    build:async()=>{const b=await buildJournalSite(config,{root,outputRoot:path.join(repo,'build')});buildData=JSON.parse(await fs.readFile(path.join(b.directory,'data.json'),'utf8'));},
-    publish:async()=>({dispatched:true}),checkPublication:async()=>live});
-  const {run}=await c.start('daily');const data=await capture(run);data.catalog.pages[0].captured_at=new Date(Date.now()+1000).toISOString();
-  await c.submit(run.id,data);assert.equal((await c.status()).runs[0].phase,'ready');
-  await c.finish(run.id);while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));
-  const status=await c.status();assert.ifError(failure);assert.equal(status.runs[0].phase,'awaiting_publication');assert.equal(paid,1);
+    publish:async()=>({dispatched:true}),checkPublication:async()=>live?{published:true,pending_translation_fields:2,translation_status:'attention'}:false});
+  const {run}=await c.start('daily'),data=await capture(run);data.catalog.pages[0].captured_at=new Date(Date.now()+1000).toISOString();
+  await c.submit(run.id,data);while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));assert.ifError(failure);
   assert.equal((await readJournalLibrary({root,config})).papers[0].abstract_original,abstract);
+  const b=await buildJournalSite(config,{root,outputRoot:path.join(repo,'build')}),buildData=JSON.parse(await fs.readFile(path.join(b.directory,'data.json'),'utf8'));
   assert.equal(buildData.collection_workflow.tasks.length,0);assert.equal(buildData.collection_workflow.receipts.length,1);
   assert.equal(JSON.stringify(buildData).includes('ai_review_results'),false);
-  assert.equal((await c.check(run.id)).phase,'awaiting_publication');live=true;assert.equal((await c.check(run.id)).phase,'published');
-  await c.submit(run.id,data);assert.equal((await c.status()).runs[0].phase,'published');assert.equal(paid,1);
+  assert.equal((await c.check(run.id)).phase,'awaiting_publication');live=true;
+  assert.equal((await c.check(run.id)).phase,'published');assert.equal((await c.status()).runs[0].pending_translation_fields,2);
 });
+
 test('loopback service rejects wrong origin, missing guard and arbitrary routes',async t=>{
   const port=19328,id='dcalhdbdeepppgdbhbgbaalabkamnhgc';let calls=0;
   const s=collectionHttpServer({status:async()=>{calls++;return {ok:true};}},{extensionId:id,port});await new Promise(r=>s.listen(port,'127.0.0.1',r));

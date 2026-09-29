@@ -7,10 +7,11 @@ import {emptyWorkflow,readWorkflow,saveWorkflow,publicWorkflow,createCollectionR
 import {readJournalLibrary} from './journalLibrary.js';
 import {readBrowserExport,prepareBrowserImport,importBrowserExport} from './browserImport.js';
 import {assertLibrary} from './libraryValidation.js';
+import {enqueuePublication,readCloudQueue} from './cloudPublication.js';
 
 const idOK=id=>typeof id==='string'&&/^[a-f0-9-]{36}$/.test(id);
 async function optional(file){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return null;throw e;}}
-export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync,checkpoint=async()=>{},translate,build,publish,checkPublication,onFailure=()=>{}}){
+export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync,checkpoint=async()=>{},publish,checkPublication,onFailure=()=>{},prepareRun=async r=>r}){
   const root=path.join(repositoryRoot,'data/journal-store');let busy=false,lastWorkflow=null;
   const runFile=id=>{assertLibrary(idOK(id),'任务 ID 无效');return path.join(stateDir,id,'run.json');};
   async function load(id){const r=await optional(runFile(id));assertLibrary(r?.run?.id===id,'任务未找到');return r;}
@@ -18,14 +19,14 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
   async function status(){if(!busy){const lib=await readJournalLibrary({root,config});lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});}
     const workflow=lastWorkflow||publicWorkflow(emptyWorkflow());
     let dirs=[];try{dirs=await fs.readdir(stateDir);}catch(e){if(e.code!=='ENOENT')throw e;}
-    const runs=[];for(const id of dirs.filter(idOK)){const r=await load(id);runs.push({id,mode:r.run.mode,created_at:r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields||0});}
-    return {busy,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
+    const runs=[];for(const id of dirs.filter(idOK)){const r=await load(id);runs.push({id,mode:r.run.mode,created_at:r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields??null,failed_stage:r.failed_stage||null});}
+    return {version:2,busy,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
   async function exclusive(fn){assertLibrary(!busy,'另一个正式任务正在处理');busy=true;try{return await fn();}finally{busy=false;}}
   async function start(mode){return exclusive(async()=>{
-    await sync();const lib=await readJournalLibrary({root,config}),run=createCollectionRun(await readWorkflow(repositoryRoot),lib.papers,{mode});
+    await sync();const lib=await readJournalLibrary({root,config}),run=await prepareRun(createCollectionRun(await readWorkflow(repositoryRoot),lib.papers,{mode}));
     lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});
     await store({run,phase:'collecting',message:'等待插件采集；网站提醒未清除。'});return {run};});}
-  async function submit(id,data){return exclusive(async()=>{
+  async function submit(id,data){const result=await exclusive(async()=>{
     const record=await load(id);assertLibrary(data?.workflow_run_id===id&&Array.isArray(data.catalog?.pages)&&Array.isArray(data.records),'结果不是当前批次');
     assertLibrary(data.catalog.pages.every(p=>record.run.jobs.some(j=>j.catalog_id===p.task_id)),'结果包含本批次以外目录');
     const text=JSON.stringify(data),digest=createHash('sha256').update(text+'\n').digest('hex');
@@ -35,16 +36,19 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
     // Validate proof shape before accepting; formal data is not modified here.
     await prepareBrowserImport(data,config,digest);
     await atomic(path.join(stateDir,id,'export.json'),data);
-    await store({...record,phase:'ready',export_hash:digest,message:'结果已保存；等待明确执行导入、翻译并发布。'});
-    return {phase:'ready'};});}
+    await store({...record,phase:'ready',export_hash:digest,message:'结果已安全保存；自动核验、去重、上传，GitHub 翻译后发布。'});
+    return {phase:'ready'};});
+    if(result.phase==='ready')await finish(id);
+    return result;
+  }
   async function finish(id){
     assertLibrary(!busy,'另一个正式任务正在处理');busy=true;let record;
     try{record=await load(id);assertLibrary(record.export_hash,'尚无采集结果');}
     catch(e){busy=false;throw e;}
-    if(record.phase==='published'&&!record.pending_translation_fields){busy=false;return {phase:'published'};}
+    if(['published','awaiting_publication'].includes(record.phase)){busy=false;return {phase:record.phase};}
     const advance=async(phase,message)=>{record.phase=phase;record.message=message;await store(record);};
-    // Durable phases survive closing the browser. A service restart never
-    // automatically resumes paid calls; the user explicitly clicks Finish.
+    // Local work contains no translator. Submission and restart are idempotent;
+    // only GitHub may issue translation requests using its durable ledger.
     void (async()=>{try{
       await advance('syncing','正在同步远端正式库。');await sync();
       const input=await readBrowserExport(path.join(stateDir,id,'export.json'));
@@ -53,32 +57,51 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       await advance('importing','按原始证据核验并合并；已有内容不覆盖。');
       const imported=await importBrowserExport(config,{root,prepared,save:true});
       record.import_stats=imported.stats;await store(record);
-      await checkpoint({root});
-      await advance('translating','仅翻译本批次新增或缺失字段；失败不删除已导入论文。');
       const captured=await checkedCatalogPapers(input.data),current=await readJournalLibrary({root,config});
-      const paperIds=[...new Set([...imported.decisions.filter(d=>['added','abstract_filled','unchanged'].includes(d.action)).map(d=>'doi:'+d.doi),
+      const paperIds=record.paper_ids||[...new Set([...imported.decisions.filter(d=>['added','abstract_filled','unchanged'].includes(d.action)).map(d=>'doi:'+d.doi),
         ...captured.filter(p=>p.review_status==='source_checked_candidate'&&current.papers.some(x=>x.doi===p.doi&&x.journal_key===p.journal)).map(p=>'doi:'+p.doi)])];
-      record.translation=await translate({root,paperIds,maxRequests:record.run.max_requests});
-      record.pending_translation_fields=(record.translation.available_fields||0)+(record.translation.held_fields||0);
+      record.paper_ids=paperIds;await store(record);
       await advance('receipting','保存目录回执和未完成论文清单。');
       const lib=await readJournalLibrary({root,config});
       const state=await applyCollectionReceipt(await readWorkflow(repositoryRoot),record.run,input.data,prepared,lib);
-      record.publication_id=randomUUID();
+      const oldCloud=(await readCloudQueue(repositoryRoot)).requests.find(r=>r.id===id);
+      record.publication_id=oldCloud?.publication_id||randomUUID();
       const receipt=state.receipts.find(r=>r.id===record.run.id);
       receipt.publication_id=record.publication_id;
-      receipt.pending_translation_fields=record.pending_translation_fields;
+      receipt.pending_translation_fields=null;receipt.translation_status='pending';
       await saveWorkflow(repositoryRoot,state);
-      await advance('building','验证网站构建；尚未发布。');await build({root});
-      await advance('publishing','提交正式库和任务回执，申请发布。');record.release=await publish({root,id});
-      await advance('awaiting_publication','数据已提交，发布已请求；等待网站版本核验，不能当作已上线。');
-    }catch(error){onFailure(error);record.failed_stage=record.phase;await advance('failed','本批次未全部完成；已保存步骤保留。可再次执行，未知计费请求不会自动重发。').catch(()=>{});}
+      await enqueuePublication(repositoryRoot,{id,inputHash:record.export_hash,publicationId:record.publication_id,paperIds,maxRequests:record.run.max_requests});
+      await advance('uploading','上传核验后的论文和翻译任务；原始浏览器抓取文件仅留本机。');await checkpoint({root});
+      await advance('publishing','正在请求 GitHub 翻译并发布。');record.release=await publish({root,id});
+      record.failed_stage=null;record.retry_at=null;record.dispatch_at=new Date().toISOString();
+      await advance('awaiting_publication','已上传 GitHub，正在云端翻译 / 发布；将自动核验网站回执。可以关闭面板。');
+    }catch(error){onFailure(error);record.failed_stage=record.phase;record.retry_at=new Date(Date.now()+60000).toISOString();
+      record.failures=(record.failures||0)+1;
+      await advance('failed',`处理暂停于 ${record.failed_stage}；结果保留。${record.failures<5?'服务将自动恢复。':'连续失败，需检查本地 Git / 网络；不会丢弃结果或重发未知计费请求。'}`).catch(()=>{});}
     finally{busy=false;}})();return {phase:'processing'};
   }
   async function check(id){return exclusive(async()=>{const r=await load(id);
     assertLibrary(['awaiting_publication','published'].includes(r.phase),'尚未提交发布');
-    if(await checkPublication(id,r.export_hash,r.publication_id)){r.phase='published';r.message='网站已读取到本次发布回执；目录未完成项及缺失论文仍保留。'+(r.pending_translation_fields?` 仍有 ${r.pending_translation_fields} 个中文字段待处理，可继续翻译，无需重新采集。`:'');await store(r);}
+    const result=await checkPublication(id,r.export_hash,r.publication_id);
+    if(result===true||result?.published){r.phase='published';r.pending_translation_fields=result.pending_translation_fields??null;
+      r.message='网站已核验本批次发布回执。'+(result.translation_status==='attention'?'部分翻译需要检查；已完成内容已上线。':result.translation_status==='pending'?'部分翻译在 GitHub 等待续跑。':'')+' 未完成目录和论文仍保留。';await store(r);}
     return {phase:r.phase};});}
-  return {status,start,submit,finish,check,run:async id=>({run:(await load(id)).run}),sync:()=>exclusive(sync)};
+  async function pulse(){
+    if(busy)return;
+    const s=await status();
+    for(const r of s.runs){
+      if(busy)return;const record=await load(r.id);
+      if(r.phase==='awaiting_publication'){
+        try{await check(r.id);}catch{/* Offline verification does not mean publication failed. */}
+        if((await load(r.id)).phase==='awaiting_publication'&&Date.now()-Date.parse(record.dispatch_at||0)>30*60000){
+          try{await publish({root,id:r.id});record.dispatch_at=new Date().toISOString();await store(record);}catch{}
+        }
+      }else if(r.has_export&&r.phase!=='published'&&(record.failures||0)<5&&(!record.retry_at||Date.parse(record.retry_at)<=Date.now())){
+        await finish(r.id);return;
+      }
+    }
+  }
+  return {status,start,submit,finish,check,pulse,run:async id=>({run:(await load(id)).run}),sync:()=>exclusive(sync)};
 }
 
 /** Fixed-origin loopback bridge. No credential, filesystem path, command or
