@@ -7,8 +7,7 @@ body { font-family: "IBM Plex Sans", "Microsoft YaHei", system-ui, sans-serif; f
 .journal-layout { gap: 18px; }
 .journal-layout > *, .filter-row > *, .paper-card { min-width: 0; }
 .journal-layout h2 { font-size: 1.2rem; margin: 0 0 12px; }
-.status-panel .digest-head h2, .calendar-head h2 { margin: 0; }
-.status-panel .digest-head { flex-wrap: wrap; }
+.calendar-head h2 { margin: 0; }
 .meta { font-size: .875rem; line-height: 1.6; }
 .filter-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
 .filter-row label { display: grid; gap: 6px; font-size: .875rem; flex: 1 1 150px; }
@@ -40,6 +39,12 @@ button, select, summary, .ghost-link { min-height: 44px; }
 .paper-actions a { overflow-wrap: anywhere; }
 .paper-authors { margin: 12px 0; font-size: .875rem; color: #425851; line-height: 1.7; }
 details > summary { cursor: pointer; padding: 9px 0; color: #0e5c57; }
+.disclosure-panel > summary { display: flex; align-items: center; gap: 10px; list-style: none; padding: 0; }
+.disclosure-panel > summary::-webkit-details-marker { display: none; }
+.disclosure-panel > summary::before { content: "▸"; flex: 0 0 auto; }
+.disclosure-panel[open] > summary::before { content: "▾"; }
+.disclosure-panel > summary h2 { margin: 0; }
+.disclosure-panel[open] > summary { margin-bottom: 14px; }
 .abstract-switch { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
 .abstract-switch button[aria-pressed="true"] { background: #0f766e; color: white; }
 .notice, .empty-state { padding: 14px 16px; background: #fff8e8; border: 1px solid #d8bc7e; border-radius: 12px; line-height: 1.7; }

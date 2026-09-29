@@ -17,15 +17,19 @@
     <p class="meta">自动中文译文未经逐篇校对，请以英文原文为准；来源没有摘要时不补写。</p>
   </header>
   <main id="main" class="calendar-layout single journal-layout">
-    <section class="panel status-panel" aria-labelledby="statusTitle">
-      <div class="digest-head"><h2 id="statusTitle">采集概况</h2><span id="statusBadge" class="status-badge">正在读取</span></div>
+    <details class="panel status-panel disclosure-panel" aria-labelledby="statusTitle">
+      <summary><h2 id="statusTitle">采集概况</h2></summary>
+      <span id="statusBadge" class="status-badge">正在读取</span>
       <p id="statusText" class="meta" role="status">正在读取已保存的论文库…</p>
       <p id="attemptWarning" class="notice" role="status" hidden></p>
       <div id="libraryMeta" class="meta"></div>
       <p id="enrichmentStatus" class="meta" role="status"></p>
       <button id="reload" class="secondary" type="button">重新读取本地数据</button>
-    </section>
-    <section class="panel" aria-labelledby="workflowTitle"><h2 id="workflowTitle">待采集提醒</h2><div id="workflowStatus" role="status">正在读取任务清单…</div></section>
+    </details>
+    <details class="panel disclosure-panel" aria-labelledby="workflowTitle">
+      <summary><h2 id="workflowTitle">待采集提醒</h2></summary>
+      <div id="workflowStatus" role="status">正在读取任务清单…</div>
+    </details>
     <section class="panel" aria-labelledby="filterTitle">
       <h2 id="filterTitle">筛选论文</h2>
       <form id="filters" role="search">

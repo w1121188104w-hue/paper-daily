@@ -6,7 +6,7 @@ import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {parseOfficialCatalog,readOfficialCatalog,hydrateRunFromOfficial,OFFICIAL_CACHE_PATH} from '../src/services/officialCatalog.js';
 import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-core.js';
-import {readCloudQueue,enqueuePublication,processCloudPublications} from '../src/services/cloudPublication.js';
+import {readCloudQueue,enqueuePublication,processCloudPublications,enqueueManualBackfill} from '../src/services/cloudPublication.js';
 import {writeWorkflowJson} from '../src/services/workflowStorage.js';
 import {knownFeedSource,readOfficialFeeds} from '../src/services/officialFeeds.js';
 import {loadJournalConfig} from '../src/services/journals.js';
@@ -69,6 +69,19 @@ test('cloud unknown/held outcomes require attention, never loop paid requests',a
   let n=0;const opts={checkpoint:async()=>{},translate:async()=>{n++;return {available_fields:0,held_fields:2,stop_reason:'NO_UNATTEMPTED_TASKS'};}};
   await processCloudPublications(dir,opts);await processCloudPublications(dir,opts);
   assert.equal(n,1);assert.equal((await readCloudQueue(dir)).requests[0].status,'attention');
+});
+
+test('manual cloud backfill freezes current eligible IDs and reuses the same Actions run',async t=>{
+  const dir=await temp(t),tasks=[{paper_id:'doi:10.1000/one',field:'title',source_text_hash:'a'.repeat(64)},
+    {paper_id:'doi:10.1000/one',field:'abstract',source_text_hash:'b'.repeat(64)}];
+  assert.equal(await enqueueManualBackfill(dir,{runId:'123',tasks:[]}),null);
+  assert.equal((await readCloudQueue(dir)).requests.length,0);
+  const first=await enqueueManualBackfill(dir,{runId:'123',tasks});
+  assert.deepEqual(first.paper_ids,['doi:10.1000/one']);assert.equal(first.max_requests,1);
+  const retry=await enqueueManualBackfill(dir,{runId:'123',tasks:[{...tasks[0],paper_id:'doi:10.1000/other'}]});
+  assert.deepEqual(retry,first);assert.equal((await readCloudQueue(dir)).requests.length,1);
+  await assert.rejects(enqueueManualBackfill(dir,{runId:'',tasks}));
+  await assert.rejects(enqueueManualBackfill(dir,{runId:'456',tasks:[{...tasks[0],source_text_hash:'invalid'}]}));
 });
 test('production surfaces have no test entrypoints or manual publish stage; local workflow has no translator',async()=>{
   for(const file of ['action-popup.html','workflow.html','catalog.html','dashboard.html','review.html']){

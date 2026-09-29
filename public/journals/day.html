@@ -18,14 +18,15 @@
     <div class="hero-actions"><a id="backToCalendar" class="ghost-link" href="./index.html">返回论文日历</a></div>
   </header>
   <main id="main" class="calendar-layout single journal-layout">
-    <section class="panel status-panel" aria-labelledby="statusTitle">
-      <div class="digest-head"><h2 id="statusTitle">采集概况</h2><span id="statusBadge" class="status-badge">正在读取</span></div>
+    <details class="panel status-panel disclosure-panel" aria-labelledby="statusTitle">
+      <summary><h2 id="statusTitle">采集概况</h2></summary>
+      <span id="statusBadge" class="status-badge">正在读取</span>
       <p id="statusText" class="meta" role="status">正在读取已保存的论文库…</p>
       <p id="attemptWarning" class="notice" role="status" hidden></p>
       <div id="libraryMeta" class="meta"></div>
       <p id="enrichmentStatus" class="meta" role="status"></p>
       <button id="reload" class="secondary" type="button">重新读取本地数据</button>
-    </section>
+    </details>
     <section class="panel" aria-labelledby="filterTitle">
       <h2 id="filterTitle">筛选本日论文</h2>
       <form id="filters" role="search">

@@ -1,9 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import { load } from 'cheerio';
 import { loadJournalConfig } from '../src/services/journals.js';
 import { journalUiFixture } from '../scripts/qa/journal-ui-fixture.js';
 import { createJournalUiQaServer } from '../scripts/qa/journal-ui-server.js';
 import { filterPapers, countsByDay } from '../public/journals/viewModel.js';
+
+test('采集概况和待采集提醒默认折叠，仅通过原生 summary 展开，保留数据节点', async () => {
+  for (const file of ['index.html', 'day.html']) {
+    const $ = load(await fs.readFile(new URL('../public/journals/' + file, import.meta.url), 'utf8'));
+    const panels = file === 'index.html' ? ['statusTitle', 'workflowTitle'] : ['statusTitle'];
+    for (const id of panels) {
+      const panel = $('#' + id).closest('details.disclosure-panel');
+      assert.equal(panel.length, 1);
+      assert.equal(panel.attr('open'), undefined);
+      assert.equal(panel.children('summary').find('#' + id).length, 1);
+    }
+    for (const id of ['statusBadge', 'statusText', 'attemptWarning', 'libraryMeta', 'enrichmentStatus', 'reload']) {
+      assert.equal($('#' + id).length, 1);
+      assert.equal($('#' + id).closest('details.disclosure-panel').length, 1);
+      assert.equal($('#' + id).closest('summary').length, 0);
+    }
+    if (file === 'index.html') assert.equal($('#workflowStatus').closest('details.disclosure-panel').length, 1);
+  }
+});
 
 test('隔离浏览器材料覆盖19刊、分页、双语状态及日期，不冒充真实论文', async () => {
   const fixture = journalUiFixture(await loadJournalConfig(), new Date('2026-09-07T17:00:00Z'));

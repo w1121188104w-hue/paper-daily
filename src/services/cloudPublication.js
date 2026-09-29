@@ -34,6 +34,23 @@ export async function enqueuePublication(repo,{id,inputHash,publicationId,paperI
 }
 export const publicationInputHash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
+// An explicit manual GitHub run may include eligible missing fields outside the
+// browser batches. Freeze its scope once; rerunning that same Actions run must
+// reuse it, never reset the translation reservation ledger or retry holds.
+export async function enqueueManualBackfill(repo,{runId,tasks}){
+  assertLibrary(typeof runId==='string'&&/^\d{1,20}$/.test(runId)&&Array.isArray(tasks),'手动补译参数无效');
+  const hash=publicationInputHash(['manual-missing',runId]);
+  const uuid=h=>[h.slice(0,8),h.slice(8,12),h.slice(12,16),h.slice(16,20),h.slice(20,32)].join('-');
+  const id=uuid(hash),existing=(await readCloudQueue(repo)).requests.find(r=>r.id===id);
+  if(existing)return existing;
+  if(!tasks.length)return null;
+  assertLibrary(tasks.every(t=>typeof t.paper_id==='string'&&['title','abstract'].includes(t.field)&&/^[a-f0-9]{64}$/.test(t.source_text_hash)),'手动补译清单无效');
+  const paperIds=[...new Set(tasks.map(t=>t.paper_id))];
+  return enqueuePublication(repo,{id,publicationId:uuid(publicationInputHash(['manual-publication',runId])),
+    inputHash:publicationInputHash(tasks.map(t=>[t.paper_id,t.field,t.source_text_hash]).sort()),paperIds,
+    maxRequests:Math.min(1000,paperIds.length)});
+}
+
 /** Durable request accounting remains in translationAutomation; this queue never
  * resets reservations, unknown outcomes, retry limits, or existing translations. */
 export async function processCloudPublications(repo,{translate,checkpoint,updateReceipt=async()=>{},now=()=>new Date()}){

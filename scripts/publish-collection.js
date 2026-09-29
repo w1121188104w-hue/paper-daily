@@ -2,8 +2,9 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {loadJournalConfig} from '../src/services/journals.js';
 import {readWorkflow,saveWorkflow,WORKFLOW_PATH} from '../src/services/collectionWorkflow.js';
-import {CLOUD_QUEUE_PATH,processCloudPublications,readCloudQueue} from '../src/services/cloudPublication.js';
-import {runTranslationAutomation} from '../src/services/translationAutomation.js';
+import {CLOUD_QUEUE_PATH,processCloudPublications,readCloudQueue,enqueueManualBackfill} from '../src/services/cloudPublication.js';
+import {runTranslationAutomation,automationQueue,readTranslationState} from '../src/services/translationAutomation.js';
+import {readJournalLibrary} from '../src/services/journalLibrary.js';
 import {makeTranslationPublisher} from '../src/services/translationAutomationGit.js';
 import {safeProcess} from './collection-service.js';
 import {assertLibrary} from '../src/services/libraryValidation.js';
@@ -21,6 +22,14 @@ async function main(){
     if(staged.length)await git(['-c','user.name=github-actions[bot]','-c','user.email=41898282+github-actions[bot]@users.noreply.github.com','commit','-m','data: checkpoint cloud publication queue']);
     await git(['push','origin','HEAD:refs/heads/master']);
   };
+  if(process.env.PAPER_BACKFILL_MISSING==='true'){
+    assertLibrary(process.env.GITHUB_EVENT_NAME==='workflow_dispatch','全库补译只能显式手动启动');
+    const library=await readJournalLibrary({root,config}),state=await readTranslationState(root);
+    const tasks=state.paused?[]:automationQueue(library,state).available;
+    const request=await enqueueManualBackfill(repo,{runId:process.env.GITHUB_RUN_ID,tasks});
+    await checkpoint();
+    console.log(JSON.stringify({manual_backfill:request?.id||null,eligible_fields:tasks.length,paused:!!state.paused}));
+  }
   const result=await processCloudPublications(repo,{checkpoint,
     translate:opts=>runTranslationAutomation(config,{...opts,root,mode:'backfill',apiKey:process.env.DEEPSEEK_API_KEY,
       publishCheckpoint:makeTranslationPublisher(config,{root,repositoryRoot:repo,branch:'master',gitImpl:git})}),

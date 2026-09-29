@@ -1,6 +1,11 @@
 name: Translate queued collections and publish
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      backfill_missing:
+        description: '手动补译全库当前缺失的合格标题/摘要；保留已有译文和付费重试保护'
+        type: boolean
+        default: false
   schedule:
     - cron: '43 * * * *'
 permissions:
@@ -36,6 +41,7 @@ jobs:
         if: steps.queue.outputs.pending == 'true'
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          PAPER_BACKFILL_MISSING: ${{ github.event_name == 'workflow_dispatch' && inputs.backfill_missing == true }}
         run: node scripts/publish-collection.js
       - name: Validate formal data and build site
         if: steps.queue.outputs.pending == 'true'
