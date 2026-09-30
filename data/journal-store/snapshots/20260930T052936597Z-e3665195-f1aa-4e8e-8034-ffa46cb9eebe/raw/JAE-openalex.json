@@ -1,0 +1,2008 @@
+{
+  "source": "openalex",
+  "journal_key": "JAE",
+  "pages": [
+    {
+      "meta": {
+        "count": 5,
+        "db_response_time_ms": 34,
+        "page": null,
+        "per_page": 100,
+        "next_cursor": null,
+        "groups_count": null,
+        "x_query": {
+          "oql": "works where date >= (2026-08-02)\n  and source is (S62142384)\n  and date <= (2026-09-30)",
+          "oqo": {
+            "get_rows": "works",
+            "filter_rows": [
+              {
+                "column_id": "from_publication_date",
+                "value": "2026-08-02"
+              },
+              {
+                "column_id": "primary_location.source.id",
+                "value": "S62142384"
+              },
+              {
+                "column_id": "to_publication_date",
+                "value": "2026-09-30"
+              }
+            ]
+          },
+          "url": "/works?filter=from_publication_date:2026-08-02,primary_location.source.id:S62142384,to_publication_date:2026-09-30&per_page=100&cursor=%2A"
+        },
+        "cost_usd": 0.0001
+      },
+      "results": [
+        {
+          "id": "https://openalex.org/W7172385481",
+          "doi": "https://doi.org/10.1016/j.jacceco.2026.101931",
+          "title": "Retraction notice to “Lost in standardization: Effects of financial statement database discrepancies on inference” [J. Account. Econ. 76/1 (2023) 101573]",
+          "display_name": "Retraction notice to “Lost in standardization: Effects of financial statement database discrepancies on inference” [J. Account. Econ. 76/1 (2023) 101573]",
+          "publication_year": 2026,
+          "publication_date": "2026-08-04",
+          "ids": {
+            "openalex": "https://openalex.org/W7172385481",
+            "doi": "https://doi.org/10.1016/j.jacceco.2026.101931"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.jacceco.2026.101931",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101931",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "retraction",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5066476663",
+                "display_name": "Kai Du",
+                "orcid": "https://orcid.org/0000-0002-2263-8393"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I130769515",
+                  "display_name": "Pennsylvania State University",
+                  "ror": "https://ror.org/04p491231",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I130769515"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Kai Du",
+              "raw_affiliation_strings": [
+                "Smeal College of Business, Penn State University, United States"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Smeal College of Business, Penn State University, United States",
+                  "institution_ids": [
+                    "https://openalex.org/I130769515"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5035707174",
+                "display_name": "Steven J. Huddart",
+                "orcid": "https://orcid.org/0000-0002-3301-4375"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I130769515",
+                  "display_name": "Pennsylvania State University",
+                  "ror": "https://ror.org/04p491231",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I130769515"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Steven Huddart",
+              "raw_affiliation_strings": [
+                "Smeal College of Business, Penn State University, United States"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Smeal College of Business, Penn State University, United States",
+                  "institution_ids": [
+                    "https://openalex.org/I130769515"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5005311786",
+                "display_name": "Xin Daniel Jiang",
+                "orcid": "https://orcid.org/0000-0002-8636-1186"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I151746483",
+                  "display_name": "University of Waterloo",
+                  "ror": "https://ror.org/01aff2v68",
+                  "country_code": "CA",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I151746483"
+                  ]
+                }
+              ],
+              "countries": [
+                "CA"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Xin Daniel Jiang",
+              "raw_affiliation_strings": [
+                "School of Accounting and Finance, University of Waterloo, Canada"
+              ],
+              "raw_orcid": null,
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "School of Accounting and Finance, University of Waterloo, Canada",
+                  "institution_ids": [
+                    "https://openalex.org/I151746483"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 2,
+          "institutions_distinct_count": 2,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5035707174"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I130769515"
+          ],
+          "apc_list": {
+            "value": 4170,
+            "currency": "USD",
+            "value_usd": 4170
+          },
+          "apc_paid": null,
+          "fwci": null,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": null,
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "82",
+            "issue": "2",
+            "first_page": "101931",
+            "last_page": "101931"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": null,
+          "topics": [],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/notice",
+              "display_name": "Notice",
+              "score": 0.930400013923645
+            },
+            {
+              "id": "https://openalex.org/keywords/financial-statement",
+              "display_name": "Financial statement",
+              "score": 0.6362000107765198
+            },
+            {
+              "id": "https://openalex.org/keywords/statement",
+              "display_name": "Statement (logic)",
+              "score": 0.5554999709129333
+            },
+            {
+              "id": "https://openalex.org/keywords/financial-statement-analysis",
+              "display_name": "Financial statement analysis",
+              "score": 0.25600001215934753
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C2779913896",
+              "wikidata": "https://www.wikidata.org/wiki/Q7063001",
+              "display_name": "Notice",
+              "level": 2,
+              "score": 0.930400013923645
+            },
+            {
+              "id": "https://openalex.org/C121955636",
+              "wikidata": "https://www.wikidata.org/wiki/Q4116214",
+              "display_name": "Accounting",
+              "level": 1,
+              "score": 0.6654999852180481
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.660099983215332
+            },
+            {
+              "id": "https://openalex.org/C2781027943",
+              "wikidata": "https://www.wikidata.org/wiki/Q192907",
+              "display_name": "Financial statement",
+              "level": 3,
+              "score": 0.6362000107765198
+            },
+            {
+              "id": "https://openalex.org/C2777026412",
+              "wikidata": "https://www.wikidata.org/wiki/Q2684591",
+              "display_name": "Statement (logic)",
+              "level": 2,
+              "score": 0.5554999709129333
+            },
+            {
+              "id": "https://openalex.org/C77088390",
+              "wikidata": "https://www.wikidata.org/wiki/Q8513",
+              "display_name": "Database",
+              "level": 1,
+              "score": 0.4731999933719635
+            },
+            {
+              "id": "https://openalex.org/C10138342",
+              "wikidata": "https://www.wikidata.org/wiki/Q43015",
+              "display_name": "Finance",
+              "level": 1,
+              "score": 0.39730000495910645
+            },
+            {
+              "id": "https://openalex.org/C162118730",
+              "wikidata": "https://www.wikidata.org/wiki/Q1128453",
+              "display_name": "Actuarial science",
+              "level": 1,
+              "score": 0.3880999982357025
+            },
+            {
+              "id": "https://openalex.org/C140060971",
+              "wikidata": "https://www.wikidata.org/wiki/Q5449753",
+              "display_name": "Financial statement analysis",
+              "level": 3,
+              "score": 0.25600001215934753
+            },
+            {
+              "id": "https://openalex.org/C199539241",
+              "wikidata": "https://www.wikidata.org/wiki/Q7748",
+              "display_name": "Law",
+              "level": 1,
+              "score": 0.2451999932527542
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.jacceco.2026.101931",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101931",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S62142384",
+                "display_name": "Journal of Accounting and Economics",
+                "issn_l": "0165-4101",
+                "issn": [
+                  "0165-4101",
+                  "1879-1980"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "listed_in": [
+                  "cwts-core",
+                  "jufo-3",
+                  "norway-2"
+                ],
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Accounting and Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "x_sdgs": [],
+          "study_designs": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "grobid_xml": false,
+            "pdf": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 0,
+          "referenced_works": [],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-09-05T08:02:43.246662",
+          "created_date": "2026-08-05T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7204557895",
+          "doi": "https://doi.org/10.1016/j.jacceco.2026.101939",
+          "title": "Editorial data",
+          "display_name": "Editorial data",
+          "publication_year": 2026,
+          "publication_date": "2026-08-28",
+          "ids": {
+            "openalex": "https://openalex.org/W7204557895",
+            "doi": "https://doi.org/10.1016/j.jacceco.2026.101939"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.jacceco.2026.101939",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101939",
+            "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000832/pdf",
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "editorial",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "bronze",
+            "oa_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000832/pdf",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [],
+          "institutions": [],
+          "countries_distinct_count": 0,
+          "institutions_distinct_count": 0,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [],
+          "apc_list": {
+            "value": 4170,
+            "currency": "USD",
+            "value_usd": 4170
+          },
+          "apc_paid": null,
+          "fwci": null,
+          "has_fulltext": true,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": null,
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "82",
+            "issue": "2",
+            "first_page": "101939",
+            "last_page": "101939"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": null,
+          "topics": [],
+          "keywords": [],
+          "concepts": [],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.jacceco.2026.101939",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101939",
+              "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000832/pdf",
+              "source": {
+                "id": "https://openalex.org/S62142384",
+                "display_name": "Journal of Accounting and Economics",
+                "issn_l": "0165-4101",
+                "issn": [
+                  "0165-4101",
+                  "1879-1980"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "listed_in": [
+                  "cwts-core",
+                  "jufo-3",
+                  "norway-2"
+                ],
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Accounting and Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1016/j.jacceco.2026.101939",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101939",
+            "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0165410126000832/pdf",
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "x_sdgs": [],
+          "study_designs": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "grobid_xml": true,
+            "pdf": true
+          },
+          "content_urls": {
+            "pdf": "https://content.openalex.org/works/W7204557895.pdf",
+            "grobid_xml": "https://content.openalex.org/works/W7204557895.grobid-xml"
+          },
+          "referenced_works_count": 0,
+          "referenced_works": [],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-09-12T09:15:50.089291",
+          "created_date": "2026-08-29T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7208773452",
+          "doi": "https://doi.org/10.1016/s0165-4101(26)00087-x",
+          "title": "Editorial Board",
+          "display_name": "Editorial Board",
+          "publication_year": 2026,
+          "publication_date": "2026-09-04",
+          "ids": {
+            "openalex": "https://openalex.org/W7208773452",
+            "doi": "https://doi.org/10.1016/s0165-4101(26)00087-x"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/s0165-4101(26)00087-x",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/s0165-4101(26)00087-x",
+            "pdf_url": "https://www.sciencedirect.com/science/article/pii/S016541012600087X/pdf",
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "paratext",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "bronze",
+            "oa_url": "https://www.sciencedirect.com/science/article/pii/S016541012600087X/pdf",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [],
+          "institutions": [],
+          "countries_distinct_count": 0,
+          "institutions_distinct_count": 0,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [],
+          "apc_list": {
+            "value": 4170,
+            "currency": "USD",
+            "value_usd": 4170
+          },
+          "apc_paid": null,
+          "fwci": null,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": null,
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": "82",
+            "issue": "2",
+            "first_page": "101943",
+            "last_page": "101943"
+          },
+          "is_retracted": false,
+          "is_paratext": true,
+          "is_xpac": false,
+          "primary_topic": null,
+          "topics": [],
+          "keywords": [],
+          "concepts": [],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/s0165-4101(26)00087-x",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1016/s0165-4101(26)00087-x",
+              "pdf_url": "https://www.sciencedirect.com/science/article/pii/S016541012600087X/pdf",
+              "source": {
+                "id": "https://openalex.org/S62142384",
+                "display_name": "Journal of Accounting and Economics",
+                "issn_l": "0165-4101",
+                "issn": [
+                  "0165-4101",
+                  "1879-1980"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "listed_in": [
+                  "cwts-core",
+                  "jufo-3",
+                  "norway-2"
+                ],
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Accounting and Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1016/s0165-4101(26)00087-x",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/s0165-4101(26)00087-x",
+            "pdf_url": "https://www.sciencedirect.com/science/article/pii/S016541012600087X/pdf",
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "x_sdgs": [],
+          "study_designs": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "grobid_xml": false,
+            "pdf": true
+          },
+          "content_urls": {
+            "pdf": "https://content.openalex.org/works/W7208773452.pdf"
+          },
+          "referenced_works_count": 0,
+          "referenced_works": [],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-09-12T09:15:50.089291",
+          "created_date": "2026-09-05T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7214065164",
+          "doi": "https://doi.org/10.1016/j.jacceco.2026.101952",
+          "title": "Navigating new accounting standards: Implications for firms and their auditors",
+          "display_name": "Navigating new accounting standards: Implications for firms and their auditors",
+          "publication_year": 2026,
+          "publication_date": "2026-09-01",
+          "ids": {
+            "openalex": "https://openalex.org/W7214065164",
+            "doi": "https://doi.org/10.1016/j.jacceco.2026.101952"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.jacceco.2026.101952",
+            "is_oa": false,
+            "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101952",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "abdc-a-star",
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": null,
+            "license_id": null,
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": false,
+            "oa_status": "closed",
+            "oa_url": null,
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": "https://openalex.org/A5093386371",
+                "display_name": "Will Anding",
+                "orcid": "https://orcid.org/0009-0004-4182-2147",
+                "observed_orcids": [
+                  "https://orcid.org/0009-0004-4182-2147"
+                ]
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I55732556",
+                  "display_name": "Arizona State University",
+                  "ror": "https://ror.org/03efmqc40",
+                  "country_code": "US",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I55732556"
+                  ]
+                }
+              ],
+              "countries": [
+                "US"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Will Anding",
+              "raw_affiliation_strings": [
+                "Arizona State University"
+              ],
+              "raw_orcid": "https://orcid.org/0009-0004-4182-2147",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Arizona State University",
+                  "institution_ids": [
+                    "https://openalex.org/I55732556"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 1,
+          "institutions_distinct_count": 1,
+          "corresponding_author_ids": [
+            "https://openalex.org/A5093386371"
+          ],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I55732556"
+          ],
+          "apc_list": {
+            "value": 4170,
+            "currency": "USD",
+            "value_usd": 4170
+          },
+          "apc_paid": null,
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.93780714,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": "101952",
+            "last_page": "101952"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T10081",
+            "display_name": "Auditing, Earnings Management, Governance",
+            "score": 0.272599995136261,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1402",
+              "display_name": "Accounting"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T10081",
+              "display_name": "Auditing, Earnings Management, Governance",
+              "score": 0.272599995136261,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T13366",
+              "display_name": "Accounting Theory and Financial Reporting",
+              "score": 0.0640999972820282,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1402",
+                "display_name": "Accounting"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T13054",
+              "display_name": "Agricultural and Financial Auditing",
+              "score": 0.029899999499320984,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1100",
+                "display_name": "General Agricultural and Biological Sciences"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/11",
+                "display_name": "Agricultural and Biological Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/1",
+                "display_name": "Life Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/audit",
+              "display_name": "Audit",
+              "score": 0.7006999850273132
+            },
+            {
+              "id": "https://openalex.org/keywords/accounting-information-system",
+              "display_name": "Accounting information system",
+              "score": 0.4205000102519989
+            },
+            {
+              "id": "https://openalex.org/keywords/accounting-scandals",
+              "display_name": "Accounting scandals",
+              "score": 0.3091999888420105
+            },
+            {
+              "id": "https://openalex.org/keywords/management-accounting",
+              "display_name": "Management accounting",
+              "score": 0.29510000348091125
+            },
+            {
+              "id": "https://openalex.org/keywords/accounting-method",
+              "display_name": "Accounting method",
+              "score": 0.2847000062465668
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C121955636",
+              "wikidata": "https://www.wikidata.org/wiki/Q4116214",
+              "display_name": "Accounting",
+              "level": 1,
+              "score": 0.8023999929428101
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.7778000235557556
+            },
+            {
+              "id": "https://openalex.org/C199521495",
+              "wikidata": "https://www.wikidata.org/wiki/Q181487",
+              "display_name": "Audit",
+              "level": 2,
+              "score": 0.7006999850273132
+            },
+            {
+              "id": "https://openalex.org/C163867264",
+              "wikidata": "https://www.wikidata.org/wiki/Q4672792",
+              "display_name": "Accounting information system",
+              "level": 2,
+              "score": 0.4205000102519989
+            },
+            {
+              "id": "https://openalex.org/C10138342",
+              "wikidata": "https://www.wikidata.org/wiki/Q43015",
+              "display_name": "Finance",
+              "level": 1,
+              "score": 0.3357999920845032
+            },
+            {
+              "id": "https://openalex.org/C2777639076",
+              "wikidata": "https://www.wikidata.org/wiki/Q4215744",
+              "display_name": "Accounting scandals",
+              "level": 3,
+              "score": 0.3091999888420105
+            },
+            {
+              "id": "https://openalex.org/C74275925",
+              "wikidata": "https://www.wikidata.org/wiki/Q2990807",
+              "display_name": "Management accounting",
+              "level": 2,
+              "score": 0.29510000348091125
+            },
+            {
+              "id": "https://openalex.org/C182931732",
+              "wikidata": "https://www.wikidata.org/wiki/Q339466",
+              "display_name": "Accounting method",
+              "level": 2,
+              "score": 0.2847000062465668
+            },
+            {
+              "id": "https://openalex.org/C147007100",
+              "wikidata": "https://www.wikidata.org/wiki/Q3344190",
+              "display_name": "External auditor",
+              "level": 4,
+              "score": 0.27480000257492065
+            },
+            {
+              "id": "https://openalex.org/C2993937409",
+              "wikidata": "https://www.wikidata.org/wiki/Q891723",
+              "display_name": "Listed company",
+              "level": 2,
+              "score": 0.2736000120639801
+            },
+            {
+              "id": "https://openalex.org/C2909264111",
+              "wikidata": "https://www.wikidata.org/wiki/Q740419",
+              "display_name": "Financial Audit",
+              "level": 3,
+              "score": 0.26190000772476196
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.jacceco.2026.101952",
+              "is_oa": false,
+              "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101952",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S62142384",
+                "display_name": "Journal of Accounting and Economics",
+                "issn_l": "0165-4101",
+                "issn": [
+                  "0165-4101",
+                  "1879-1980"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "listed_in": [
+                  "abdc-a-star",
+                  "cwts-core",
+                  "jufo-3",
+                  "norway-2"
+                ],
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": null,
+              "license_id": null,
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Accounting and Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": null,
+          "sustainable_development_goals": [],
+          "x_sdgs": [],
+          "study_designs": [],
+          "awards": [],
+          "funders": [],
+          "has_content": {
+            "grobid_xml": false,
+            "pdf": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 39,
+          "referenced_works": [
+            "https://openalex.org/W1506294255",
+            "https://openalex.org/W1573498635",
+            "https://openalex.org/W1977426898",
+            "https://openalex.org/W2002558691",
+            "https://openalex.org/W2012622045",
+            "https://openalex.org/W2102896483",
+            "https://openalex.org/W2116485500",
+            "https://openalex.org/W2118877261",
+            "https://openalex.org/W2130954557",
+            "https://openalex.org/W2548963472",
+            "https://openalex.org/W2554293883",
+            "https://openalex.org/W2729038242",
+            "https://openalex.org/W2802336935",
+            "https://openalex.org/W2888241179",
+            "https://openalex.org/W3040874840",
+            "https://openalex.org/W3122309589",
+            "https://openalex.org/W3123132665",
+            "https://openalex.org/W3123244669",
+            "https://openalex.org/W3123478659",
+            "https://openalex.org/W3123545319",
+            "https://openalex.org/W3124213838",
+            "https://openalex.org/W3125460159",
+            "https://openalex.org/W3126329311",
+            "https://openalex.org/W3127288993",
+            "https://openalex.org/W4230278345",
+            "https://openalex.org/W4285030998",
+            "https://openalex.org/W4285731593",
+            "https://openalex.org/W4296232960",
+            "https://openalex.org/W4312582803",
+            "https://openalex.org/W4361007122",
+            "https://openalex.org/W4367680780",
+            "https://openalex.org/W4388758305",
+            "https://openalex.org/W4392747346",
+            "https://openalex.org/W4394953847",
+            "https://openalex.org/W4396517141",
+            "https://openalex.org/W4399038360",
+            "https://openalex.org/W4399603852",
+            "https://openalex.org/W7124431829",
+            "https://openalex.org/W7136667478"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": null,
+          "counts_by_year": [],
+          "updated_date": "2026-09-29T14:09:16.559479",
+          "created_date": "2026-09-23T00:00:00"
+        },
+        {
+          "id": "https://openalex.org/W7214215924",
+          "doi": "https://doi.org/10.1016/j.jacceco.2026.101950",
+          "title": "Direct and Indirect Effects of Transparency Regulation",
+          "display_name": "Direct and Indirect Effects of Transparency Regulation",
+          "publication_year": 2026,
+          "publication_date": "2026-09-01",
+          "ids": {
+            "openalex": "https://openalex.org/W7214215924",
+            "doi": "https://doi.org/10.1016/j.jacceco.2026.101950"
+          },
+          "language": "en",
+          "primary_location": {
+            "id": "doi:10.1016/j.jacceco.2026.101950",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101950",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "abdc-a-star",
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "type": "article",
+          "indexed_in": [
+            "crossref"
+          ],
+          "open_access": {
+            "is_oa": true,
+            "oa_status": "hybrid",
+            "oa_url": "https://doi.org/10.1016/j.jacceco.2026.101950",
+            "any_repository_has_fulltext": false
+          },
+          "authorships": [
+            {
+              "author_position": "first",
+              "author": {
+                "id": null,
+                "display_name": "Matthias Breuer",
+                "orcid": "https://orcid.org/0000-0002-1754-6865",
+                "observed_orcids": [
+                  "https://orcid.org/0000-0002-1754-6865"
+                ]
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I913958620",
+                  "display_name": "Erasmus University Rotterdam",
+                  "ror": "https://ror.org/057w15z03",
+                  "country_code": "NL",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I913958620"
+                  ]
+                }
+              ],
+              "countries": [
+                "NL"
+              ],
+              "is_corresponding": true,
+              "raw_author_name": "Matthias Breuer",
+              "raw_affiliation_strings": [
+                "Erasmus University Rotterdam"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0002-1754-6865",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Erasmus University Rotterdam",
+                  "institution_ids": [
+                    "https://openalex.org/I913958620"
+                  ]
+                }
+              ]
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5040490647",
+                "display_name": "Patricia Breuer",
+                "orcid": "https://orcid.org/0000-0003-2379-2111",
+                "observed_orcids": [
+                  "https://orcid.org/0000-0003-2379-2111"
+                ]
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I913958620",
+                  "display_name": "Erasmus University Rotterdam",
+                  "ror": "https://ror.org/057w15z03",
+                  "country_code": "NL",
+                  "type": "education",
+                  "lineage": [
+                    "https://openalex.org/I913958620"
+                  ]
+                }
+              ],
+              "countries": [
+                "NL"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Patricia Breuer",
+              "raw_affiliation_strings": [
+                "Erasmus University Rotterdam"
+              ],
+              "raw_orcid": "https://orcid.org/0000-0003-2379-2111",
+              "affiliations": [
+                {
+                  "raw_affiliation_string": "Erasmus University Rotterdam",
+                  "institution_ids": [
+                    "https://openalex.org/I913958620"
+                  ]
+                }
+              ]
+            }
+          ],
+          "institutions": [],
+          "countries_distinct_count": 1,
+          "institutions_distinct_count": 1,
+          "corresponding_author_ids": [],
+          "corresponding_institution_ids": [
+            "https://openalex.org/I913958620"
+          ],
+          "apc_list": {
+            "value": 4170,
+            "currency": "USD",
+            "value_usd": 4170
+          },
+          "apc_paid": {
+            "value": 4170,
+            "currency": "USD",
+            "value_usd": 4170
+          },
+          "fwci": 0,
+          "has_fulltext": false,
+          "cited_by_count": 0,
+          "citation_normalized_percentile": {
+            "value": 0.90824784,
+            "is_in_top_1_percent": false,
+            "is_in_top_10_percent": true
+          },
+          "cited_by_percentile_year": null,
+          "biblio": {
+            "volume": null,
+            "issue": null,
+            "first_page": "101950",
+            "last_page": "101950"
+          },
+          "is_retracted": false,
+          "is_paratext": false,
+          "is_xpac": false,
+          "primary_topic": {
+            "id": "https://openalex.org/T12185",
+            "display_name": "Regulation and Compliance Studies",
+            "score": 0.16130000352859497,
+            "subfield": {
+              "id": "https://openalex.org/subfields/1408",
+              "display_name": "Strategy and Management"
+            },
+            "field": {
+              "id": "https://openalex.org/fields/14",
+              "display_name": "Business, Management and Accounting"
+            },
+            "domain": {
+              "id": "https://openalex.org/domains/2",
+              "display_name": "Social Sciences"
+            }
+          },
+          "topics": [
+            {
+              "id": "https://openalex.org/T12185",
+              "display_name": "Regulation and Compliance Studies",
+              "score": 0.16130000352859497,
+              "subfield": {
+                "id": "https://openalex.org/subfields/1408",
+                "display_name": "Strategy and Management"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/14",
+                "display_name": "Business, Management and Accounting"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T11042",
+              "display_name": "Corruption and Economic Development",
+              "score": 0.026100000366568565,
+              "subfield": {
+                "id": "https://openalex.org/subfields/3312",
+                "display_name": "Sociology and Political Science"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/33",
+                "display_name": "Social Sciences"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            },
+            {
+              "id": "https://openalex.org/T13074",
+              "display_name": "Global Financial Regulation and Crises",
+              "score": 0.023800000548362732,
+              "subfield": {
+                "id": "https://openalex.org/subfields/2003",
+                "display_name": "Finance"
+              },
+              "field": {
+                "id": "https://openalex.org/fields/20",
+                "display_name": "Economics, Econometrics and Finance"
+              },
+              "domain": {
+                "id": "https://openalex.org/domains/2",
+                "display_name": "Social Sciences"
+              }
+            }
+          ],
+          "keywords": [
+            {
+              "id": "https://openalex.org/keywords/transparency",
+              "display_name": "Transparency (behavior)",
+              "score": 0.8361999988555908
+            }
+          ],
+          "concepts": [
+            {
+              "id": "https://openalex.org/C2780233690",
+              "wikidata": "https://www.wikidata.org/wiki/Q535347",
+              "display_name": "Transparency (behavior)",
+              "level": 2,
+              "score": 0.8361999988555908
+            },
+            {
+              "id": "https://openalex.org/C144133560",
+              "wikidata": "https://www.wikidata.org/wiki/Q4830453",
+              "display_name": "Business",
+              "level": 0,
+              "score": 0.6141999959945679
+            },
+            {
+              "id": "https://openalex.org/C556758197",
+              "wikidata": "https://www.wikidata.org/wiki/Q580018",
+              "display_name": "Monetary economics",
+              "level": 1,
+              "score": 0.5623000264167786
+            },
+            {
+              "id": "https://openalex.org/C162324750",
+              "wikidata": "https://www.wikidata.org/wiki/Q8134",
+              "display_name": "Economics",
+              "level": 0,
+              "score": 0.4165000021457672
+            },
+            {
+              "id": "https://openalex.org/C73283319",
+              "wikidata": "https://www.wikidata.org/wiki/Q1416617",
+              "display_name": "Financial system",
+              "level": 1,
+              "score": 0.34929999709129333
+            },
+            {
+              "id": "https://openalex.org/C10138342",
+              "wikidata": "https://www.wikidata.org/wiki/Q43015",
+              "display_name": "Finance",
+              "level": 1,
+              "score": 0.30649998784065247
+            },
+            {
+              "id": "https://openalex.org/C121955636",
+              "wikidata": "https://www.wikidata.org/wiki/Q4116214",
+              "display_name": "Accounting",
+              "level": 1,
+              "score": 0.2930999994277954
+            },
+            {
+              "id": "https://openalex.org/C40700",
+              "wikidata": "https://www.wikidata.org/wiki/Q1411783",
+              "display_name": "Industrial organization",
+              "level": 1,
+              "score": 0.27619999647140503
+            },
+            {
+              "id": "https://openalex.org/C18547055",
+              "wikidata": "https://www.wikidata.org/wiki/Q47417",
+              "display_name": "International economics",
+              "level": 1,
+              "score": 0.25609999895095825
+            },
+            {
+              "id": "https://openalex.org/C175444787",
+              "wikidata": "https://www.wikidata.org/wiki/Q39072",
+              "display_name": "Microeconomics",
+              "level": 1,
+              "score": 0.22579999268054962
+            }
+          ],
+          "mesh": [],
+          "locations_count": 1,
+          "locations": [
+            {
+              "id": "doi:10.1016/j.jacceco.2026.101950",
+              "is_oa": true,
+              "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101950",
+              "pdf_url": null,
+              "source": {
+                "id": "https://openalex.org/S62142384",
+                "display_name": "Journal of Accounting and Economics",
+                "issn_l": "0165-4101",
+                "issn": [
+                  "0165-4101",
+                  "1879-1980"
+                ],
+                "is_oa": false,
+                "is_in_doaj": false,
+                "is_core": true,
+                "listed_in": [
+                  "abdc-a-star",
+                  "cwts-core",
+                  "jufo-3",
+                  "norway-2"
+                ],
+                "host_organization": "https://openalex.org/P4310320990",
+                "host_organization_name": "Elsevier BV",
+                "host_organization_lineage": [
+                  "https://openalex.org/P4310320990"
+                ],
+                "host_organization_lineage_names": [
+                  "Elsevier BV"
+                ],
+                "type": "journal"
+              },
+              "license": "cc-by",
+              "license_id": "https://openalex.org/licenses/cc-by",
+              "version": "publishedVersion",
+              "is_accepted": true,
+              "is_published": true,
+              "raw_source_name": "Journal of Accounting and Economics",
+              "raw_type": "journal-article"
+            }
+          ],
+          "best_oa_location": {
+            "id": "doi:10.1016/j.jacceco.2026.101950",
+            "is_oa": true,
+            "landing_page_url": "https://doi.org/10.1016/j.jacceco.2026.101950",
+            "pdf_url": null,
+            "source": {
+              "id": "https://openalex.org/S62142384",
+              "display_name": "Journal of Accounting and Economics",
+              "issn_l": "0165-4101",
+              "issn": [
+                "0165-4101",
+                "1879-1980"
+              ],
+              "is_oa": false,
+              "is_in_doaj": false,
+              "is_core": true,
+              "listed_in": [
+                "abdc-a-star",
+                "cwts-core",
+                "jufo-3",
+                "norway-2"
+              ],
+              "host_organization": "https://openalex.org/P4310320990",
+              "host_organization_name": "Elsevier BV",
+              "host_organization_lineage": [
+                "https://openalex.org/P4310320990"
+              ],
+              "host_organization_lineage_names": [
+                "Elsevier BV"
+              ],
+              "type": "journal"
+            },
+            "license": "cc-by",
+            "license_id": "https://openalex.org/licenses/cc-by",
+            "version": "publishedVersion",
+            "is_accepted": true,
+            "is_published": true,
+            "raw_source_name": "Journal of Accounting and Economics",
+            "raw_type": "journal-article"
+          },
+          "sustainable_development_goals": [],
+          "x_sdgs": [],
+          "study_designs": [],
+          "awards": [],
+          "funders": [
+            {
+              "id": "https://openalex.org/F4320320875",
+              "display_name": "Deutscher Akademischer Austauschdienst",
+              "ror": "https://ror.org/039djdh30"
+            },
+            {
+              "id": "https://openalex.org/F4320320879",
+              "display_name": "Deutsche Forschungsgemeinschaft",
+              "ror": "https://ror.org/018mejw64"
+            }
+          ],
+          "has_content": {
+            "grobid_xml": false,
+            "pdf": false
+          },
+          "content_urls": null,
+          "referenced_works_count": 65,
+          "referenced_works": [
+            "https://openalex.org/W578810007",
+            "https://openalex.org/W1483106487",
+            "https://openalex.org/W1965462086",
+            "https://openalex.org/W2000791920",
+            "https://openalex.org/W2056540093",
+            "https://openalex.org/W2069985282",
+            "https://openalex.org/W2077710056",
+            "https://openalex.org/W2111147781",
+            "https://openalex.org/W2127999605",
+            "https://openalex.org/W2137211510",
+            "https://openalex.org/W2155694514",
+            "https://openalex.org/W2260725321",
+            "https://openalex.org/W2336317428",
+            "https://openalex.org/W2593581405",
+            "https://openalex.org/W2601011777",
+            "https://openalex.org/W2751168321",
+            "https://openalex.org/W2758081422",
+            "https://openalex.org/W2767768457",
+            "https://openalex.org/W2769449215",
+            "https://openalex.org/W2791859701",
+            "https://openalex.org/W2792018968",
+            "https://openalex.org/W2891145393",
+            "https://openalex.org/W2891485059",
+            "https://openalex.org/W2941822748",
+            "https://openalex.org/W2951991237",
+            "https://openalex.org/W2954942125",
+            "https://openalex.org/W2968565727",
+            "https://openalex.org/W3044225844",
+            "https://openalex.org/W3113467028",
+            "https://openalex.org/W3121504762",
+            "https://openalex.org/W3122321277",
+            "https://openalex.org/W3122385450",
+            "https://openalex.org/W3122604999",
+            "https://openalex.org/W3122615110",
+            "https://openalex.org/W3122816510",
+            "https://openalex.org/W3122951791",
+            "https://openalex.org/W3123458215",
+            "https://openalex.org/W3123681098",
+            "https://openalex.org/W3123791478",
+            "https://openalex.org/W3124394808",
+            "https://openalex.org/W3124411176",
+            "https://openalex.org/W3124589685",
+            "https://openalex.org/W3124995356",
+            "https://openalex.org/W3125113415",
+            "https://openalex.org/W3125163224",
+            "https://openalex.org/W3125373908",
+            "https://openalex.org/W3126001876",
+            "https://openalex.org/W3126126585",
+            "https://openalex.org/W3139222136",
+            "https://openalex.org/W3186595708",
+            "https://openalex.org/W3189633508",
+            "https://openalex.org/W3191065104",
+            "https://openalex.org/W3214828027",
+            "https://openalex.org/W4206684512",
+            "https://openalex.org/W4283387379",
+            "https://openalex.org/W4292202185",
+            "https://openalex.org/W4293833992",
+            "https://openalex.org/W4381322328",
+            "https://openalex.org/W4385801879",
+            "https://openalex.org/W4388774030",
+            "https://openalex.org/W4400237801",
+            "https://openalex.org/W4400870537",
+            "https://openalex.org/W4408057940",
+            "https://openalex.org/W4408461795",
+            "https://openalex.org/W7203622044"
+          ],
+          "related_works": [],
+          "abstract_inverted_index": {
+            "We": [
+              0
+            ],
+            "examine": [
+              1
+            ],
+            "the": [
+              2,
+              26,
+              84
+            ],
+            "direct": [
+              3,
+              38,
+              86
+            ],
+            "and": [
+              4,
+              25,
+              52,
+              87
+            ],
+            "indirect": [
+              5,
+              59,
+              89
+            ],
+            "effects": [
+              6,
+              90
+            ],
+            "of": [
+              7,
+              17,
+              22,
+              29,
+              78,
+              94
+            ],
+            "transparency": [
+              8,
+              41,
+              62,
+              107
+            ],
+            "regulation": [
+              9,
+              42,
+              63,
+              108
+            ],
+            "on": [
+              10,
+              65
+            ],
+            "economic": [
+              11,
+              48,
+              74,
+              113,
+              127
+            ],
+            "activity.": [
+              12,
+              75,
+              128
+            ],
+            "Using": [
+              13
+            ],
+            "two": [
+              14
+            ],
+            "distinct": [
+              15
+            ],
+            "sources": [
+              16
+            ],
+            "regulatory": [
+              18
+            ],
+            "variation—the": [
+              19
+            ],
+            "varying": [
+              20
+            ],
+            "extent": [
+              21
+            ],
+            "financial-reporting": [
+              23
+            ],
+            "requirements": [
+              24
+            ],
+            "staggered": [
+              27
+            ],
+            "introduction": [
+              28
+            ],
+            "electronic": [
+              30
+            ],
+            "business": [
+              31
+            ],
+            "registers": [
+              32
+            ],
+            "in": [
+              33
+            ],
+            "Europe—,": [
+              34
+            ],
+            "we": [
+              35,
+              56,
+              81
+            ],
+            "find": [
+              36,
+              57,
+              82
+            ],
+            "that": [
+              37,
+              58,
+              83,
+              106
+            ],
+            "exposure": [
+              39,
+              60
+            ],
+            "to": [
+              40,
+              44,
+              61,
+              70,
+              92,
+              110
+            ],
+            "tends": [
+              43,
+              69
+            ],
+            "hurt": [
+              45,
+              125
+            ],
+            "focal": [
+              46,
+              72
+            ],
+            "firms’": [
+              47,
+              73
+            ],
+            "activity": [
+              49,
+              114
+            ],
+            "(e.g.,": [
+              50
+            ],
+            "production": [
+              51
+            ],
+            "employment).": [
+              53
+            ],
+            "By": [
+              54
+            ],
+            "contrast,": [
+              55
+            ],
+            "imposed": [
+              64
+            ],
+            "other": [
+              66
+            ],
+            "related": [
+              67
+            ],
+            "firms": [
+              68
+            ],
+            "help": [
+              71,
+              123
+            ],
+            "In": [
+              76
+            ],
+            "terms": [
+              77
+            ],
+            "relative": [
+              79
+            ],
+            "magnitudes,": [
+              80
+            ],
+            "negative": [
+              85
+            ],
+            "positive": [
+              88
+            ],
+            "tend": [
+              91
+            ],
+            "be": [
+              93
+            ],
+            "similar": [
+              95
+            ],
+            "size,": [
+              96
+            ],
+            "almost": [
+              97
+            ],
+            "perfectly": [
+              98
+            ],
+            "offsetting": [
+              99
+            ],
+            "each": [
+              100
+            ],
+            "other.": [
+              101
+            ],
+            "Collectively,": [
+              102
+            ],
+            "our": [
+              103
+            ],
+            "evidence": [
+              104
+            ],
+            "suggests": [
+              105
+            ],
+            "appears": [
+              109
+            ],
+            "primarily": [
+              111
+            ],
+            "reallocate": [
+              112
+            ],
+            "from": [
+              115
+            ],
+            "more": [
+              116
+            ],
+            "toward": [
+              117
+            ],
+            "less": [
+              118
+            ],
+            "regulated": [
+              119
+            ],
+            "markets": [
+              120
+            ],
+            "rather": [
+              121
+            ],
+            "than": [
+              122
+            ],
+            "or": [
+              124
+            ],
+            "aggregate": [
+              126
+            ]
+          },
+          "counts_by_year": [],
+          "updated_date": "2026-09-29T14:09:16.559479",
+          "created_date": "2026-09-25T00:00:00"
+        }
+      ],
+      "group_by": []
+    }
+  ],
+  "rejected": [],
+  "warnings": []
+}
