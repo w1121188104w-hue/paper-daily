@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-f7e9daf2b42806f9d333c5b58e84f8c46f7eb9fb638e127a6bbd0f2836dba45f",
+  "stats": {
+    "completed_fields": 10,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 5
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.respol.2026.105635",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.respol.2026.105635",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1093/qje/qjag035",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1093/qje/qjag035",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1177/01492063261487124",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1177/01492063261487124",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1287/mnsc.2024.08553",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1287/mnsc.2024.08553",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1287/mnsc.2025.00107",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1287/mnsc.2025.00107",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
