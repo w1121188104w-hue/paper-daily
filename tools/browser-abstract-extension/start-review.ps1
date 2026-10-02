@@ -1,6 +1,9 @@
 ﻿param([switch]$Configure)
 $ErrorActionPreference = 'Stop'
 try {
+  . (Join-Path $PSScriptRoot 'service-runtime.ps1')
+  $env:LOCALAPPDATA = Get-PaperConfiguredDataRoot
+  if (Test-Path -LiteralPath (Join-Path $env:LOCALAPPDATA 'PaperDailyReviewBridge/config.clixml')) { Set-PaperServiceDataRoot }
   . (Join-Path $PSScriptRoot 'review-config.ps1')
   $configPath = Join-Path $env:LOCALAPPDATA 'PaperDailyReviewBridge\config.clixml'
   if ($Configure -or -not (Test-Path -LiteralPath $configPath)) {

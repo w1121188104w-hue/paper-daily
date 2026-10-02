@@ -149,6 +149,12 @@ test('loopback service rejects wrong origin, missing guard and arbitrary routes'
   const post={method:'POST',headers:{...good,'Content-Type':'application/json'},body:'{}'};
   assert.equal((await fetch(`http://127.0.0.1:${port}/status`,post)).status,200);
   assert.equal(calls,2);
+  const health=await fetch(`http://127.0.0.1:${port}/health`,post);
+  assert.equal(health.status,200);
+  assert.deepEqual(await health.json(),{service:'paper-daily-workflow',status:'ready',version:2});
+  assert.equal(calls,2,'health does not read the library or run the coordinator');
+  assert.equal((await fetch(`http://127.0.0.1:${port}/health`,{...post,headers:{...post.headers,Origin:'https://evil.example'}})).status,403);
+  assert.equal((await fetch(`http://127.0.0.1:${port}/health`,{method:'POST',headers:{Origin:good.Origin}})).status,403);
   for(const Origin of [undefined,'null','https://evil.example','chrome-extension://'+'a'.repeat(32)]){
     const headers={...post.headers};delete headers.Origin;if(Origin!==undefined)headers.Origin=Origin;
     assert.equal((await fetch(`http://127.0.0.1:${port}/status`,{...post,headers})).status,403);

@@ -116,6 +116,10 @@ export function collectionHttpServer(coordinator,{extensionId,port=17328}){
     if(req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST',
       'Access-Control-Allow-Headers':'Content-Type, X-Paper-Workflow'});res.end();return;}
     if(req.headers['x-paper-workflow']!=='1'){reply(403,{message:'请求校验失败'});req.resume();return;}
+    // Liveness must not read the library, sync Git or create paid work.
+    if(['GET','POST'].includes(req.method)&&req.url==='/health'){
+      req.resume();reply(200,{service:'paper-daily-workflow',status:'ready',version:2});return;
+    }
     try {
       if(req.method==='GET'&&req.url==='/status'){reply(200,await coordinator.status());return;}
       assertLibrary(req.method==='POST'&&['/status','/start','/run','/submit','/finish','/sync','/check-publication'].includes(req.url),'请求不支持');
