@@ -34904,7 +34904,7 @@
       "batch_id": "batch-728fa5f9b09ae63365d775e515f00ce806e7a5b385c7ab03828edd97de43e624",
       "mode": "backfill",
       "created_at": "2026-10-03T05:21:00.329Z",
-      "finished_at": null,
+      "finished_at": "2026-10-03T05:22:55.132Z",
       "items": [
         {
           "id": "doi:10.1016/j.aos.2026.101663",
@@ -34923,10 +34923,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 728,
+            "completion_tokens": 264,
+            "total_tokens": 992
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.38104/vadyba.2026.2.01",
@@ -34945,10 +34952,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 860,
+            "completion_tokens": 301,
+            "total_tokens": 1161
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.38104/vadyba.2026.2.02",
@@ -34967,10 +34981,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 1020,
+            "completion_tokens": 509,
+            "total_tokens": 1529
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.38104/vadyba.2026.2.03",
@@ -34989,10 +35010,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 1223,
+            "completion_tokens": 562,
+            "total_tokens": 1785
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.38104/vadyba.2026.2.04",
@@ -35011,10 +35039,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 1065,
+            "completion_tokens": 410,
+            "total_tokens": 1475
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
