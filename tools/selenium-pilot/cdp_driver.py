@@ -4,6 +4,10 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import socket
+import subprocess
+import time
+import urllib.request
 
 from seleniumbase import sb_cdp
 from selenium.common.exceptions import TimeoutException
@@ -23,6 +27,7 @@ def linux_sandbox_config(options):
 
 class CDPDriver:
     def __init__(self, args):
+        self.process = None
         binary = args.binary
         if not binary and args.browser == "edge" and platform.system() == "Linux":
             binary = shutil.which("microsoft-edge") or shutil.which("microsoft-edge-stable")
@@ -42,8 +47,37 @@ class CDPDriver:
         if args.profile:
             options["user_data_dir"] = str(Path(args.profile).resolve())
         if platform.system() == "Linux":
-            options["config"] = linux_sandbox_config(options)
-        self.client = sb_cdp.Chrome(**options)
+            config = linux_sandbox_config(options)
+            config.host = '127.0.0.1'
+            with socket.socket() as available:
+                available.bind((config.host, 0))
+                config.port = available.getsockname()[1]
+            log_path = Path(os.environ.get('PAPER_CDP_STARTUP_LOG', str(Path(args.profile).parent / 'browser-startup.log')))
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            with log_path.open('wb') as log:
+                self.process = subprocess.Popen([str(binary), *config()], stdout=log, stderr=log)
+            opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+            deadline = time.monotonic() + 60
+            ready = False
+            while time.monotonic() < deadline and self.process.poll() is None:
+                try:
+                    with opener.open(f'http://127.0.0.1:{config.port}/json/version', timeout=1) as response:
+                        ready = response.status == 200
+                    if ready:
+                        break
+                except OSError:
+                    pass
+                time.sleep(0.5)
+            if not ready:
+                self.stop_process()
+                print(log_path.read_text(encoding='utf-8', errors='replace')[-6000:], flush=True)
+                raise RuntimeError('Browser startup readiness failed; see browser-startup.log')
+            options.update(config=config, host=config.host, port=config.port)
+        try:
+            self.client = sb_cdp.Chrome(**options)
+        except Exception:
+            self.stop_process()
+            raise
         self.timeout = args.timeout
         self.capabilities = {"browserName": args.browser, "platformName": platform.system(),
                              "browserVersion": self.client.get_user_agent()}
@@ -80,4 +114,16 @@ class CDPDriver:
             self.client.page.solve_captcha(), timeout=min(self.timeout, 20)))
 
     def quit(self):
-        self.client.quit()
+        try:
+            self.client.quit()
+        finally:
+            self.stop_process()
+
+    def stop_process(self):
+        if self.process and self.process.poll() is None:
+            self.process.terminate()
+            try:
+                self.process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.process.kill()
+                self.process.wait(timeout=5)
