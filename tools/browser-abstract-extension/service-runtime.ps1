@@ -108,3 +108,11 @@ function Enter-PaperServiceLock {
   if (-not $acquired) { $mutex.Dispose(); return $null }
   return $mutex
 }
+function Invoke-PaperServiceProcess {
+  param([string]$Executable, [string]$Script)
+  if (-not ('PaperDaily.ServiceHost' -as [type])) {
+    Add-Type -Path (Join-Path $PSScriptRoot 'service-host.cs')
+  }
+  if ($Script.Contains('"')) { throw 'INVALID_SCRIPT_PATH' }
+  return [PaperDaily.ServiceHost]::RunHidden($Executable, ('"' + $Script + '"'), (Get-Location).Path)
+}

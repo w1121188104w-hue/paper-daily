@@ -12,6 +12,13 @@ if ($Mode -eq 'Install') {
   try { $DataRoot = Get-PaperConfiguredDataRoot $DataRoot }
   catch { Write-Host 'SERVICE_DATA_ROOT_CONFLICT: inspect the two managed task actions.'; exit 1 }
 } elseif (-not $DataRoot) { $DataRoot = $env:LOCALAPPDATA }
+$hostSource = Join-Path $project 'tools/browser-abstract-extension/service-host.cs'
+$hostBase = Join-Path $DataRoot 'PaperDailyWorkflow\service-host'
+$hashAlgorithm = [Security.Cryptography.SHA256]::Create()
+try { $hostHash = [BitConverter]::ToString($hashAlgorithm.ComputeHash([IO.File]::ReadAllBytes($hostSource))).Replace('-','') }
+finally { $hashAlgorithm.Dispose() }
+$hostDirectory = Join-Path $hostBase $hostHash
+$hostExecutable = Join-Path $hostDirectory 'PaperDaily.ServiceHost.exe'
 $definitions = @(
   @{Role='Workflow'; Script=(Join-Path $PSScriptRoot 'start-workflow.ps1'); Extra=' -Worker'},
   @{Role='Review'; Script=(Join-Path $project 'tools/browser-abstract-extension/service-worker.ps1'); Extra=''}
@@ -21,7 +28,9 @@ $definitions = @(
 foreach ($definition in $definitions) {
   $definition.Name = Get-PaperServiceTaskName $definition.Role
   $definition.LegacyArguments = '-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "' + $definition.Script + '"' + $definition.Extra
-  $definition.Arguments = $definition.LegacyArguments + ' -DataRoot "' + $DataRoot + '"'
+  $definition.WorkerArguments = $definition.LegacyArguments + ' -DataRoot "' + $DataRoot + '"'
+  $definition.Execute = $hostExecutable
+  $definition.Arguments = '-Role ' + $definition.Role + ' -Script "' + $definition.Script + '" -DataRoot "' + $DataRoot + '"'
   $definition.Description = 'Paper Daily managed local ' + $definition.Role + ' service v1'
 }
 if ($Mode -eq 'Plan') {
@@ -32,15 +41,28 @@ try {
   # Validate all targets first. Never replace a task from a different installation.
   foreach ($definition in $definitions) {
     $task = Get-PaperManagedTask $definition.Role
-    if ($task -and (@($task.Actions).Count -ne 1 -or $task.Actions[0].Execute -ne $powershellPath -or ($task.Actions[0].Arguments -cne $definition.Arguments -and $task.Actions[0].Arguments -cne $definition.LegacyArguments) -or (Get-PaperTaskUserSid $task.Principal.UserId) -ne $userSid)) { throw 'TASK_OWNERSHIP_CONFLICT' }
+    if ($task) {
+      if (@($task.Actions).Count -ne 1 -or (Get-PaperTaskUserSid $task.Principal.UserId) -ne $userSid) { throw 'TASK_OWNERSHIP_CONFLICT' }
+      $action = $task.Actions[0]
+      $legacy = $action.Execute -eq $powershellPath -and ($action.Arguments -ceq $definition.WorkerArguments -or $action.Arguments -ceq $definition.LegacyArguments)
+      $ownedHost = $action.Execute -match ('^' + [regex]::Escape($hostBase.TrimEnd('\','/')) + '[\\/][A-Fa-f0-9]{64}[\\/]PaperDaily\.ServiceHost\.exe$') -and $action.Arguments -ceq $definition.Arguments
+      if (-not $legacy -and -not $ownedHost) { throw 'TASK_OWNERSHIP_CONFLICT' }
+    }
   }
   if ($Mode -eq 'Install') {
     . (Join-Path $project 'tools/browser-abstract-extension/review-config.ps1')
     $config = Read-PaperReviewConfig -Path (Join-Path $env:LOCALAPPDATA 'PaperDailyReviewBridge/config.clixml')
     $config.Secret.Dispose()
+    if (-not (Test-Path -LiteralPath $hostExecutable)) {
+      [void][IO.Directory]::CreateDirectory($hostDirectory)
+      # Versioned by source hash: never overwrite an executable that is running.
+      $temporaryHost = Join-Path $hostDirectory ([Guid]::NewGuid().ToString('N') + '.exe')
+      Add-Type -Path $hostSource -OutputAssembly $temporaryHost -OutputType WindowsApplication
+      [IO.File]::Move($temporaryHost, $hostExecutable)
+    }
     foreach ($definition in $definitions) {
       if (-not (Test-Path -LiteralPath $definition.Script)) { throw 'WORKER_MISSING' }
-      $action = New-ScheduledTaskAction -Execute $powershellPath -Argument $definition.Arguments -WorkingDirectory $project
+      $action = New-ScheduledTaskAction -Execute $hostExecutable -Argument $definition.Arguments -WorkingDirectory $project
       $triggers = @((New-ScheduledTaskTrigger -AtLogOn -User $userSid), (New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 1)))
       $principal = New-ScheduledTaskPrincipal -UserId $userSid -LogonType Interactive -RunLevel Limited
       $settings = New-ScheduledTaskSettingsSet -Hidden -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)

@@ -22,8 +22,8 @@ try {
   $nodeExecutable = if ($nodeCommand) { $nodeCommand.Source } else { Join-Path $env:USERPROFILE '.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe' }
   $stage='NODE_RUNNING'
   Write-PaperServiceEvent Review STARTING
-  & $nodeExecutable (Join-Path $PSScriptRoot 'review-bridge.mjs')
-  Write-PaperServiceEvent Review ('NODE_EXIT:' + $LASTEXITCODE)
+  $nodeExit = Invoke-PaperServiceProcess $nodeExecutable (Join-Path $PSScriptRoot 'review-bridge.mjs')
+  Write-PaperServiceEvent Review ('NODE_EXIT:' + $nodeExit)
   throw 'SERVICE_EXITED'
 } catch { Write-PaperServiceFailure Review $stage $_; Write-Output 'Local review service exited or could not start. No credentials are included in this message.' }
 finally {

@@ -26,6 +26,7 @@ test('service lifetime belongs to limited current-user scheduled tasks, not a la
   for(const p of ['scripts/start-workflow.ps1','tools/browser-abstract-extension/service-worker.ps1']) {
     const worker=await read(p);assert.match(worker,/Enter-PaperServiceLock/);assert.match(worker,/ReleaseMutex/);
     assert.match(worker,/NODE_EXIT:/);assert.match(worker,/exit 1/);
+    assert.match(worker,/Invoke-PaperServiceProcess/);assert.doesNotMatch(worker,/& \$nodeExecutable/);
   }
   const runtime=await read('tools/browser-abstract-extension/service-runtime.ps1');
   assert.match(runtime,/INVALID_EVENT_CODE/);assert.doesNotMatch(runtime,/Exception\.Message|Secret|apiKey/);
@@ -57,5 +58,34 @@ test('Windows lifecycle scripts parse, and dry-run plan performs no registration
   const plan=JSON.parse(raw);assert.equal(plan.logon_type,'Interactive');assert.equal(plan.run_level,'Limited');
   assert.equal(plan.tasks.length,2);assert.equal(plan.interval_minutes,1);assert.equal(plan.execution_limit,'PT0S');
   assert.equal(new Set(plan.tasks.map(t=>t.Name)).size,2);
-  for(const task of plan.tasks) {assert.ok(task.Name.endsWith(plan.user));assert.match(task.Arguments,/-WindowStyle Hidden/);}
+  for(const task of plan.tasks) {assert.ok(task.Name.endsWith(plan.user));assert.match(task.Execute,/PaperDaily\.ServiceHost\.exe$/);assert.match(task.Arguments,/-Role (Workflow|Review) -Script /);}
+});
+
+test('GUI service host creates no console and propagates worker exit after draining both pipes', {skip:process.platform!=='win32'}, async()=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'paper-hidden-host-'));
+  try {
+    const quote=s=>s.replaceAll("'","''");
+    const exe=path.join(root,'host.exe'),probe=path.join(root,'probe.ps1');
+    // This synthetic worker never reads configuration or calls a network API.
+    await fs.writeFile(probe,`param([switch]$Worker,[string]$DataRoot)
+Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class ConsoleProbe{[DllImport("kernel32.dll")]public static extern IntPtr GetConsoleWindow();}'
+$noConsole = [ConsoleProbe]::GetConsoleWindow() -eq [IntPtr]::Zero
+[IO.File]::WriteAllText((Join-Path $DataRoot 'result.txt'), [string]$noConsole)
+$chunk='x' * 8192
+for($i=0;$i -lt 128;$i++){[Console]::Out.Write($chunk);[Console]::Error.Write($chunk)}
+exit 17
+`);
+    const compile=`$ErrorActionPreference='Stop';Add-Type -Path ./tools/browser-abstract-extension/service-host.cs -OutputAssembly '${quote(exe)}' -OutputType WindowsApplication`;
+    execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',compile],{cwd:repo,stdio:'pipe'});
+    const pe=await fs.readFile(exe),header=pe.readUInt32LE(0x3c);
+    assert.equal(pe.readUInt16LE(header+24+68),2,'host must use Windows GUI subsystem, not Console');
+    const {spawnSync}=await import('node:child_process');
+    const result=spawnSync(exe,['-Role','Workflow','-Script',probe,'-DataRoot',root],{windowsHide:true,timeout:15000,encoding:'utf8'});
+    assert.equal(result.status,17,result.error?.message);assert.equal(result.stdout,'');assert.equal(result.stderr,'');
+    assert.equal(await fs.readFile(path.join(root,'result.txt'),'utf8'),'True');
+    const helper=`$ErrorActionPreference='Stop';. ./tools/browser-abstract-extension/service-runtime.ps1;$code=Invoke-PaperServiceProcess '${quote(process.execPath)}' '${quote(path.join(root,'probe.js'))}';exit $code`;
+    await fs.writeFile(path.join(root,'probe.js'),"process.stdout.write('discarded');process.stderr.write('discarded');process.exitCode=19;");
+    const child=spawnSync('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',helper],{cwd:repo,windowsHide:true,timeout:15000,encoding:'utf8'});
+    assert.equal(child.status,19,child.stderr);assert.equal(child.stdout,'');assert.equal(child.stderr,'');
+  } finally { await fs.rm(root,{recursive:true,force:true}); }
 });

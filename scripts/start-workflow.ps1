@@ -50,8 +50,8 @@ try {
   $nodeExecutable=if($nodeCommand){$nodeCommand.Source}else{Join-Path $env:USERPROFILE '.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe'}
   $stage='NODE_RUNNING'
   Write-PaperServiceEvent Workflow STARTING
-  & $nodeExecutable (Join-Path $PSScriptRoot 'collection-service.js')
-  Write-PaperServiceEvent Workflow ('NODE_EXIT:' + $LASTEXITCODE)
+  $nodeExit = Invoke-PaperServiceProcess $nodeExecutable (Join-Path $PSScriptRoot 'collection-service.js')
+  Write-PaperServiceEvent Workflow ('NODE_EXIT:' + $nodeExit)
   throw 'SERVICE_EXITED'
 } catch { Write-PaperServiceFailure Workflow $stage $_; Write-Host 'WORKFLOW_SERVICE_FAILED: no credentials printed.' }
 finally {

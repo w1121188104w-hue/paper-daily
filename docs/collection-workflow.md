@@ -21,6 +21,8 @@ Windows 启动器现在会注册当前用户的两个计划任务（正式流程
 
 安装时通过现有加密配置的文件句柄解析实际数据路径，并把非机密路径传给两个任务；这兼容桌面应用对 AppData 的虚拟化。后台任务和启动器复用同一份配置、批次、缓存和计费账本，不复制或重新初始化它们。实际路径可在计划任务的 `-DataRoot` 参数查看，日志也位于该路径下的 `PaperDailyWorkflow/service-logs/`。仅设置服务子进程的数据目录，不修改系统环境变量。
 
+计划任务通过本机编译的无控制台 Windows 启动器运行；PowerShell 和 Node 子进程都显式禁止创建控制台，而非仅依赖 `-WindowStyle Hidden`。启动器等待工作进程结束并传递退出码，保留自动恢复；标准输出/错误流持续丢弃，诊断仅使用固定事件日志。启动器按源码哈希保存在实际数据目录的 `PaperDailyWorkflow/service-host/`，升级不会覆盖正在运行的程序，也不改变 Windows Terminal 的全局设置。
+
 这台电脑睡眠、关机或注销时服务仍不可用；登录/唤醒后由 Windows 恢复。配置损坏、端口被其他程序占用等故障不会靠强杀未知进程处理。只含时间、进程号和固定错误阶段的日志位于 `%LOCALAPPDATA%/PaperDailyWorkflow/service-logs/`。运行 `scripts/manage-workflow-service.ps1 -Mode Status` 可查看任务状态。
 
 如需关闭自动启动/恢复，运行 `disable-workflow-autostart.cmd`；它不强制中断正在处理的批次。`stop-review.cmd` 停止核对服务时也会停用该服务的自动恢复；核对正在执行则拒绝关闭并恢复原来的任务设置。再次运行 `start-workflow.cmd` 会重新启用两个服务。核对缓存、持久调用额度、未知计费保护和 GitHub 翻译账本均保持不变。
