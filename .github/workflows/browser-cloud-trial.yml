@@ -43,7 +43,7 @@ jobs:
       - name: Diagnose browser startup without visiting a publisher
         run: |
           set +e
-          timeout 12s xvfb-run -a microsoft-edge --user-data-dir="$RUNNER_TEMP/edge-startup-check" --no-first-run --disable-setuid-sandbox --remote-debugging-port=9229 about:blank
+          timeout 12s xvfb-run -a microsoft-edge --user-data-dir="$RUNNER_TEMP/edge-startup-check" --no-first-run --remote-debugging-port=9229 about:blank
           status=$?
           echo "Browser startup probe exit: $status (124 means it kept running)"
           exit 0

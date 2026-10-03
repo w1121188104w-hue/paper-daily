@@ -9,6 +9,18 @@ from seleniumbase import sb_cdp
 from selenium.common.exceptions import TimeoutException
 
 
+def linux_sandbox_config(options):
+    from seleniumbase.undetected.cdp_driver.config import Config
+
+    class SandboxedConfig(Config):
+        def __call__(self):
+            # Keep the packaged browser's SUID sandbox available where Ubuntu
+            # restricts unprivileged user namespaces. Do not disable sandboxing.
+            return [arg for arg in super().__call__() if arg != '--disable-setuid-sandbox']
+
+    return SandboxedConfig(**{k: v for k, v in options.items() if k != 'headed'})
+
+
 class CDPDriver:
     def __init__(self, args):
         binary = args.binary
@@ -29,6 +41,8 @@ class CDPDriver:
             options["browser_executable_path"] = binary
         if args.profile:
             options["user_data_dir"] = str(Path(args.profile).resolve())
+        if platform.system() == "Linux":
+            options["config"] = linux_sandbox_config(options)
         self.client = sb_cdp.Chrome(**options)
         self.timeout = args.timeout
         self.capabilities = {"browserName": args.browser, "platformName": platform.system(),
