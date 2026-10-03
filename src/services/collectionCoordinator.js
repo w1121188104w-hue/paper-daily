@@ -25,15 +25,19 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
     return {version:2,busy,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
   async function exclusive(fn){assertLibrary(!busy,'另一个正式任务正在处理');busy=true;try{return await fn();}finally{busy=false;}}
   async function start(mode){return exclusive(async()=>{
-    await sync();const lib=await readJournalLibrary({root,config}),baseRun=createCollectionRun(await readWorkflow(repositoryRoot),lib.papers,{mode});
+    let stage='SYNC';
+    try{
+    await sync();stage='LOAD_RUN';const lib=await readJournalLibrary({root,config}),baseRun=createCollectionRun(await readWorkflow(repositoryRoot),lib.papers,{mode});
     const fields=(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending'&&(mode==='full'||!p.next_retry_at||Date.parse(p.next_retry_at)<=Date.now()));
     for(const p of fields)for(const task of ACTIVE_CATALOG_TASKS.filter(t=>t.journal===p.journal))
       if(!baseRun.jobs.some(j=>j.catalog_id===task.id&&j.url===task.url))baseRun.jobs.push({catalog_id:task.id,url:task.url,signal_at:null});
     baseRun.pending_field_tasks=fields;
     baseRun.known_papers=baseRun.known_papers.map(p=>fields.some(f=>f.journal===p.journal&&f.doi===p.doi)?{...p,complete:false,next_retry_at:null}:p);
-    const run=await prepareRun(baseRun);
+    stage='PREPARE_RUN';const run=await prepareRun(baseRun);
     lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});
-    await store({run,phase:'collecting',message:'等待插件采集；网站提醒未清除。'});return {run};});}
+    stage='SAVE_RUN';await store({run,phase:'collecting',message:'等待采集；已取得内容将独立审核和发布。'});return {run};
+    }catch(error){error.workflowStage=stage;throw error;}
+    });}
   async function submit(id,data){const result=await exclusive(async()=>{
     const record=await load(id);assertLibrary(data?.workflow_run_id===id&&Array.isArray(data.catalog?.pages)&&Array.isArray(data.records),'结果不是当前批次');
     assertLibrary(data.catalog.pages.every(p=>record.run.jobs.some(j=>j.catalog_id===p.task_id)),'结果包含本批次以外目录');
@@ -164,6 +168,6 @@ export function collectionHttpServer(coordinator,{extensionId,port=17328}){
       const result=req.url==='/run'?await coordinator.run(body.id):req.url==='/start'?await coordinator.start(body.mode):req.url==='/submit'?await coordinator.submit(body.id,body.data):
         req.url==='/finish'?await coordinator.finish(body.id):req.url==='/check-publication'?await coordinator.check(body.id):await coordinator.sync();
       reply(200,result||{ok:true});
-    }catch{reply(409,{message:'正式流程未完成请求；保留原有数据。请确认没有其他任务运行、任务 ID 正确且 Git 同步可用。'});}
+    }catch(error){reply(409,{code:['SYNC','LOAD_RUN','PREPARE_RUN','SAVE_RUN'].includes(error.workflowStage)?'WORKFLOW_'+error.workflowStage:'WORKFLOW_NOT_COMPLETE',message:'正式流程未完成请求；保留原有数据。请确认没有其他任务运行、任务 ID 正确且 Git 同步可用。'});}
   });
 }
