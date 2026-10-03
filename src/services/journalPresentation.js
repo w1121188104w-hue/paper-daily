@@ -80,6 +80,7 @@ export function presentJournalLibrary(library, config) {
     journal_id: identities.get(paper.journal_key).id,
     ...abstractInfo(paper,library.enrichmentState,library.repairState),
     sources: [...paper.sources], authors: paper.authors.map((author) => select(author, ['name', 'orcid'])),
+    ...(paper.affiliations?.length?{affiliations:paper.affiliations.map(a=>select(a,['author','affiliation','association','source_url']))}:{}),
     author_variants: authorVariants(paper),
     ...publicationInfo(paper),
     classification: classifyPaper(paper) }));

@@ -168,6 +168,8 @@ function renderPaper(paper) {
     const details = node('details', '', 'paper-authors');
     details.append(node('summary', `作者：${names.slice(0, 4).join('；')} 等${names.length}位（展开全部）`), node('p', names.join('；'))); card.append(details);
   } else card.append(node('p', `作者：${names.join('；') || '来源未提供作者'}`, 'paper-authors'));
+  if(paper.affiliations?.length){const details=node('details','','paper-affiliations');details.append(node('summary','作者机构（展开查看）'));
+    for(const a of paper.affiliations)details.append(node('p',`${a.author||'作者对应关系未明确'}：${a.affiliation}`));card.append(details);}
   if (paper.author_variants?.length > 1) {
     const details = node('details', '', 'author-variants');
     details.append(node('summary', '来源作者写法不同（展开对照）'),

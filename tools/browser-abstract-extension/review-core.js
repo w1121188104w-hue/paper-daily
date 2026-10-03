@@ -8,8 +8,20 @@ import {detailOtherSource} from './article-type.js';
 import {applyAbstractAvailability} from './abstract-availability.js';
 import {disabledCatalogUrl,excludedJpeRecord} from './collection-policy.js';
 export const REVIEW_FIELDS = ['title', 'doi', 'authors', 'publication_date', 'abstract'];
+export const SOURCE_REVIEW_FIELDS = ['published_online_date','published_print_date','volume','issue','pages','type'];
+export function safeReviewUrl(input){
+  if(safeSourceUrl(input?.source_url))return true;
+  if(input?.source_record_review_version!==1)return false;
+  try{
+    const u=new URL(input.source_url);
+    if(u.protocol!=='https:'||u.username||u.password||u.port||u.search||u.hash)return false;
+    return input.source_kind==='crossref'&&u.hostname==='api.crossref.org'&&/^\/works\/[^/]+$/.test(u.pathname)||
+      input.source_kind==='openalex'&&u.hostname==='api.openalex.org'&&/^\/works\/W\d+$/.test(u.pathname)||
+      input.source_kind==='semanticscholar'&&u.hostname==='api.semanticscholar.org'&&/^\/graph\/v1\/paper\/[a-f0-9]{40}$/i.test(u.pathname);
+  }catch{return false;}
+}
 export function validateReviewInput(input) {
-  if (!input || !['catalog', 'article'].includes(input.kind) || !safeSourceUrl(input.source_url) ||
+  if (!input || !['catalog', 'article'].includes(input.kind) || !safeReviewUrl(input) ||
     !input.identity || typeof input.identity.title !== 'string' || input.identity.title.length > 1500 ||
     !Array.isArray(input.blocks) || !input.blocks.length || input.blocks.length > 100 ||
     JSON.stringify(input).length > 80000) throw Error('INVALID_OR_OVERSIZE_EVIDENCE');
@@ -50,7 +62,7 @@ export function validateReviewOutput(input, output) {
   const fields = {}, proofs = {}, states = {};
   if (!output || output.identity_match !== true || !output.fields || typeof output.fields !== 'object')
     return { status: 'identity_unconfirmed', fields: {}, proofs: {}, states: {}, publication_month: null };
-  for (const name of REVIEW_FIELDS) {
+  for (const name of [...REVIEW_FIELDS,...(input.source_record_review_version===1?SOURCE_REVIEW_FIELDS:[])]) {
     fields[name] = null;
     const value = output.fields[name];
     if (!value || !['confirmed','corrected'].includes(value.status)) { states[name] = 'missing_or_uncertain'; continue; }

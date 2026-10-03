@@ -20,7 +20,7 @@ export function validateEnrichmentRuns(runs) {
   assertLibrary(Array.isArray(runs), '补全日志应为数组');
   const ids = new Set();
   for (const row of runs) {
-    if (row.kind !== undefined) assertLibrary(['missing_metadata_repair', 'duplicate_resolution', 'journal_identity_correction'].includes(row.kind), '未知补全操作子类型');
+    if (row.kind !== undefined) assertLibrary(['missing_metadata_repair', 'duplicate_resolution', 'journal_identity_correction','source_review_import'].includes(row.kind), '未知补全操作子类型');
     assertLibrary(row.schema_version === 1 && /^[A-Za-z0-9-]{10,100}$/.test(row.run_id) && !ids.has(row.run_id) &&
       isDay(row.run_date) && isIsoTime(row.started_at) && isIsoTime(row.finished_at) && row.finished_at >= row.started_at &&
       isDay(row.from_date) && isDay(row.to_date) && row.from_date <= row.to_date &&
@@ -82,5 +82,22 @@ export function validateEnrichmentOnlyChange(previous, next) {
     assertLibrary(Boolean(p.abstract_original) && p.abstract_translation_status === (old.abstract_zh ? 'outdated' : 'pending') &&
       p.source_text_hash.title === old.source_text_hash.title &&
       stableJson({ ...p.provenance, abstract_original: null }) === stableJson({ ...old.provenance, abstract_original: null }), '补全只能填入缺失的摘要');
+  }
+}
+
+/** Reviewed incremental imports may fill empty fields; no existing value changes. */
+export function validateReviewedEnrichmentOnlyChange(previous,next){
+  const fields=['abstract_original','authors','published_online_date','published_print_date','publication_date','volume','issue','pages','affiliations'];
+  const bookkeeping=['abstract_translation_status','source_text_hash','sources','source_records','provenance','last_checked_at'];
+  const rest=p=>Object.fromEntries(Object.entries(p).filter(([k])=>![...fields,...bookkeeping].includes(k)));
+  const present=v=>Array.isArray(v)?v.length>0:Boolean(v);
+  for(const old of previous){
+    const p=next.find(p=>p.id===old.id);assertLibrary(p&&stableJson(rest(p))===stableJson(rest(old)),'增量审核不能改动已有标题、身份或译文');
+    const changed=fields.filter(f=>stableJson(old[f])!==stableJson(p[f]));
+    for(const f of changed)assertLibrary(!present(old[f])&&present(p[f]),'增量审核只能填入缺失字段');
+    assertLibrary(p.source_text_hash.title===old.source_text_hash.title,'增量审核不能改变标题哈希');
+    if(changed.includes('abstract_original'))assertLibrary(p.abstract_translation_status===(old.abstract_zh?'outdated':'pending'),'新增摘要翻译状态无效');
+    else assertLibrary(p.abstract_translation_status===old.abstract_translation_status&&p.source_text_hash.abstract===old.source_text_hash.abstract,'未修改摘要不能改变翻译状态');
+    for(const [key,value] of Object.entries(old.provenance))if(!changed.includes(key))assertLibrary(stableJson(value)===stableJson(p.provenance[key]),'已有字段来源不能改变');
   }
 }

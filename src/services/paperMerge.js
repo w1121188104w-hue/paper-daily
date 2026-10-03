@@ -127,6 +127,7 @@ function materialize(group, firstSeenDate, checkedAt) {
   paper.provenance.doi = records.filter((record) => record.doi).map((record) => ({ source: record.source, source_id: record.source_id }))
     .filter((entry, index, list) => list.findIndex((x) => JSON.stringify(x) === JSON.stringify(entry)) === index);
   paper.provenance.journal = { source: 'journals.json', key: base.journal_key };
+  if(records.some(r=>r.affiliations!==undefined))paper.affiliations=[...new Map(records.flatMap(r=>r.affiliations||[]).map(a=>[JSON.stringify([a.author,a.affiliation]),structuredClone(a)])).values()];
   preserveTranslation(paper, group.previous);
   return paper;
 }

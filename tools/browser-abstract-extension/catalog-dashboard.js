@@ -1,11 +1,23 @@
 import {ACTIVE_CATALOG_TASKS,mergeCatalog} from './catalog-core.js';
-import {workflowId,storedRun,catalogKey} from './workflow-client.js';
+import {workflowId,storedRun,catalogKey,workflowRequest} from './workflow-client.js';
 import {CatalogEngine} from './catalog-engine.js';
 import {readCatalogDocument} from './catalog-extractor.js';
 import {makeReviewJobs,reviewedCatalogPapers} from './review-core.js';
-import {mountAutoReview,prepareReviewPlan,REVIEW_KEY} from './review-client.js';
+import {mountAutoReview,prepareReviewPlan,REVIEW_KEY,reviewFingerprint} from './review-client.js';
 const $=id=>document.getElementById(id),runId=workflowId();
 let controller,autoReview,writable=false,papers=null,tasks=[],transitioning=false,armed=true;
+let submitting=false,nextSubmit=0,lastSubmitted='';
+async function checkpointCatalog(stored,plan){
+  if(submitting||Date.now()<nextSubmit)return;submitting=true;
+  try{
+    const results=Object.fromEntries(plan.jobs.filter(j=>stored[j.hash]).map(j=>[j.hash,stored[j.hash]]));
+    if(!Object.values(results).some(r=>r.verdict?.status==='source_checked_candidate'))return;
+    const data={kind:'paper_project',workflow_run_id:runId,records:[],catalog:structuredClone(controller.s),catalog_review_results:results,ai_review_results:{}};
+    const fingerprint=await reviewFingerprint(data);if(fingerprint===lastSubmitted)return;
+    await workflowRequest('/checkpoint',{id:runId,data});lastSubmitted=fingerprint;nextSubmit=Date.now()+30000;
+  }catch{nextSubmit=Date.now()+30000;}
+  finally{submitting=false;}
+}
 async function enterDetails(){
   if(transitioning)return;transitioning=true;autoReview.close();
   location.href=`dashboard.html?queue=catalog&autostart=1&run=${runId}`;
@@ -29,6 +41,7 @@ function render(s){
 async function refreshReviewed(){
   const stored=(await chrome.storage.local.get(REVIEW_KEY))[REVIEW_KEY]||{},plan=await prepareReviewPlan(makeReviewJobs(controller.s,null),stored);
   papers=reviewedCatalogPapers(controller.s,plan,stored);render(controller.s);
+  await checkpointCatalog(stored,plan);
   if(armed&&controller.s.mode==='done'&&!autoReview.isRunning()&&['done','done_with_errors'].includes(autoReview.getState().phase))await enterDetails();
 }
 async function boot(){

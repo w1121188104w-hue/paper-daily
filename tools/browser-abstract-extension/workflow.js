@@ -8,7 +8,16 @@ async function refresh(){
   if(refreshing)return;refreshing=true;let stage='request';
   try{const s=await workflowRequest('/status');stage='render';
     if(s.version!==2)throw Object.assign(Error('请重启 start-workflow.cmd 更新本地服务，Key 不需要重配。'),{code:'VERSION'});
-    $('status').textContent=`已连接。待处理目录 ${s.workflow.tasks.length} 个；待补论文 ${s.workflow.pending_papers.length} 篇。${s.busy?'后台正在安全处理已提交结果。':''}`;
+    const pending=new Set([...s.workflow.pending_papers,...(s.workflow.field_tasks||[])].map(p=>(p.journal||p.journal_key)+'|'+(p.doi||p.id||p.title)));
+    $('status').textContent=`已连接。待处理目录 ${s.workflow.tasks.length} 个；待补论文 ${pending.size} 篇。${s.busy?'后台正在安全处理已提交结果。':''}`;
+    const p=s.python,phases={idle:'尚未启动',starting:'正在启动',running:'正在采集',paused:'已暂停',interrupted:'运行中断，可继续',captured:'本轮采集结束'};
+    $('python-status').textContent=!p?'请更新并重启本机服务以启用 Python。':!p.available?'本机 Python 环境尚未配置。请运行项目的 setup-local-python.cmd。':
+      `${phases[p.phase]||p.phase} · 已采集 ${p.completed||0}/${p.total||0} 页 · 已审核 ${p.review_done||0}/${p.review_total||0} 项 · 待审核 ${p.review_pending||0} 项 · 疑难记录 ${p.remaining||0} 项${p.current?' · 当前 '+p.current.journal+' '+(p.current.title||'目录'):''}`;
+    if(p?.review_error)$('python-status').textContent+=' · '+({REVIEW_BUSY:'DeepSeek 正在处理其他内容，稍后自动继续',REVIEW_LIMIT:'审核额度已用完，已采集内容保留',REVIEW_SERVICE_UNAVAILABLE:'等待审核服务连接，恢复后自动继续'}[p.review_error]||'审核待恢复');
+    $('python-start').disabled=!p?.available||p.running||starting||s.busy||p.id&&!['idle','captured'].includes(p.phase);
+    $('python-pause').disabled=!p?.running;
+    $('python-resume').disabled=!p?.available||p.running||!['paused','interrupted'].includes(p.phase);
+    $('python-fallback').disabled=!p?.id||p.running||s.busy;
     $('daily').disabled=s.busy||starting;$('full').disabled=s.busy||starting;
     const due=(s.workflow.catalog_checks||[]).filter(c=>c.status!=='recently_checked');
     $('audit').textContent=due.length?`${due.length} 个目录尚无基线或已到巡检期；可按需全刊巡检。`:'暂无到期目录。没有提醒不代表没有新论文，定期巡检用于补漏。';
@@ -29,4 +38,11 @@ for(const mode of ['daily','full'])$(mode).onclick=async()=>{
   }catch(e){$('status').textContent=e.message;}finally{starting=false;$('daily').disabled=false;$('full').disabled=false;}
 };
 $('refresh').onclick=async()=>{try{await workflowRequest('/sync',{});await refresh();}catch(e){$('status').textContent=e.message;}};
+for(const action of ['start','pause','resume','fallback'])$('python-'+action).onclick=async()=>{
+  $('python-'+action).disabled=true;
+  try{const result=await workflowRequest('/python/'+action,action==='start'?{mode:'daily'}:{});
+    if(action==='fallback'){await saveRun(result.run);location.href=`catalog.html?autostart=1&run=${result.run.id}`;return;}
+    await refresh();
+  }catch(e){$('python-status').textContent='操作尚未完成，已有结果保留。'+e.message;}
+};
 void refresh();setInterval(()=>void refresh(),15000);

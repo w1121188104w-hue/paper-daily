@@ -27,11 +27,13 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Offline regression tests
         run: npm test
-      - name: Independent indexes and official static catalogs; browser fallback on restriction
+      - name: Collect independent sources and verify each article with DeepSeek
         env:
           SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: node scripts/discover-collection.js --run --save-sources
       - name: Save formal library and reminders only
+        if: always()
         run: |
           node scripts/stage-collection-discovery.js
           if ! git diff --cached --quiet; then

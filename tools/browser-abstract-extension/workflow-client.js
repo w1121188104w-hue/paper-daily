@@ -1,4 +1,5 @@
 import { ACTIVE_CATALOG_TASKS, catalogUrl } from './catalog-core.js';
+import {REVIEW_KEY} from './review-client.js';
 export const WORKFLOW_ORIGIN='http://127.0.0.1:17328';
 export const runKey=id=>`paper_workflow_run_${id}`;
 export const catalogKey=id=>`paper_workflow_catalog_${id}`;
@@ -33,10 +34,19 @@ export function incrementalPapers(papers,run,now=Date.now()){
 }
 export async function saveRun(run){
   await chrome.storage.local.setAccessLevel({accessLevel:'TRUSTED_CONTEXTS'});
+  if(run.catalog_review_results){const old=(await chrome.storage.local.get(REVIEW_KEY))[REVIEW_KEY]||{};
+    await chrome.storage.local.set({[REVIEW_KEY]:{...run.catalog_review_results,...old}});}
   const existing=(await chrome.storage.local.get(catalogKey(run.id)))[catalogKey(run.id)];
+  if(run.browser_snapshot&&!existing){
+    const snapshot=run.browser_snapshot,records=snapshot.records||[];
+    await chrome.storage.local.set({[catalogKey(run.id)]:snapshot.catalog});
+    // Keep raw Python evidence available to the detail dashboard; its normal
+    // queue reconciliation decides which articles still need browser work.
+    await chrome.storage.local.set({['paper_python_records_'+run.id]:records});
+  }
   const pages=run.direct_pages||[],directJobs=[...new Map(pages.map(p=>[p.task_id+'|'+p.requested_url,{task_id:p.task_id,url:p.requested_url,depth:0}])).values()];
   const browserJobs=run.jobs.filter(j=>!directJobs.some(d=>d.task_id===j.catalog_id&&d.url===j.url)).map(j=>({task_id:j.catalog_id,url:j.url,depth:0}));
-  await chrome.storage.local.set({[runKey(run.id)]:run,...(!existing?{[catalogKey(run.id)]:{schema_version:1,mode:'paused',reason:'正式任务已建立；不会清除网站提醒。',
+  await chrome.storage.local.set({[runKey(run.id)]:run,...(!existing&&!run.browser_snapshot?{[catalogKey(run.id)]:{schema_version:1,mode:'paused',reason:'正式任务已建立；不会清除网站提醒。',
     run_started_at:run.created_at,scope_task_ids:[...new Set(run.jobs.map(j=>j.catalog_id))],
     queue:[...directJobs,...browserJobs],cursor:directJobs.length,pages,history:[]}}:{})});
 }

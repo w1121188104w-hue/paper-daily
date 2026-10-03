@@ -44,6 +44,7 @@ export async function fetchPages(source, journal, options, adapter) {
               result.warnings.push({ index: result.raw_count - items.length + index, code, field: 'abstract' });
             } });
           // An adapter may deliberately exclude an otherwise valid out-of-window record.
+          if(record&&options.captureReviewEvidence)record.raw_dates={...record.raw_dates,source_capture:{original:item}};
           if (record) result.records.push(record);
         }
         catch {

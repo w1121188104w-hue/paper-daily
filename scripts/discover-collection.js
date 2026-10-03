@@ -7,10 +7,13 @@ import {discoverIndexedCollectionTasks} from '../src/services/collectionDiscover
 import {assertLibrary} from '../src/services/libraryValidation.js';
 import {fileURLToPath} from 'node:url';
 import {collectJournals} from '../src/services/collectJournals.js';
-import {runJournalCollection} from '../src/services/journalRun.js';
 import {collectOfficialCatalogs} from '../src/services/officialCatalog.js';
 import {enqueuePublication,publicationInputHash} from '../src/services/cloudPublication.js';
 import {randomUUID} from 'node:crypto';
+import {enqueueSourceReviews,processSourceReviews,REVIEW_PROVIDER_PATH} from '../src/services/sourceReviewQueue.js';
+import {createSourceReviewer} from '../tools/browser-abstract-extension/review-provider.mjs';
+import {makeSourceReviewCheckpoint} from '../src/services/sourceReviewGit.js';
+import {safeProcess} from './collection-service.js';
 const repositoryRoot=fileURLToPath(new URL('../',import.meta.url));
 async function main(){
   const {values:v}=parseArgs({options:{run:{type:'boolean'},'save-sources':{type:'boolean'}}});
@@ -18,15 +21,26 @@ async function main(){
   const config=await loadJournalConfig(),root=path.join(repositoryRoot,'data/journal-store');
   const library=await readJournalLibrary({root,config});
   await withLibraryLock(path.join(repositoryRoot,'data/collection-workflow'),async()=>{
-    const sourceOptions={maxPages:10,timeoutMs:15000,pageDelayMs:1000,semanticScholarKey:process.env.SEMANTIC_SCHOLAR_API_KEY};
-    // One validated snapshot per run, not nineteen copies of the entire library.
-    const indexed=v['save-sources']?await runJournalCollection(config,{...sourceOptions,root,withSemanticScholar:true}):null;
-    const collect=indexed?async(_c,opts)=>({source_results:indexed.source_results.filter(r=>r.journal_key===opts.journalKey)}):collectJournals;
+    const sourceOptions={maxPages:10,timeoutMs:15000,pageDelayMs:3000,captureReviewEvidence:true,semanticScholarKey:process.env.SEMANTIC_SCHOLAR_API_KEY};
+    const env={...process.env};delete env.DEEPSEEK_API_KEY;delete env.SEMANTIC_SCHOLAR_API_KEY;
+    const checkpoint=process.env.GITHUB_ACTIONS==='true'?makeSourceReviewCheckpoint(repositoryRoot,
+      (args,options={})=>safeProcess('git',args,{cwd:repositoryRoot,env,...options})):async()=>{};
+    const provider=process.env.DEEPSEEK_API_KEY?createSourceReviewer({apiKey:process.env.DEEPSEEK_API_KEY,
+      stateDir:path.join(repositoryRoot,REVIEW_PROVIDER_PATH),beforeRequest:checkpoint,afterRequest:checkpoint}):null;
+    const request=provider?async(input,options={})=>{const r=await provider.review(input,{retryHeader:options.retryAttempt});return r.data;}:null;
+    const collect=async(c,opts)=>{const result=await collectJournals(c,opts);
+      if(v['save-sources'])await enqueueSourceReviews(repositoryRoot,result.source_results.flatMap(r=>r.records),{papers:library.papers});
+      return result;};
     let state=await discoverIndexedCollectionTasks(config,await readWorkflow(repositoryRoot),library.papers,{collect,
       sourceOptions,
       onJournal:s=>saveWorkflow(repositoryRoot,s)});
     if(v['save-sources']){
-      const official=await collectOfficialCatalogs(config,state,{repositoryRoot,root,onProgress:row=>console.log(JSON.stringify(row))});
+      // Indexed metadata can complete this branch without waiting for a browser.
+      await processSourceReviews(repositoryRoot,config,{root,request,checkpoint});
+      const official=await collectOfficialCatalogs(config,state,{repositoryRoot,root,requestReview:request,reviewCheckpoint:checkpoint,
+        reviewSources:async sources=>{await enqueueSourceReviews(repositoryRoot,sources,{papers:(await readJournalLibrary({root,config})).papers});
+          await processSourceReviews(repositoryRoot,config,{root,request,checkpoint});return [];},
+        onProgress:row=>console.log(JSON.stringify(row))});
       state=official.state;await saveWorkflow(repositoryRoot,state);
       const current=await readJournalLibrary({root,config});
       const changed=current.papers.filter(p=>{const old=library.papers.find(x=>x.id===p.id);return !old||!old.abstract_original&&p.abstract_original;}).map(p=>p.id);

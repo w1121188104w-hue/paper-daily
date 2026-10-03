@@ -76,7 +76,7 @@ function parseAuthors(text) {
 }
 
 /** Offline only. Re-extract exact spans from raw evidence; ignore exported derived papers. */
-export async function prepareBrowserImport(data, config, inputHash = hash(JSON.stringify(data))) {
+export async function prepareBrowserImport(data, config, inputHash = hash(JSON.stringify(data)), {knownPapers=[]}={}) {
   assertLibrary(kinds.has(data.kind) && Array.isArray(data.records) && Array.isArray(data.catalog?.pages), '插件导出格式无效');
   const pages = verifiedPages(data), catalog = { pages };
   const caches = checkedCaches(data.ai_review_results), catalogCaches = checkedCaches(data.catalog_review_results);
@@ -89,7 +89,13 @@ export async function prepareBrowserImport(data, config, inputHash = hash(JSON.s
     const decision = { doi: normalizeDoi(raw.doi), journal_key: raw.journal, action: 'skipped', reason: '' };
     const reject = reason => { decisions.push({ ...decision, reason }); };
     if (excludedJpeRecord(raw)) { reject('excluded_by_user'); continue; }
-    const match = matchingCard(pages, raw), journal = config.journals.find(j => j.key === raw.journal);
+    let match = matchingCard(pages, raw);
+    const journal = config.journals.find(j => j.key === raw.journal);
+    if(!match&&journal&&decision.doi){
+      const known=knownPapers.find(p=>p.doi===decision.doi&&p.journal_key===raw.journal&&titleKey(p.title_original)===titleKey(raw.title));
+      const task=CATALOG_TASKS.find(t=>t.journal===raw.journal&&articleUrl(raw.source_url,t)&&articleUrl(raw.url,t));
+      if(known&&task)match={page:{source_url:task.url},item:{url:raw.url,title:known.title_original},known_identity:true};
+    }
     if (!match || !journal) { reject('catalog_identity_unconfirmed'); continue; }
     if (knownJournalMismatch({ doi: decision.doi, journal_key: raw.journal })) { reject('wrong_journal'); continue; }
     const job = plan.jobs.find(j => j.id === `article:${raw.doi}`), result = job && caches[job.hash];
@@ -122,6 +128,7 @@ export async function prepareBrowserImport(data, config, inputHash = hash(JSON.s
     const source = normalizeSourceRecord({ source: 'publisher', source_id: `browser:${decision.doi}:${evidenceHash}`,
       doi: selected.doi, title: selected.title, abstract: selected.abstract, raw_title: selected.title, raw_abstract: selected.abstract,
       authors: parseAuthors(authorsText), publication_date: month || '',
+      ...(checked.affiliations?.length?{affiliations:checked.affiliations}:{}),
       journal_key: journal.key, journal_name: journal.name, journal_category: journal.category, journal_category_zh: journal.category_zh,
       print_issn: journal.print_issn, electronic_issn: journal.electronic_issn,
       last_checked_at: capturedAt, url: job.input.source_url,
@@ -132,13 +139,32 @@ export async function prepareBrowserImport(data, config, inputHash = hash(JSON.s
         body_sha256: evidenceHash, method: 'browser_verified_source_spans' } });
     sources.push(source);
   }
+  // A reviewed directory card is independently useful metadata. It need not
+  // wait for a blocked detail page or for the rest of the directory to finish.
+  for(const card of catalogPapers){
+    if(card.review_status!=='source_checked_candidate'||card.field_sources?.title?.method!=='deepseek_source_checked'||
+      data.records.some(r=>r.journal===card.journal&&(card.doi?r.doi===card.doi:r.url===card.url)))continue;
+    const journal=config.journals.find(j=>j.key===card.journal),page=pages.find(p=>p.journal===card.journal&&p.items.some(i=>i.url===card.url));
+    if(!journal||!page||!isIsoTime(page.captured_at)||knownJournalMismatch({journal_key:card.journal,doi:card.doi}))continue;
+    const title=card.title,doi=card.doi||'',month=card.field_sources.publication_month?.method==='deepseek_source_checked'?card.publication_month:'';
+    const abstract=card.field_sources.abstract?.method==='deepseek_source_checked'?card.abstract||'':'';
+    const selected={title,doi,abstract,authors:card.field_sources.authors_raw?.method==='deepseek_source_checked'?card.authors_raw:'',publication_month:month};
+    const fingerprint=hash(JSON.stringify(selected));
+    sources.push(normalizeSourceRecord({source:'publisher',source_id:`catalog:${card.url}:${fingerprint}`,doi,title,abstract,
+      authors:parseAuthors(selected.authors),publication_date:month||'',url:card.url,type:catalogOtherSource(card)?'other':'journal-article',
+      journal_key:journal.key,journal_name:journal.name,journal_category:journal.category,journal_category_zh:journal.category_zh,
+      print_issn:journal.print_issn,electronic_issn:journal.electronic_issn,last_checked_at:page.captured_at,
+      raw_dates:{catalog_import:{export_sha256:inputHash,selected_fields:selected,field_sources:card.field_sources}},
+      source_evidence:{url:card.url,scope_url:page.source_url,fetched_at:page.captured_at,body_sha256:fingerprint,method:'browser_verified_catalog_spans'}}));
+  }
   // Reject an inconsistent batch rather than letting array order pick a winner.
-  const conflicted = new Set(sources.filter(s => sources.some(t => t.doi === s.doi &&
+  const conflicted = new Set(sources.filter(s => s.doi&&sources.some(t => t.doi === s.doi &&
     (t.journal_key !== s.journal_key || titleKey(t.title) !== titleKey(s.title) || (t.abstract && s.abstract && t.abstract !== s.abstract)))).map(s => s.doi));
   const unique = new Map();
   for (const s of sources) {
     if (conflicted.has(s.doi)) { decisions.push({ doi: s.doi, journal_key: s.journal_key, action: 'skipped', reason: 'batch_identity_or_abstract_conflict' }); continue; }
-    if (!unique.has(s.doi) || (!unique.get(s.doi).abstract && s.abstract)) unique.set(s.doi, s);
+    const key=s.doi||s.journal_key+'|'+s.source_id;
+    if (!unique.has(key) || (!unique.get(key).abstract && s.abstract)) unique.set(key, s);
   }
   return { input_sha256: inputHash, sources: [...unique.values()], decisions, raw_record_count: data.records.length };
 }
@@ -151,7 +177,7 @@ export function planBrowserImport(prepared, previous, config, now = new Date()) 
       existing_total_count: previous.papers.filter(p => p.journal_key === source.journal_key).length,
       official_in_window_count: 0, matched_count: 0, missing_count: 0, added_count: 0, pending_count: 0, entries: [], attempts: [] }; journals.push(jr); }
     const match = matchOfficialPaper(source, papers, source.journal_key);
-    const row = { doi: source.doi, journal_key: source.journal_key, action: 'unchanged', reason: '', source_url: source.url };
+    const row = { doi: source.doi, title:source.title, journal_key: source.journal_key, action: 'unchanged', reason: '', source_url: source.url };
     if (match.status === 'conflict' || (match.paper && titleKey(match.paper.title_original) !== titleKey(source.title))) {
       row.action = 'conflict'; row.reason = match.reason || 'existing_title_conflict'; jr.pending_count++;
       jr.entries.push({ ...row, status: 'pending' });
@@ -166,13 +192,24 @@ export function planBrowserImport(prepared, previous, config, now = new Date()) 
         papers[papers.indexOf(match.paper)] = fillMissingAbstract(match.paper, source); row.action = 'abstract_filled';
         abstracts.push({ paper_id: match.paper.id, journal_key: source.journal_key, doi: source.doi, status: 'found', abstract_source: 'publisher' });
       } else if (source.abstract && cleanText(source.abstract) !== cleanText(match.paper.abstract_original)) row.reason = 'existing_abstract_preserved';
+      const current=papers.find(p=>p.id===match.paper.id);
+      const metadata=['authors','published_online_date','published_print_date','publication_date','volume','issue','pages','affiliations'];
+      const missing=metadata.filter(f=>!(Array.isArray(current[f])?current[f].length:current[f])&&(Array.isArray(source[f])?source[f].length:source[f]));
+      if(missing.length){
+        const index=papers.indexOf(current),merged=mergePapers([source],{existingPapers:[current],firstSeenDate:current.first_seen_date,checkedAt:now.toISOString()}).papers[0];
+        // Fill only empty fields. Preserve every existing value, source record,
+        // translation and its provenance even if a later source is longer.
+        const next=structuredClone(current);next.source_records=merged.source_records;next.sources=merged.sources;
+        for(const f of missing){next[f]=merged[f];if(f!=='affiliations')next.provenance[f]=merged.provenance[f];}
+        papers[index]=next;if(row.action==='unchanged')row.action='metadata_filled';row.filled_fields=missing;
+      }
       jr.entries.push({ ...row, paper_id: match.paper.id, status: 'existing' });
     }
     decisions.push(row);
   }
   validatePapers(papers, config);
   return { papers, decisions, journals, abstracts, stats: { added: journals.reduce((n,j) => n+j.added_count,0),
-    abstracts_filled: abstracts.length, abstracts_checked: abstracts.length,
+    abstracts_filled: abstracts.length, abstracts_checked: abstracts.length, metadata_filled:decisions.filter(d=>d.filled_fields?.length).length,
     pending_candidates: decisions.filter(d => ['skipped','conflict'].includes(d.action) && d.reason !== 'excluded_by_user').length },
     input_sha256: prepared.input_sha256, scope: 'captured_details_only', paid_requests: 0 };
 }
@@ -182,14 +219,14 @@ export async function importBrowserExport(config, { root, prepared, save = false
   const execute = async () => {
     const previous = await readJournalLibrary({ root, config }), at = now();
     const plan = planBrowserImport(prepared, previous, config, at);
-    if (!save || !plan.stats.added && !plan.stats.abstracts_filled) return { ...plan, committed: false };
+    if (!save || !plan.stats.added && !plan.stats.abstracts_filled && !plan.stats.metadata_filled) return { ...plan, committed: false };
     const runId = newRunId(at), day = dateInShanghai(at), status = plan.stats.pending_candidates ? 'partial' : 'success';
     const report = { schema_version: 1, run_id: runId, status, from_date: day, to_date: day,
       stats: plan.stats, journals: plan.journals, abstracts: plan.abstracts, decisions: plan.decisions,
       input_sha256: plan.input_sha256, scope: plan.scope, stage: 'browser_import',
       note: 'Capture import date, not publication window; does not establish complete journal coverage.' };
     const ref = await writeLibraryJson(root, `snapshots/${runId}/browser-import-report.json`, report);
-    const log = { schema_version: 1, run_id: runId, run_date: day, started_at: at.toISOString(), finished_at: at.toISOString(),
+    const log = { schema_version: 1, kind:'source_review_import', run_id: runId, run_date: day, started_at: at.toISOString(), finished_at: at.toISOString(),
       from_date: day, to_date: day, status, stats: plan.stats, report: ref };
     await publishLibrarySnapshot({ root, config, previous, papers: plan.papers, enrichment: log,
       audit: previous.audit || { duplicates: [], excluded: [], notices: [] } });

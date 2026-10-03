@@ -260,8 +260,19 @@ export function normalizeSourceRecord(input) {
     ...(input?.source_evidence !== undefined ? { source_evidence: normalizeSourceEvidence(input.source_evidence) } : {}),
     ...(input?.crossref_notice !== undefined ? { crossref_notice: normalizedCrossrefNotice(input.crossref_notice,
       source, doi, String(input?.type || '').trim()) } : {}),
-    ...(input.text_selection ? { text_selection: structuredClone(input.text_selection) } : {})
+    ...(input.text_selection ? { text_selection: structuredClone(input.text_selection) } : {}),
+    ...(input.affiliations!==undefined?{affiliations:normalizeAffiliations(input.affiliations)}:{})
   };
+}
+
+export function normalizeAffiliations(value){
+  if(!Array.isArray(value)||value.length>100)throw Error('作者机构字段无效');
+  return value.map(a=>{
+    if(!a||!(a.author===null||typeof a.author==='string')||typeof a.affiliation!=='string'||!a.affiliation.trim()||
+      a.status!=='source_checked'||typeof a.source_url!=='string'||!a.proof||typeof a.proof.text!=='string'||
+      a.proof.text!==(a.author?a.author+'\n'+a.affiliation:a.affiliation))throw Error('机构缺少原文核对依据');
+    return structuredClone(a);
+  });
 }
 
 export function canonicalPaperId(record) {

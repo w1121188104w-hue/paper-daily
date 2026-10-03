@@ -11,6 +11,8 @@ import {readJournalLibrary} from './journalLibrary.js';
 import {addDiscoverySignals} from './collectionWorkflow.js';
 import {recordCatalogBaseline} from './catalogBaseline.js';
 import {readOfficialFeeds,knownFeedSource} from './officialFeeds.js';
+import {reviewCatalogPages,readCatalogReviews} from './catalogSourceReview.js';
+import {cleanText} from './paperModel.js';
 
 export const OFFICIAL_CACHE_PATH='data/collection-workflow/official-catalogs.json';
 const cardSelector='.js-article-list-item,.article-list-item,.issue-item,.toc-item,.toc__item,.table-of-content__item,.al-article-item,.al-article-list-item,.c-listing__item,.c-card,.journal-article,article.journal-article';
@@ -117,10 +119,10 @@ export async function hydrateRunFromOfficial(repo,run,{now=Date.now()}={}){
   }
   // These are real catalog captures, not fabricated AI verdicts. The plugin
   // reviews their exact source spans without opening the catalog a second time.
-  return {...run,direct_pages:pages};
+  return {...run,direct_pages:pages,catalog_review_results:await readCatalogReviews(repo)};
 }
 export async function collectOfficialCatalogs(config,state,{repositoryRoot,root,tasks=ACTIVE_CATALOG_TASKS,
-  http=makeEvidenceHttp({maxRequests:240,timeoutMs:15000,intervalMs:2000}),maxDetails=80,onProgress=()=>{}}){
+  http=makeEvidenceHttp({maxRequests:240,timeoutMs:15000,intervalMs:3000}),maxDetails=80,onProgress=()=>{},reviewSources=null,requestReview=null,reviewCheckpoint=async()=>{}}){
   const cache={schema_version:1,catalogs:[],feeds:[]},sources=[],blocked=new Set();let detailCount=0;
   let library=await readJournalLibrary({root,config}),next=structuredClone(state);
   for(const key of new Set(tasks.map(t=>t.journal))){
@@ -152,7 +154,10 @@ export async function collectOfficialCatalogs(config,state,{repositoryRoot,root,
           const response=await http.request(p.url,task.hosts||[task.host]);
           const lead=parsePublisherArticle(response,journal,{doi:p.doi||undefined,title:p.title,scope_url:catalog.url,discovery:true});
           if(lead.abstract&&(lead.abstract.length<150||(lead.abstract.match(/\b[A-Za-z]+\b/g)||[]).length<25||/^(?:highlights|graphical abstract)\b/i.test(lead.abstract))){lead.abstract='';lead.raw_abstract='';}
-          if(lead.doi&&lead.journal_confirmed&&titleKey(lead.title)===titleKey(p.title))sources.push(publisherRecord(lead,journal));
+          if(lead.doi&&lead.journal_confirmed&&titleKey(lead.title)===titleKey(p.title)){
+            const source=publisherRecord(lead,journal);
+            source.raw_dates.source_capture={text:cleanText(response.body).slice(0,40000),body_sha256:response.sha256};sources.push(source);
+          }
         }catch(e){if(['ACCESS_RESTRICTED','ROBOTS_UNAVAILABLE','RATE_LIMITED'].includes(e.code))blocked.add(task.host);}
       }
       if(!sources.some(s=>s.journal_key===p.journal&&s.title===p.title&&s.abstract))
@@ -160,10 +165,13 @@ export async function collectOfficialCatalogs(config,state,{repositoryRoot,root,
     }
     onProgress({catalog:task.id,complete:catalog.complete,papers:catalog.papers.length,code:catalog.code});
   }
-  const prepared={input_sha256:evidenceHash(JSON.stringify(sources)),sources,decisions:[],raw_record_count:sources.length};
+  // No deterministic parser result may bypass the shared semantic review.
+  const accepted=reviewSources?await reviewSources(sources):[];
+  const prepared={input_sha256:evidenceHash(JSON.stringify(accepted)),sources:accepted,decisions:[],raw_record_count:sources.length};
   const imported=await importBrowserExport(config,{root,prepared,save:true});library=await readJournalLibrary({root,config});
   for(const c of cache.catalogs.filter(c=>c.complete)){
-    const checked=c.papers.map(p=>({...p,review_status:'source_checked_candidate'}));
+    const {papers:checked}=await reviewCatalogPages(repositoryRoot,c.pages,{request:requestReview,checkpoint:reviewCheckpoint});
+    if(checked.some(p=>p.review_status!=='source_checked_candidate'))continue;
     recordCatalogBaseline(next,{catalog_id:c.catalog_id,url:c.url},c.pages,checked,{receiptId:'official:'+c.checked_at,inputHash:evidenceHash(JSON.stringify(c.pages))});
     const allComplete=c.papers.every(p=>p.type==='other'||library.papers.some(x=>x.journal_key===p.journal&&((p.doi&&x.doi===p.doi)||titleKey(x.title_original)===titleKey(p.title))&&x.abstract_original));
     if(allComplete)for(const t of next.tasks.filter(t=>t.catalog_id===c.catalog_id&&t.url===c.url)){
@@ -173,5 +181,5 @@ export async function collectOfficialCatalogs(config,state,{repositoryRoot,root,
     }
   }
   await writeWorkflowJson(path.join(repositoryRoot,OFFICIAL_CACHE_PATH),cache);
-  return {state:next,cache,imported};
+  return {state:next,cache,imported,sources};
 }

@@ -65,6 +65,7 @@ export async function runLibraryCommand(args, { log = console.log, read = readJo
     log('只读校验结束，没有联网或写文件。此处显示最近正式提交的日志；提交前中断的诊断位于 attempts 目录。');
     return 0;
   }
+  if(run===runJournalCollection)throw new Error('此旧入口已停止直接入库。请运行 node scripts/discover-collection.js --run --save-sources，经 DeepSeek 原文审核后保存。');
   log(`将联网采集并保存到 ${DEFAULT_LIBRARY_ROOT}。不调用AI、不启动旧网站；只有显式启用第三来源才读取它的专用密钥。`);
   const result = await run(config, { ...options,
     ...(options.withSemanticScholar ? { semanticScholarKey: getSemanticScholarKey() } : {}), onProgress: (source) => log(

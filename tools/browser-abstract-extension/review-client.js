@@ -8,6 +8,7 @@ export const REVIEW_PROGRESS_KEY = 'paper_source_review_progress_v1';
 // the failed operation separately; storage exhaustion is not an API/key error.
 export function reviewFailure(error, stage) {
   const message=String(error?.message || ''), storage=['load','save','progress'].includes(stage);
+  if(stage==='request'&&message==='BRIDGE_HTTP_409')return {phase:'waiting_service',code:'service_busy',failure_stage:stage,reason:'本地审核服务正在处理其他分支；已采集内容保留，稍后自动继续。'};
   let code='review_internal_error', reason='核对处理未完成，请导出结果以便检查。';
   if(storage){
     if(/quota|QUOTA_BYTES|exceed.*(?:storage|limit)|storage.*exceed/i.test(message)){
@@ -175,19 +176,19 @@ export function browserReviewEnvironment(report, settled, scope = 'all') {
 }
 export function mountAutoReview(getPlan, scope = 'all', onSaved = () => {}) {
   const status = document.getElementById('ai-status'), run = document.getElementById('ai-run'), stop = document.getElementById('ai-stop');
-  let attempted = false, active = true, nextHealthAt = 0, ready = false;
+  let attempted = false, active = true, nextHealthAt = 0, ready = false, held=false,lastPlanSignature='';
   const runner = new ReviewRunner(browserReviewEnvironment(s => { status.textContent = s.reason; run.disabled = s.phase === 'running'; stop.disabled = !['running','waiting_service'].includes(s.phase); },
     () => { run.disabled = false; stop.disabled = runner.state.phase !== 'waiting_service'; void Promise.resolve(onSaved()).catch(() => { status.textContent += '（界面更新失败，请刷新查看已保存结果）'; }); }, scope));
-  const begin = () => { if (!active) return; attempted = true; run.disabled = true; return runner.run(getPlan()); };
+  const begin = () => { if (!active) return; held=false;attempted = true; run.disabled = true; const plan=getPlan();lastPlanSignature=JSON.stringify(plan.jobs);return runner.run(plan); };
   void chrome.storage.local.get(REVIEW_PROGRESS_KEY + '_' + scope).then(stored => {
     const prior = stored[REVIEW_PROGRESS_KEY + '_' + scope];
     if (prior?.phase === 'paused' || prior?.phase === 'done_with_errors') {
-      attempted = true; runner.state = prior; status.textContent = prior.reason || '核对已暂停；点继续待核对恢复。';
+      attempted = true; held=prior.phase==='paused'; runner.state = prior; status.textContent = prior.reason || '核对已暂停；点继续待核对恢复。';
     }
     ready = true;
   }).catch(() => { attempted = true; ready = true; status.textContent = '读取上次核对状态失败，请先导出结果。'; });
   const pause = () => {
-    attempted = true; runner.stop();
+    attempted = true; held=true;runner.stop();
     if (!runner.running) void runner.report({phase:'paused',code:'user_paused',reason:'自动核对已暂停；点击继续待核对恢复。'}).catch(() => { status.textContent = '暂停状态保存失败，请先导出结果。'; });
   };
   run.addEventListener('click', () => { void begin(); }); stop.addEventListener('click', pause);
@@ -195,12 +196,13 @@ export function mountAutoReview(getPlan, scope = 'all', onSaved = () => {}) {
     isRunning:()=>runner.running,
     getState:()=>runner.state,
     tick: mode => {
-      if (!ready || !active || mode !== 'done' || runner.running) return;
-      if (!attempted || (runner.state.phase === 'waiting_service' && runner.state.code === 'service_unreachable' && Date.now() >= nextHealthAt)) {
+      if (!ready || !active || held || !['done','running','paused'].includes(mode) || runner.running) return;
+      const changed=JSON.stringify(getPlan().jobs)!==lastPlanSignature;
+      if (!attempted || changed&&['done','done_with_errors'].includes(runner.state.phase) || (runner.state.phase === 'waiting_service' && ['service_unreachable','service_busy'].includes(runner.state.code) && Date.now() >= nextHealthAt)) {
         nextHealthAt = Date.now() + 15000; void begin();
       }
     },
-    reset: () => { attempted = false; }, stop: pause,
+    reset: () => { attempted = false;held=false; }, stop: pause,
     close: () => { active = false; runner.stop(); },
     export: async () => {
       const stored = await browserReviewEnvironment().load(), plan = await prepareReviewPlan(getPlan(),stored);

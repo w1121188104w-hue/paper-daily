@@ -1,6 +1,9 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>论文采集</title><link rel="stylesheet" href="style.css"></head>
-<body><main><header><span class="tag">PAPER DAILY</span><h1>论文采集</h1><p>官网直读优先，浏览器补全剩余内容。开始后自动核对、去重、上传，由 GitHub 统一翻译发布。</p></header>
-<section><p id="status" role="status">连接本机服务……</p><div class="buttons"><button id="daily" disabled>开始增量采集</button><button id="full" disabled>开始全刊巡检</button><button id="refresh">刷新状态</button></div>
+<body><main><header><span class="tag">PAPER DAILY</span><h1>论文采集</h1><p>自动采集、本地 Python 和插件各自取得数据后，独立核对、入库和发布。缺失内容继续保留，已有成果及时更新。</p></header>
+<section><h2>本地自动补采</h2><p id="python-status" role="status">连接本机采集服务……</p>
+<div class="buttons"><button id="python-start" disabled>启动本地 Python 补采</button><button id="python-pause" disabled>暂停</button><button id="python-resume" disabled>继续</button><button id="python-fallback" disabled>用插件处理剩余任务</button></div>
+<p class="note">访问间隔至少 3 秒。关闭面板后本地采集仍可继续；再次打开可查看进度。遇到无法自动处理的页面会保留待办，已取得的内容继续审核发布。</p></section>
+<section><h2>插件疑难处理</h2><p id="status" role="status">连接本机服务……</p><div class="buttons"><button id="daily" disabled>插件处理增量任务</button><button id="full" disabled>插件全刊巡检</button><button id="refresh">刷新状态</button></div>
 <p class="note">采集期间保留任务面板，遇验证码手动处理即可。每周或两周可全刊巡检一次；只看最新一期与在线发表，不回溯全部历史。</p>
 <h2>需要浏览器处理</h2><div id="tasks"></div><p id="audit"></p></section>
 <section><h2>采集与发布进度</h2><p>提交后自动运行，无需再点核对、导入或发布。翻译 Key 仅由 GitHub 使用；本机 Key 只用于原文核对。</p><div id="runs"></div></section>

@@ -2,7 +2,7 @@ import { assessCapture } from './core.js';
 import { readArticleDocument } from './extractor.js';
 import { QueueEngine } from './engine.js';
 import { makeReviewJobs,reviewedCatalogPapers,reviewedArticleRecords } from './review-core.js';
-import { mountAutoReview,prepareReviewPlan,REVIEW_KEY } from './review-client.js';
+import { mountAutoReview,prepareReviewPlan,REVIEW_KEY,reviewFingerprint } from './review-client.js';
 import {buildDetailQueue,mergeDetailPapers,reconcileDetailQueue,applyDetailTypes} from './detail-queue.js';
 import {abstractRetryComplete} from './abstract-availability.js';
 import {excludedJpePaper} from './collection-policy.js';
@@ -16,6 +16,25 @@ const labels = { candidate_extracted: '已提取候选原文', no_abstract_state
   page_unavailable: '页面无法读取', needs_user_verification: '等待验证' };
 let controller, autoReview, writable = false, reviewed=[];
 const runId=workflowId(),stateKey=detailKey(runId);let workflowRun,exportPayload,submitted=false,submitting=false,submitAfter=0,frozenExport=null;
+let checkpointing=false,lastCheckpoint='',checkpointAfter=0;
+async function checkpointAvailable(){
+  if(!runId||!exportPayload||checkpointing||Date.now()<checkpointAfter)return;
+  checkpointing=true;
+  try{
+    const data=await exportPayload();
+    const accepted=new Set(Object.values(data.ai_review_results||{}).filter(r=>r.verdict?.status==='source_checked_candidate').map(r=>r.input.identity.doi));
+    data.records=data.records.filter(r=>accepted.has(r.doi));
+    if(!data.records.length)return;
+    const signature=await reviewFingerprint({records:data.records,ai_review_results:data.ai_review_results,catalog_review_results:data.catalog_review_results});
+    const key='paper_incremental_checkpoint_'+runId;
+    lastCheckpoint ||= (await chrome.storage.local.get(key))[key]||'';
+    if(signature===lastCheckpoint)return;
+    await workflowRequest('/checkpoint',{id:runId,data});lastCheckpoint=signature;
+    await chrome.storage.local.set({[key]:signature});
+    $('workflow-message').textContent='已取得且审核通过的内容已独立提交；剩余采集继续进行。';
+  }catch{checkpointAfter=Date.now()+30000;}
+  finally{checkpointing=false;}
+}
 async function refreshReviewed(){
   const results=(await chrome.storage.local.get(REVIEW_KEY))[REVIEW_KEY]||{};
   const plan=await prepareReviewPlan(makeReviewJobs(null,controller.s,{includeRetired:true}),results);
@@ -134,7 +153,18 @@ async function boot(){
   const reviews=(await chrome.storage.local.get(REVIEW_KEY))[REVIEW_KEY]||{},plan=await prepareReviewPlan(makeReviewJobs(catalog,null,{includeRetired:true}),reviews);
   const catalogReviews=Object.fromEntries(plan.jobs.filter(j=>reviews[j.hash]).map(j=>[j.hash,reviews[j.hash]]));
   let catalogPapers=reviewedCatalogPapers(catalog,plan,reviews);
-  const saved=(await chrome.storage.local.get(stateKey))[stateKey];
+  let saved=(await chrome.storage.local.get(stateKey))[stateKey];
+  if(!saved){
+    const python=(await chrome.storage.local.get('paper_python_records_'+runId))['paper_python_records_'+runId];
+    if(python?.length){
+      const available=buildDetailQueue(incrementalPapers(catalogPapers,workflowRun)).papers;
+      const prior=python.filter(r=>available.some(p=>p.doi===r.doi));
+      const detailPlan=await prepareReviewPlan(makeReviewJobs(null,{records:prior}),reviews),checked=await reviewedArticleRecords({records:prior},detailPlan,reviews);
+      const done=new Set(checked.filter(r=>r.abstract&&r.affiliations?.length&&r.authors_raw&&r.publication_month).map(r=>r.doi));
+      saved={schema_version:1,sample_dois:available.map(p=>p.doi),detail_papers:available,queue:available.filter(p=>!done.has(p.doi)).map(p=>p.doi),cursor:0,
+        mode:'paused',reason:'继续 Python 剩余文章；已有原文和审核结果保留。',records:prior,history:[],attempts:0};
+    }
+  }
   catalogPapers=applyDetailTypes(catalogPapers,saved?.records||[]);
   const queue=buildDetailQueue(incrementalPapers(catalogPapers,workflowRun)),reconciled=reconcileDetailQueue(saved,queue.papers),papers=reconciled.papers;
   const sessionKey=stateKey+'_owned_tab';
@@ -172,6 +202,7 @@ async function boot(){
     const removed=id=>void controller.tabClosed(id);chrome.tabs.onRemoved.addListener(removed);
     const timer=setInterval(()=>void controller.tick().then(()=>{
       autoReview.tick(controller.s.mode);
+      if(!submitted&&!submitting)void checkpointAvailable();
       if(!submitted&&!submitting&&controller.s.mode==='done'&&['done','done_with_errors'].includes(autoReview.getState().phase))void submitWorkflow();
     }).catch(()=>{}),2000);
     await new Promise(resolve=>window.addEventListener('pagehide',()=>{clearInterval(timer);autoReview.close();chrome.runtime.onMessage.removeListener(listener);chrome.tabs.onRemoved.removeListener(removed);writable=false;resolve();},{once:true}));

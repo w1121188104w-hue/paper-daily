@@ -6,7 +6,7 @@ import { LibraryError, assertLibrary, isObject, isCount, isIsoTime, isDay, stabl
   validatePapers, validateRuns, validateHistoryPreserved, validateTranslationImports, validateTranslationOnlyChange } from './libraryValidation.js';
 import { buildTranslationQueue } from './translationQueue.js';
 import { emptyEnrichmentState, validateEnrichmentState, validateEnrichmentRuns, validateEnrichmentReport,
-  validateEnrichmentOnlyChange } from './enrichmentValidation.js';
+  validateEnrichmentOnlyChange,validateReviewedEnrichmentOnlyChange } from './enrichmentValidation.js';
 import { buildMasterList, officialDiscoveries } from './masterList.js';
 import { emptyRepairState, reconcileRepairState, validateRepairState, validateRepairProjection } from './repairState.js';
 import { validateMetadataRepairOnlyChange } from './metadataRepairValidation.js';
@@ -208,6 +208,7 @@ export async function publishLibrarySnapshot({ root, config, previous, papers, r
   validateEnrichmentRuns(enrichments);
   if (enrichment) {
     if (enrichment.kind === 'missing_metadata_repair') validateMetadataRepairOnlyChange(previous.papers, papers);
+    else if(enrichment.kind==='source_review_import')validateReviewedEnrichmentOnlyChange(previous.papers,papers);
     else if (!duplicateOperation && !identityCorrection) validateEnrichmentOnlyChange(previous.papers, papers);
     assertLibrary(identityCorrection ? enrichment.stats.added === 0 && enrichment.stats.removed === previous.papers.length - papers.length :
       duplicateOperation ? enrichment.stats.added === 0 && enrichment.stats.merged === previous.papers.length - papers.length :

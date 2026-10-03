@@ -7,6 +7,7 @@ import {readOfficialCache,OFFICIAL_CACHE_PATH} from '../src/services/officialCat
 import {readCloudQueue,CLOUD_QUEUE_PATH} from '../src/services/cloudPublication.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {sourceReviewGitFiles} from '../src/services/sourceReviewGit.js';
 const repositoryRoot=fileURLToPath(new URL('../',import.meta.url));
 try{
   await readWorkflow(repositoryRoot);await stageJournalFiles(await loadJournalConfig());
@@ -15,4 +16,6 @@ try{
     try{await fs.stat(path.join(repositoryRoot,file));await validate(repositoryRoot);await safeProcess('git',['add','-f','--',file],{cwd:repositoryRoot});}
     catch(e){if(e.code!=='ENOENT')throw e;}
   }
+  const reviewFiles=await sourceReviewGitFiles(repositoryRoot);
+  if(reviewFiles.length)await safeProcess('git',['add','-f','--pathspec-from-file=-','--pathspec-file-nul'],{cwd:repositoryRoot,input:reviewFiles.join('\0')+'\0'});
 }catch{console.error('DISCOVERY_STAGE_FAILED');process.exitCode=1;}

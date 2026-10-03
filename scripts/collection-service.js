@@ -11,6 +11,9 @@ import {readTranslationState} from '../src/services/translationAutomation.js';
 import {STATE_GIT_PATH} from '../src/services/translationAutomationGit.js';
 import {CLOUD_QUEUE_PATH,readCloudQueue} from '../src/services/cloudPublication.js';
 import {hydrateRunFromOfficial} from '../src/services/officialCatalog.js';
+import {createLocalCollector,findLocalPython,localReviewRequest} from '../src/services/localCollector.js';
+import {sourceReviewGitFiles} from '../src/services/sourceReviewGit.js';
+import {FIELD_TASKS_PATH,readFieldTasks} from '../src/services/collectionFieldTasks.js';
 
 export function safeProcess(command,args,{cwd,env=process.env,input='',timeout=120000}={}){
   return new Promise((resolve,reject)=>{
@@ -27,7 +30,7 @@ export async function allowedWorkflowDirty(config,{root,repositoryRoot,git,plan=
   // Synchronizing an unchanged checkout must not reparse all historical payloads.
   // Every actual data commit still performs the full closure/hash validation.
   if(!dirty.length)return new Set();
-  const allowed=new Set([...(await plan(config,{root,repositoryRoot})).files,WORKFLOW_PATH,STATE_GIT_PATH,CLOUD_QUEUE_PATH]);
+  const allowed=new Set([...(await plan(config,{root,repositoryRoot})).files,WORKFLOW_PATH,STATE_GIT_PATH,CLOUD_QUEUE_PATH,FIELD_TASKS_PATH,...(repositoryRoot?await sourceReviewGitFiles(repositoryRoot):[])]);
   assertLibrary(dirty.every(p=>allowed.has(p)),'存在未提交代码改动，停止正式流程');
   return allowed;
 }
@@ -51,6 +54,7 @@ export async function startCollectionService({env=process.env}={}){
     await git(['add','-f','--',STATE_GIT_PATH]);
     try{await fs.stat(path.join(repositoryRoot,WORKFLOW_PATH));await readWorkflow(repositoryRoot);await git(['add','-f','--',WORKFLOW_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
     try{await fs.stat(path.join(repositoryRoot,CLOUD_QUEUE_PATH));await readCloudQueue(repositoryRoot);await git(['add','-f','--',CLOUD_QUEUE_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
+    try{await fs.stat(path.join(repositoryRoot,FIELD_TASKS_PATH));await readFieldTasks(repositoryRoot);await git(['add','-f','--',FIELD_TASKS_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
     if((await git(['diff','--cached','--name-only'])).trim())await git(['-c','user.name=paper-daily','-c','user.email=paper-daily@users.noreply.github.com','commit','-m','data: save browser collection and workflow receipts']);
     await git(['push','origin','HEAD:refs/heads/master']);
   }
@@ -62,10 +66,12 @@ export async function startCollectionService({env=process.env}={}){
     checkPublication:(id,hash,publicationId)=>release('Check',id,hash,publicationId)});
   await fs.mkdir(stateDir,{recursive:true});
   // One local writer; only recover submitted work, never open new publisher tabs.
-  const server=collectionHttpServer(coordinator,{extensionId:env.PAPER_EXTENSION_ID});
+  const collector=createLocalCollector({repositoryRoot,stateDir,config,coordinator,
+    pythonExecutable:await findLocalPython(repositoryRoot,env),requestReview:localReviewRequest(env.PAPER_EXTENSION_ID)});
+  const server=collectionHttpServer({...coordinator,python:collector,status:async()=>({...await coordinator.status(),python:await collector.status()})},{extensionId:env.PAPER_EXTENSION_ID});
   server.requestTimeout=120000;server.headersTimeout=15000;
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(17328,'127.0.0.1',resolve);});
-  const timer=setInterval(()=>void coordinator.pulse().catch(()=>{}),15000);timer.unref();
+  const timer=setInterval(()=>{void coordinator.pulse().catch(()=>{});void collector.pulse().catch(()=>{});},15000);timer.unref();
   server.on('close',()=>clearInterval(timer));
   return server;
 }

@@ -23,7 +23,7 @@ const STRINGS = ['id', 'doi', 'doi_url', 'journal_key', 'journal_name', 'journal
   'print_issn', 'electronic_issn', 'first_seen_date', 'last_checked_at', 'title_original', 'abstract_original',
   'published_online_date', 'published_print_date', 'publication_date', 'volume', 'issue', 'pages', 'url',
   'title_zh', 'abstract_zh', 'title_translation_status', 'abstract_translation_status', 'translation_model', 'translated_at'];
-const PAPER_KEYS = new Set(['schema_version', ...STRINGS, 'discovered_at', 'sources', 'authors', 'provenance', 'source_records', 'source_text_hash', 'translation_provenance']);
+const PAPER_KEYS = new Set(['schema_version', ...STRINGS, 'discovered_at', 'sources', 'authors', 'affiliations', 'provenance', 'source_records', 'source_text_hash', 'translation_provenance']);
 const STAT_KEYS = ['added', 'updated', 'unchanged', 'new_pending_fields'];
 export const RUN_STATUSES = ['success', 'no_updates', 'partial_failure', 'full_failure'];
 
@@ -65,6 +65,7 @@ export function validatePapers(papers, config) {
       typeof author.name === 'string' && author.name.trim() && typeof author.orcid === 'string'), '作者列表无效');
     assertLibrary(Array.isArray(paper.source_records) && paper.source_records.length > 0, '论文缺少原始来源记录');
     const sourceRecords = paper.source_records;
+    if(paper.affiliations!==undefined)assertLibrary(Array.isArray(paper.affiliations)&&paper.affiliations.every(a=>sourceRecords.some(r=>(r.affiliations||[]).some(b=>stableJson(a)===stableJson(b)))),'作者机构缺少已核对来源');
     for (const record of sourceRecords) {
       assertLibrary(isObject(record) && typeof record.source_id === 'string' && typeof record.title === 'string' &&
         typeof record.raw_title === 'string' && typeof record.raw_abstract === 'string', '来源原文不完整');
