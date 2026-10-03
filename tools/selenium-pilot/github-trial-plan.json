@@ -1,0 +1,1590 @@
+{
+  "schema_version": 1,
+  "experiment": "github-versus-local-fixed-pages",
+  "baseline_date": "2026-10-03",
+  "journal_order": [
+    "TAR",
+    "AOS",
+    "JAR",
+    "JAE",
+    "CAR",
+    "RAS",
+    "AER",
+    "JPE",
+    "QJE",
+    "RES",
+    "JF",
+    "JFE",
+    "RFS",
+    "JCF",
+    "JIBS",
+    "RP",
+    "MS",
+    "JM",
+    "JOM"
+  ],
+  "source_commit": "5ae80edff6db03be845be968653ae181d51159b6",
+  "source_hashes": {
+    "catalog-core.js": "c0ef587a983a0a6af759fcdcb3656f98e80441007d3611d7040306fc3b7301ad",
+    "catalog-registry.js": "bc84537051860bb2bf55ca950a868afad2ada7671e1ae76b872991fe26f403de",
+    "catalog-resolutions.js": "7675174fb37282d0429b026ff93a8fe58302068ea2da63b26a21af7e321ed73a",
+    "catalog-scope.js": "b8a7994837fdaa8ece03314e298267a94f385aa3aa9fb4a1e99ed4f7218bf06c",
+    "article-type.js": "6242f180d25cac095d1b7314010df16d3ec68c41ff12231539116715005871ab",
+    "collection-policy.js": "67db324e831c42982b5a883d4996371cc597651a3c9e697d9150e254a0d5e870",
+    "core.js": "03eeb0cec5e3c290c20bd316cadd998d1dcb47ca62d8546e8769430f6f9dd223",
+    "catalog-extractor.js": "966bb1bb9b1765598b34b2243c317efb64b38b62006d1f0064728e0ba3e34920",
+    "extractor.js": "4f35344fdc85d05cad202adba4596548be28226593aaeb7e00148359fa2a1832"
+  },
+  "extractor_hashes": {
+    "catalog": "3a45ced34c122f1e9884abb1f1aa38f20c830f91445010fb239450ac51447e5a",
+    "article": "a91ef58f43d853754c01f96a670bd83236b5671157650c9512e4bae7446a107d"
+  },
+  "scripts": {
+    "catalog": "return (function readCatalogDocument() {\n  const text = el => (el?.innerText || el?.textContent || '').replace(/\\s+/g, ' ').trim();\n  const visible = el => !!el && !el.closest('[hidden],[aria-hidden=\"true\"]') && el.getBoundingClientRect().height > 0;\n  const safeLink = el => { try { const u = new URL(el.getAttribute('href'), location.href); const id=u.hostname==='www.aeaweb.org'&&u.pathname==='/articles'?u.searchParams.get('id'):null; u.search = ''; u.hash = ''; if(id&&/^10\\.1257\\/aer\\.[^\\s?#]+$/i.test(id))u.searchParams.set('id',id); return u.href; } catch { return ''; } };\n  const body = text(document.body), page_title = document.title;\n  const gate = [...document.querySelectorAll('iframe[src*=\"captcha\"],iframe[src*=\"challenge\"],#challenge-running,#challenge-stage,.g-recaptcha')].some(visible);\n  const challenge = gate || /just a moment|access denied|robot check|are you (?:a )?robot\\s*\\?|verify (?:you are|that you)|checking your browser|security verification|unusual traffic|请稍候|验证您是否|人机验证/i.test(page_title + ' ' + body.slice(0, 1800));\n  const page_not_found = /^(?:404\\b|not found\\b|page not found\\b)/i.test(page_title.trim()) ||\n    [...document.querySelectorAll('h1')].some(h => /^(?:404(?:\\s*[-:–]\\s*)?)?(?:page )?not found$/i.test(text(h)));\n  const headings = [page_title, ...[...document.querySelectorAll('h1,meta[name=\"citation_journal_title\"],meta[property=\"og:title\"],.journal-title,.journal-name,.journal-header')].map(x => x.content || text(x))];\n  // OUP/AAA sometimes put the journal name only in the linked masthead logo.\n  // Only the current journal's home/issue links count, not partner/footer logos.\n  const journalCode = location.pathname.split('/')[1];\n  if (['academic.oup.com', 'publications.aaahq.org'].includes(location.hostname)) {\n    for (const a of document.querySelectorAll('a[href]')) {\n      try {\n        const u = new URL(a.href);\n        if (u.origin === location.origin && [ `/${journalCode}`, `/${journalCode}/`, `/${journalCode}/issue` ].includes(u.pathname)) {\n          for (const img of a.querySelectorAll('img[alt]')) headings.push(img.alt);\n          const label = a.getAttribute('aria-label') || a.getAttribute('title'); if (label) headings.push(label);\n        }\n      } catch { /* Not a journal identity link. */ }\n    }\n  }\n  const issns = [...document.querySelectorAll('meta[name=\"citation_issn\"],meta[name=\"prism.issn\"],meta[property=\"prism.issn\"]')]\n    .flatMap(x => (x.content || '').match(/\\d{4}-[\\dXx]{4}/g) || []);\n  // AAA Early Access can identify the journal through footer ISSNs instead of\n  // metadata. Only explicitly labelled ISSNs count, never arbitrary numbers.\n  if(location.hostname==='publications.aaahq.org') {\n    const footer=document.querySelector('footer,[role=\"contentinfo\"],.site-footer,.footer');\n    for(const m of text(footer).matchAll(/\\b(?:(?:Print|Online|Electronic)\\s+)?(?:E?ISSN)\\s*:?\\s*(\\d{4}-[\\dXx]{4})\\b/gi)) issns.push(m[1]);\n  }\n  const exclude = el => {\n    for (let n = el; n && n !== document.body; n = n.parentElement) {\n      if (/^(?:NAV|FOOTER|ASIDE)$/.test(n.tagName) || /recommend|most[-_ ]?(?:read|cited)|related[-_ ]?(?:article|content)|citation[-_ ]?list/i.test(n.className + ' ' + n.id)) return true;\n    }\n    return false;\n  };\n  const articlePath = href => /\\/science\\/article\\/(?:abs\\/)?pii\\/[A-Za-z0-9]+|\\/doi\\/(?:abs\\/|full\\/|pdf\\/|epdf\\/|pdfplus\\/|abstract\\/)?10\\.|https:\\/\\/doi\\.org\\/10\\.|\\/article\\/10\\.|\\/(?:qje|restud|rfs|accounting-review)\\/(?:article|advance-article)\\/|aeaweb\\.org\\/articles\\?id=10\\./i.test(href);\n  const cardSelector = '.js-article-list-item,.article-list-item,.issue-item,.toc-item,.toc__item,.table-of-content__item,.al-article-item,.al-article-items,.al-article-list-item,.c-listing__item,.c-card,.journal-article';\n  const cards = [...document.querySelectorAll(cardSelector)]\n    .filter(x => !exclude(x));\n  const roots = cards.filter(x => !cards.some(y => y !== x && x.contains(y)));\n  const items = [], used = new Set();\n  const titleLinks = card => [...card.querySelectorAll('h2 a[href],h3 a[href],h4 a[href],h5 a[href],.al-title a[href],a.al-title[href],.article-content-title[href],.issue-item__title a[href],.hlFld-Title a[href]')]\n    .filter(a => articlePath(a.href) && !exclude(a));\n  const articleCount = card => new Set(titleLinks(card).map(safeLink)).size;\n  const collect = (card, selector, forcedAnchor) => {\n    // Some themes use the plural class for the entire list. Never send several\n    // papers as one article's evidence; fallback headings will split the list.\n    if (articleCount(card) > 1) {\n      if (!forcedAnchor) return;\n      let scoped = forcedAnchor.closest('h2,h3,h4,h5,.al-title,.article-content-title,.issue-item__title,.hlFld-Title') || forcedAnchor;\n      while (scoped.parentElement && scoped.parentElement !== card && articleCount(scoped.parentElement) <= 1) scoped = scoped.parentElement;\n      card = scoped;\n    }\n    const links = [...card.querySelectorAll('a[href]')];\n    const a = forcedAnchor || links.find(x => articlePath(x.href) &&\n      (x.matches('.article-content-title,.issue-item__title,.publication_title,.hlFld-Title,.al-title') || x.closest('h2,h3,h4,h5,.issue-item__title,.publication_title,.hlFld-Title,.al-title')) &&\n      !/^(?:abstract|full text|pdf|epub|first page|download|references)$/i.test(text(x))) ||\n      links.find(x => articlePath(x.href) && text(x).length > 20 && !/^(?:https?:|10\\.|full text|download)/i.test(text(x)));\n    if (!a || used.has(a) || exclude(a)) return;\n    // Access badges are not part of a title (e.g. \"FREE\" in AAA listings).\n    const titleNode=a.cloneNode(true);\n    titleNode.querySelectorAll('.free,.free-access,.open-access,.access-label,.access-icon,.badge,sup').forEach(n=>{\n      if(/^(?:free|open access|free access)$/i.test(text(n)))n.remove();\n    });\n    const title = text(titleNode); if (!title) return; used.add(a);\n    let doi = card.getAttribute('data-doi') || card.querySelector('[data-doi]')?.getAttribute('data-doi') || null;\n    for (const link of [a, ...links]) {\n      if (doi) break;\n      try {\n        const u = new URL(link.href), p = decodeURIComponent(u.pathname);\n        doi = u.hostname === 'doi.org' ? p.slice(1) : u.hostname==='www.aeaweb.org' ? u.searchParams.get('id') :\n          p.match(/^\\/article\\/(10\\.\\d{4,9}\\/[^/]+)\\/?$/i)?.[1] ||\n          p.match(/\\/(?:advance-article|article)\\/doi\\/(10\\.\\d{4,9}\\/[^/]+(?:\\/[^/]+)?)(?=\\/\\d+\\/|\\/\\d+$)/i)?.[1] ||\n          p.match(/^\\/doi\\/(?:abs\\/|full\\/|pdf\\/|epdf\\/|pdfplus\\/|abstract\\/)?(10\\.\\d{4,9}\\/.+)/i)?.[1];\n      } catch { /* Keep the title/link even without DOI. */ }\n    }\n    const authorNodes = [...card.querySelectorAll('.authors,.author,.author-group,.authors-list,.author-list,.issue-item__authors,.hlFld-ContribAuthor,.loa,.al-authors-list,.c-author-list,[class*=\"author-name\"]')];\n    const authors = authorNodes.filter(x => !authorNodes.some(y => y !== x && y.contains(x))).map(text).filter(Boolean);\n    const dateNodes = [...card.querySelectorAll('time,.article-date,.cover-date,.epub-date,.item__date,.publication-date,[class*=\"date\"]')];\n    items.push({ title, doi: doi || null, url: safeLink(a), selector, authors_raw: [...new Set(authors)].join('; ').slice(0, 1500) || null,\n      date_raw: [...new Set(dateNodes.map(text).filter(Boolean))].join('; ').slice(0, 500) || null,\n      section: text(card.querySelector('.article-type,.issue-item__type,.subType,.articleType,.content-type')).slice(0, 200) || null,\n      evidence_text: (() => { const copy = card.cloneNode(true); copy.querySelectorAll('script,style,form,input,textarea,select,nav,aside').forEach(n => n.remove()); return text(copy); })(),\n      evidence_version: 2 });\n  };\n  roots.slice(0, 500).forEach(x => collect(x, 'publisher_article_card'));\n  // Conservative diagnostic fallback: only article title headings, not every DOI on the page.\n  for (const a of document.querySelectorAll('h2 a[href],h3 a[href],h4 a[href],h5 a[href],.al-title a[href],a.al-title[href],.article-content-title[href],.issue-item__title a[href],.hlFld-Title a[href]')) {\n    if (articlePath(a.href)) collect(a.closest(cardSelector + ',article,li,.article-item') || a.parentElement, 'heading_fallback_unverified', a);\n  }\n  const next_links = [], more_controls = [], navigation_links = [];\n  for (const a of document.querySelectorAll('a[href]')) {\n    const label = (a.getAttribute('aria-label') || text(a)).trim();\n    if (/^(?:previous issue|next issue|all issues|view all issues)$/i.test(label)) navigation_links.push(a.href);\n    if (!visible(a) || a.getAttribute('aria-disabled') === 'true' || a.classList.contains('disabled')) continue;\n    if (a.rel === 'next' || /^(?:next(?: page)?|next \\d+|下一页|›|»|→)$/i.test(label)) {\n      // Never treat next issue / next article as next page.\n      if (!/issue|article/i.test(label)) next_links.push(a.href);\n    }\n    // Wiley sometimes offers only numbered pagination. Follow a later numeric\n    // page within the same pathname, never \"next issue\" or arbitrary links.\n    if (/^\\d+$/.test(label) && a.closest('[class*=\"pagination\"],[aria-label*=\"Pagination\"],[aria-label*=\"pagination\"]')) {\n      try {\n        const here = new URL(location.href), next = new URL(a.href);\n        const container = a.closest('[class*=\"pagination\"],[aria-label*=\"Pagination\"],[aria-label*=\"pagination\"]');\n        const selected = Number(text(container.querySelector('[aria-current=\"page\"],.active,.current')));\n        const current = selected || (here.searchParams.has('startPage') ? Number(here.searchParams.get('startPage')) + 1 : Number(here.searchParams.get('page') || here.searchParams.get('pageNumber') || 1));\n        const wileyAlias = here.hostname === 'onlinelibrary.wiley.com' && (() => {\n          const p = here.pathname.match(/^\\/toc\\/([^/]+)\\/(current|\\d{4}\\/\\d+\\/\\d+)\\/?$/i), q = next.pathname.match(/^\\/toc\\/([^/]+)\\/(current|\\d{4}\\/\\d+\\/\\d+)\\/?$/i);\n          return p && q && p[1] === q[1] && (p[2] === 'current' || q[2] === 'current');\n        })();\n        if (next.origin === here.origin && (next.pathname === here.pathname || wileyAlias) && Number(label) > current &&\n          ['startPage','page','pageNumber','offset'].some(k => next.searchParams.has(k))) next_links.push(next.href);\n      } catch { /* Not a supported pagination URL. */ }\n    }\n  }\n  for (const b of document.querySelectorAll('button,[role=\"button\"],a[href]')) {\n    const label = (b.getAttribute('aria-label') || text(b)).trim();\n    if (visible(b) && !b.disabled && /^(?:load more|show more|view more|show all|view all)(?: articles| results)?$/i.test(label)) more_controls.push(label);\n  }\n  const navigationText = [...document.querySelectorAll('[class*=\"pagination\"],[aria-label*=\"Pagination\"],[aria-label*=\"pagination\"]')].map(text).join(' ').slice(0, 600);\n  const paginationNumbers = (navigationText.match(/\\b\\d+\\b/g) || []).map(Number);\n  const here = new URL(location.href);\n  const pagination_current = Number(text(document.querySelector('[class*=\"pagination\"] [aria-current=\"page\"],[class*=\"pagination\"] .active,[class*=\"pagination\"] .current'))) ||\n    (here.searchParams.has('startPage') ? Number(here.searchParams.get('startPage')) + 1 : Number(here.searchParams.get('page') || here.searchParams.get('pageNumber') || 1));\n  const pagination_unresolved = !next_links.length && paginationNumbers.some(n => n > pagination_current);\n  const issue_heading = [...document.querySelectorAll('h1,h2,.volume-issue,.issue-header,.publication-volume,.issue-info')].map(text).filter(s => /volume|issue|ahead of print|early view|just accepted|articles in press/i.test(s)).join(' | ').slice(0, 1500);\n  const issue_links = [...document.querySelectorAll('a[href]')].filter(a => /^current issue$/i.test(text(a)) || /\\/volumes-and-issues\\/\\d+-[\\d-]+$/.test(a.pathname)).map(a=>({url:a.href,label:text(a)}));\n  const observed_article_links = [...new Set([...document.querySelectorAll('a[href]')].filter(a=>!exclude(a)&&articlePath(a.href)&&text(a).length>20&&!/^(?:https?:|10\\.|full text|download|view|add to|open the)/i.test(text(a))).map(safeLink))];\n  const unmatched_article_links = observed_article_links.filter(url=>!items.some(i=>i.url===url));\n  return { url: location.href, page_title, headings, issns, challenge, page_not_found, items, raw_card_count: roots.length,\n    adapter: roots.length ? 'publisher_cards' : 'heading_fallback', issue_heading,\n    next_links: [...new Set(next_links)], pagination_current, pagination_unresolved, more_controls, navigation_links, issue_links, observed_article_links, unmatched_article_links,\n    empty_message: body.match(/(?:this journal currently does not have articles in press|no articles (?:are )?(?:currently )?available|there are currently no articles|no results found)/i)?.[0] || null,\n    warnings: [ ...(unmatched_article_links.length ? ['unmatched_article_links:' + unmatched_article_links.length] : []), ...(roots.length > 500 ? ['card_limit_500'] : []), ...(navigationText ? ['pagination_present:' + navigationText] : []),\n      ...(!roots.length ? ['publisher_card_selector_not_matched'] : []) ] };\n})();",
+    "article": "return (function readArticleDocument() {\n  const clean = value => String(value || '').replace(/\\r/g, '').replace(/[\\t ]+/g, ' ').replace(/\\n{3,}/g, '\\n\\n').trim();\n  const meta = key => [...document.querySelectorAll('meta')].filter(e => (e.getAttribute('name') || e.getAttribute('property') || '').toLowerCase() === key.toLowerCase()).map(e => e.content).filter(Boolean);\n  const titles = [...meta('citation_title'), ...meta('dc.title'), ...meta('og:title')];\n  const dois = [...meta('citation_doi'), ...meta('dc.identifier')].filter(x => /^(?:https?:\\/\\/(?:dx\\.)?doi\\.org\\/|doi:\\s*)?10\\.\\d{4,9}\\//i.test(x));\n  const candidates = [];\n  const affiliationRows = [], authorNames = [...meta('citation_author')];\n  const addAffiliation = (author, affiliation, method) => {\n    author = author ? clean(author) : null; affiliation = clean(affiliation);\n    if (!affiliation || affiliation.length < 4 || affiliation.length > 2000 || /\\b(?:access denied|sign in|copyright)\\b/i.test(affiliation)) return;\n    if (affiliationRows.some(r => r.author === author && r.affiliation === affiliation)) return;\n    if (affiliationRows.length < 40) affiliationRows.push({author,affiliation,method});\n  };\n  // Highwire metadata encodes institutions after the relevant author. Do not\n  // pair independent author/institution arrays by index or assign all to all.\n  let metadataAuthor = null, metadataAuthorRun = 0, afterInstitution = false;\n  for (const el of document.querySelectorAll('meta[name]')) {\n    const key = el.name.toLowerCase();\n    if (key === 'citation_author') { metadataAuthorRun = afterInstitution ? 1 : metadataAuthorRun + 1; metadataAuthor = el.content; afterInstitution = false; }\n    if (key === 'citation_author_institution') { addAffiliation(metadataAuthorRun === 1 ? metadataAuthor : null, el.content, 'meta:citation_author_institution'); afterInstitution = true; }\n  }\n  const body = clean(document.body?.innerText).slice(0, 120000);\n  const headline = clean(document.querySelector('h1')?.innerText);\n  if (headline) titles.push(headline);\n  const top = `${document.title}\\n${body.slice(0, 3500)}`;\n  const challenge = /verify (?:you are|that you are) human|checking your browser|just a moment|performing security verification|enable javascript and cookies to continue|unusual traffic|access denied|请完成验证|验证您是真人/i.test(top)\n    || [...document.querySelectorAll('iframe')].some(e => /captcha|challenges\\.cloudflare/i.test(e.src) && e.getBoundingClientRect().height > 0);\n  const stripHeading = text => clean(text).replace(/^(?:Abstract|ABSTRACT|Summary)\\s*\\n+/, '').trim();\n  const add = (text, field, extra = {}) => { if (text) candidates.push({ text: stripHeading(text), field, ...extra }); };\n  const visible = e => e.getBoundingClientRect().height > 0 && getComputedStyle(e).visibility !== 'hidden';\n  const truncated = e => {\n    // A child paragraph may look untruncated while its ancestor clips the abstract.\n    for (let node = e; node && node !== document.body; node = node.parentElement) {\n      const style = getComputedStyle(node);\n      if ((['hidden', 'clip'].includes(style.overflowY) && node.scrollHeight > node.clientHeight + 4)\n          || Number(style.webkitLineClamp) > 0) return true;\n    }\n    return false;\n  };\n  const language = e => e.closest('[lang]')?.getAttribute('lang') || '';\n  const outsideArticle = e => {\n    for (let node = e; node && node !== document.body; node = node.parentElement) {\n      if (/recommend|related[-_ ]|references|search-results|citation-list/i.test(node.id + ' ' + node.className)) return true;\n    }\n    return false;\n  };\n  const selectors = [\n    '.abstract.author', '.abstract.svAbstract', '#Abs1-content', '[data-title=\"Abstract\"] .c-article-section__content',\n    'section.article-section__abstract .article-section__content', '.abstract-group .abstract',\n    '.abstractSection', '.abstractInFull', '.abstractInFull p', '.abstract-content', '#abstract .abstract-text',\n    'section.abstract', 'div.abstract', '#abstract', '#Abs1'\n  ];\n  const seen = new Set();\n  for (const selector of selectors) for (const el of document.querySelectorAll(selector)) {\n    if (!visible(el) || seen.has(el) || outsideArticle(el) || /graphical|highlights/i.test(el.id + ' ' + el.className)) continue;\n    const heading = el.querySelector('h2,h3,h4');\n    if (heading && !/^(?:abstract|summary)$/i.test(clean(heading.innerText))) continue;\n    seen.add(el);\n    // A full article wrapper is not an abstract, even if its first heading says Abstract.\n    if ([...el.querySelectorAll('h2,h3,h4')].some(h => !/^(?:abstract|summary|background|methods|results|conclusions?|purpose|design\\/methodology\\/approach|findings|originality\\/value)$/i.test(clean(h.innerText)))) continue;\n    // Preserve lists and structured abstract subheadings as well as paragraphs.\n    add(el.innerText, 'dom:' + selector, { truncated: truncated(el), language: language(el) });\n  }\n  // Only an explicitly labelled section; never og:description, introduction, or search snippets.\n  for (const heading of document.querySelectorAll('h2,h3,h4')) {\n    if (!visible(heading) || outsideArticle(heading) || !/^abstract$/i.test(clean(heading.innerText))) continue;\n    const paragraphs = [];\n    for (let next = heading.nextElementSibling; next; next = next.nextElementSibling) {\n      if (/^H[1-6]$/.test(next.tagName) || next.querySelector('h1,h2,h3,h4')) break;\n      if (!/^(P|DIV)$/.test(next.tagName)) break;\n      if (visible(next)) paragraphs.push(next);\n      if (paragraphs.length === 8) break;\n    }\n    if (paragraphs.length) add(paragraphs.map(p => p.innerText).join('\\n\\n'), 'dom:Abstract-following-paragraphs', { truncated: paragraphs.some(truncated), language: language(heading) });\n  }\n  for (const key of ['citation_abstract', 'dc.description.abstract', 'dcterms.abstract']) for (const text of meta(key)) add(text, 'meta:' + key);\n  const blocks = [...document.querySelectorAll('script[type=\"application/ld+json\"]')].slice(0, 30);\n  for (const block of blocks) {\n    if (block.textContent.length > 500000) continue;\n    let parsed; try { parsed = JSON.parse(block.textContent); } catch { continue; }\n    const objects = Array.isArray(parsed) ? parsed : [parsed, ...(Array.isArray(parsed?.['@graph']) ? parsed['@graph'] : [])];\n    for (const obj of objects) {\n      if (!obj || ![obj['@type']].flat().some(t => ['ScholarlyArticle', 'MedicalScholarlyArticle', 'Article'].includes(t))) continue;\n      const identifiers = [obj.identifier].flat().map(v => typeof v === 'string' ? v : v?.value || '');\n      const doi = identifiers.find(v => /^(?:https?:\\/\\/(?:dx\\.)?doi\\.org\\/|doi:\\s*)?10\\.\\d{4,9}\\//i.test(v));\n      // Only attach matching JSON-LD article objects to the current page; recommendations are ignored.\n      const normalized = s => clean(s).normalize('NFKC').toLowerCase().replace(/[^\\p{L}\\p{N}]/gu, '');\n      if (!titles.some(t => normalized(t) === normalized(obj.headline || obj.name))) continue;\n      if (doi && dois.length && !dois.some(d => normalized(d.replace(/^https?:\\/\\/(?:dx\\.)?doi\\.org\\//i,'')) === normalized(doi.replace(/^https?:\\/\\/(?:dx\\.)?doi\\.org\\//i,'')))) continue;\n      for (const author of [obj.author].flat().filter(Boolean)) {\n        if (typeof author !== 'object' || typeof author.name !== 'string') continue;\n        authorNames.push(clean(author.name));\n        for (const org of [author.affiliation].flat().filter(Boolean))\n          addAffiliation(author.name, typeof org === 'string' ? org : org.name, 'jsonld:author.affiliation');\n      }\n      if (typeof obj.abstract === 'string') add(obj.abstract, 'jsonld:abstract', { doi, language: obj.inLanguage || '' });\n    }\n  }\n  const evidence = [];\n  // Publisher-labelled affiliation sections only, never university names in\n  // references, acknowledgements or arbitrary article prose.\n  for (const el of document.querySelectorAll('.affiliation,.author-affiliation,.affiliations .aff,.author-info .affiliation,[id^=\"aff\"],[id^=\"Aff\"]')) {\n    if (!visible(el) || outsideArticle(el) || el.closest('footer,nav,aside') || el.querySelector('.affiliation,.author-affiliation,.aff')) continue;\n    if (!/affiliat|^aff\\d|^aff-/i.test(el.id + ' ' + el.className)) continue;\n    const text = clean(el.innerText);\n    if (!text || text.length > 2000) continue;\n    const paired = new Set();\n    if (el.id) for (const link of document.querySelectorAll('a[href]')) {\n      if (link.getAttribute('href') !== '#'+el.id || outsideArticle(link)) continue;\n      const holder = link.closest('.author,.author-name,.author-name-link,li[itemprop=\"author\"],.contrib,.entryAuthor');\n      const names = [...new Set(authorNames)].filter(name => name && clean(holder?.innerText).includes(name));\n      if (names.length === 1) paired.add(names[0]);\n    }\n    if (paired.size) for (const name of paired) addAffiliation(name,text,'dom:explicit-affiliation-reference');\n    else if (!affiliationRows.some(r => r.affiliation === text)) addAffiliation(null,text,'dom:affiliation-unmapped');\n  }\n  for (const row of affiliationRows) evidence.push({id:`affiliation-${evidence.length}`,kind:'context',context:'author_affiliation',\n    text:row.author ? row.author+'\\n'+row.affiliation : row.affiliation, affiliation_record:row});\n  for (const value of titles.slice(0, 12)) evidence.push({ id: `title-${evidence.length}`, kind: 'title', text: value });\n  for (const value of dois.slice(0, 12)) evidence.push({ id: `doi-${evidence.length}`, kind: 'doi', text: value });\n  for (const c of candidates.slice(0, 30)) evidence.push({ id: `abstract-${evidence.length}`, kind: 'abstract', text: c.text, context: c.field,\n    truncated: !!c.truncated, language: c.language || '' });\n  // Keep textual context of the article, excluding unrelated UI, forms and scripts.\n  // It is comparison evidence, NOT a licence to relabel body/Highlights as Abstract.\n  const root = document.querySelector('main') || document.querySelector('article');\n  if (root) {\n    const copy = root.cloneNode(true);\n    copy.querySelectorAll('script,style,form,input,textarea,select,nav,header,footer,aside,[hidden],[aria-hidden=\"true\"],.recommended,.related-articles').forEach(n => n.remove());\n    const value = clean(copy.textContent);\n    if (value.length <= 500000) evidence.push({ id: 'article-context', kind: 'context', text: value });\n    else evidence.push({ id: 'article-context', kind: 'context', text: '', omitted: 'context_over_500000_chars' });\n  }\n  return { url: location.href, titles: titles.slice(0, 12), dois: dois.slice(0, 12), challenge, evidence_version: 2, evidence, affiliation_extraction_version:1,\n    affiliation_candidates:evidence.filter(b=>b.affiliation_record).map(b=>({...b.affiliation_record,block_id:b.id})),\n    noAbstract: candidates.some(c => /^(?:\\[no abstract\\]|no abstract (?:is )?available)[.!]?$/i.test(c.text)), candidates: candidates.slice(0, 30) };\n})();"
+  },
+  "tasks": [
+    {
+      "journal": "TAR",
+      "kind": "catalog",
+      "url": "https://publications.aaahq.org/accounting-review/issue",
+      "catalog_id": "catalog-tar-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-tar-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 19
+    },
+    {
+      "journal": "TAR",
+      "kind": "catalog",
+      "url": "https://publications.aaahq.org/accounting-review/publish-ahead-of-print",
+      "catalog_id": "catalog-tar-online",
+      "collection": "online",
+      "label": "Early Access",
+      "test_id": "catalog-tar-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 32
+    },
+    {
+      "journal": "TAR",
+      "kind": "article",
+      "doi": "10.2308/tar-2025-0006",
+      "title": "CEO Tax Lock-In and Share Pledging",
+      "url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2025-0006/28099/CEO-Tax-Lock-In-and-Share-Pledging",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-tar-online",
+      "catalog_url": "https://publications.aaahq.org/accounting-review/publish-ahead-of-print",
+      "expected_issns": [
+        "0001-4826",
+        "1558-7967"
+      ],
+      "test_id": "TAR:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1238,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "TAR",
+      "kind": "article",
+      "doi": "10.2308/tar-2023-0727",
+      "title": "Burn It or Return It? The Effects of the Possibility to Return Budget Surplus and the Moderating Role of Uncertainty on Capital Budgeting",
+      "url": "https://publications.aaahq.org/accounting-review/article/101/5/1/24127/Burn-It-or-Return-It-The-Effects-of-the",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-tar-issue",
+      "catalog_url": "https://publications.aaahq.org/accounting-review/issue",
+      "expected_issns": [
+        "0001-4826",
+        "1558-7967"
+      ],
+      "test_id": "TAR:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1099,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "TAR",
+      "kind": "article",
+      "doi": "10.2308/tar-2025-0166",
+      "title": "The Nonproduction of an Accounting Standard: Climate Change, Emissions Trading, and Legitimacy Shielding",
+      "url": "https://publications.aaahq.org/accounting-review/article/doi/10.2308/TAR-2025-0166/28113/The-Nonproduction-of-an-Accounting-Standard",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-tar-online",
+      "catalog_url": "https://publications.aaahq.org/accounting-review/publish-ahead-of-print",
+      "expected_issns": [
+        "0001-4826",
+        "1558-7967"
+      ],
+      "test_id": "TAR:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1105,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "AOS",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/accounting-organizations-and-society/latest",
+      "catalog_id": "catalog-aos-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-aos-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 13
+    },
+    {
+      "journal": "AOS",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/accounting-organizations-and-society/articles-in-press",
+      "catalog_id": "catalog-aos-online",
+      "collection": "online",
+      "label": "Articles in Press",
+      "test_id": "catalog-aos-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 1
+    },
+    {
+      "journal": "AOS",
+      "kind": "article",
+      "doi": "10.1016/j.aos.2026.101650",
+      "title": "Do big prizes attract talent or big heads? The role of prize concentration, relative skill information, and narcissism in public and private tournament choice",
+      "url": "https://www.sciencedirect.com/science/article/pii/S036136822600019X",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-aos-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/accounting-organizations-and-society/vol/117/suppl/C",
+      "expected_issns": [
+        "0361-3682",
+        "1873-6289"
+      ],
+      "test_id": "AOS:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 941,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "AOS",
+      "kind": "article",
+      "doi": "10.1016/j.aos.2026.101651",
+      "title": "Parallel accounts, parallel accountabilities: How translation challenges narrative reporting research",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0361368226000206",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-aos-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/accounting-organizations-and-society/vol/117/suppl/C",
+      "expected_issns": [
+        "0361-3682",
+        "1873-6289"
+      ],
+      "test_id": "AOS:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1279,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "AOS",
+      "kind": "article",
+      "doi": "10.1016/j.aos.2026.101649",
+      "title": "“Making up” user voice: Accounting for experiences of the vulnerable",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0361368226000188",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-aos-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/accounting-organizations-and-society/vol/117/suppl/C",
+      "expected_issns": [
+        "0361-3682",
+        "1873-6289"
+      ],
+      "test_id": "AOS:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1601,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JAR",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/1475679x/current",
+      "catalog_id": "catalog-3",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-3",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 15
+    },
+    {
+      "journal": "JAR",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/1475679x/0/0",
+      "catalog_id": "catalog-4",
+      "collection": "online",
+      "label": "Early View",
+      "test_id": "catalog-4",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 20
+    },
+    {
+      "journal": "JAR",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/1475679x/0/0?page=2",
+      "catalog_id": "catalog-4",
+      "collection": "online",
+      "label": "Early View",
+      "test_id": "catalog-4:page2",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 8
+    },
+    {
+      "journal": "JAR",
+      "kind": "article",
+      "doi": "10.1111/1475-679x.70086",
+      "title": "Mimicking Regulatory Peers",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/1475-679x.70086",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-4",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/1475679x/0/0",
+      "expected_issns": [
+        "0021-8456",
+        "1475-679X"
+      ],
+      "test_id": "JAR:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1163,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JAR",
+      "kind": "article",
+      "doi": "10.1111/1475-679x.70043",
+      "title": "Accounting Rules and the Labor Market for Accountants",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/1475-679x.70043",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-3",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/1475679x/current",
+      "expected_issns": [
+        "0021-8456",
+        "1475-679X"
+      ],
+      "test_id": "JAR:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1119,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JAR",
+      "kind": "article",
+      "doi": "10.1111/1475-679x.70090",
+      "title": "Book Value Risk Management of Banks: Limited Hedging, HTM Accounting, and Rising Interest Rates",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/1475-679x.70090",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-4",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/1475679x/0/0",
+      "expected_issns": [
+        "0021-8456",
+        "1475-679X"
+      ],
+      "test_id": "JAR:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1819,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JAE",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/journal-of-accounting-and-economics/latest",
+      "catalog_id": "catalog-jae-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jae-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 17
+    },
+    {
+      "journal": "JAE",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/journal-of-accounting-and-economics/articles-in-press",
+      "catalog_id": "catalog-jae-online",
+      "collection": "online",
+      "label": "Articles in Press",
+      "test_id": "catalog-jae-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 20
+    },
+    {
+      "journal": "JAE",
+      "kind": "article",
+      "doi": "10.1016/j.jacceco.2026.101950",
+      "title": "Direct and Indirect Effects of Transparency Regulation",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0165410126000947",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jae-online",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-accounting-and-economics/articles-in-press",
+      "expected_issns": [
+        "0165-4101",
+        "1879-1980"
+      ],
+      "test_id": "JAE:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 930,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JAE",
+      "kind": "article",
+      "doi": "10.1016/j.jacceco.2026.101898",
+      "title": "Consumption tax and corporate product mix decisions",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0165410126000418",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jae-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-accounting-and-economics/vol/82/issue/2",
+      "expected_issns": [
+        "0165-4101",
+        "1879-1980"
+      ],
+      "test_id": "JAE:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1092,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JAE",
+      "kind": "article",
+      "doi": "10.1016/j.jacceco.2026.101952",
+      "title": "Navigating new accounting standards: Implications for firms and their auditors",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0165410126000960",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jae-online",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-accounting-and-economics/articles-in-press",
+      "expected_issns": [
+        "0165-4101",
+        "1879-1980"
+      ],
+      "test_id": "JAE:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 362,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "CAR",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/19113846/current",
+      "catalog_id": "catalog-car-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-car-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 20
+    },
+    {
+      "journal": "CAR",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/19113846/0/0",
+      "catalog_id": "catalog-car-online",
+      "collection": "online",
+      "label": "Early View",
+      "test_id": "catalog-car-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 17
+    },
+    {
+      "journal": "CAR",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/19113846/2026/43/3?page=2",
+      "catalog_id": "catalog-car-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-car-issue:page2",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 1
+    },
+    {
+      "journal": "CAR",
+      "kind": "article",
+      "doi": "10.1111/1911-3846.70077",
+      "title": "Specialists' Evidence Evaluation and Judgments in AuditsÉvaluation des preuves et jugements des spécialistes lors des audits",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70077",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-car-online",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/19113846/0/0",
+      "expected_issns": [
+        "0823-9150",
+        "1911-3846"
+      ],
+      "test_id": "CAR:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1168,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "CAR",
+      "kind": "article",
+      "doi": "10.1111/1911-3846.70046",
+      "title": "A Survey of the Archival Audit LiteratureUne revue de la littérature en matière d'audit fondée sur les données archivales",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70046",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-car-issue",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/19113846/current",
+      "expected_issns": [
+        "0823-9150",
+        "1911-3846"
+      ],
+      "test_id": "CAR:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1426,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "CAR",
+      "kind": "article",
+      "doi": "10.1111/1911-3846.70084",
+      "title": "Collaborative Innovation and R&D Disclosures: Evidence From Co-PatentsInnovation collaborative et communication d'informations sur la R et D : données relatives à la copropriété de brevets",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70084",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-car-online",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/19113846/0/0",
+      "expected_issns": [
+        "0823-9150",
+        "1911-3846"
+      ],
+      "test_id": "CAR:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1773,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RAS",
+      "kind": "catalog",
+      "url": "https://link.springer.com/journal/11142/volumes-and-issues",
+      "catalog_id": "catalog-ras-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-ras-issue",
+      "baseline_status": "catalog_landing",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RAS",
+      "kind": "catalog",
+      "url": "https://link.springer.com/journal/11142/volumes-and-issues/31-3",
+      "catalog_id": "catalog-ras-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-ras-issue:latest",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 25
+    },
+    {
+      "journal": "RAS",
+      "kind": "catalog",
+      "url": "https://link.springer.com/journal/11142/online-first",
+      "catalog_id": "catalog-ras-online",
+      "collection": "online",
+      "label": "Online First",
+      "test_id": "catalog-ras-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 14
+    },
+    {
+      "journal": "RAS",
+      "kind": "article",
+      "doi": "10.1007/s11142-026-09981-0",
+      "title": "Analyst visibility and earnings forecast quality",
+      "url": "https://link.springer.com/article/10.1007/s11142-026-09981-0",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-ras-online",
+      "catalog_url": "https://link.springer.com/journal/11142/online-first",
+      "expected_issns": [
+        "1380-6653",
+        "1573-7136"
+      ],
+      "test_id": "RAS:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1026,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RAS",
+      "kind": "article",
+      "doi": "10.1007/s11142-026-09971-2",
+      "title": "Beyond earnings quality: evaluating the quality of corporate disclosure practices",
+      "url": "https://link.springer.com/article/10.1007/s11142-026-09971-2",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-ras-issue",
+      "catalog_url": "https://link.springer.com/journal/11142/volumes-and-issues/31-3",
+      "expected_issns": [
+        "1380-6653",
+        "1573-7136"
+      ],
+      "test_id": "RAS:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 970,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RAS",
+      "kind": "article",
+      "doi": "10.1007/s11142-026-09994-9",
+      "title": "Retail investor trading and market reactions to earnings announcements",
+      "url": "https://link.springer.com/article/10.1007/s11142-026-09994-9",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-ras-online",
+      "catalog_url": "https://link.springer.com/journal/11142/online-first",
+      "expected_issns": [
+        "1380-6653",
+        "1573-7136"
+      ],
+      "test_id": "RAS:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1124,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "AER",
+      "kind": "catalog",
+      "url": "https://www.aeaweb.org/journals/aer",
+      "catalog_id": "catalog-aer-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-aer-issue",
+      "baseline_status": "catalog_landing",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "AER",
+      "kind": "catalog",
+      "url": "https://www.aeaweb.org/issues/864",
+      "catalog_id": "catalog-aer-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-aer-issue:latest",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 10
+    },
+    {
+      "journal": "AER",
+      "kind": "catalog",
+      "url": "https://www.aeaweb.org/journals/aer/forthcoming",
+      "catalog_id": "catalog-aer-online",
+      "collection": "online",
+      "label": "Forthcoming Articles",
+      "test_id": "catalog-aer-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 39
+    },
+    {
+      "journal": "AER",
+      "kind": "article",
+      "doi": "10.1257/aer.20240491",
+      "title": "Monetary Policy, Segmentation, and the Term Structure",
+      "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240491",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-aer-online",
+      "catalog_url": "https://www.aeaweb.org/journals/aer/forthcoming",
+      "expected_issns": [
+        "0002-8282",
+        "1944-7981"
+      ],
+      "test_id": "AER:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 584,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "AER",
+      "kind": "article",
+      "doi": "10.1257/aer.20250115",
+      "title": "Who Marries Whom? The Role of Segregation by Race and Class",
+      "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250115",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-aer-issue",
+      "catalog_url": "https://www.aeaweb.org/issues/864",
+      "expected_issns": [
+        "0002-8282",
+        "1944-7981"
+      ],
+      "test_id": "AER:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 711,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "AER",
+      "kind": "article",
+      "doi": "10.1257/aer.20230557",
+      "title": "Sophisticated Consumers with Inertia: Long-Term Implications from a Large-Scale Field Experiment",
+      "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230557",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-aer-online",
+      "catalog_url": "https://www.aeaweb.org/journals/aer/forthcoming",
+      "expected_issns": [
+        "0002-8282",
+        "1944-7981"
+      ],
+      "test_id": "AER:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 662,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JPE",
+      "kind": "catalog",
+      "url": "https://www.journals.uchicago.edu/toc/jpe/current",
+      "catalog_id": "catalog-5",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-5",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 11
+    },
+    {
+      "journal": "JPE",
+      "kind": "catalog",
+      "url": "https://www.journals.uchicago.edu/toc/jpe/0/0",
+      "catalog_id": "catalog-6",
+      "collection": "online",
+      "label": "Ahead of Print",
+      "test_id": "catalog-6",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 8
+    },
+    {
+      "journal": "JPE",
+      "kind": "article",
+      "doi": "10.1086/742715",
+      "title": "Online Business Models, Digital Ads, and User Welfare",
+      "url": "https://www.journals.uchicago.edu/doi/10.1086/742715",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-6",
+      "catalog_url": "https://www.journals.uchicago.edu/toc/jpe/0/0",
+      "expected_issns": [
+        "0022-3808",
+        "1537-534X"
+      ],
+      "test_id": "JPE:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 865,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JPE",
+      "kind": "article",
+      "doi": "10.1086/742422",
+      "title": "Rent Guarantee Insurance",
+      "url": "https://www.journals.uchicago.edu/doi/10.1086/742422",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-5",
+      "catalog_url": "https://www.journals.uchicago.edu/toc/jpe/current",
+      "expected_issns": [
+        "0022-3808",
+        "1537-534X"
+      ],
+      "test_id": "JPE:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 700,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JPE",
+      "kind": "article",
+      "doi": "10.1086/742710",
+      "title": "Why Is Intermediating Houses So Difficult? Evidence from iBuyers",
+      "url": "https://www.journals.uchicago.edu/doi/10.1086/742710",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-6",
+      "catalog_url": "https://www.journals.uchicago.edu/toc/jpe/0/0",
+      "expected_issns": [
+        "0022-3808",
+        "1537-534X"
+      ],
+      "test_id": "JPE:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 797,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "QJE",
+      "kind": "catalog",
+      "url": "https://academic.oup.com/qje/issue",
+      "catalog_id": "catalog-qje-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-qje-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 15
+    },
+    {
+      "journal": "QJE",
+      "kind": "catalog",
+      "url": "https://academic.oup.com/qje/advance-articles",
+      "catalog_id": "catalog-qje-online",
+      "collection": "online",
+      "label": "Advance Articles",
+      "test_id": "catalog-qje-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 19
+    },
+    {
+      "journal": "QJE",
+      "kind": "article",
+      "doi": "10.1093/qje/qjag035",
+      "title": "Retrieval Failures and Consumption Smoothing: A Field Experiment on Seasonal Poverty",
+      "url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag035/8859066",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-qje-online",
+      "catalog_url": "https://academic.oup.com/qje/advance-articles",
+      "expected_issns": [
+        "0033-5533",
+        "1531-4650"
+      ],
+      "test_id": "QJE:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1376,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "QJE",
+      "kind": "article",
+      "doi": "10.1093/qje/qjag027",
+      "title": "The Power of Proximity to Coworkers",
+      "url": "https://academic.oup.com/qje/article/141/3/1825/8676722",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-qje-issue",
+      "catalog_url": "https://academic.oup.com/qje/issue",
+      "expected_issns": [
+        "0033-5533",
+        "1531-4650"
+      ],
+      "test_id": "QJE:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1027,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "QJE",
+      "kind": "article",
+      "doi": "10.1093/qje/qjag048",
+      "title": "The Origin of RiskGet access",
+      "url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag048/8855718",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-qje-online",
+      "catalog_url": "https://academic.oup.com/qje/advance-articles",
+      "expected_issns": [
+        "0033-5533",
+        "1531-4650"
+      ],
+      "test_id": "QJE:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 782,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RES",
+      "kind": "catalog",
+      "url": "https://academic.oup.com/restud/issue",
+      "catalog_id": "catalog-res-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-res-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 18
+    },
+    {
+      "journal": "RES",
+      "kind": "catalog",
+      "url": "https://academic.oup.com/restud/advance-articles",
+      "catalog_id": "catalog-res-online",
+      "collection": "online",
+      "label": "Advance Articles",
+      "test_id": "catalog-res-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 100
+    },
+    {
+      "journal": "RES",
+      "kind": "article",
+      "doi": "10.1093/restud/rdag104",
+      "title": "Monetary Policy Invariance, Hysteresis, and Optimal Inflation",
+      "url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag104/8855618",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-res-online",
+      "catalog_url": "https://academic.oup.com/restud/advance-articles",
+      "expected_issns": [
+        "0034-6527",
+        "1467-937X"
+      ],
+      "test_id": "RES:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 927,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RES",
+      "kind": "article",
+      "doi": "10.1093/restud/rdaf098",
+      "title": "Markups Across Space and TimeGet access",
+      "url": "https://academic.oup.com/restud/article/93/5/2847/8407380",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-res-issue",
+      "catalog_url": "https://academic.oup.com/restud/issue",
+      "expected_issns": [
+        "0034-6527",
+        "1467-937X"
+      ],
+      "test_id": "RES:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 709,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RES",
+      "kind": "article",
+      "doi": "10.1093/restud/rdag109",
+      "title": "Markup Estimation Using Production and Demand Data: An Application to the U.S. Brewing IndustryGet access",
+      "url": "https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdag109/8826398",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-res-online",
+      "catalog_url": "https://academic.oup.com/restud/advance-articles",
+      "expected_issns": [
+        "0034-6527",
+        "1467-937X"
+      ],
+      "test_id": "RES:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 725,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JF",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/15406261/current",
+      "catalog_id": "catalog-jf-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jf-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 18
+    },
+    {
+      "journal": "JF",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/15406261/0/0",
+      "catalog_id": "catalog-jf-online",
+      "collection": "online",
+      "label": "Early View",
+      "test_id": "catalog-jf-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 13
+    },
+    {
+      "journal": "JF",
+      "kind": "article",
+      "doi": "10.1111/jofi.70093",
+      "title": "The Politicization of Social Responsibility",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70093",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jf-online",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/15406261/0/0",
+      "expected_issns": [
+        "0022-1082",
+        "1540-6261"
+      ],
+      "test_id": "JF:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 737,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JF",
+      "kind": "article",
+      "doi": "10.1111/jofi.70091",
+      "title": "Supranational Banking Supervision, Credit Supply, and Risk-Taking: European Evidence from Multi-Country Credit Registers",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70091",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jf-online",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/15406261/0/0",
+      "expected_issns": [
+        "0022-1082",
+        "1540-6261"
+      ],
+      "test_id": "JF:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1026,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JF",
+      "kind": "article",
+      "doi": "10.1111/jofi.70076",
+      "title": "Can Small Businesses Survive Chapter 11?",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70076",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jf-issue",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/15406261/current",
+      "test_id": "JF:article:replacement-research",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 661,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JFE",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/journal-of-financial-economics/latest",
+      "catalog_id": "catalog-jfe-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jfe-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 15
+    },
+    {
+      "journal": "JFE",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/journal-of-financial-economics/articles-in-press",
+      "catalog_id": "catalog-jfe-online",
+      "collection": "online",
+      "label": "Articles in Press",
+      "test_id": "catalog-jfe-online",
+      "baseline_status": "catalog_empty",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JFE",
+      "kind": "article",
+      "doi": "10.1016/j.jfineco.2026.104355",
+      "title": "Signaling with debt currency choice",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0304405X26001261",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jfe-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-financial-economics/vol/185/suppl/C",
+      "expected_issns": [
+        "0304-405X",
+        "1879-2774"
+      ],
+      "test_id": "JFE:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1030,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JFE",
+      "kind": "article",
+      "doi": "10.1016/j.jfineco.2026.104353",
+      "title": "Removing the fine print: Disclosure, standardized products, and consumer outcomes",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0304405X26001248",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jfe-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-financial-economics/vol/185/suppl/C",
+      "expected_issns": [
+        "0304-405X",
+        "1879-2774"
+      ],
+      "test_id": "JFE:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 727,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JFE",
+      "kind": "article",
+      "doi": "10.1016/j.jfineco.2026.104358",
+      "title": "The value of trademarks",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0304405X26001297",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jfe-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-financial-economics/vol/185/suppl/C",
+      "expected_issns": [
+        "0304-405X",
+        "1879-2774"
+      ],
+      "test_id": "JFE:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 700,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RFS",
+      "kind": "catalog",
+      "url": "https://academic.oup.com/rfs/issue",
+      "catalog_id": "catalog-rfs-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-rfs-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 8
+    },
+    {
+      "journal": "RFS",
+      "kind": "catalog",
+      "url": "https://academic.oup.com/rfs/advance-articles",
+      "catalog_id": "catalog-rfs-online",
+      "collection": "online",
+      "label": "Advance Articles",
+      "test_id": "catalog-rfs-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 86
+    },
+    {
+      "journal": "RFS",
+      "kind": "article",
+      "doi": "10.1093/rfs/hhag084",
+      "title": "Universal Portfolio Shrinkage",
+      "url": "https://academic.oup.com/rfs/advance-article/doi/10.1093/rfs/hhag084/8835505",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-rfs-online",
+      "catalog_url": "https://academic.oup.com/rfs/advance-articles",
+      "expected_issns": [
+        "0893-9454",
+        "1465-7368"
+      ],
+      "test_id": "RFS:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 615,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RFS",
+      "kind": "article",
+      "doi": "10.1093/rfs/hhag022",
+      "title": "Machine Learning and the Implementable Efficient Frontier",
+      "url": "https://academic.oup.com/rfs/article/39/10/3035/8524346",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-rfs-issue",
+      "catalog_url": "https://academic.oup.com/rfs/issue",
+      "expected_issns": [
+        "0893-9454",
+        "1465-7368"
+      ],
+      "test_id": "RFS:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 742,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RFS",
+      "kind": "article",
+      "doi": "10.1093/rfs/hhag088",
+      "title": "Original Sin Redux: Role of Duration Risk*Get access",
+      "url": "https://academic.oup.com/rfs/advance-article/doi/10.1093/rfs/hhag088/8834171",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-rfs-online",
+      "catalog_url": "https://academic.oup.com/rfs/advance-articles",
+      "expected_issns": [
+        "0893-9454",
+        "1465-7368"
+      ],
+      "test_id": "RFS:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 517,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JCF",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/journal-of-corporate-finance/latest",
+      "catalog_id": "catalog-jcf-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jcf-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 14
+    },
+    {
+      "journal": "JCF",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/journal-of-corporate-finance/articles-in-press",
+      "catalog_id": "catalog-jcf-online",
+      "collection": "online",
+      "label": "Articles in Press",
+      "test_id": "catalog-jcf-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 3
+    },
+    {
+      "journal": "JCF",
+      "kind": "article",
+      "doi": "10.1016/j.jcorpfin.2026.103095",
+      "title": "The voting behavior of women-led mutual funds",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0929119926001537",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jcf-online",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-corporate-finance/articles-in-press",
+      "expected_issns": [
+        "0929-1199",
+        "1872-6313"
+      ],
+      "test_id": "JCF:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 744,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JCF",
+      "kind": "article",
+      "doi": "10.1016/j.jcorpfin.2026.103073",
+      "title": "Financial disclosure under regulatory fragmentation",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0929119926001318",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jcf-issue",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-corporate-finance/vol/102/suppl/C",
+      "expected_issns": [
+        "0929-1199",
+        "1872-6313"
+      ],
+      "test_id": "JCF:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1251,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JCF",
+      "kind": "article",
+      "doi": "10.1016/j.jcorpfin.2026.103096",
+      "title": "Monetary policy and mergers and acquisitions",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0929119926001549",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jcf-online",
+      "catalog_url": "https://www.sciencedirect.com/journal/journal-of-corporate-finance/articles-in-press",
+      "expected_issns": [
+        "0929-1199",
+        "1872-6313"
+      ],
+      "test_id": "JCF:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 489,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JIBS",
+      "kind": "catalog",
+      "url": "https://link.springer.com/journal/41267/volumes-and-issues",
+      "catalog_id": "catalog-jibs-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jibs-issue",
+      "baseline_status": "catalog_landing",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JIBS",
+      "kind": "catalog",
+      "url": "https://link.springer.com/journal/41267/volumes-and-issues/57-7",
+      "catalog_id": "catalog-jibs-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jibs-issue:latest",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 10
+    },
+    {
+      "journal": "JIBS",
+      "kind": "catalog",
+      "url": "https://link.springer.com/journal/41267/online-first",
+      "catalog_id": "catalog-jibs-online",
+      "collection": "online",
+      "label": "Online First",
+      "test_id": "catalog-jibs-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 39
+    },
+    {
+      "journal": "JIBS",
+      "kind": "article",
+      "doi": "10.1057/s41267-025-00833-8",
+      "title": "Business and management research on societal wellbeing: a historic, multi-journal and large language model analysis of the UN’s Sustainable Development Goals",
+      "url": "https://link.springer.com/article/10.1057/s41267-025-00833-8",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jibs-issue",
+      "catalog_url": "https://link.springer.com/journal/41267/volumes-and-issues/57-7",
+      "expected_issns": [
+        "0047-2506",
+        "1478-6990"
+      ],
+      "test_id": "JIBS:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1326,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JIBS",
+      "kind": "article",
+      "doi": "10.1057/s41267-026-00902-6",
+      "title": "Cross-border cooperation among securities regulators and supply chain collaboration: evidence from U.S.-listed foreign firms",
+      "url": "https://link.springer.com/article/10.1057/s41267-026-00902-6",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jibs-online",
+      "catalog_url": "https://link.springer.com/journal/41267/online-first",
+      "test_id": "JIBS:article:replacement-research:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1283,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JIBS",
+      "kind": "article",
+      "doi": "10.1057/s41267-026-00896-1",
+      "title": "The impact of migration and institutions on new business creation: integrating social capital theory and institutional theory",
+      "url": "https://link.springer.com/article/10.1057/s41267-026-00896-1",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jibs-online",
+      "catalog_url": "https://link.springer.com/journal/41267/online-first",
+      "test_id": "JIBS:article:replacement-research:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1558,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RP",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/research-policy/latest",
+      "catalog_id": "catalog-1",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-1",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 22
+    },
+    {
+      "journal": "RP",
+      "kind": "catalog",
+      "url": "https://www.sciencedirect.com/journal/research-policy/articles-in-press",
+      "catalog_id": "catalog-2",
+      "collection": "online",
+      "label": "Articles in Press",
+      "test_id": "catalog-2",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 4
+    },
+    {
+      "journal": "RP",
+      "kind": "article",
+      "doi": "10.1016/j.respol.2026.105633",
+      "title": "Mobilizing ecosystem support for architectural innovation: Broker-mediated expectation formation",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0048733326002246",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-2",
+      "catalog_url": "https://www.sciencedirect.com/journal/research-policy/articles-in-press",
+      "expected_issns": [
+        "0048-7333",
+        "1873-7625"
+      ],
+      "test_id": "RP:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1032,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RP",
+      "kind": "article",
+      "doi": "10.1016/j.respol.2026.105603",
+      "title": "Immigration and firm innovation: Evidence from Finnish manufacturing",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0048733326001940",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-1",
+      "catalog_url": "https://www.sciencedirect.com/journal/research-policy/vol/55/issue/10",
+      "expected_issns": [
+        "0048-7333",
+        "1873-7625"
+      ],
+      "test_id": "RP:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 282,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "RP",
+      "kind": "article",
+      "doi": "10.1016/j.respol.2026.105607",
+      "title": "A cord of three strands: Industry-university-research collaboration and corporate ESG performance",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0048733326001988",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-1",
+      "catalog_url": "https://www.sciencedirect.com/journal/research-policy/vol/55/issue/10",
+      "expected_issns": [
+        "0048-7333",
+        "1873-7625"
+      ],
+      "test_id": "RP:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 388,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "MS",
+      "kind": "catalog",
+      "url": "https://pubsonline.informs.org/toc/mnsc/current",
+      "catalog_id": "catalog-ms-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-ms-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 42
+    },
+    {
+      "journal": "MS",
+      "kind": "catalog",
+      "url": "https://pubsonline.informs.org/toc/mnsc/0/",
+      "catalog_id": "catalog-ms-online",
+      "collection": "online",
+      "label": "Articles in Advance",
+      "test_id": "catalog-ms-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 319
+    },
+    {
+      "journal": "MS",
+      "kind": "article",
+      "doi": "10.1287/mnsc.2024.08553",
+      "title": "More Monitoring, Less Pay: Active Ownership and Employee Compensation",
+      "url": "https://pubsonline.informs.org/doi/abs/10.1287/mnsc.2024.08553",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-ms-online",
+      "catalog_url": "https://pubsonline.informs.org/toc/mnsc/0/",
+      "expected_issns": [
+        "0025-1909",
+        "1526-5501"
+      ],
+      "test_id": "MS:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1660,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "MS",
+      "kind": "article",
+      "doi": "10.1287/mnsc.2026.00184",
+      "title": "Fighting Fire with Fire: Infusing Artificial Intelligence into Peer Review to Sustain Quality Scholarship",
+      "url": "https://pubsonline.informs.org/doi/abs/10.1287/mnsc.2026.00184",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-ms-issue",
+      "catalog_url": "https://pubsonline.informs.org/toc/mnsc/current",
+      "expected_issns": [
+        "0025-1909",
+        "1526-5501"
+      ],
+      "test_id": "MS:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1844,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "MS",
+      "kind": "article",
+      "doi": "10.1287/mnsc.2025.00107",
+      "title": "Does Privacy Matter? Evidence from a Legal Reform",
+      "url": "https://pubsonline.informs.org/doi/abs/10.1287/mnsc.2025.00107",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-ms-online",
+      "catalog_url": "https://pubsonline.informs.org/toc/mnsc/0/",
+      "expected_issns": [
+        "0025-1909",
+        "1526-5501"
+      ],
+      "test_id": "MS:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1772,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JM",
+      "kind": "catalog",
+      "url": "https://journals.sagepub.com/toc/joma/current",
+      "catalog_id": "catalog-jm-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jm-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 12
+    },
+    {
+      "journal": "JM",
+      "kind": "catalog",
+      "url": "https://journals.sagepub.com/toc/joma/0/0",
+      "catalog_id": "catalog-jm-online",
+      "collection": "online",
+      "label": "OnlineFirst",
+      "test_id": "catalog-jm-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 10
+    },
+    {
+      "journal": "JM",
+      "kind": "catalog",
+      "url": "https://journals.sagepub.com/toc/joma/0/0?startPage=1&pageSize=10",
+      "catalog_id": "catalog-jm-online",
+      "collection": "online",
+      "label": "OnlineFirst",
+      "test_id": "catalog-jm-online:page2",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 10
+    },
+    {
+      "journal": "JM",
+      "kind": "article",
+      "doi": "10.1177/01492063261487124",
+      "title": "To Settle or Not to Settle: Defending Firm Reputation in Litigation Response",
+      "url": "https://journals.sagepub.com/doi/abs/10.1177/01492063261487124",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jm-online",
+      "catalog_url": "https://journals.sagepub.com/toc/joma/0/0",
+      "expected_issns": [
+        "0149-2063",
+        "1557-1211"
+      ],
+      "test_id": "JM:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 853,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JM",
+      "kind": "article",
+      "doi": "10.1177/01492063251339412",
+      "title": "The Strength of Showing Weakness: Organizational Supplication and Investor Reactions to Workforce Downsizing",
+      "url": "https://journals.sagepub.com/doi/abs/10.1177/01492063251339412",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jm-issue",
+      "catalog_url": "https://journals.sagepub.com/toc/joma/current",
+      "expected_issns": [
+        "0149-2063",
+        "1557-1211"
+      ],
+      "test_id": "JM:article:2",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1340,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JM",
+      "kind": "article",
+      "doi": "10.1177/01492063261481739",
+      "title": "Beyond Good and Bad: Understanding the Contradictory Effects of Positive Leadership Behavior and Negative Leadership Behavior",
+      "url": "https://journals.sagepub.com/doi/abs/10.1177/01492063261481739",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jm-online",
+      "catalog_url": "https://journals.sagepub.com/toc/joma/0/0",
+      "expected_issns": [
+        "0149-2063",
+        "1557-1211"
+      ],
+      "test_id": "JM:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1685,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JOM",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/18731317/current",
+      "catalog_id": "catalog-jom-issue",
+      "collection": "issue",
+      "label": "最新卷期",
+      "test_id": "catalog-jom-issue",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 5
+    },
+    {
+      "journal": "JOM",
+      "kind": "catalog",
+      "url": "https://onlinelibrary.wiley.com/toc/18731317/0/0",
+      "catalog_id": "catalog-jom-online",
+      "collection": "online",
+      "label": "Early View",
+      "test_id": "catalog-jom-online",
+      "baseline_status": "catalog_candidates",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 1
+    },
+    {
+      "journal": "JOM",
+      "kind": "article",
+      "doi": "10.1002/joom.70057",
+      "title": "Impact of Carbon Emission Trading Schemes on Firms' Environmental and Social Disclosure Under Institutional Pressure",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/joom.70057",
+      "selection_source": "live_online",
+      "catalog_id": "catalog-jom-online",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/18731317/0/0",
+      "expected_issns": [
+        "0272-6963",
+        "1873-1317"
+      ],
+      "test_id": "JOM:article:1",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 2050,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JOM",
+      "kind": "article",
+      "doi": "10.1002/joom.70053",
+      "title": "Bridging Fragmentation in Digital Transformation Research: Building an Interface Between Operations Management and Information Systems",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/joom.70053",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jom-issue",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/18731317/current",
+      "expected_issns": [
+        "0272-6963",
+        "1873-1317"
+      ],
+      "test_id": "JOM:article:2",
+      "baseline_status": "not_found",
+      "baseline_abstract_length": 0,
+      "baseline_item_count": 0
+    },
+    {
+      "journal": "JOM",
+      "kind": "article",
+      "doi": "10.1002/joom.70055",
+      "title": "Do Common Analysts Along Supply Chains Facilitate Suppliers' Operational Efficiencies?",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/joom.70055",
+      "selection_source": "live_issue",
+      "catalog_id": "catalog-jom-issue",
+      "catalog_url": "https://onlinelibrary.wiley.com/toc/18731317/current",
+      "expected_issns": [
+        "0272-6963",
+        "1873-1317"
+      ],
+      "test_id": "JOM:article:3",
+      "baseline_status": "candidate_extracted",
+      "baseline_abstract_length": 1292,
+      "baseline_item_count": 0
+    }
+  ]
+}

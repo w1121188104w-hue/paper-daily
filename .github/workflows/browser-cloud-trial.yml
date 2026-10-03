@@ -1,0 +1,54 @@
+name: Journal browser cloud comparison (isolated, no import)
+on:
+  push:
+    branches: [codex/github-browser-trial-20261003]
+    paths:
+      - .github/workflows/browser-cloud-trial.yml
+      - tools/selenium-pilot/**
+  workflow_dispatch: {}
+permissions:
+  contents: read
+concurrency:
+  group: browser-cloud-trial
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/browser-abstract-extension
+            tools/selenium-pilot
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install the same browser collection libraries
+        run: python -m pip install --disable-pip-version-check -r tools/selenium-pilot/requirements-cdp.txt
+      - name: Verify extraction rules and browser availability
+        run: |
+          node tools/selenium-pilot/github-trial-bridge.mjs verify tools/selenium-pilot/github-trial-plan.json
+          python -m unittest discover -s tools/selenium-pilot -p 'test_*.py' -v
+          command -v microsoft-edge
+          command -v xvfb-run
+          microsoft-edge --version
+      - name: Read the fixed 19-journal sample with a visible browser on Xvfb
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: |
+          xvfb-run -a --server-args='-screen 0 1280x900x24' python -X utf8 tools/selenium-pilot/github-trial.py --plan tools/selenium-pilot/github-trial-plan.json --output trial-output --profile "$RUNNER_TEMP/paper-browser-profile" --binary "$(command -v microsoft-edge)" --interval 3
+      - name: Preserve partial results even if collection fails
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: browser-cloud-trial-${{ github.run_id }}-${{ github.run_attempt }}
+          path: trial-output/
+          if-no-files-found: warn
+          retention-days: 14
+          compression-level: 6
