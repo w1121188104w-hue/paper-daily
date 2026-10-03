@@ -40,6 +40,12 @@ jobs:
           command -v microsoft-edge
           command -v xvfb-run
           microsoft-edge --version
+      - name: Restore packaged Edge sandbox helper permissions on the temporary VM
+        run: |
+          test -f /opt/microsoft/msedge/msedge-sandbox
+          sudo chown root:root /opt/microsoft/msedge/msedge-sandbox
+          sudo chmod 4755 /opt/microsoft/msedge/msedge-sandbox
+          stat -c '%U %G %a %n' /opt/microsoft/msedge/msedge-sandbox
       - name: Diagnose browser startup without visiting a publisher
         run: |
           set +e
