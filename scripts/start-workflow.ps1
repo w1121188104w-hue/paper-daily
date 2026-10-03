@@ -42,6 +42,12 @@ try {
   $env:GIT_CONFIG_KEY_1='http.version';$env:GIT_CONFIG_VALUE_1='HTTP/1.1'
   $env:GIT_CONFIG_KEY_2='credential.interactive';$env:GIT_CONFIG_VALUE_2='never'
   $stage='RUNTIME_LOADING'
+  # Task Scheduler has the Windows login PATH, not Codex's bundled runtime PATH.
+  # Resolve the installed Git executable before starting Node and its children.
+  $gitCommand=Get-Command git -ErrorAction SilentlyContinue
+  $gitExecutable=if($gitCommand){$gitCommand.Source}else{Join-Path $env:USERPROFILE '.cache/codex-runtimes/codex-primary-runtime/dependencies/native/git/cmd/git.exe'}
+  if(-not (Test-Path -LiteralPath $gitExecutable)){throw 'GIT_RUNTIME_MISSING'}
+  $env:PATH=(Split-Path -Parent $gitExecutable)+';'+$env:PATH
   $proxy = [System.Net.WebRequest]::GetSystemWebProxy().GetProxy([uri]'https://github.com')
   if ($proxy.Scheme -eq 'http' -and $proxy.Host -eq '127.0.0.1' -and -not $proxy.UserInfo) {
     $env:GIT_CONFIG_COUNT='4';$env:GIT_CONFIG_KEY_3='http.proxy';$env:GIT_CONFIG_VALUE_3=$proxy.AbsoluteUri
