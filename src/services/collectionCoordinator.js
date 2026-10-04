@@ -86,7 +86,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
     // Local work contains no translator. Submission and restart are idempotent;
     // only GitHub may issue translation requests using its durable ledger.
     void (async()=>{try{
-      await advance('syncing','正在同步远端正式库。');await sync();
+      await advance('syncing','正在同步远端正式库。');await sync({forWrite:true});
       const input=await readBrowserExport(path.join(stateDir,id,'export.json'));
       assertLibrary(input.sha256===record.export_hash,'导出文件校验失败');
       const prepared=await prepareBrowserImport(input.data,config,input.sha256,{knownPapers:(await readJournalLibrary({root,config})).papers});
@@ -115,6 +115,9 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       record.failed_stage=null;record.failure_code=null;record.retry_at=null;record.dispatch_at=new Date().toISOString();
       await advance('awaiting_publication','已上传 GitHub，正在云端翻译 / 发布；将自动核验网站回执。可以关闭面板。');
     }catch(error){onFailure(error);if(record.failed_stage!==record.phase)record.failures=0;record.failed_stage=record.phase;record.failure_code=/^[A-Z0-9_]{1,80}$/.test(error.code||'')?error.code:'WORKFLOW_OPERATION_FAILED';record.retry_at=new Date(Date.now()+60000).toISOString();
+      if(error.code==='CLOUD_WRITER_ACTIVE'){
+        await advance('waiting_for_cloud','云端正在翻译或发布先前批次；本批结果已保存，完成后自动续传。');return;
+      }
       record.failures=(record.failures||0)+1;
       if(transportStages.has(record.failed_stage))record.retry_at=new Date(Date.now()+Math.min(record.failures,10)*60000).toISOString();
       await advance('failed',`处理暂停于 ${record.failed_stage}；结果保留。${record.failures<5?'服务将自动恢复。':'连续失败，需检查本地 Git / 网络；不会丢弃结果或重发未知计费请求。'}`).catch(()=>{});}
@@ -130,7 +133,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
     if(busy)return;
     await exclusive(async()=>{
       const dirs=await fs.readdir(stateDir),groups=new Map();
-      for(const id of dirs.filter(idOK)){const r=await load(id);if(!r.run.parent_run_id||!r.export_hash||!['ready','failed'].includes(r.phase))continue;
+      for(const id of dirs.filter(idOK)){const r=await load(id);if(!r.run.parent_run_id||!r.export_hash||!['ready','failed','waiting_for_cloud'].includes(r.phase))continue;
         const file=path.join(stateDir,id,'export.json'),at=(await fs.stat(file)).mtimeMs;
         if(!r.submitted_at){r.submitted_at=new Date(at).toISOString();await store(r);}
         const group=groups.get(r.run.parent_run_id)||[];group.push({r,file,at});groups.set(r.run.parent_run_id,group);}

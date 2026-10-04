@@ -1,5 +1,5 @@
 # Fixed repository and read-only website verification. Never output credentials.
-param([ValidateSet('Publish','Check')][string]$Mode='Check',[string]$BatchId,[string]$ExportHash,[string]$PublicationId)
+param([ValidateSet('Publish','Check','CloudState')][string]$Mode='Check',[string]$BatchId,[string]$ExportHash,[string]$PublicationId)
 $ErrorActionPreference='Stop'
 try {
   if ($Mode -eq 'Check') {
@@ -13,6 +13,12 @@ try {
     $secretLine = $lines | Where-Object {$_.StartsWith('password=')} | Select-Object -First 1
     if (-not $secretLine) { throw 'LOGIN_UNAVAILABLE' }
     $headers = @{Authorization=('Bearer '+$secretLine.Substring(9));Accept='application/vnd.github+json';'X-GitHub-Api-Version'='2022-11-28'}
+    if ($Mode -eq 'CloudState') {
+      $runs=Invoke-RestMethod -Uri 'https://api.github.com/repos/w1121188104w-hue/paper-daily/actions/runs?branch=master&per_page=100' -Headers $headers -TimeoutSec 25
+      $active=@($runs.workflow_runs | Where-Object {$_.status -ne 'completed' -and $_.path -in @('.github/workflows/collection-publish.yml','.github/workflows/collection-discovery.yml')})
+      @{busy=($active.Count -gt 0)} | ConvertTo-Json -Compress
+      exit 0
+    }
     Invoke-RestMethod -Method Post -Uri 'https://api.github.com/repos/w1121188104w-hue/paper-daily/actions/workflows/collection-publish.yml/dispatches' -Headers $headers -ContentType 'application/json' -Body '{"ref":"master"}' -TimeoutSec 25 | Out-Null
     '{"dispatched":true,"published":false}'
   }

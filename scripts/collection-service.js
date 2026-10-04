@@ -52,7 +52,12 @@ export async function startCollectionService({env=process.env}={}){
   const childEnv={...env};delete childEnv.DEEPSEEK_API_KEY;
   const git=(args,options={})=>safeProcess('git',args,{cwd:repositoryRoot,env:childEnv,...options});
   const allowedDirty=()=>allowedWorkflowDirty(config,{root,repositoryRoot,git});
-  async function sync(){
+  async function cloudWriterIdle(){
+    const state=await release('CloudState');assertLibrary(typeof state.busy==='boolean','无法确认云端写入状态');
+    if(state.busy)throw Object.assign(Error('Cloud writer active'),{code:'CLOUD_WRITER_ACTIVE'});
+  }
+  async function sync({forWrite=false}={}){
+    if(forWrite)await cloudWriterIdle();
     assertLibrary((await git(['remote','get-url','origin'])).trim()==='https://github.com/w1121188104w-hue/paper-daily.git','正式仓库不匹配');
     await allowedDirty();await git(['fetch','origin','master']);
     const [behind,ahead]=(await git(['rev-list','--left-right','--count','origin/master...HEAD'])).trim().split(/\s+/).map(Number);
@@ -73,6 +78,11 @@ export async function startCollectionService({env=process.env}={}){
     try{await fs.stat(path.join(repositoryRoot,CLOUD_QUEUE_PATH));await readCloudQueue(repositoryRoot);await git(['add','-f','--',CLOUD_QUEUE_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
     try{await fs.stat(path.join(repositoryRoot,FIELD_TASKS_PATH));await readFieldTasks(repositoryRoot);await git(['add','-f','--',FIELD_TASKS_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
     if((await git(['diff','--cached','--name-only'])).trim())await git(['-c','user.name=paper-daily','-c','user.email=paper-daily@users.noreply.github.com','commit','-m','data: save browser collection and workflow receipts']);
+    // A cloud translation reserves and settles billing through master. Keep
+    // local captures flowing, but defer this saved data commit while it writes.
+    // If a writer starts in the remaining race window, normal Git rejection and
+    // archived-export recovery still protect both branches.
+    await cloudWriterIdle();
     await git(['push','origin','HEAD:refs/heads/master']);
   }
   const release=(mode,id,hash,publicationId)=>safeProcess('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',path.join(repositoryRoot,'scripts/collection-release.ps1'),'-Mode',mode,

@@ -139,6 +139,23 @@ test('saved upload failures resume despite older failure counts and clear safe d
   const done=JSON.parse(await fs.readFile(file,'utf8'));
   assert.equal(done.phase,'awaiting_publication');assert.equal(done.failure_code,null);assert.equal(dispatched,1);
 });
+
+test('cloud writer delays publication without blocking new capture or consuming a failure retry',async t=>{
+  const repo=await temp(t),stateDir=path.join(repo,'private-runs');
+  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));
+  let cloudBusy=true,dispatched=0;
+  const c=createCollectionCoordinator({repositoryRoot:repo,stateDir,config,sync:async({forWrite=false}={})=>{
+    if(forWrite&&cloudBusy)throw Object.assign(Error('busy'),{code:'CLOUD_WRITER_ACTIVE'});
+  },publish:async()=>{dispatched++;return {};},checkPublication:async()=>false});
+  const {run}=await c.start('daily');await c.submit(run.id,await capture(run));
+  while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));
+  const file=path.join(stateDir,run.id,'run.json'),waiting=JSON.parse(await fs.readFile(file,'utf8'));
+  assert.equal(waiting.phase,'waiting_for_cloud');assert.equal(waiting.failures,0);assert.equal(dispatched,0);
+  assert.ok((await c.start('daily')).run.id,'independent capture may start while a saved batch waits');
+  cloudBusy=false;await fs.writeFile(file,JSON.stringify({...waiting,retry_at:'2020-01-01T00:00:00Z'}));
+  await c.pulse();while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));
+  assert.equal(JSON.parse(await fs.readFile(file,'utf8')).phase,'awaiting_publication');assert.equal(dispatched,1);
+});
 test('scoped source import preserves data; cloud receipt is required to confirm deployment',async t=>{
   const repo=await temp(t),root=path.join(repo,'data/journal-store'),stateDir=path.join(repo,'private-runs');
   await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));let failure,live=false;
