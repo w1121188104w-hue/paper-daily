@@ -131,6 +131,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       const dirs=await fs.readdir(stateDir),groups=new Map();
       for(const id of dirs.filter(idOK)){const r=await load(id);if(!r.run.parent_run_id||!r.export_hash||!['ready','failed'].includes(r.phase))continue;
         const file=path.join(stateDir,id,'export.json'),at=(await fs.stat(file)).mtimeMs;
+        if(!r.submitted_at){r.submitted_at=new Date(at).toISOString();await store(r);}
         const group=groups.get(r.run.parent_run_id)||[];group.push({r,file,at});groups.set(r.run.parent_run_id,group);}
       for(const rows of groups.values())if(rows.length>1){
         rows.sort((a,b)=>b.at-a.at);const latest=await readBrowserExport(rows[0].file);
@@ -154,7 +155,10 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       }
     }
   }
-  return {status,start,submit,checkpointCapture,finish,check,pulse,run:async id=>({run:(await load(id)).run}),sync:()=>exclusive(sync)};
+  async function captureFinished(id,{remaining=0}={}){return exclusive(async()=>{const r=await load(id);
+    if(r.phase==='captured'||r.export_hash)return;
+    await store({...r,phase:'captured',message:`本轮自动采集和原文审核结束；${remaining} 项页面问题可交给插件。已取得内容继续独立发布。`});});}
+  return {status,start,submit,checkpointCapture,captureFinished,finish,check,pulse,run:async id=>({run:(await load(id)).run}),sync:()=>exclusive(sync)};
 }
 
 /** Fixed-origin loopback bridge. No credential, filesystem path, command or

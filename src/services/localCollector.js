@@ -110,7 +110,7 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
   }
   async function reviewCapture(c){
     try{
-      const {data}=await snapshot(c),cache=await json(path.join(c.dir,'reviews.json'),{});
+      const {data,state}=await snapshot(c),cache=await json(path.join(c.dir,'reviews.json'),{});
       const plan=await prepareReviewPlan(makeReviewJobs({pages:verifiedPages(data)},data),cache);
       let processed=0,reviewError=null;
       for(const job of [...plan.jobs].sort((a,b)=>Number(b.input.kind==='article')-Number(a.input.kind==='article'))){
@@ -130,6 +130,7 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
       }
       await atomic(path.join(c.dir,'review-status.json'),{review_total:plan.jobs.length,review_done:plan.jobs.filter(j=>cache[j.hash]?.verdict?.status==='source_checked_candidate').length,
         review_pending:plan.jobs.filter(j=>!cache[j.hash]).length,review_attention:plan.jobs.filter(j=>cache[j.hash]?.error).length,review_error:reviewError,review_service_ready:!reviewError});
+      if(state.phase==='captured'&&settled)try{await coordinator.captureFinished?.(c.id,{remaining:state.remaining?.length||0});}catch{/* A publication writer is active; retry next pulse. */}
     }finally{}
   }
   async function pulse(){

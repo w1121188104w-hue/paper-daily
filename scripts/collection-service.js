@@ -31,6 +31,10 @@ export async function allowedWorkflowDirty(config,{root,repositoryRoot,git,plan=
   // Synchronizing an unchanged checkout must not reparse all historical payloads.
   // Every actual data commit still performs the full closure/hash validation.
   if(!dirty.length)return new Set();
+  const workflowFiles=new Set([WORKFLOW_PATH,CLOUD_QUEUE_PATH,FIELD_TASKS_PATH]);
+  if(repositoryRoot&&dirty.every(f=>workflowFiles.has(f))){
+    await readWorkflow(repositoryRoot);await readCloudQueue(repositoryRoot);await readFieldTasks(repositoryRoot);return workflowFiles;
+  }
   const allowed=new Set([...(await plan(config,{root,repositoryRoot})).files,WORKFLOW_PATH,STATE_GIT_PATH,CLOUD_QUEUE_PATH,FIELD_TASKS_PATH,...(repositoryRoot?await sourceReviewGitFiles(repositoryRoot):[])]);
   assertLibrary(dirty.every(p=>allowed.has(p)),'存在未提交代码改动，停止正式流程');
   return allowed;
@@ -54,7 +58,10 @@ export async function startCollectionService({env=process.env}={}){
   }
   async function checkpoint(){
     await allowedDirty();await readTranslationState(root);
-    await stageJournalFiles(config,{root,repositoryRoot,runGit:(args,options)=>git(args,options)});
+    const dirty=(await git(['diff','HEAD','--name-only','-z'])).split('\0').filter(Boolean);
+    // A receipt-only update cannot alter immutable library history. Traverse
+    // that history only when the formal library itself has changed.
+    if(dirty.some(f=>f.startsWith('data/journal-store/')))await stageJournalFiles(config,{root,repositoryRoot,runGit:(args,options)=>git(args,options)});
     await git(['add','-f','--',STATE_GIT_PATH]);
     try{await fs.stat(path.join(repositoryRoot,WORKFLOW_PATH));await readWorkflow(repositoryRoot);await git(['add','-f','--',WORKFLOW_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
     try{await fs.stat(path.join(repositoryRoot,CLOUD_QUEUE_PATH));await readCloudQueue(repositoryRoot);await git(['add','-f','--',CLOUD_QUEUE_PATH]);}catch(e){if(e.code!=='ENOENT')throw e;}
