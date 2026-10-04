@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-542be6049c700cb1bf871d2f0a3b5dd2538b885289e870dc4de2c4f1fdab7dcc",
+  "stats": {
+    "completed_fields": 3,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 2
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1257/aer.20241596",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 0,
+      "id": "doi:10.1257/aer.20241596",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1257/aer.20250115",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
