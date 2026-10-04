@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-d91167cf1ae89b4df2ca2ec829b5daef5219b46ff461657058b1b982cb4b3704",
+  "stats": {
+    "completed_fields": 2,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1093/rfs/hhaf028",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 0,
+      "id": "doi:10.1093/rfs/hhaf028",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
