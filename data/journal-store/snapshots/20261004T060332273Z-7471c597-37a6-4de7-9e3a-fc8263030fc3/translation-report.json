@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-c273641be0f03dda7261b464da355eea8f6605bfdab4d8ef7f564437a02a8011",
+  "stats": {
+    "completed_fields": 3,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 2
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.jfineco.2026.104363",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1111/1911-3846.70077",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1111/1911-3846.70077",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
