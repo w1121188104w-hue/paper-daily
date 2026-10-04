@@ -1,0 +1,46 @@
+[
+  {
+    "schema_version": 1,
+    "kind": "source_review_import",
+    "run_id": "20261004T055556201Z-9b492955-5a24-4bc6-a187-174cb055225f",
+    "run_date": "2026-10-04",
+    "started_at": "2026-10-04T05:55:56.201Z",
+    "finished_at": "2026-10-04T05:55:56.201Z",
+    "from_date": "2026-10-04",
+    "to_date": "2026-10-04",
+    "status": "partial",
+    "stats": {
+      "added": 11,
+      "abstracts_filled": 0,
+      "abstracts_checked": 0,
+      "metadata_filled": 8,
+      "pending_candidates": 17
+    },
+    "report": {
+      "path": "snapshots/20261004T055556201Z-9b492955-5a24-4bc6-a187-174cb055225f/browser-import-report.json",
+      "sha256": "efa5bce82498d973c0d9ee562847f47d11025a96bff875b5fcaebc265f4d474b"
+    }
+  },
+  {
+    "schema_version": 1,
+    "kind": "source_review_import",
+    "run_id": "20261004T083816910Z-3d9c7988-d060-430d-a8ba-f46a1f9b7792",
+    "run_date": "2026-10-04",
+    "started_at": "2026-10-04T08:38:16.910Z",
+    "finished_at": "2026-10-04T08:38:16.910Z",
+    "from_date": "2026-10-04",
+    "to_date": "2026-10-04",
+    "status": "partial",
+    "stats": {
+      "added": 64,
+      "abstracts_filled": 1,
+      "abstracts_checked": 1,
+      "metadata_filled": 0,
+      "pending_candidates": 19
+    },
+    "report": {
+      "path": "snapshots/20261004T083816910Z-3d9c7988-d060-430d-a8ba-f46a1f9b7792/browser-import-report.json",
+      "sha256": "a1d15744fb8d10e324630e2d6ae27d8dfea20ae825a73aaf225fc0f9efada023"
+    }
+  }
+]
