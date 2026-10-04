@@ -36887,6 +36887,37 @@
           ]
         }
       ]
+    },
+    {
+      "id": "819a2442-877e-4c1c-a0c5-d02dde3f778f",
+      "batch_id": "batch-d91167cf1ae89b4df2ca2ec829b5daef5219b46ff461657058b1b982cb4b3704",
+      "mode": "backfill",
+      "created_at": "2026-10-04T09:12:27.804Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1093/rfs/hhaf028",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "b2e9cb9c7921aeaf1326402d467482ef4874856874730e793ca958f08d28d44d",
+              "task_id": "task:e38f9dfd6b9aa2ca61932daff788ecefc447e9c5a32c4c32042a01fbea90331e"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "28e9c72755e1cf93a22dd6c3f2c7446e879132751703cf766d32695bbb5cb3ac",
+              "task_id": "task:faec3e0ff120a6e3d2fafcca05989079f593f45f5cf0a52dd9caf9ea6cb47390"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
