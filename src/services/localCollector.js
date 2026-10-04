@@ -124,8 +124,9 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
       const ready=new Set(reviewed.filter(r=>['source_checked_candidate','needs_attention'].includes(r.review_status)).map(r=>r.doi));
       data.records=data.records.filter(r=>ready.has(r.doi));
       const fingerprint=digest(data),last=await json(path.join(c.dir,'submitted.json'));
-      if(last?.fingerprint!==fingerprint&&Object.values(cache).some(r=>r.verdict?.status==='source_checked_candidate')){
-        try{await coordinator.checkpointCapture(c.id,data);await atomic(path.join(c.dir,'submitted.json'),{fingerprint});}catch{/* Another writer is publishing; retry saved proof on the next pulse. */}
+      const settled=plan.jobs.every(j=>cache[j.hash]&&!canRetryReview(cache[j.hash]));
+      if(last?.fingerprint!==fingerprint&&(settled||!last?.at||Date.now()-Date.parse(last.at)>=120000)&&Object.values(cache).some(r=>r.verdict?.status==='source_checked_candidate')){
+        try{await coordinator.checkpointCapture(c.id,data);await atomic(path.join(c.dir,'submitted.json'),{fingerprint,at:new Date().toISOString()});}catch{/* Another writer is publishing; retry saved proof on the next pulse. */}
       }
       await atomic(path.join(c.dir,'review-status.json'),{review_total:plan.jobs.length,review_done:plan.jobs.filter(j=>cache[j.hash]?.verdict?.status==='source_checked_candidate').length,
         review_pending:plan.jobs.filter(j=>!cache[j.hash]).length,review_attention:plan.jobs.filter(j=>cache[j.hash]?.error).length,review_error:reviewError,review_service_ready:!reviewError});

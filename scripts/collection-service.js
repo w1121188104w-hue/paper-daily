@@ -14,6 +14,7 @@ import {hydrateRunFromOfficial} from '../src/services/officialCatalog.js';
 import {createLocalCollector,findLocalPython,localReviewRequest} from '../src/services/localCollector.js';
 import {sourceReviewGitFiles} from '../src/services/sourceReviewGit.js';
 import {FIELD_TASKS_PATH,readFieldTasks} from '../src/services/collectionFieldTasks.js';
+import {recoverCollectionDivergence} from '../src/services/collectionGitRecovery.js';
 
 export function safeProcess(command,args,{cwd,env=process.env,input='',timeout=120000}={}){
   return new Promise((resolve,reject)=>{
@@ -45,7 +46,10 @@ export async function startCollectionService({env=process.env}={}){
     assertLibrary((await git(['remote','get-url','origin'])).trim()==='https://github.com/w1121188104w-hue/paper-daily.git','正式仓库不匹配');
     await allowedDirty();await git(['fetch','origin','master']);
     const [behind,ahead]=(await git(['rev-list','--left-right','--count','origin/master...HEAD'])).trim().split(/\s+/).map(Number);
-    assertLibrary(!(behind&&ahead),'本地和线上分支冲突，不能自动覆盖');
+    if(behind&&ahead){
+      const allowedFiles=new Set([...(await journalGitFiles(config,{root,repositoryRoot})).files,WORKFLOW_PATH,CLOUD_QUEUE_PATH,FIELD_TASKS_PATH,STATE_GIT_PATH]);
+      await recoverCollectionDivergence({git,stateDir,allowedFiles});return;
+    }
     if(behind){assertLibrary(!(await git(['diff','HEAD','--name-only'])),'远端已变化，先保留本机未发布数据');await git(['merge','--ff-only','origin/master']);}
   }
   async function checkpoint(){

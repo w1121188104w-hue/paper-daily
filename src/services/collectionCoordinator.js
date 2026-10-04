@@ -10,6 +10,7 @@ import {assertLibrary} from './libraryValidation.js';
 import {enqueuePublication,readCloudQueue} from './cloudPublication.js';
 import {readFieldTasks,reconcileFieldTasks} from './collectionFieldTasks.js';
 import {ACTIVE_CATALOG_TASKS} from '../../tools/browser-abstract-extension/catalog-core.js';
+import {captureContains} from './captureCoverage.js';
 
 const idOK=id=>typeof id==='string'&&/^[a-f0-9-]{36}$/.test(id);
 async function optional(file){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return null;throw e;}}
@@ -21,7 +22,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
   async function status(){if(!busy){const lib=await readJournalLibrary({root,config});lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});}
     const workflow={...(lastWorkflow||publicWorkflow(emptyWorkflow())),field_tasks:(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending')};
     let dirs=[];try{dirs=await fs.readdir(stateDir);}catch(e){if(e.code!=='ENOENT')throw e;}
-    const runs=[];for(const id of dirs.filter(idOK)){const r=await load(id);runs.push({id,mode:r.run.mode,created_at:r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields??null,failed_stage:r.failed_stage||null});}
+    const runs=[];for(const id of dirs.filter(idOK)){const r=await load(id);if(r.phase==='superseded')continue;runs.push({id,mode:r.run.mode,created_at:r.submitted_at||r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields??null,failed_stage:r.failed_stage||null});}
     return {version:2,busy,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
   async function exclusive(fn){assertLibrary(!busy,'另一个正式任务正在处理');busy=true;try{return await fn();}finally{busy=false;}}
   async function start(mode){return exclusive(async()=>{
@@ -69,7 +70,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       assertLibrary(Buffer.byteLength(text)<=150*1024*1024,'增量导出过大');
       await prepareBrowserImport(exportData,config,digest,{knownPapers:(await readJournalLibrary({root,config})).papers});
       await atomic(path.join(stateDir,batchId,'export.json'),exportData);
-      await store({run:{...parent.run,id:batchId,parent_run_id:id},phase:'ready',export_hash:digest,message:'已保存本次取得的内容；独立核验、上传和发布。'});
+      await store({run:{...parent.run,id:batchId,parent_run_id:id},submitted_at:new Date().toISOString(),phase:'ready',export_hash:digest,message:'已保存本次取得的内容；独立核验、上传和发布。'});
       return {id:batchId,phase:'ready'};
     });
     if(result.phase==='ready')await finish(result.id);
@@ -79,7 +80,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
     assertLibrary(!busy,'另一个正式任务正在处理');busy=true;let record;
     try{record=await load(id);assertLibrary(record.export_hash,'尚无采集结果');}
     catch(e){busy=false;throw e;}
-    if(['published','awaiting_publication'].includes(record.phase)){busy=false;return {phase:record.phase};}
+    if(['published','awaiting_publication','superseded'].includes(record.phase)){busy=false;return {phase:record.phase};}
     const advance=async(phase,message)=>{record.phase=phase;record.message=message;await store(record);};
     // Local work contains no translator. Submission and restart are idempotent;
     // only GitHub may issue translation requests using its durable ledger.
@@ -93,7 +94,8 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       record.import_stats=imported.stats;await store(record);
       const captured=await checkedCatalogPapers(input.data),current=await readJournalLibrary({root,config});
       const accepted=imported.decisions.filter(d=>['added','abstract_filled','metadata_filled','unchanged'].includes(d.action));
-      const paperIds=record.paper_ids||current.papers.filter(p=>accepted.some(d=>p.journal_key===d.journal_key&&(d.doi?p.doi===d.doi:p.title_original===d.title))||
+      const existingCloud=(await readCloudQueue(repositoryRoot)).requests.find(r=>r.id===id);
+      const paperIds=existingCloud?.paper_ids||current.papers.filter(p=>accepted.some(d=>p.journal_key===d.journal_key&&(d.doi?p.doi===d.doi:p.title_original===d.title))||
         captured.some(c=>c.review_status==='source_checked_candidate'&&c.journal===p.journal_key&&(c.doi?c.doi===p.doi:c.title===p.title_original))).map(p=>p.id);
       record.paper_ids=paperIds;await store(record);
       await advance('receipting','保存目录回执和未完成论文清单。');
@@ -113,6 +115,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       await advance('awaiting_publication','已上传 GitHub，正在云端翻译 / 发布；将自动核验网站回执。可以关闭面板。');
     }catch(error){onFailure(error);record.failed_stage=record.phase;record.retry_at=new Date(Date.now()+60000).toISOString();
       record.failures=(record.failures||0)+1;
+      if(record.failed_stage==='syncing')record.retry_at=new Date(Date.now()+Math.min(record.failures,10)*60000).toISOString();
       await advance('failed',`处理暂停于 ${record.failed_stage}；结果保留。${record.failures<5?'服务将自动恢复。':'连续失败，需检查本地 Git / 网络；不会丢弃结果或重发未知计费请求。'}`).catch(()=>{});}
     finally{busy=false;}})();return {phase:'processing'};
   }
@@ -124,6 +127,20 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
     return {phase:r.phase};});}
   async function pulse(){
     if(busy)return;
+    await exclusive(async()=>{
+      const dirs=await fs.readdir(stateDir),groups=new Map();
+      for(const id of dirs.filter(idOK)){const r=await load(id);if(!r.run.parent_run_id||!r.export_hash||!['ready','failed'].includes(r.phase))continue;
+        const file=path.join(stateDir,id,'export.json'),at=(await fs.stat(file)).mtimeMs;
+        const group=groups.get(r.run.parent_run_id)||[];group.push({r,file,at});groups.set(r.run.parent_run_id,group);}
+      for(const rows of groups.values())if(rows.length>1){
+        rows.sort((a,b)=>b.at-a.at);const latest=await readBrowserExport(rows[0].file);
+        assertLibrary(latest.sha256===rows[0].r.export_hash,'最新批次证据变化');
+        for(const old of rows.slice(1)){const input=await readBrowserExport(old.file);
+          if(input.sha256!==old.r.export_hash||!captureContains(latest.data,input.data))continue;
+          await store({...old.r,phase:'superseded',superseded_by:rows[0].r.run.id,message:'已并入包含全部相同原始证据的后续批次；原始文件保留。'});
+        }
+      }
+    });
     const s=await status();
     for(const r of s.runs){
       if(busy)return;const record=await load(r.id);
@@ -132,7 +149,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
         if((await load(r.id)).phase==='awaiting_publication'&&Date.now()-Date.parse(record.dispatch_at||0)>30*60000){
           try{await publish({root,id:r.id});record.dispatch_at=new Date().toISOString();await store(record);}catch{}
         }
-      }else if(r.has_export&&r.phase!=='published'&&(record.failures||0)<5&&(!record.retry_at||Date.parse(record.retry_at)<=Date.now())){
+      }else if(r.has_export&&!['published','superseded'].includes(r.phase)&&((record.failures||0)<5||record.failed_stage==='syncing')&&(!record.retry_at||Date.parse(record.retry_at)<=Date.now())){
         await finish(r.id);return;
       }
     }
