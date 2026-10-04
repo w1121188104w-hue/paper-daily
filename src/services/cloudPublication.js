@@ -6,6 +6,10 @@ import {writeWorkflowJson} from './workflowStorage.js';
 
 // Only IDs and operational receipts go to GitHub. Raw browser exports stay local.
 export const CLOUD_QUEUE_PATH='data/collection-workflow/publication-queue.json';
+// The Actions job has a 60-minute hard limit. Stop starting paid batches after
+// 35 minutes across the whole queue, leaving time to settle the current batch,
+// checkpoint receipts, validate the library and publish already completed work.
+export const CLOUD_TRANSLATION_WINDOW_MS=35*60000;
 export function validateCloudQueue(q){
   assertLibrary(q?.schema_version===1&&Array.isArray(q.requests)&&q.requests.length<=20000,'云端发布队列格式无效');
   const ids=new Set();
@@ -53,19 +57,22 @@ export async function enqueueManualBackfill(repo,{runId,tasks}){
 
 /** Durable request accounting remains in translationAutomation; this queue never
  * resets reservations, unknown outcomes, retry limits, or existing translations. */
-export async function processCloudPublications(repo,{translate,checkpoint,updateReceipt=async()=>{},now=()=>new Date()}){
+export async function processCloudPublications(repo,{translate,checkpoint,updateReceipt=async()=>{},now=()=>new Date(),stopStartingAt=now().getTime()+CLOUD_TRANSLATION_WINDOW_MS}){
+  assertLibrary(Number.isFinite(stopStartingAt)&&stopStartingAt>0,'云端翻译收尾时间无效');
   const q=await readCloudQueue(repo);let processed=0;
   for(const r of q.requests){
+    if(now().getTime()>=stopStartingAt)break;
     if(!['pending','processing'].includes(r.status)||r.next_at&&Date.parse(r.next_at)>now().getTime())continue;
     if(r.rounds>=6){r.status='attention';r.code='CLOUD_ROUND_LIMIT';r.updated_at=now().toISOString();await updateReceipt(r);await saveCloudQueue(repo,q);await checkpoint();continue;}
     r.status='processing';r.rounds++;r.updated_at=now().toISOString();await saveCloudQueue(repo,q);await checkpoint();
     try{
-      const result=await translate({paperIds:r.paper_ids,maxRequests:r.max_requests});
+      const result=await translate({paperIds:r.paper_ids,maxRequests:r.max_requests,stopStartingAt});
+      if(result.stop_reason==='TIME_LIMIT'&&!result.requested_this_run)r.rounds--;
       r.pending_fields=(result.available_fields||0)+(result.held_fields||0);
       r.requested=(r.requested||0)+(result.requested_this_run||0);
       r.code=result.stop_reason||null;
       r.status=r.pending_fields===0?'translated':result.paused?'attention':(result.available_fields||0)>0&&r.rounds<6?'pending':'attention';
-      r.next_at=r.status==='pending'?new Date(now().getTime()+30*60000).toISOString():null;
+      r.next_at=r.status==='pending'?new Date(now().getTime()+(r.code==='TIME_LIMIT'?0:30*60000)).toISOString():null;
       await updateReceipt(r);
     }catch(e){
       // Unknown paid outcomes are held by the immutable reservation ledger.

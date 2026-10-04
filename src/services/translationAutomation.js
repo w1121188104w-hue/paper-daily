@@ -185,9 +185,10 @@ export function automationSummary(library, state, now = new Date()) {
 /** Commit reservations remotely BEFORE paid calls, then commit accepted raw translations and receipts together.
  * A killed runner leaves reservations that prevent repeat billing on a new runner. No semantic editing occurs here. */
 export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_ROOT, mode = 'daily', apiKey,
-  publishCheckpoint, fetchImpl = fetch, now = () => new Date(), log = () => {}, maxRequests, paperIds } = {}) {
+  publishCheckpoint, fetchImpl = fetch, now = () => new Date(), log = () => {}, maxRequests, paperIds, stopStartingAt } = {}) {
   assertLibrary(['daily', 'backfill'].includes(mode) && typeof publishCheckpoint === 'function', '自动翻译需要明确模式及持久保存步骤');
   assertLibrary(maxRequests === undefined || Number.isInteger(maxRequests) && maxRequests > 0 && maxRequests <= 1000, '单次翻译请求上限无效');
+  assertLibrary(stopStartingAt === undefined || Number.isFinite(stopStartingAt) && stopStartingAt > 0, '翻译收尾时间无效');
   assertLibrary(paperIds === undefined || Array.isArray(paperIds) && paperIds.every(id => typeof id === 'string'), '翻译论文范围无效');
   const selectedIds = paperIds === undefined ? null : new Set(paperIds);
   const scoped = value => selectedIds === null ? value : { ...value, papers: value.papers.filter(p => selectedIds.has(p.id)) };
@@ -207,13 +208,14 @@ export async function runTranslationAutomation(config, { root = DEFAULT_LIBRARY_
   const minutes = mode === 'backfill' ? AUTOMATION_LIMITS.backfill_minutes : AUTOMATION_LIMITS.daily_minutes;
   let requested = 0, failureStreak = 0, stopReason = 'QUEUE_FINISHED';
   while (requested < cap) {
-    if (now() - started >= minutes * 60000) { stopReason = 'TIME_LIMIT'; break; }
+    if (now() - started >= minutes * 60000 || stopStartingAt !== undefined && now().getTime() >= stopStartingAt) { stopReason = 'TIME_LIMIT'; break; }
     library = await readJournalLibrary({ root, config }); state = await readTranslationState(root);
     if (state.paused) { stopReason = 'PAUSED'; break; }
     const remaining = mode === 'daily' ? Math.min(cap - requested, cap - dailyCount(state, dateInShanghai(now()))) : cap - requested;
     if (remaining <= 0) { stopReason = 'REQUEST_LIMIT'; break; }
     const proposed = nextAutomationBatch(scoped(library), state, { limit: Math.min(10, remaining), now: now() });
     if (!proposed.items.length) break;
+    if (stopStartingAt !== undefined && now().getTime() >= stopStartingAt) { stopReason = 'TIME_LIMIT'; break; }
     assertLibrary(!JSON.stringify(proposed).includes(apiKey), '原文清单不能包含密钥');
     const batch = await keepBatch(root, proposed), reservedAt = now().toISOString();
     const history = taskHistory(state);

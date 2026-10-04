@@ -64,6 +64,31 @@ test('cloud queue checkpoints before translation; IDs only, exact retry idempote
   assert.deepEqual(order,['save','translate','save']);assert.equal((await readCloudQueue(dir)).requests[0].status,'translated');
   await processCloudPublications(dir,{checkpoint:async()=>{},translate:async()=>{throw Error('duplicate billing');}});
 });
+test('cloud queue shares one deadline, saves partial receipts and leaves later batches untouched for the next run',async t=>{
+  const dir=await temp(t),ids=[randomUUID(),randomUUID()];
+  for(const id of ids)await enqueuePublication(dir,{id,publicationId:randomUUID(),inputHash:'c'.repeat(64),paperIds:[id]});
+  let clock=Date.parse('2026-10-04T12:00:00Z'),calls=0;const stopStartingAt=clock+1000,receipts=[];
+  await processCloudPublications(dir,{now:()=>new Date(clock),stopStartingAt,checkpoint:async()=>{},
+    updateReceipt:async r=>receipts.push(r.status),translate:async opts=>{
+      calls++;assert.equal(opts.stopStartingAt,stopStartingAt);clock=stopStartingAt;
+      return {available_fields:2,held_fields:0,requested_this_run:1,stop_reason:'TIME_LIMIT'};
+    }});
+  let q=await readCloudQueue(dir);assert.equal(calls,1);assert.deepEqual(receipts,['pending']);
+  assert.equal(q.requests[0].rounds,1);assert.equal(q.requests[1].rounds,0);
+  assert.equal(q.requests[1].status,'pending');assert.equal(Date.parse(q.requests[0].next_at),clock);
+  await processCloudPublications(dir,{now:()=>new Date(clock),checkpoint:async()=>{},
+    translate:async()=>{calls++;return {available_fields:0,held_fields:0,requested_this_run:1};}});
+  q=await readCloudQueue(dir);assert.equal(calls,3);assert.ok(q.requests.every(r=>r.status==='translated'));
+});
+
+test('deadline exhausted by checkpoint does not consume a paid retry round',async t=>{
+  const dir=await temp(t);await enqueuePublication(dir,{id:randomUUID(),publicationId:randomUUID(),inputHash:'d'.repeat(64),paperIds:[]});
+  let clock=Date.parse('2026-10-04T12:00:00Z');const stopStartingAt=clock+1000;
+  await processCloudPublications(dir,{now:()=>new Date(clock),stopStartingAt,checkpoint:async()=>{clock=stopStartingAt;},
+    translate:async opts=>{assert.equal(opts.stopStartingAt,clock);return {available_fields:2,held_fields:0,requested_this_run:0,stop_reason:'TIME_LIMIT'};}});
+  const r=(await readCloudQueue(dir)).requests[0];assert.equal(r.rounds,0);assert.equal(r.status,'pending');assert.equal(r.requested,0);
+});
+
 test('cloud unknown/held outcomes require attention, never loop paid requests',async t=>{
   const dir=await temp(t);await enqueuePublication(dir,{id:randomUUID(),publicationId:randomUUID(),inputHash:'b'.repeat(64),paperIds:[]});
   let n=0;const opts={checkpoint:async()=>{},translate:async()=>{n++;return {available_fields:0,held_fields:2,stop_reason:'NO_UNATTEMPTED_TASKS'};}};

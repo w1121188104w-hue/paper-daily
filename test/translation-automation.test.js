@@ -84,6 +84,23 @@ test('自动翻译：分批原样保存机器译文，远端登记先于收费�
   assert.equal((await run(root, { fetchImpl: async () => { throw new Error('repeat billing'); } })).requested_this_run, 0);
 });
 
+test('shared cloud deadline settles paid results before yielding and the next run translates only remaining papers', async t => {
+  const {root}=await fixture(t,Array.from({length:12},(_,i)=>record(i)));
+  let clock=Date.parse(time),calls=0;const stopStartingAt=clock+5000;
+  const result=await run(root,{now:()=>new Date(clock),stopStartingAt,
+    publishCheckpoint:async({phase})=>{if(phase==='settle')clock=stopStartingAt+1;},
+    fetchImpl:async()=>{calls++;return response();}});
+  assert.equal(calls,10);assert.equal(result.stop_reason,'TIME_LIMIT');
+  assert.equal(result.available_papers,2);assert.equal(result.completed_fields,20);
+  const saved=await readTranslationState(root);
+  assert.equal(saved.reservations.length,1);assert.ok(saved.reservations[0].finished_at);
+  assert.ok(saved.reservations[0].items.every(i=>i.status==='succeeded'));
+  const next=await run(root,{now:()=>new Date(clock),stopStartingAt:clock+5000,
+    fetchImpl:async()=>{calls++;return response();}});
+  assert.equal(calls,12);assert.equal(next.requested_this_run,2);assert.equal(next.available_fields,0);
+  assert.deepEqual((await readTranslationState(root)).reservations[0],saved.reservations[0]);
+});
+
 test('自动翻译：非 DOI 标识可登记；没有英文摘要时只翻标题，目录不处理', async (t) => {
   const { root } = await fixture(t, [record(0, { doi: '', source_id: 'external-record', abstract: '' }),
     record(1, { title: 'Table of contents', abstract: '' })]);
