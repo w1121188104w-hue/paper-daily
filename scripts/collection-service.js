@@ -18,11 +18,17 @@ import {recoverCollectionDivergence} from '../src/services/collectionGitRecovery
 
 export function safeProcess(command,args,{cwd,env=process.env,input='',timeout=120000}={}){
   return new Promise((resolve,reject)=>{
-    const child=spawn(command,args,{cwd,env,windowsHide:true,stdio:['pipe','pipe','pipe']});let chunks=[],size=0,bad=false;
-    const timer=setTimeout(()=>{bad=true;child.kill();},timeout);
-    child.stderr.resume();child.stdin.on('error',()=>{});child.stdout.on('data',c=>{size+=c.length;if(size>2*1024*1024){bad=true;child.kill();}else chunks.push(c);});
+    const child=spawn(command,args,{cwd,env,windowsHide:true,stdio:['pipe','pipe','pipe']});let chunks=[],size=0,bad=false,reason='',stderr='';
+    const failure=code=>Object.assign(Error('PROCESS_FAILED'),{code});
+    const timer=setTimeout(()=>{bad=true;reason='PROCESS_TIMEOUT';child.kill();},timeout);
+    // Retain only a bounded diagnostic in memory; report fixed codes, never raw
+    // stderr, command arguments, remote URLs, or credentials.
+    child.stderr.on('data',c=>{stderr=(stderr+c.toString()).slice(-8192);});child.stdin.on('error',()=>{});child.stdout.on('data',c=>{size+=c.length;if(size>2*1024*1024){bad=true;reason='PROCESS_OUTPUT_LIMIT';child.kill();}else chunks.push(c);});
     child.on('error',()=>{clearTimeout(timer);reject(Error('PROCESS_UNAVAILABLE'));});
-    child.on('close',code=>{clearTimeout(timer);if(code||bad)reject(Error('PROCESS_FAILED'));else resolve(Buffer.concat(chunks).toString('utf8'));});child.stdin.end(input);
+    child.on('close',code=>{clearTimeout(timer);if(code||bad){
+      const diagnostic=reason||(/non-fast-forward|fetch first|\[rejected\]/i.test(stderr)?'GIT_PUSH_REJECTED':/authentication failed|could not read Username|terminal prompts disabled/i.test(stderr)?'GIT_AUTH_FAILED':/could not resolve|failed to connect|connection.*(?:reset|timed out)|SSL.*error/i.test(stderr)?'GIT_CONNECTION_FAILED':`PROCESS_EXIT_${Number.isInteger(code)?code:'UNKNOWN'}`);
+      reject(failure(diagnostic));
+    }else resolve(Buffer.concat(chunks).toString('utf8'));});child.stdin.end(input);
   });
 }
 export async function allowedWorkflowDirty(config,{root,repositoryRoot,git,plan=journalGitFiles}){

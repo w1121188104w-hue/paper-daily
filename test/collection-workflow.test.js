@@ -122,6 +122,23 @@ test('automatic submission queues GitHub work, never invokes a local translator,
   assert.equal((await c.check(run.id)).phase,'awaiting_publication');
   live=true;await c.pulse();assert.equal((await c.status()).runs[0].phase,'published');
 });
+
+test('saved upload failures resume despite older failure counts and clear safe diagnostics after success',async t=>{
+  const repo=await temp(t),stateDir=path.join(repo,'private-runs');
+  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));
+  let offline=true,dispatched=0;
+  const c=createCollectionCoordinator({repositoryRoot:repo,stateDir,config,sync:async()=>{},
+    checkpoint:async()=>{if(offline)throw Object.assign(Error('private transport detail'),{code:'GIT_CONNECTION_FAILED'});},
+    publish:async()=>{dispatched++;return {dispatched:true};},checkPublication:async()=>false});
+  const {run}=await c.start('daily');await c.submit(run.id,await capture(run));
+  while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));
+  const file=path.join(stateDir,run.id,'run.json'),saved=JSON.parse(await fs.readFile(file,'utf8'));
+  assert.equal(saved.failure_code,'GIT_CONNECTION_FAILED');assert.equal(JSON.stringify(saved).includes('private transport detail'),false);
+  await fs.writeFile(file,JSON.stringify({...saved,failures:6,retry_at:'2020-01-01T00:00:00Z'}));offline=false;
+  await c.pulse();while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));
+  const done=JSON.parse(await fs.readFile(file,'utf8'));
+  assert.equal(done.phase,'awaiting_publication');assert.equal(done.failure_code,null);assert.equal(dispatched,1);
+});
 test('scoped source import preserves data; cloud receipt is required to confirm deployment',async t=>{
   const repo=await temp(t),root=path.join(repo,'data/journal-store'),stateDir=path.join(repo,'private-runs');
   await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));let failure,live=false;

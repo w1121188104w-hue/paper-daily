@@ -13,6 +13,7 @@ import {ACTIVE_CATALOG_TASKS} from '../../tools/browser-abstract-extension/catal
 import {captureContains} from './captureCoverage.js';
 
 const idOK=id=>typeof id==='string'&&/^[a-f0-9-]{36}$/.test(id);
+const transportStages=new Set(['syncing','uploading','publishing']);
 async function optional(file){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return null;throw e;}}
 export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync,checkpoint=async()=>{},publish,checkPublication,onFailure=()=>{},prepareRun=async r=>r}){
   const root=path.join(repositoryRoot,'data/journal-store');let busy=false,lastWorkflow=null;
@@ -111,11 +112,11 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       await enqueuePublication(repositoryRoot,{id,inputHash:record.export_hash,publicationId:record.publication_id,paperIds,maxRequests:record.run.max_requests});
       await advance('uploading','上传核验后的论文和翻译任务；原始浏览器抓取文件仅留本机。');await checkpoint({root});
       await advance('publishing','正在请求 GitHub 翻译并发布。');record.release=await publish({root,id});
-      record.failed_stage=null;record.retry_at=null;record.dispatch_at=new Date().toISOString();
+      record.failed_stage=null;record.failure_code=null;record.retry_at=null;record.dispatch_at=new Date().toISOString();
       await advance('awaiting_publication','已上传 GitHub，正在云端翻译 / 发布；将自动核验网站回执。可以关闭面板。');
-    }catch(error){onFailure(error);record.failed_stage=record.phase;record.retry_at=new Date(Date.now()+60000).toISOString();
+    }catch(error){onFailure(error);if(record.failed_stage!==record.phase)record.failures=0;record.failed_stage=record.phase;record.failure_code=/^[A-Z0-9_]{1,80}$/.test(error.code||'')?error.code:'WORKFLOW_OPERATION_FAILED';record.retry_at=new Date(Date.now()+60000).toISOString();
       record.failures=(record.failures||0)+1;
-      if(record.failed_stage==='syncing')record.retry_at=new Date(Date.now()+Math.min(record.failures,10)*60000).toISOString();
+      if(transportStages.has(record.failed_stage))record.retry_at=new Date(Date.now()+Math.min(record.failures,10)*60000).toISOString();
       await advance('failed',`处理暂停于 ${record.failed_stage}；结果保留。${record.failures<5?'服务将自动恢复。':'连续失败，需检查本地 Git / 网络；不会丢弃结果或重发未知计费请求。'}`).catch(()=>{});}
     finally{busy=false;}})();return {phase:'processing'};
   }
@@ -150,7 +151,7 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
         if((await load(r.id)).phase==='awaiting_publication'&&Date.now()-Date.parse(record.dispatch_at||0)>30*60000){
           try{await publish({root,id:r.id});record.dispatch_at=new Date().toISOString();await store(record);}catch{}
         }
-      }else if(r.has_export&&!['published','superseded'].includes(r.phase)&&((record.failures||0)<5||record.failed_stage==='syncing')&&(!record.retry_at||Date.parse(record.retry_at)<=Date.now())){
+      }else if(r.has_export&&!['published','superseded'].includes(r.phase)&&((record.failures||0)<5||transportStages.has(record.failed_stage))&&(!record.retry_at||Date.parse(record.retry_at)<=Date.now())){
         await finish(r.id);return;
       }
     }

@@ -30,6 +30,13 @@ export async function recoverCollectionDivergence({git,stateDir,allowedFiles}){
   const backup='refs/heads/codex/collection-recovery-'+head;
   await git(['update-ref',backup,head]);
   await writeWorkflowJson(path.join(stateDir,'git-recovery.json'),{version:1,from:head,to:remote,backup,batches:requests.map(r=>r.id),phase:'archived'});
+  // Re-arm every archived batch before moving HEAD, including older upload
+  // failures. A crash here leaves both the old commit and replayable exports.
+  for(const r of requests){
+    const file=path.join(stateDir,r.id,'run.json'),saved=JSON.parse(await fs.readFile(file,'utf8'));
+    await writeWorkflowJson(file,{...saved,phase:'ready',failures:0,failed_stage:null,failure_code:null,retry_at:null,recovery_from:head,
+      message:'已保留本地提交备份；将从原始证据恢复上传，审核缓存继续复用。'});
+  }
   // The checkout is clean, local-only changes are validated generated data, and
   // the former HEAD remains reachable. No untracked files are cleaned/deleted.
   await git(['reset','--hard',remote]);

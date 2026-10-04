@@ -24,7 +24,7 @@ test('divergent generated data is archived before replay, while remote changes a
   const data={kind:'paper_project',workflow_run_id:id,catalog:{pages:[]},records:[]},text=JSON.stringify(data)+'\n';
   const hash=createHash('sha256').update(text).digest('hex');
   await fs.mkdir(path.join(stateDir,id),{recursive:true});await fs.writeFile(path.join(stateDir,id,'export.json'),text);
-  await fs.writeFile(path.join(stateDir,id,'run.json'),JSON.stringify({run:{id},export_hash:hash}));
+  await fs.writeFile(path.join(stateDir,id,'run.json'),JSON.stringify({run:{id},export_hash:hash,phase:'failed',failed_stage:'uploading',failures:6}));
   await enqueuePublication(local,{id,publicationId,inputHash:hash,paperIds:[]});
   await git(['add','.']);await git(['commit','-m','data: save browser collection and workflow receipts']);
   const original=(await git(['rev-parse','HEAD'])).trim();
@@ -42,6 +42,8 @@ test('divergent generated data is archived before replay, while remote changes a
   assert.equal((await git(['rev-parse','refs/heads/codex/collection-recovery-'+original])).trim(),original);
   assert.equal(await fs.readFile(path.join(local,'cloud.txt'),'utf8'),'remote translation saved');
   assert.equal(await fs.readFile(proof,'utf8'),text);
+  const replay=JSON.parse(await fs.readFile(path.join(stateDir,id,'run.json'),'utf8'));
+  assert.equal(replay.phase,'ready');assert.equal(replay.failures,0);assert.equal(replay.recovery_from,original);
   assert.equal((await git(['rev-parse','HEAD'])).trim(),(await cloud(['rev-parse','HEAD'])).trim());
 });
 test('only a superset of exact frozen captures can supersede pending batches',()=>{
