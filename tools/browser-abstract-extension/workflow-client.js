@@ -11,7 +11,7 @@ export async function workflowRequest(endpoint,body,fetchImpl=fetch){
   let response;
   try{response=await fetchImpl(WORKFLOW_ORIGIN+endpoint,{method:'POST',headers:{'X-Paper-Workflow':'1','Content-Type':'application/json'},
     body:JSON.stringify(body??{}),signal:AbortSignal.timeout(30000)});}
-  catch{throw Object.assign(Error('无法连接本机正式流程服务；请确认 start-workflow.cmd 已运行。'),{code:'WORKFLOW_CONNECTION'});}
+  catch{throw Object.assign(Error('无法连接本机正式流程服务；请点击“启动本机服务”。'),{code:'WORKFLOW_CONNECTION'});}
   if(!response.ok)throw Object.assign(Error(response.status===403?'本地服务拒绝扩展来源，请核对扩展 ID；不是 API Key 错误。':`正式流程服务返回 HTTP ${response.status}；原有数据保留。`),{code:`WORKFLOW_HTTP_${response.status}`});
   try{return await response.json();}
   catch{throw Object.assign(Error('服务已响应，但返回格式无法读取；请检查插件与服务版本。'),{code:'WORKFLOW_RESPONSE'});}

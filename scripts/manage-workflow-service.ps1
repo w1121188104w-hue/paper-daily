@@ -1,4 +1,4 @@
-param([ValidateSet('Install','Disable','Status','Plan')][string]$Mode='Status', [string]$DataRoot)
+param([ValidateSet('Install','Start','Disable','Status','Plan')][string]$Mode='Status', [string]$DataRoot)
 $ErrorActionPreference='Stop'
 $project = Split-Path -Parent $PSScriptRoot
 . (Join-Path $project 'tools/browser-abstract-extension/service-runtime.ps1')
@@ -70,6 +70,16 @@ try {
       Start-ScheduledTask -TaskName $definition.Name -TaskPath '\'
     }
     Write-Host 'Automatic startup and recovery enabled for the current user. No collection job was created.'
+    & (Join-Path $PSScriptRoot 'install-service-launcher.ps1') -DataRoot $DataRoot
+  } elseif ($Mode -eq 'Start') {
+    foreach ($definition in $definitions) {
+      if (-not (Get-PaperManagedTask $definition.Role)) { throw 'MANAGED_TASK_MISSING' }
+    }
+    foreach ($definition in $definitions) {
+      Enable-ScheduledTask -TaskName $definition.Name -TaskPath '\' | Out-Null
+      Start-ScheduledTask -TaskName $definition.Name -TaskPath '\'
+    }
+    Write-Host 'Managed services started. No collection job was created.'
   } elseif ($Mode -eq 'Disable') {
     foreach ($definition in $definitions) {
       if (Get-PaperManagedTask $definition.Role) { Disable-ScheduledTask -TaskName $definition.Name -TaskPath '\' | Out-Null }

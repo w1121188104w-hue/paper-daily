@@ -1,4 +1,5 @@
 import {workflowRequest,workflowFailure,saveRun,detailKey} from './workflow-client.js';
+import {startLocalServices} from './service-launcher.js';
 const $=id=>document.getElementById(id);let refreshing=false,starting=false;
 async function continueRun(id){
   const details=(await chrome.storage.local.get(detailKey(id)))[detailKey(id)];
@@ -27,7 +28,7 @@ async function refresh(){
       if(!r.has_export){const b=document.createElement('button');b.textContent='继续这次采集';b.disabled=s.busy;b.onclick=()=>continueRun(r.id);box.append(b);}
       if(r.phase==='failed'){const b=document.createElement('button');b.textContent='恢复后台处理';b.disabled=s.busy;b.onclick=async()=>{await workflowRequest('/finish',{id:r.id});await refresh();};box.append(b);}
       return box;}));
-  }catch(e){$('status').textContent=e.code==='VERSION'?e.message:workflowFailure(e,stage);$('daily').disabled=true;$('full').disabled=true;}
+  }catch(e){$('status').textContent=e.code==='VERSION'?e.message:workflowFailure(e,stage);$('python-status').textContent='本机采集服务未连接，请点击上方“启动本机服务”。';$('daily').disabled=true;$('full').disabled=true;for(const action of ['start','pause','resume','fallback'])$('python-'+action).disabled=true;}
   finally{refreshing=false;}
 }
 for(const mode of ['daily','full'])$(mode).onclick=async()=>{
@@ -36,6 +37,24 @@ for(const mode of ['daily','full'])$(mode).onclick=async()=>{
     if(!run.jobs.length){$('status').textContent='目前没有需要浏览器处理的目录。官网直读和 GitHub 翻译在后台自动运行。';return;}
     location.href=`catalog.html?autostart=1&run=${run.id}`;
   }catch(e){$('status').textContent=e.message;}finally{starting=false;$('daily').disabled=false;$('full').disabled=false;}
+};
+$('services-start').onclick=async()=>{
+  $('services-start').disabled=true;$('services-status').textContent='正在启动本机采集与 DeepSeek 审核服务……';
+  try{
+    await startLocalServices();
+    const deadline=Date.now()+45000;
+    while(Date.now()<deadline){
+      try{const responses=await Promise.all([[17328,'X-Paper-Workflow'],[17327,'X-Paper-Review']].map(async([port,guard])=>{
+          const r=await fetch(`http://127.0.0.1:${port}/health`,{method:'POST',headers:{'Content-Type':'application/json',[guard]:'1'},body:'{}',signal:AbortSignal.timeout(3000)});
+          return r.ok&&(await r.json()).status==='ready';
+        }));
+        if(responses.every(Boolean)){$('services-status').textContent='采集与原文审核服务已连接。可以启动 Python 补采，或继续已有任务。';await refresh();return;}
+      }catch{}
+      await new Promise(resolve=>setTimeout(resolve,1000));
+    }
+    throw Error('服务仍在启动，请稍后刷新状态；已有数据已保留。');
+  }catch(e){$('services-status').textContent=e.message;}
+  finally{$('services-start').disabled=false;}
 };
 $('refresh').onclick=async()=>{try{await workflowRequest('/sync',{});await refresh();}catch(e){$('status').textContent=e.message;}};
 for(const action of ['start','pause','resume','fallback'])$('python-'+action).onclick=async()=>{

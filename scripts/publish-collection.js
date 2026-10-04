@@ -39,4 +39,4 @@ async function main(){
   });
   console.log(JSON.stringify(result));
 }
-main().catch(()=>{console.error('CLOUD_PUBLICATION_FAILED: saved papers and billing reservations retained');process.exitCode=1;});
+main().catch(error=>{const code=/^[A-Z0-9_]{1,80}$/.test(error.code||'')?error.code:'WORKFLOW_OPERATION_FAILED';console.error(`CLOUD_PUBLICATION_FAILED:${code}: saved papers and billing reservations retained`);process.exitCode=1;});

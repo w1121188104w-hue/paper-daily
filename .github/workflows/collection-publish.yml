@@ -56,6 +56,16 @@ jobs:
         with:
           path: ${{ steps.build.outputs.directory }}
           include-hidden-files: true
+      - name: Preserve unpublished committed translations after failure
+        if: failure()
+        run: node scripts/save-cloud-recovery.js
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        if: failure()
+        with:
+          name: cloud-publication-recovery
+          path: data/cloud-recovery/unpublished.bundle
+          if-no-files-found: ignore
+          retention-days: 30
   deploy:
     if: vars.JOURNAL_PAGES_ENABLED == 'true' && needs.publish.outputs.changed == 'true'
     needs: publish

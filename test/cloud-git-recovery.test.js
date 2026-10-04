@@ -1,0 +1,25 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {saveCloudRecoveryBundle} from '../src/services/cloudGitRecovery.js';
+const exec=promisify(execFile);
+test('failed cloud push retains exact committed results in a verified bundle without credentials',async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'cloud-recovery-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const git=async args=>(await exec('git',['-c','user.name=Test','-c','user.email=test@example.invalid',...args],{cwd:dir,windowsHide:true})).stdout;
+  await git(['init','--initial-branch=master']);await fs.writeFile(path.join(dir,'code.txt'),'initial');await git(['add','.']);await git(['commit','-m','initial']);
+  await git(['update-ref','refs/remotes/origin/master','HEAD']);const output=path.join(dir,'private/recovery.bundle');
+  assert.deepEqual(await saveCloudRecoveryBundle({git,output}),{saved:false});
+  await git(['config','http.https://example.invalid/.extraheader','Authorization: private-test-value']);
+  await fs.mkdir(path.join(dir,'data/journal-store'),{recursive:true});await fs.writeFile(path.join(dir,'data/journal-store/result.json'),'verified model response');
+  await git(['add','.']);await git(['commit','-m','data: save automatic DeepSeek translations and usage']);
+  const head=(await git(['rev-parse','HEAD'])).trim();assert.deepEqual(await saveCloudRecoveryBundle({git,output}),{saved:true,commits:1});
+  const heads=await git(['bundle','list-heads',output]);assert.ok(heads.includes(head));
+  assert.equal((await fs.readFile(output)).includes(Buffer.from('private-test-value')),false);
+  await git(['fetch',output,'HEAD:refs/heads/recovered']);assert.equal(await git(['show','recovered:data/journal-store/result.json']),'verified model response');
+  await fs.writeFile(path.join(dir,'code.txt'),'unrelated edit');await git(['add','code.txt']);await git(['commit','-m','code edit']);
+  await assert.rejects(saveCloudRecoveryBundle({git,output}),/非云端发布/);
+});
