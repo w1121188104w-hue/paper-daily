@@ -48775,6 +48775,37 @@
           ]
         }
       ]
+    },
+    {
+      "id": "4281dc6d-3476-4ed0-aff5-882a00105268",
+      "batch_id": "batch-a8c55471223559cef8030f6a86b9859ae26ce6f631c1a985612b2c2e26f8af5d",
+      "mode": "backfill",
+      "created_at": "2026-10-05T12:47:05.052Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1177/01492063261461512",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "ea43b69021c03ef62e2b0205121f367520e103683251d44b7063c71f2f3638d5",
+              "task_id": "task:9ea682f1a681e456d9a142d482e111e25494c340ce918a125dd909315baf45ab"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "fb713a209fa0538bc9ae032c13f1ffd8b02b26403d091224d5342286f9f77cbf",
+              "task_id": "task:c3b4181d81c797eef4bd08f7dac192eeca9f5933bb85f800edc390560123f011"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
