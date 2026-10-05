@@ -47671,6 +47671,68 @@
           ]
         }
       ]
+    },
+    {
+      "id": "5e15a221-c208-452d-bea6-484ef81ffdda",
+      "batch_id": "batch-816e4fdd8f156af1f5b2d717562ec7823ae409e00683194f2fd79838ce24ee86",
+      "mode": "backfill",
+      "created_at": "2026-10-05T11:10:47.937Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1093/rfs/hhaf021",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "de055c5f6a55cb777629b243a369c26b0832d6cfaa70daf6c8ecc871be131ac3",
+              "task_id": "task:f16cad74fef771ad7b34d57ef673307b36ccb6f5a2ed7d8392261000449532b9"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1287/mnsc.2019.02983",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "4d285dfe2dedaec1f36f79e56b6e09c23f3bafe849c27f668f6b21ddd8cc0c49",
+              "task_id": "task:89755b4fbb2fc62d34b982f7f86356fbc38835c70e8cdc64cfd665f928907faf"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1287/mnsc.2024.08673",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "7384dc3c03d5bbc3ec376baf226b7c53c76ab8147627a91acd671c1cb058432b",
+              "task_id": "task:01eec39308d80c11d6da6ca29561eee01b9f0c35f942a4814c553e78dd803287"
+            }
+          ],
+          "retry_of": {
+            "abstract": "25d01c27-1eec-4891-bafd-1e272a5a0980"
+          },
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
