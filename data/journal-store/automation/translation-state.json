@@ -47751,6 +47751,32 @@
           "completed_fields": []
         }
       ]
+    },
+    {
+      "id": "3fcb8dee-d18a-47ea-92b9-402a14ff30a6",
+      "batch_id": "batch-d577635ac8aa25a9099646e4b19886067f2e5d614ad7a8e88f931afe56aa0cda",
+      "mode": "backfill",
+      "created_at": "2026-10-05T12:07:15.972Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1093/restud/rdag048",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "0f33b09ac1bfba5c9186de92c7a5dd02754818f2da1c82934c0e55b9e1dd9d7b",
+              "task_id": "task:4b1911b731695d8bc1a977d1ad157fdc15f8ac5486674f7dc1b7a629f0e7d1f5"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
