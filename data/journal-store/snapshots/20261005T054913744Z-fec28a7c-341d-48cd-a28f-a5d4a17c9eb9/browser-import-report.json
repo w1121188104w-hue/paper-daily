@@ -1,0 +1,856 @@
+{
+  "schema_version": 1,
+  "run_id": "20261005T054913744Z-fec28a7c-341d-48cd-a28f-a5d4a17c9eb9",
+  "status": "partial",
+  "from_date": "2026-10-05",
+  "to_date": "2026-10-05",
+  "stats": {
+    "added": 0,
+    "abstracts_filled": 1,
+    "abstracts_checked": 1,
+    "metadata_filled": 0,
+    "pending_candidates": 17
+  },
+  "journals": [
+    {
+      "journal_key": "JAE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 47,
+      "official_in_window_count": 0,
+      "matched_count": 1,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1016/s0165-4101(26)00087-x",
+          "title": "Editorial Board",
+          "journal_key": "JAE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/s0165-4101(26)00087-x",
+          "paper_id": "doi:10.1016/s0165-4101(26)00087-x",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "CAR",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 58,
+      "official_in_window_count": 0,
+      "matched_count": 3,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1111/1911-3846.70086",
+          "title": "Issue Information",
+          "journal_key": "CAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1111/1911-3846.70086",
+          "paper_id": "doi:10.1111/1911-3846.70086",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/1911-3846.70086",
+          "title": "Issue Information",
+          "journal_key": "CAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1111/1911-3846.70086",
+          "paper_id": "doi:10.1111/1911-3846.70086",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/1911-3846.70077",
+          "title": "Specialists' Evidence Evaluation and Judgments in Audits",
+          "journal_key": "CAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1111/1911-3846.70077",
+          "paper_id": "doi:10.1111/1911-3846.70077",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "AER",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 84,
+      "official_in_window_count": 0,
+      "matched_count": 2,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 2,
+      "entries": [
+        {
+          "doi": "10.1257/aer.116.9.i",
+          "title": "Front Matter",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1257/aer.116.9.i",
+          "paper_id": "doi:10.1257/aer.116.9.i",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.116.10.i",
+          "title": "Front Matter",
+          "journal_key": "AER",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1257/aer.116.10.i",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1257/aer.116.9.i",
+          "title": "Front Matter",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1257/aer.116.9.i",
+          "paper_id": "doi:10.1257/aer.116.9.i",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.116.10.i",
+          "title": "Front Matter",
+          "journal_key": "AER",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1257/aer.116.10.i",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JPE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 51,
+      "official_in_window_count": 0,
+      "matched_count": 2,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 4,
+      "entries": [
+        {
+          "doi": "10.1086/743929",
+          "title": "JPE Turnaround Times",
+          "journal_key": "JPE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1086/743929",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1086/744159",
+          "title": "Recent Referees",
+          "journal_key": "JPE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1086/744159",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1086/744158",
+          "title": "Front Matter",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1086/744158",
+          "paper_id": "doi:10.1086/744158",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/743929",
+          "title": "JPE Turnaround Times",
+          "journal_key": "JPE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1086/743929",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1086/744158",
+          "title": "Front Matter",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1086/744158",
+          "paper_id": "doi:10.1086/744158",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/744159",
+          "title": "Recent Referees",
+          "journal_key": "JPE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1086/744159",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JF",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 44,
+      "official_in_window_count": 0,
+      "matched_count": 0,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 6,
+      "entries": [
+        {
+          "doi": "10.1111/jofi.70019",
+          "title": "ANNOUNCEMENTS",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1111/jofi.70019",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.13353",
+          "title": "ISSUE INFORMATION",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1111/jofi.13353",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.13354",
+          "title": "AMERICAN FINANCE ASSOCIATION",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1111/jofi.13354",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.13353",
+          "title": "ISSUE INFORMATION",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1111/jofi.13353",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.13354",
+          "title": "AMERICAN FINANCE ASSOCIATION",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1111/jofi.13354",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.70019",
+          "title": "ANNOUNCEMENTS",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1111/jofi.70019",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JFE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 59,
+      "official_in_window_count": 0,
+      "matched_count": 4,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 2,
+      "entries": [
+        {
+          "doi": "10.1016/s0304-405x(26)00139-x",
+          "title": "Editorial Board",
+          "journal_key": "JFE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/s0304-405x(26)00139-x",
+          "paper_id": "doi:10.1016/s0304-405x(26)00139-x",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/j.jfineco.2026.104363",
+          "title": "Climate regulatory risks and corporate bonds",
+          "journal_key": "JFE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/j.jfineco.2026.104363",
+          "paper_id": "doi:10.1016/j.jfineco.2026.104363",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/s0304-405x(26)00113-3",
+          "title": "Editorial Board",
+          "journal_key": "JFE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1016/s0304-405x(26)00113-3",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1016/s0304-405x(26)00139-x",
+          "title": "Editorial Board",
+          "journal_key": "JFE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/s0304-405x(26)00139-x",
+          "paper_id": "doi:10.1016/s0304-405x(26)00139-x",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/s0304-405x(26)00113-3",
+          "title": "Editorial Board",
+          "journal_key": "JFE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://www.semanticscholar.org/paper/107dedec64951fd1f958ae0fbac4ae48362c214d",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1016/s0304-405x(26)00139-x",
+          "title": "Editorial Board",
+          "journal_key": "JFE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.semanticscholar.org/paper/91e5ab825edf687c1a65bd91c255df4fb8d31226",
+          "paper_id": "doi:10.1016/s0304-405x(26)00139-x",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JCF",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 45,
+      "official_in_window_count": 0,
+      "matched_count": 3,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1016/s0929-1199(26)00143-4",
+          "title": "Editorial Board",
+          "journal_key": "JCF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/s0929-1199(26)00143-4",
+          "paper_id": "doi:10.1016/s0929-1199(26)00143-4",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/s0929-1199(26)00143-4",
+          "title": "Editorial Board",
+          "journal_key": "JCF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/s0929-1199(26)00143-4",
+          "paper_id": "doi:10.1016/s0929-1199(26)00143-4",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/s0929-1199(26)00143-4",
+          "title": "Editorial Board",
+          "journal_key": "JCF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.semanticscholar.org/paper/5e9563297e1902cbc75fb37169e14ba907de3d04",
+          "paper_id": "doi:10.1016/s0929-1199(26)00143-4",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "RP",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 115,
+      "official_in_window_count": 0,
+      "matched_count": 3,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 3,
+      "entries": [
+        {
+          "doi": "10.1016/s0048-7333(26)00185-x",
+          "title": "Editorial Board",
+          "journal_key": "RP",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/s0048-7333(26)00185-x",
+          "paper_id": "doi:10.1016/s0048-7333(26)00185-x",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/s0048-7333(26)00207-6",
+          "title": "Editorial Board",
+          "journal_key": "RP",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1016/s0048-7333(26)00207-6",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1016/s0048-7333(26)00145-9",
+          "title": "Editorial Board",
+          "journal_key": "RP",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://doi.org/10.1016/s0048-7333(26)00145-9",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1016/s0048-7333(26)00185-x",
+          "title": "Editorial Board",
+          "journal_key": "RP",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1016/s0048-7333(26)00185-x",
+          "paper_id": "doi:10.1016/s0048-7333(26)00185-x",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/s0048-7333(26)00185-x",
+          "title": "Editorial Board",
+          "journal_key": "RP",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.semanticscholar.org/paper/1ec6c560838a272d9e13d52d7dcacebc1f9d1d62",
+          "paper_id": "doi:10.1016/s0048-7333(26)00185-x",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1016/s0048-7333(26)00145-9",
+          "title": "Editorial Board",
+          "journal_key": "RP",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://www.semanticscholar.org/paper/71c261386648701663424c242e3e5dbedba51b88",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "MS",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 427,
+      "official_in_window_count": 0,
+      "matched_count": 2,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1287/mnsc.2026.eb.v72n9",
+          "title": "Editorial Board",
+          "journal_key": "MS",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1287/mnsc.2026.eb.v72n9",
+          "paper_id": "doi:10.1287/mnsc.2026.eb.v72n9",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1287/mnsc.2026.eb.v72n9",
+          "title": "Editorial Board",
+          "journal_key": "MS",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1287/mnsc.2026.eb.v72n9",
+          "paper_id": "doi:10.1287/mnsc.2026.eb.v72n9",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JOM",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 6,
+      "official_in_window_count": 0,
+      "matched_count": 2,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 0,
+      "entries": [
+        {
+          "doi": "10.1002/joom.70059",
+          "title": "Issue Information",
+          "journal_key": "JOM",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1002/joom.70059",
+          "paper_id": "doi:10.1002/joom.70059",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1002/joom.70059",
+          "title": "Issue Information",
+          "journal_key": "JOM",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://doi.org/10.1002/joom.70059",
+          "paper_id": "doi:10.1002/joom.70059",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    }
+  ],
+  "abstracts": [
+    {
+      "paper_id": "doi:10.1016/j.jfineco.2026.104363",
+      "journal_key": "JFE",
+      "doi": "10.1016/j.jfineco.2026.104363",
+      "status": "found",
+      "abstract_source": "publisher"
+    }
+  ],
+  "decisions": [
+    {
+      "doi": "10.1016/s0165-4101(26)00087-x",
+      "title": "Editorial Board",
+      "journal_key": "JAE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/s0165-4101(26)00087-x"
+    },
+    {
+      "doi": "10.1111/1911-3846.70086",
+      "title": "Issue Information",
+      "journal_key": "CAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1111/1911-3846.70086"
+    },
+    {
+      "doi": "10.1111/1911-3846.70086",
+      "title": "Issue Information",
+      "journal_key": "CAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1111/1911-3846.70086"
+    },
+    {
+      "doi": "10.1111/1911-3846.70077",
+      "title": "Specialists' Evidence Evaluation and Judgments in Audits",
+      "journal_key": "CAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1111/1911-3846.70077"
+    },
+    {
+      "doi": "10.1257/aer.116.9.i",
+      "title": "Front Matter",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1257/aer.116.9.i"
+    },
+    {
+      "doi": "10.1257/aer.116.10.i",
+      "title": "Front Matter",
+      "journal_key": "AER",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1257/aer.116.10.i"
+    },
+    {
+      "doi": "10.1257/aer.116.9.i",
+      "title": "Front Matter",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1257/aer.116.9.i"
+    },
+    {
+      "doi": "10.1257/aer.116.10.i",
+      "title": "Front Matter",
+      "journal_key": "AER",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1257/aer.116.10.i"
+    },
+    {
+      "doi": "10.1086/743929",
+      "title": "JPE Turnaround Times",
+      "journal_key": "JPE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1086/743929"
+    },
+    {
+      "doi": "10.1086/744159",
+      "title": "Recent Referees",
+      "journal_key": "JPE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1086/744159"
+    },
+    {
+      "doi": "10.1086/744158",
+      "title": "Front Matter",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1086/744158"
+    },
+    {
+      "doi": "10.1086/743929",
+      "title": "JPE Turnaround Times",
+      "journal_key": "JPE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1086/743929"
+    },
+    {
+      "doi": "10.1086/744158",
+      "title": "Front Matter",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1086/744158"
+    },
+    {
+      "doi": "10.1086/744159",
+      "title": "Recent Referees",
+      "journal_key": "JPE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1086/744159"
+    },
+    {
+      "doi": "10.1111/jofi.70019",
+      "title": "ANNOUNCEMENTS",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1111/jofi.70019"
+    },
+    {
+      "doi": "10.1111/jofi.13353",
+      "title": "ISSUE INFORMATION",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1111/jofi.13353"
+    },
+    {
+      "doi": "10.1111/jofi.13354",
+      "title": "AMERICAN FINANCE ASSOCIATION",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1111/jofi.13354"
+    },
+    {
+      "doi": "10.1111/jofi.13353",
+      "title": "ISSUE INFORMATION",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1111/jofi.13353"
+    },
+    {
+      "doi": "10.1111/jofi.13354",
+      "title": "AMERICAN FINANCE ASSOCIATION",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1111/jofi.13354"
+    },
+    {
+      "doi": "10.1111/jofi.70019",
+      "title": "ANNOUNCEMENTS",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1111/jofi.70019"
+    },
+    {
+      "doi": "10.1016/s0304-405x(26)00139-x",
+      "title": "Editorial Board",
+      "journal_key": "JFE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/s0304-405x(26)00139-x"
+    },
+    {
+      "doi": "10.1016/j.jfineco.2026.104363",
+      "title": "Climate regulatory risks and corporate bonds",
+      "journal_key": "JFE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/j.jfineco.2026.104363"
+    },
+    {
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "title": "Editorial Board",
+      "journal_key": "JFE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1016/s0304-405x(26)00113-3"
+    },
+    {
+      "doi": "10.1016/s0304-405x(26)00139-x",
+      "title": "Editorial Board",
+      "journal_key": "JFE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/s0304-405x(26)00139-x"
+    },
+    {
+      "doi": "10.1016/s0304-405x(26)00113-3",
+      "title": "Editorial Board",
+      "journal_key": "JFE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://www.semanticscholar.org/paper/107dedec64951fd1f958ae0fbac4ae48362c214d"
+    },
+    {
+      "doi": "10.1016/s0304-405x(26)00139-x",
+      "title": "Editorial Board",
+      "journal_key": "JFE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.semanticscholar.org/paper/91e5ab825edf687c1a65bd91c255df4fb8d31226"
+    },
+    {
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "title": "Editorial Board",
+      "journal_key": "JCF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/s0929-1199(26)00143-4"
+    },
+    {
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "title": "Editorial Board",
+      "journal_key": "JCF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/s0929-1199(26)00143-4"
+    },
+    {
+      "doi": "10.1016/s0929-1199(26)00143-4",
+      "title": "Editorial Board",
+      "journal_key": "JCF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.semanticscholar.org/paper/5e9563297e1902cbc75fb37169e14ba907de3d04"
+    },
+    {
+      "doi": "10.1016/s0048-7333(26)00185-x",
+      "title": "Editorial Board",
+      "journal_key": "RP",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/s0048-7333(26)00185-x"
+    },
+    {
+      "doi": "10.1016/s0048-7333(26)00207-6",
+      "title": "Editorial Board",
+      "journal_key": "RP",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1016/s0048-7333(26)00207-6"
+    },
+    {
+      "doi": "10.1016/s0048-7333(26)00145-9",
+      "title": "Editorial Board",
+      "journal_key": "RP",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://doi.org/10.1016/s0048-7333(26)00145-9"
+    },
+    {
+      "doi": "10.1016/s0048-7333(26)00185-x",
+      "title": "Editorial Board",
+      "journal_key": "RP",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1016/s0048-7333(26)00185-x"
+    },
+    {
+      "doi": "10.1016/s0048-7333(26)00185-x",
+      "title": "Editorial Board",
+      "journal_key": "RP",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.semanticscholar.org/paper/1ec6c560838a272d9e13d52d7dcacebc1f9d1d62"
+    },
+    {
+      "doi": "10.1016/s0048-7333(26)00145-9",
+      "title": "Editorial Board",
+      "journal_key": "RP",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://www.semanticscholar.org/paper/71c261386648701663424c242e3e5dbedba51b88"
+    },
+    {
+      "doi": "10.1287/mnsc.2026.eb.v72n9",
+      "title": "Editorial Board",
+      "journal_key": "MS",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1287/mnsc.2026.eb.v72n9"
+    },
+    {
+      "doi": "10.1287/mnsc.2026.eb.v72n9",
+      "title": "Editorial Board",
+      "journal_key": "MS",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1287/mnsc.2026.eb.v72n9"
+    },
+    {
+      "doi": "10.1002/joom.70059",
+      "title": "Issue Information",
+      "journal_key": "JOM",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1002/joom.70059"
+    },
+    {
+      "doi": "10.1002/joom.70059",
+      "title": "Issue Information",
+      "journal_key": "JOM",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://doi.org/10.1002/joom.70059"
+    }
+  ],
+  "input_sha256": "25029693a500440a69facf8d2ff3c14341bb3789ca827cd99cbd62f40e274c66",
+  "scope": "captured_details_only",
+  "stage": "browser_import",
+  "note": "Capture import date, not publication window; does not establish complete journal coverage."
+}
