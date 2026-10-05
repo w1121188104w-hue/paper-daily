@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-a8c55471223559cef8030f6a86b9859ae26ce6f631c1a985612b2c2e26f8af5d",
+  "stats": {
+    "completed_fields": 2,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1177/01492063261461512",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 0,
+      "id": "doi:10.1177/01492063261461512",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}

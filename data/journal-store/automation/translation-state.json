@@ -48781,7 +48781,7 @@
       "batch_id": "batch-a8c55471223559cef8030f6a86b9859ae26ce6f631c1a985612b2c2e26f8af5d",
       "mode": "backfill",
       "created_at": "2026-10-05T12:47:05.052Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T12:49:42.312Z",
       "items": [
         {
           "id": "doi:10.1177/01492063261461512",
@@ -48800,10 +48800,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 668,
+            "completion_tokens": 174,
+            "total_tokens": 842
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         }
       ]
     }
