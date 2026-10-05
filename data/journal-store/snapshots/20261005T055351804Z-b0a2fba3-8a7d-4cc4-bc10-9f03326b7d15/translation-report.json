@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-98dd1bed3e709cf1d7543becfa7bd8aa829638af00e9c69130da040d3c97c65a",
+  "stats": {
+    "completed_fields": 1,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.jfineco.2026.104363",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}

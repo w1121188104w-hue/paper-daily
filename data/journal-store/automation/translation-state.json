@@ -44482,7 +44482,7 @@
       "batch_id": "batch-98dd1bed3e709cf1d7543becfa7bd8aa829638af00e9c69130da040d3c97c65a",
       "mode": "backfill",
       "created_at": "2026-10-05T05:51:46.353Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T05:54:01.417Z",
       "items": [
         {
           "id": "doi:10.1016/j.jfineco.2026.104363",
@@ -44496,10 +44496,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 570,
+            "completion_tokens": 124,
+            "total_tokens": 694
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }
