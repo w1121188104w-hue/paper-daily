@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-ed03a5ebb735af8236eaff1fb64578851e5a2af3a529ed587892485193461870",
+  "stats": {
+    "completed_fields": 2,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 2
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1093/restud/rdag036",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1093/restud/rdag037",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}

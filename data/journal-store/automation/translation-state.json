@@ -47374,7 +47374,7 @@
       "batch_id": "batch-ed03a5ebb735af8236eaff1fb64578851e5a2af3a529ed587892485193461870",
       "mode": "backfill",
       "created_at": "2026-10-05T10:46:59.609Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T10:48:37.797Z",
       "items": [
         {
           "id": "doi:10.1093/restud/rdag036",
@@ -47388,10 +47388,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 449,
+            "completion_tokens": 13,
+            "total_tokens": 462
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1093/restud/rdag037",
@@ -47405,10 +47411,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 460,
+            "completion_tokens": 21,
+            "total_tokens": 481
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
