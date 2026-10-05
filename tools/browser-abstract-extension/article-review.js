@@ -1,3 +1,4 @@
+import {decisionOutput} from './review-decisions.js';
 export const ARTICLE_REVIEW_PROTOCOL='article-block-selection-v1';
 export const canonicalEvidence=value=>JSON.stringify(value, function(key,v){
   return v && typeof v==='object' && !Array.isArray(v) ? Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])) : v;
@@ -18,7 +19,7 @@ export function compactArticleInput(legacy){
     if(b.kind!=='context'||b.affiliation_record||b.context==='ocr_full_preview_context_not_an_abstract'){blocks.push({...b});continue;}
     context.push(b);
   }
-  let budget=12000;
+  let budget=legacy.decision_version?Math.max(0,65000-JSON.stringify(blocks).length):12000;
   for(const b of context){
     if(b.text.length<=budget){blocks.push({...b});budget-=b.text.length;continue;}
     const length=Math.min(budget,8000);
@@ -29,16 +30,26 @@ export function compactArticleInput(legacy){
   return {...legacy,blocks,review_protocol:ARTICLE_REVIEW_PROTOCOL,evidence_selection:{full_capture_preserved:true,omitted_context:omitted}};
 }
 export function abstractBlockSpans(input,value){
+  if(input.decision_version&&Array.isArray(value.spans)&&value.completeness==='complete'&&value.role==='abstract'){
+    if(!value.spans.length||value.spans.length>20)throw Error('INVALID_ABSTRACT_SELECTION');
+    return value.spans.map(s=>{
+      const b=input.blocks.find(b=>b.id===s.block_id),start=b?.text.indexOf(s.quote);
+      if(!b||typeof s.quote!=='string'||!s.quote.trim()||start<0||b.text.indexOf(s.quote,start+1)>=0)throw Error('INVALID_ABSTRACT_SPAN');
+      return {block_id:b.id,start,end:start+s.quote.length,text:b.text.slice(start,start+s.quote.length)};
+    });
+  }
   if(!Array.isArray(value.block_ids)||value.block_ids.length!==1)throw Error('INVALID_ABSTRACT_BLOCK_SELECTION');
   const b=input.blocks.find(b=>b.id===value.block_ids[0]);
-  if(!usableAbstractBlock(b))throw Error('NOT_A_COMPLETE_ENGLISH_ABSTRACT');
+  if(input.decision_version?(!b||b.kind!=='abstract'||!b.text.trim()||b.text.length>20000):!usableAbstractBlock(b))throw Error('NOT_A_COMPLETE_ENGLISH_ABSTRACT');
   return [{block_id:b.id,start:0,end:b.text.length,text:b.text}];
 }
 export function verdictOutput(input,verdict){
   const fields=Object.fromEntries(Object.entries(verdict.proofs||{}).map(([name,spans])=>[name,
     {status:verdict.states[name],...(name==='abstract' && input.review_protocol===ARTICLE_REVIEW_PROTOCOL ?
-      {block_ids:spans.filter(s=>input.blocks.some(b=>b.id===s.block_id&&b.text===s.text&&s.start===0&&s.end===b.text.length)).map(s=>s.block_id)} :
+      (input.decision_version&&spans.some(s=>{const b=input.blocks.find(b=>b.id===s.block_id);return b?.text!==s.text||b?.kind!=='abstract';})?
+        {spans:spans.map(s=>({block_id:s.block_id,quote:s.text})),completeness:'complete',role:'abstract'}:
+        {block_ids:spans.filter(s=>input.blocks.some(b=>b.id===s.block_id&&b.text===s.text&&s.start===0&&s.end===b.text.length)).map(s=>s.block_id)}) :
       {spans:spans.map(s=>({block_id:s.block_id,quote:s.text}))})}]));
-  return {identity_match:verdict.status==='source_checked_candidate',fields,
+  return {identity_match:verdict.status==='source_checked_candidate',fields,...decisionOutput(verdict),
     affiliations:(verdict.affiliations||[]).map(a=>({block_id:a.proof?.block_id,status:'confirmed'}))};
 }

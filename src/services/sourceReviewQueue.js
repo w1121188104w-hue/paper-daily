@@ -10,6 +10,8 @@ import {readJournalLibrary} from './journalLibrary.js';
 import {importBrowserExport} from './browserImport.js';
 import {enqueuePublication,publicationInputHash} from './cloudPublication.js';
 import {reconcileFieldTasks} from './collectionFieldTasks.js';
+import {collectionScope} from '../../tools/browser-abstract-extension/collection-policy.js';
+import {findPaper} from '../../tools/browser-abstract-extension/paper-identity.js';
 export const REVIEW_QUEUE_PATH='data/collection-workflow/source-review.json';
 export const REVIEW_PROVIDER_PATH='data/collection-workflow/review-provider';
 export function validateSourceReviewQueue(q){
@@ -26,13 +28,25 @@ export async function readSourceReviewQueue(repo){
     return validateSourceReviewQueue(JSON.parse(await fs.readFile(file,'utf8')));}
   catch(e){if(e.code==='ENOENT')return {version:1,jobs:[]};throw e;}
 }
-export const saveSourceReviewQueue=(repo,q)=>writeWorkflowJson(path.join(repo,REVIEW_QUEUE_PATH),validateSourceReviewQueue(q));
-export async function enqueueSourceReviews(repo,records,{papers=[],branch='automatic'}={}){
+export async function saveSourceReviewQueue(repo,q){
+  await writeWorkflowJson(path.join(repo,REVIEW_QUEUE_PATH),validateSourceReviewQueue(q));
+  await writeWorkflowJson(path.join(repo,'data/collection-workflow/source-review-progress.json'),q.jobs.filter(j=>!j.scope_reason||j.scope_needs_review).map(j=>({
+    journal:j.record.journal_key,doi:j.record.doi||null,title:j.record.title,url:j.record.url,
+    processing_stage:j.scope_needs_review?'missing':j.status==='reviewed'?'awaiting_import':j.status==='pending'?'awaiting_review':'missing',
+    reason:j.status==='attention'||j.scope_needs_review?'classification_pending':null})));
+}
+export async function enqueueSourceReviews(repo,records,{papers=[],branch='automatic',enforceCollectionScope=false,now=new Date()}={}){
   const q=await readSourceReviewQueue(repo),rejected=[];
-  for(const record of records){
+  for(const captured of records){
+    const record=structuredClone(captured);
+    if(enforceCollectionScope&&!findPaper(record,papers)&&!record.raw_dates?.catalog_memberships?.some(m=>m.collection==='issue')){
+      record.raw_dates={...record.raw_dates,collection_scope:'online',collection_scope_at:now.toISOString()};
+      const scope=collectionScope({...record,volume:'',issue:'',catalog_collection:'online'},now);
+      if(!scope.eligible&&!scope.needs_review){rejected.push({doi:record.doi,journal:record.journal_key,reason:scope.status});continue;}
+    }
     if(!hasNewSourceFields(record,papers))continue;
     try{
-      const input=sourceReviewInput(record),id=await reviewFingerprint(input);
+      const input=sourceReviewInput(record,{knownPapers:papers}),id=await reviewFingerprint(input);
       if(q.jobs.some(j=>j.id===id))continue;
       q.jobs.push({id,record,input,branch,status:'pending',created_at:new Date().toISOString(),result:null});
     }catch{rejected.push({doi:record.doi,journal:record.journal_key,reason:'review_evidence_invalid'});}
@@ -49,7 +63,7 @@ export async function processSourceReviews(repo,config,{root=path.join(repo,'dat
     if(processed>=maxJobs)break;
     if(!request){job.status='attention';job.error='REVIEW_SERVICE_UNAVAILABLE';continue;}
     try{
-      const original=sourceReviewInput(job.record);
+      const original=sourceReviewInput(job.record,{knownPapers:job.input.existing_records||[],legacy:!job.input.decision_version});
       assertLibrary(await reviewFingerprint(original)===job.id&&await reviewFingerprint(job.input)===job.id,'来源审核证据已变化');
       const {result}=await reviewJob(job.input,request,{retry,cached:job.result});
       job.result=result;job.updated_at=new Date().toISOString();processed++;
@@ -66,15 +80,20 @@ export async function processSourceReviews(repo,config,{root=path.join(repo,'dat
   // without another provider call or losing previously accepted partial fields.
   const latestSources=new Map();
   for(const job of q.jobs.filter(j=>j.status==='reviewed')){
-    try{const source=reviewedSource(job.record,sourceReviewInput(job.record),job.result);
-      if(source)latestSources.set(source.source+'|'+source.source_id,source);
+    try{const source=reviewedSource(job.record,job.input,job.result);
+      if(source){
+        const scope=collectionScope({...source,volume:'',issue:'',catalog_collection:source.raw_dates?.collection_scope,catalog_memberships:source.raw_dates?.catalog_memberships||[]},new Date(source.raw_dates?.collection_scope_at||Date.now()));
+        if(!scope.eligible){job.scope_reason=scope.status;job.scope_needs_review=!!scope.needs_review;decisions.push({doi:source.doi,journal_key:source.journal_key,action:'skipped',reason:scope.status});continue;}
+        delete job.scope_reason;delete job.scope_needs_review;
+        latestSources.set(source.source+'|'+source.source_id,source);
+      }
     }catch{job.status='attention';job.error='SAVED_REVIEW_INVALID';}
   }
   sources.splice(0,sources.length,...latestSources.values());
   const prepared={input_sha256:publicationInputHash(sources),sources,decisions,raw_record_count:q.jobs.length};
   const imported=await importBrowserExport(config,{root,prepared,save:true});
   const library=await readJournalLibrary({root,config});
-  const accepted=imported.decisions.filter(d=>['added','abstract_filled','metadata_filled','unchanged'].includes(d.action));
+  const accepted=imported.decisions.filter(d=>['added','abstract_filled','metadata_filled','corrected','review_recorded','unchanged'].includes(d.action));
   if(accepted.length){
     const paperIds=library.papers.filter(p=>accepted.some(d=>p.journal_key===d.journal_key&&(d.doi?p.doi===d.doi:p.title_original===d.title))).map(p=>p.id);
     // Content-derived IDs recover an interruption between import and enqueue.

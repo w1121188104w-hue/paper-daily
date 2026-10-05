@@ -4,8 +4,9 @@ import {createHash} from 'node:crypto';
 import {writeWorkflowJson} from './workflowStorage.js';
 import {assertLibrary} from './libraryValidation.js';
 import {missingPaperFields} from './sourceReview.js';
-import {classifyPaper} from './paperClassification.js';
 import {applyAbstractAvailability} from '../../tools/browser-abstract-extension/abstract-availability.js';
+import {activeMissingFields,COLLECTION_POLICY_VERSION,confirmedAbstractAbsent} from '../../tools/browser-abstract-extension/collection-policy.js';
+import {findPaper} from '../../tools/browser-abstract-extension/paper-identity.js';
 export const FIELD_TASKS_PATH='data/collection-workflow/field-tasks.json';
 export async function readFieldTasks(repo){
   try{const q=JSON.parse(await fs.readFile(path.join(repo,FIELD_TASKS_PATH),'utf8'));
@@ -13,14 +14,20 @@ export async function readFieldTasks(repo){
   }catch(e){if(e.code==='ENOENT')return {version:1,papers:[]};throw e;}
 }
 export function pendingFields(paper){
-  if(classifyPaper(paper).kind==='other')return [];
-  const absent=applyAbstractAvailability({doi:paper.doi,journal:paper.journal_key,title:paper.title_original}).abstract_status==='confirmed_absent';
-  return missingPaperFields(paper).filter(f=>f!=='abstract'||!absent);
+  const absent=confirmedAbstractAbsent(paper)||
+    applyAbstractAvailability({doi:paper.doi,journal:paper.journal_key,title:paper.title_original}).abstract_status==='confirmed_absent';
+  return absent?[]:activeMissingFields(missingPaperFields(paper));
 }
 export async function reconcileFieldTasks(repo,papers,{paperIds=[],branch='browser',now=new Date()}={}){
   const q=await readFieldTasks(repo),selected=new Set([...paperIds,...q.papers.map(p=>p.id)]);
+  for(const old of q.papers){
+    const canonical=papers.find(p=>p.id===old.id)||findPaper(old,papers);
+    if(canonical)selected.add(canonical.id);
+    if(canonical&&canonical.id!==old.id){old.status='resolved_alias';old.canonical_id=canonical.id;}
+    else if(!activeMissingFields(old.missing_fields).length){old.status='inactive';old.reason='outside_active_supplement_scope';}
+  }
   for(const paper of papers.filter(p=>selected.has(p.id))){
-    const missing_fields=pendingFields(paper),fingerprint=createHash('sha256').update(JSON.stringify([paper.source_text_hash,paper.authors,paper.publication_date,paper.published_online_date,paper.published_print_date,paper.affiliations])).digest('hex');
+    const missing_fields=pendingFields(paper),fingerprint=createHash('sha256').update(JSON.stringify([COLLECTION_POLICY_VERSION,paper.source_text_hash,missing_fields])).digest('hex');
     const old=q.papers.find(p=>p.id===paper.id);
     if(old?.fingerprint===fingerprint)continue;
     const row={id:paper.id,doi:paper.doi,journal:paper.journal_key,title:paper.title_original,url:paper.url,

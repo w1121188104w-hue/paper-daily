@@ -29,6 +29,22 @@ class ResumeTests(unittest.TestCase):
         result = self.run_worker(lambda _: self.fail('browser must stay closed'))
         self.assertEqual((result['phase'], result['cursor']), ('paused', 0))
 
+    def test_doi_less_alias_with_completed_abstract_is_not_queued(self):
+        task = {**self.task, 'doi': None}
+        plan = {**self.plan, 'known_papers': [{**self.task, 'url': 'https://doi.org/' + self.task['doi'],
+                    'identity_urls': [self.task['url']], 'complete': True}]}
+        state = {'queue': [], 'remaining': []}
+        worker.enqueue(state, [task], plan)
+        self.assertEqual(state['queue'], [])
+        worker.enqueue(state, [task, self.task], self.plan)
+        self.assertEqual(len(state['queue']), 1)
+
+    def test_different_dois_or_journals_are_not_deduplicated(self):
+        state = {'queue': [], 'remaining': []}
+        worker.enqueue(state, [self.task, {**self.task, 'doi': '10.1016/different'},
+                               {**self.task, 'journal': 'JFE'}], self.plan)
+        self.assertEqual(len(state['queue']), 3)
+
     def test_saved_capture_replays_after_crash_without_reopening_browser(self):
         (self.root / 'captures').mkdir()
         self.save('captures/' + worker.key(self.task) + '.json',

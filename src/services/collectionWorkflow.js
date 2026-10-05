@@ -3,16 +3,19 @@ import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import { ACTIVE_CATALOG_TASKS, catalogUrl, articleUrl, cleanDoi, titleKey } from '../../tools/browser-abstract-extension/catalog-core.js';
 import { catalogRepairJobs } from '../../tools/browser-abstract-extension/catalog-engine.js';
-import { makeReviewJobs, reviewedCatalogPapers } from '../../tools/browser-abstract-extension/review-core.js';
+import { makeReviewJobs, reviewedCatalogPapers,reviewedCatalogCoverage } from '../../tools/browser-abstract-extension/review-core.js';
 import { prepareReviewPlan } from '../../tools/browser-abstract-extension/review-client.js';
 import { canonicalEvidence } from '../../tools/browser-abstract-extension/article-review.js';
 import { assertLibrary } from './libraryValidation.js';
-import { classifyPaper } from './paperClassification.js';
 import { verifiedPages } from './browserImport.js';
 import { excludedJpePaper } from '../../tools/browser-abstract-extension/collection-policy.js';
 import { writeWorkflowJson } from './workflowStorage.js';
-import { discoveryCatalogEvidenceUrl } from './discoveryLead.js';
-import {validateBaselines,recordCatalogBaseline,catalogChecks,AUDIT_INTERVAL_DAYS} from './catalogBaseline.js';
+import { discoveryCatalogEvidenceUrl,issueRank } from './discoveryLead.js';
+import {validateBaselines,recordCatalogBaseline,catalogChecks,AUDIT_INTERVAL_DAYS,catalogPagesForJob,compareIssuePosition} from './catalogBaseline.js';
+import {catalogMembership} from '../../tools/browser-abstract-extension/catalog-scope.js';
+import {reviewRecord} from '../../tools/browser-abstract-extension/review-decisions.js';
+import {findPaper,groupPaperIdentities} from '../../tools/browser-abstract-extension/paper-identity.js';
+import {collectionScope,confirmedAbstractAbsent,onlinePaginationStop} from '../../tools/browser-abstract-extension/collection-policy.js';
 
 export const WORKFLOW_PATH = 'data/collection-workflow/state.json';
 const sha = x => createHash('sha256').update(JSON.stringify(x)).digest('hex');
@@ -69,6 +72,11 @@ export function addDiscoverySignals(input, observations, { now = new Date() } = 
       title:o.title, doi, source_url:sourceUrl || null, discovered_at:at,
       confidence:['crossref','openalex','semanticscholar'].includes(o.source) ? 'paper_detected' : 'possible_update' };
     const id=sha([catalog.id,url]); let task=state.tasks.find(t=>t.id===id);
+    if(!task&&catalog.collection==='issue'){
+      const rank=issueRank(url,catalog),issue_year=catalogMembership({source_url:url},catalog).issue_year;
+      const baseline=(state.catalog_baselines||[]).filter(b=>b.catalog_id===catalog.id&&b.rank).sort(compareIssuePosition).at(-1);
+      if(rank&&baseline&&compareIssuePosition({rank,issue_year},baseline)<0)continue;
+    }
     if(!task) { task={id,catalog_id:catalog.id,journal:catalog.journal,collection:catalog.collection,url,
       status:'pending',created_at:at,updated_at:at,signals:[],checked_at:null,receipt_id:null}; state.tasks.push(task); }
     if(task.signals.some(s=>s.key===signal.key)) continue;
@@ -83,14 +91,15 @@ export function publicWorkflow(state, { now = new Date(), papers = [] } = {}) {
     audit_interval_days:state.audit_interval_days||AUDIT_INTERVAL_DAYS,catalog_checks:catalogChecks(state,{now}),
     tasks:state.tasks.filter(t=>t.status==='pending').map(t=>({id:t.id,catalog_id:t.catalog_id,journal:t.journal,collection:t.collection,
       url:t.url,signal_count:t.signals.length,confidence:t.signals.some(s=>s.confidence==='paper_detected')?'paper_detected':'possible_update',
+      pending_reason:[...state.receipts].reverse().flatMap(r=>r.pending_catalog_details||[]).find(p=>p.catalog_id===t.catalog_id&&p.url===t.url)?.reason||'catalog_not_read',
       updated_at:t.updated_at,titles:t.signals.slice(-5).map(s=>s.title)})),
     pending_papers:pendingWorkflowPapers(state,papers),
     monitors:state.monitors.map(m=>({journal:m.journal,source:m.source,status:m.status,checked_at:m.checked_at,catalog_id:m.catalog_id||null,code:m.code||null})), receipts:state.receipts.slice(-20).map(r=>({id:r.id,at:r.at,mode:r.mode,
       completed_catalogs:r.completed_catalogs,pending_catalogs:r.pending_catalogs,pending_papers:r.pending_papers.length,input_sha256:r.input_sha256,
       publication_id:r.publication_id||null,pending_translation_fields:r.pending_translation_fields??null,translation_status:r.translation_status||null,translation_code:r.translation_code||null,cloud_processed_at:r.cloud_processed_at||null})),
     full_audit_last_at:[...state.receipts].reverse().find(r=>r.mode==='full'&&r.pending_catalogs===0)?.at || null,
-    known_papers:papers.map(p=>{const checked=state.checked_papers.find(x=>x.doi===p.doi&&x.journal===p.journal_key);
-      return {doi:p.doi,journal:p.journal_key,title:p.title_original,complete:!!p.abstract_original || checked?.status==='confirmed_absent' || classifyPaper(p).kind==='other',
+    known_papers:papers.map(p=>{const checked=findPaper(p,state.checked_papers);
+      return {id:p.id,doi:p.doi,url:p.url,identity_urls:p.source_records.map(r=>r.url).filter(Boolean),journal:p.journal_key,title:p.title_original,complete:!!p.abstract_original || confirmedAbstractAbsent(p)||checked?.status==='confirmed_absent',
         next_retry_at:checked?.status==='missing'?checked.next_retry_at:null};}),generated_at:now.toISOString()};
 }
 
@@ -107,7 +116,8 @@ export function createCollectionRun(state, papers, { mode='daily', scope='all', 
       if(url&&!jobs.some(j=>j.catalog_id===task.id&&j.url===url))jobs.push({catalog_id:task.id,url});}
   return {version:1,id:randomUUID(),mode,scope,created_at:now.toISOString(),max_requests:maxRequests,
     jobs:jobs.map(j=>({...j,signal_at:active.find(t=>t.catalog_id===j.catalog_id&&t.url===j.url)?.updated_at||null})), task_versions:active.map(t=>({id:t.id,signals:t.signals.map(s=>s.key)})),
-    known_papers:publicWorkflow(state,{papers,now}).known_papers};
+    known_papers:publicWorkflow(state,{papers,now}).known_papers,
+    review_context:{known_papers:papers.map(reviewRecord)}};
 }
 
 /** Replay original catalog evidence, never trust export.papers or a client success flag. */
@@ -122,9 +132,10 @@ export async function checkedCatalogPapers(data) {
 export function pendingWorkflowPapers(state,papers=[]) {
   const latest=new Map();
   for(const r of state.receipts)for(const p of r.pending_papers)latest.set(`${p.journal}|${p.doi||titleKey(p.title)}`,p);
-  return [...latest.values()].filter(p=>!papers.some(x=>x.journal_key===p.journal&&x.doi&&x.doi===p.doi&&
-    (x.abstract_original||classifyPaper(x).kind==='other'))&&!state.checked_papers.some(x=>x.journal===p.journal&&x.doi&&x.doi===p.doi&&['complete','confirmed_absent','other'].includes(x.status)))
-    .map(p=>({...p,next_retry_at:state.checked_papers.find(x=>x.doi===p.doi&&x.journal===p.journal)?.next_retry_at||p.next_retry_at||null}));
+  return groupPaperIdentities([...latest.values()].map(p=>{const known=findPaper(p,papers);return known?{...p,id:known.id,doi:known.doi||p.doi}:p;})).map(g=>g[0])
+    .filter(p=>{const known=findPaper(p,papers);return !known?.abstract_original&&!(known&&confirmedAbstractAbsent(known))&&
+      !state.checked_papers.some(x=>x.journal===p.journal&&x.doi&&x.doi===p.doi&&['complete','confirmed_absent'].includes(x.status));})
+    .map(p=>({...p,next_retry_at:findPaper(p,state.checked_papers)?.next_retry_at||p.next_retry_at||null}));
 }
 
 export function validateCollectionRun(run) {
@@ -141,38 +152,46 @@ export async function applyCollectionReceipt(input, run, data, prepared, library
   validateCollectionRun(run);
   assertLibrary(data.workflow_run_id===run.id && Array.isArray(data.catalog?.pages) && time(run.created_at),'回执不属于当前任务');
   if(state.receipts.some(r=>r.id===run.id&&r.input_sha256===prepared.input_sha256)) return state;
-  const pages=verifiedPages(data), pending=[], completeJobs=[];
-  const inRun=p=>p.captured_at>=run.created_at||(run.direct_pages||[]).some(d=>canonicalEvidence(d)===canonicalEvidence(p));
+  const rawPages=verifiedPages(data),coveragePlan=await prepareReviewPlan(makeReviewJobs({...data.catalog,pages:rawPages},null),data.catalog_review_results||{});
+  const pages=reviewedCatalogCoverage({...data.catalog,pages:rawPages},coveragePlan,data.catalog_review_results||{}),pending=[],completeJobs=[];
+  // Authenticate the original cached page before reviewed coverage removes
+  // resolved links. Derived coverage is not byte-identical to its raw capture.
+  const authenticated=new Set(pages.filter((p,i)=>rawPages[i].captured_at>=run.created_at||
+    (run.direct_pages||[]).some(d=>canonicalEvidence(d)===canonicalEvidence(rawPages[i]))));
+  const inRun=p=>authenticated.has(p);
   const checked=await checkedCatalogPapers(data);
   // Fresh browser pages plus byte-equivalent server-supplied cached pages are
   // the only eligible evidence. Do not let the engine's time-only freshness
   // check reject an authenticated pre-run direct capture.
   const repair=catalogRepairJobs({...data.catalog,pages:pages.filter(inRun),run_started_at:null});
   for(const job of run.jobs) {
-    const task=taskFor(job.catalog_id), captured=pages.filter(p=>p.task_id===job.catalog_id && inRun(p) &&
+    const task=taskFor(job.catalog_id), captured=catalogPagesForJob(pages,job,task).filter(p=>inRun(p) &&
       catalogUrl(p.source_url,task) && ['catalog_candidates','catalog_empty','catalog_landing'].includes(p.status));
     const root=captured.find(p=>[p.requested_url,p.source_url].includes(job.url));
-    const unfinished=(data.catalog.queue||[]).filter(j=>j.task_id===job.catalog_id).some((j)=>
+    const belongs=j=>j.task_id===job.catalog_id&&(j.url===job.url||captured.some(p=>[p.requested_url,p.source_url,...(p.next_links||[]),p.issue_target].includes(j.url)));
+    const unfinished=(data.catalog.queue||[]).filter(belongs).some((j)=>
       !captured.some(p=>[p.requested_url,p.source_url].includes(j.url)))||
-      (data.catalog.queue||[]).slice(data.catalog.cursor).some(j=>j.task_id===job.catalog_id);
-    const unreviewed=checked.some(p=>p.catalog_memberships?.some(m=>m.task_id===job.catalog_id)&&p.review_status!=='source_checked_candidate'&&p.type!=='other'&&!excludedJpePaper(p));
-    const missingLinkedPage=captured.some(p=>[...(p.next_links||[]),...(p.issue_target?[p.issue_target]:[])].some(u=>
+      (data.catalog.queue||[]).slice(data.catalog.cursor).some(belongs);
+    const unreviewed=checked.some(p=>p.catalog_memberships?.some(m=>m.task_id===job.catalog_id&&captured.some(c=>c.source_url===m.catalog_url))&&
+      (p.review_status!=='source_checked_candidate'||p.review_decisions?.catalog_membership?.status==='uncertain')&&!excludedJpePaper(p));
+    const missingLinkedPage=captured.some(p=>[...(onlinePaginationStop(p,task,now)?[]:p.next_links||[]),...(p.issue_target?[p.issue_target]:[])].some(u=>
       !captured.some(q=>[q.requested_url,q.source_url].includes(u))));
-    if(!root || unfinished || missingLinkedPage || unreviewed || repair.some(j=>j.task_id===job.catalog_id) || captured.some(p=>p.more_controls?.length || p.pagination_unresolved || p.pagination_note ||
-      p.warnings?.some(w=>/not_stable|limit|unresolved|unmatched_article_links/i.test(w)))) pending.push(job);
+    if(!root || unfinished || missingLinkedPage || unreviewed || repair.some(belongs) || captured.some(p=>p.more_controls?.length || p.pagination_unresolved || p.pagination_note ||
+      p.warnings?.some(w=>/not_stable|limit|unresolved|unmatched_article_links/i.test(w)))) pending.push({...job,reason:!root?'page_missing':unfinished||missingLinkedPage?'pagination_missing':unreviewed?'membership_review_pending':'completeness_pending'});
     else completeJobs.push(job);
   }
-  const lib=new Map(library.papers.map(p=>[p.doi,p]));
   const accepted=new Set(prepared.sources.map(s=>s.doi));
   const pendingPapers=[];
   for(const p of checked) {
     if(!run.jobs.some(j=>p.catalog_memberships?.some(m=>m.task_id===j.catalog_id))) continue;
-    if(excludedJpePaper(p)||p.type==='other')continue;
-    const paper=lib.get(p.doi), source=prepared.sources.find(s=>s.doi===p.doi);
-    const old=state.checked_papers.find(x=>x.doi===p.doi&&x.journal===p.journal);
-    let status=paper?.journal_key===p.journal&&(paper.abstract_original||classifyPaper(paper).kind==='other')?'complete':
+    if(excludedJpePaper(p)||p.review_decisions?.catalog_membership?.status==='out_of_scope')continue;
+    const scope=collectionScope(p,now);if(!scope.eligible&&!scope.needs_review)continue;
+    const paper=findPaper(p,library.papers), source=findPaper(p,prepared.sources);
+    const old=findPaper(p,state.checked_papers);
+    let status=paper?.journal_key===p.journal&&paper.abstract_original?'complete':
       old?.status==='confirmed_absent'?'confirmed_absent':null;
-    if(!status && source?.raw_dates?.browser_import?.abstract_state==='confirmed_absent') status='confirmed_absent';
+    if(!status&&p.abstract_status==='confirmed_absent')status='confirmed_absent';
+    if(!status && (paper&&confirmedAbstractAbsent(paper)||source&&confirmedAbstractAbsent({source_records:[source]}))) status='confirmed_absent';
     if(!status) pendingPapers.push({doi:p.doi||null,journal:p.journal,title:p.title,url:p.url,catalog_memberships:p.catalog_memberships,next_retry_at:new Date(now.getTime()+7*86400000).toISOString(),
       reason:!p.doi?'no_doi_yet':accepted.has(p.doi)?'abstract_missing':'detail_or_identity_pending'});
     if(p.doi && (source || status)) {
@@ -194,6 +213,6 @@ export async function applyCollectionReceipt(input, run, data, prepared, library
   }
   state.receipts=state.receipts.filter(r=>r.id!==run.id);
   state.receipts.push({id:run.id,at,mode:run.mode,completed_catalogs:completeJobs.length,pending_catalogs:pending.length,
-    pending_papers:pendingPapers,input_sha256:prepared.input_sha256});
+    pending_catalog_details:pending,pending_papers:pendingPapers,input_sha256:prepared.input_sha256});
   state.updated_at=at; return validateWorkflow(state);
 }

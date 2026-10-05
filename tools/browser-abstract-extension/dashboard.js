@@ -1,3 +1,4 @@
+import {taskIdentity,samePaper} from './paper-identity.js';
 import { assessCapture } from './core.js';
 import { readArticleDocument } from './extractor.js';
 import { QueueEngine } from './engine.js';
@@ -7,7 +8,7 @@ import {buildDetailQueue,mergeDetailPapers,reconcileDetailQueue,applyDetailTypes
 import {abstractRetryComplete} from './abstract-availability.js';
 import {excludedJpePaper} from './collection-policy.js';
 import {recoverStoredOcr} from './ocr-core.js';
-import {closeOwnedJpePanel,collectJpeAffiliations,mergeJpeAffiliations} from './jpe-panel.js';
+import {closeOwnedJpePanel} from './jpe-panel.js';
 import {workflowId,storedRun,catalogKey,detailKey,incrementalPapers,workflowRequest} from './workflow-client.js';
 
 const $ = id => document.getElementById(id);
@@ -22,8 +23,8 @@ async function checkpointAvailable(){
   checkpointing=true;
   try{
     const data=await exportPayload();
-    const accepted=new Set(Object.values(data.ai_review_results||{}).filter(r=>r.verdict?.status==='source_checked_candidate').map(r=>r.input.identity.doi));
-    data.records=data.records.filter(r=>accepted.has(r.doi));
+    const accepted=new Set(Object.values(data.ai_review_results||{}).filter(r=>r.verdict?.status==='source_checked_candidate').map(r=>taskIdentity(r.input.identity)));
+    data.records=data.records.filter(r=>accepted.has(taskIdentity(r)));
     if(!data.records.length)return;
     const signature=await reviewFingerprint({records:data.records,ai_review_results:data.ai_review_results,catalog_review_results:data.catalog_review_results});
     const key='paper_incremental_checkpoint_'+runId;
@@ -67,20 +68,20 @@ function render(s) {
   $('export').disabled = false;
   document.title = `${s.mode === 'running' ? '运行中' : s.mode === 'done' ? '已完成' : '已暂停'} · 论文摘要助手`;
   const cards = controller.papers.map(paper => {
-    const record = s.records.find(r => r.doi === paper.doi), card = document.createElement('article');
+    const record = s.records.find(r => samePaper(r,paper)), card = document.createElement('article');
     const title = document.createElement('h3'); title.textContent = `${paper.journal} · ${paper.title}`;
     const link = document.createElement('a'); link.href = paper.url; link.textContent = paper.doi; link.target = '_blank'; link.rel = 'noopener noreferrer';
     const status = document.createElement('p'); status.className = 'result'; status.textContent = record ? labels[record.status] || record.status : '等待处理';
     card.append(title, link, status);
     if(controller.excluded(paper)){const note=document.createElement('p');note.textContent='已按要求放弃：JPE Just Accepted / 图片摘要。不再采集、识别或重试；历史记录保留。';card.append(note);}
-    if(record?.ocr&&!controller.excluded(paper)){const note=document.createElement('p'),checked=reviewed.find(r=>r.doi===paper.doi),recovered=recoverStoredOcr(record);
+    if(record?.ocr&&!controller.excluded(paper)){const note=document.createElement('p'),checked=reviewed.find(r=>samePaper(r,paper)),recovered=recoverStoredOcr(record);
       note.textContent=checked?.abstract?'图片摘要已保存；OCR 原文和来源可追溯，但不保证逐字符识别无误。':recovered.ocr.extraction?.abstract?'已从保存的 OCR 原文找到摘要候选，待 DeepSeek 核对；无需重新打开网页。':`图片摘要未补全：${record.ocr.extraction?.status||record.ocr.status||'未识别'}。不会生成摘要。`;card.append(note);}
     if (record?.abstract) {
       const details = document.createElement('details'), summary = document.createElement('summary'), text = document.createElement('pre');
       summary.textContent = `查看候选英文摘要（${record.abstract.length} 字符）`; text.textContent = record.abstract;
       details.append(summary, text); card.append(details);
     }
-    const checked=reviewed.find(r=>r.doi===paper.doi);
+    const checked=reviewed.find(r=>samePaper(r,paper));
     if(checked?.abstract_status==='confirmed_absent'){const note=document.createElement('p');note.textContent='已确认：出版社没有独立摘要。保留空值，不生成摘要，不自动重试。';card.append(note);}
     if(checked?.type==='other'){const note=document.createElement('p');note.textContent='其他：已根据原文确认非研究文章；保留记录，不参加缺摘要重试。';card.append(note);}
     if(checked?.affiliations?.length){
@@ -100,15 +101,6 @@ function expandExplicitAbstract() {
   }
   return false;
 }
-function expandExplicitAffiliations(){
-  for(const el of document.querySelectorAll('button,[role="button"],a[href^="#"]')){
-    if(/^(?:author (?:information|affiliations|info(?:rmation)? and affiliations)|authors and affiliations|show (?:all )?affiliations|show more|作者信息|作者单位)$/i.test((el.textContent||el.getAttribute('aria-label')||'').trim()) &&
-      el.getBoundingClientRect().height>0 && el.getAttribute('aria-expanded')!=='true' && !el.dataset.paperAffiliationExpanded){
-      if(/^show more$/i.test(el.textContent.trim())&&!el.closest('.author-group,.AuthorGroups,.authors,.author-info'))continue;
-      el.dataset.paperAffiliationExpanded='1';el.click();return true;
-    }
-  }return false;
-}
 async function inspect(tabId, paper) {
   const execute=(func,args=[])=>chrome.scripting.executeScript({target:{tabId,frameIds:[0]},func,args});
   const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -120,20 +112,9 @@ async function inspect(tabId, paper) {
   if (!values[0]?.result) return { status: 'page_unavailable', abstract: null };
   let capture=values[0].result,result=assessCapture(paper,capture);
   if(paper.journal==='JPE'&&!result.abstract&&capture.evidence?.some(b=>/\bJust Accepted\b/i.test(b.text||'')))result.collection_status='excluded_by_user';
-  if (result.identity?.ok) {
-    if(paper.journal==='JPE'&&result.abstract&&!capture.affiliation_candidates?.length){
-      const authors=await collectJpeAffiliations(execute,paper,async()=>{
-        const extra=(await execute(readArticleDocument))?.[0]?.result;
-        return extra&&assessCapture(paper,extra).identity?.ok?extra:null;
-      },wait);
-      capture=mergeJpeAffiliations(capture,authors.capture);
-      result.author_panel={status:authors.status,cleanup:authors.cleanup};
-      if(['close_failed','close_unavailable','owned_panel_open'].includes(authors.cleanup))result.panel_cleanup_failed=true;
-    }
-    result.evidence = capture.evidence; result.evidence_version = capture.evidence_version;
-    result.affiliation_candidates=capture.affiliation_candidates||[];result.affiliation_extraction_version=capture.affiliation_extraction_version;
-    if(paper.journal!=='JPE'&&!result.affiliation_candidates.length){const expanded=await chrome.scripting.executeScript({target:{tabId,frameIds:[0]},func:expandExplicitAffiliations});result.pending_affiliations=expanded[0]?.result===true;}
-  }
+  // Capture evidence even when the preliminary identity or field parser is unsure.
+  result.evidence = capture.evidence; result.evidence_version = capture.evidence_version;
+  result.affiliation_candidates=capture.affiliation_candidates||[];result.affiliation_extraction_version=capture.affiliation_extraction_version;
   if (result.status === 'not_found' && result.identity?.ok) {
     await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, func: expandExplicitAbstract });
   }
@@ -159,10 +140,10 @@ async function boot(){
     const python=(await chrome.storage.local.get('paper_python_records_'+runId))['paper_python_records_'+runId];
     if(python?.length){
       const available=buildDetailQueue(incrementalPapers(catalogPapers,workflowRun)).papers;
-      const prior=python.filter(r=>available.some(p=>p.doi===r.doi));
-      const detailPlan=await prepareReviewPlan(makeReviewJobs(null,{records:prior}),reviews),checked=await reviewedArticleRecords({records:prior},detailPlan,reviews);
-      const done=new Set(checked.filter(r=>r.abstract&&r.affiliations?.length&&r.authors_raw&&r.publication_month).map(r=>r.doi));
-      saved={schema_version:1,sample_dois:available.map(p=>p.doi),detail_papers:available,queue:available.filter(p=>!done.has(p.doi)).map(p=>p.doi),cursor:0,
+      const prior=python.filter(r=>available.some(p=>samePaper(p,r)));
+      const detailPlan=await prepareReviewPlan(makeReviewJobs(null,{records:prior,review_context:workflowRun.review_context}),reviews),checked=await reviewedArticleRecords({records:prior},detailPlan,reviews);
+      const done=new Set(checked.filter(abstractRetryComplete).map(taskIdentity));
+      saved={schema_version:1,sample_dois:available.map(taskIdentity),detail_papers:available,queue:available.filter(p=>!done.has(taskIdentity(p))).map(taskIdentity),cursor:0,
         mode:'paused',reason:'继续 Python 剩余文章；已有原文和审核结果保留。',records:prior,history:[],attempts:0};
     }
   }
@@ -171,7 +152,7 @@ async function boot(){
   const sessionKey=stateKey+'_owned_tab';
   controller=new QueueEngine(papers,{
     autoResumeVerification:true,peek:async(tabId,paper)=>{const r=await chrome.scripting.executeScript({target:{tabId,frameIds:[0]},func:readArticleDocument});return r[0]?.result?assessCapture(paper,r[0].result):{};},
-    excludedDois:catalogPapers.filter(excludedJpePaper).map(p=>p.doi),now:()=>Date.now(),render,
+    excludedDois:catalogPapers.filter(excludedJpePaper).map(taskIdentity),now:()=>Date.now(),render,
     load:async()=>reconciled.saved,save:value=>chrome.storage.local.set({[stateKey]:{...value,detail_papers:papers}}),
     loadSession:async()=>(await chrome.storage.session.get(sessionKey))[sessionKey],saveSession:value=>chrome.storage.session.set({[sessionKey]:value}),
     createTab:url=>chrome.tabs.create({url,active:true}),getTab:id=>chrome.tabs.get(id),navigate:(id,url)=>chrome.tabs.update(id,{url}),inspect
@@ -180,7 +161,7 @@ async function boot(){
     if(!writable)return;
     try{
       if(name==='pause'){autoReview.stop();await controller.pause();return;}
-      if(name==='retry'){await refreshReviewed();autoReview.reset();await controller.retry({excludedDois:reviewed.filter(p=>p.type==='other').map(p=>p.doi),checkedDois:reviewed.filter(abstractRetryComplete).map(p=>p.doi)});await controller.start();return;}
+      if(name==='retry'){await refreshReviewed();autoReview.reset();await controller.retry({checkedDois:reviewed.filter(abstractRetryComplete).map(taskIdentity)});await controller.start();return;}
       autoReview.reset();await controller[name]();if(name==='recheck')await controller.start();
     }catch(e){$('status').textContent='操作未完成：'+e.message;}
   };
@@ -193,6 +174,7 @@ async function boot(){
   await navigator.locks.request('paper-abstract-controller',{ifAvailable:true},async lock=>{
     if(!lock){$('status').textContent='另一任务面板正在运行，请回到原面板。';return;}
     writable=true;await controller.init();
+    controller.s.review_context=workflowRun.review_context;
     autoReview=mountAutoReview(()=>makeReviewJobs(null,controller.s),'details-'+runId,refreshReviewed);await refreshReviewed();
     if(new URL(location.href).searchParams.get('autostart')==='1'){history.replaceState(null,'','dashboard.html?queue=catalog&run='+runId);await controller.start();}
     const listener=(m,sender,reply)=>{

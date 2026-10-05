@@ -29,7 +29,7 @@ export function createSourceReviewer({apiKey,stateDir,fetchImpl=fetch,maxCalls=5
       try{previous=JSON.parse(await fs.readFile(file,'utf8'));previous={...previous,attempt:previous.attempt||1,...reviewErrorPolicy(previous.error)};}
       catch(e){if(e.code!=='ENOENT')throw Error('CACHE_UNREADABLE');}
       if(previous&&!(previous.error&&previous.retryable&&previous.attempt<MAX_REVIEW_ATTEMPTS&&Number(retryHeader)===previous.attempt))
-        return reply(200,{...previous,cached:true});
+        return reply(200,{...previous,...(previous.output?{verdict:validateReviewOutput(input,previous.output)}:{}),cached:true});
       if(!previous&&retryHeader!==undefined)return reply(409,{error:'RETRY_WITHOUT_PRIOR_ATTEMPT'});
       if(calls>=maxCalls)return reply(429,{error:'SESSION_LIMIT'});
       const attempt=previous?previous.attempt+1:1,started=Date.now();
@@ -56,8 +56,8 @@ export function createSourceReviewer({apiKey,stateDir,fetchImpl=fetch,maxCalls=5
           let output;try{output=JSON.parse(choice.message.content);}catch{throw Error('PROVIDER_INVALID_JSON');}
           if(typeof output?.identity_match!=='boolean'||!output.fields||Array.isArray(output.fields)||typeof output.fields!=='object')throw Error('PROVIDER_INVALID_REVIEW_SHAPE');
           const verdict=validateReviewOutput(input,output);
-          result={fingerprint,verdict,usage:{prompt_tokens:data.usage?.prompt_tokens??null,completion_tokens:data.usage?.completion_tokens??null},checked_at:new Date().toISOString()};
-          if((input.blocks.some(b=>b.id==='catalog-abstract')||(input.review_protocol===ARTICLE_REVIEW_PROTOCOL&&expectsAbstract(input)))&&verdict.status==='source_checked_candidate'&&!verdict.fields.abstract)
+          result={fingerprint,verdict,output,usage:{prompt_tokens:data.usage?.prompt_tokens??null,completion_tokens:data.usage?.completion_tokens??null},checked_at:new Date().toISOString()};
+          if(!input.decision_version&&(input.blocks.some(b=>b.id==='catalog-abstract')||(input.review_protocol===ARTICLE_REVIEW_PROTOCOL&&expectsAbstract(input)))&&verdict.status==='source_checked_candidate'&&!verdict.fields.abstract)
             result.error='PROVIDER_ABSTRACT_NOT_EXTRACTED';
         }
       }catch(e){

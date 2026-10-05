@@ -1,5 +1,7 @@
 import { ACTIVE_CATALOG_TASKS, catalogUrl } from './catalog-core.js';
 import {REVIEW_KEY} from './review-client.js';
+import {collectionScope,needsAbstract} from './collection-policy.js';
+import {findPaper} from './paper-identity.js';
 export const WORKFLOW_ORIGIN='http://127.0.0.1:17328';
 export const runKey=id=>`paper_workflow_run_${id}`;
 export const catalogKey=id=>`paper_workflow_catalog_${id}`;
@@ -28,8 +30,8 @@ export async function storedRun(id){
 export function incrementalPapers(papers,run,now=Date.now()){
   return papers.filter(p=>{
     if(p.review_status!=='source_checked_candidate')return false;
-    const old=run.known_papers.find(x=>x.doi&&x.doi===p.doi&&x.journal===p.journal);
-    return !old?.complete&&(!old?.next_retry_at||Date.parse(old.next_retry_at)<=now);
+    const old=findPaper(p,run.known_papers),scope=collectionScope(p,new Date(now));
+    return needsAbstract(p)&&p.review_decisions?.catalog_membership?.status!=='out_of_scope'&&(scope.eligible||scope.needs_review)&&!old?.complete&&(!old?.next_retry_at||Date.parse(old.next_retry_at)<=now);
   });
 }
 export async function saveRun(run){
@@ -47,6 +49,6 @@ export async function saveRun(run){
   const pages=run.direct_pages||[],directJobs=[...new Map(pages.map(p=>[p.task_id+'|'+p.requested_url,{task_id:p.task_id,url:p.requested_url,depth:0}])).values()];
   const browserJobs=run.jobs.filter(j=>!directJobs.some(d=>d.task_id===j.catalog_id&&d.url===j.url)).map(j=>({task_id:j.catalog_id,url:j.url,depth:0}));
   await chrome.storage.local.set({[runKey(run.id)]:run,...(!existing&&!run.browser_snapshot?{[catalogKey(run.id)]:{schema_version:1,mode:'paused',reason:'正式任务已建立；不会清除网站提醒。',
-    run_started_at:run.created_at,scope_task_ids:[...new Set(run.jobs.map(j=>j.catalog_id))],
+    run_started_at:run.created_at,review_context:run.review_context,scope_task_ids:[...new Set(run.jobs.map(j=>j.catalog_id))],
     queue:[...directJobs,...browserJobs],cursor:directJobs.length,pages,history:[]}}:{})});
 }

@@ -7,6 +7,7 @@ import { unresolvedTitleConflict } from './titleConsensus.js';
 import { fillMissingMetadata } from './searchMetadata.js';
 import { dateInShanghai } from './paperMerge.js';
 import { assertLibrary, isIsoTime, stableJson } from './libraryValidation.js';
+import {correctionAuthority,applyReviewedSource} from './reviewedCorrection.js';
 
 const discoveryRecord = row => !row.source_evidence ||
   ['semanticscholar_discovery_api', 'publisher_rss', 'article_without_abstract', 'article_metadata_abstract'].includes(row.source_evidence.method);
@@ -17,6 +18,13 @@ const compatibleAuthors = (a, b) => !a.authors.length || !b.authors.length || au
  * Newly filled canonical fields cannot provide circular proof for themselves. */
 export function duplicateMergeProof(original, target, input, checkedAt) {
   let record; try { record = normalizeSourceRecord(input); } catch { return null; }
+  if(original&&target&&original.id!==target.id&&!original.doi&&target.doi===record.doi&&isIsoTime(checkedAt)&&
+    correctionAuthority(record,original)&&correctionAuthority(record,target)){
+    const reviewed=correctionAuthority(record,target).verdict;
+    if(reviewed.fields.title===record.title&&reviewed.fields.doi===record.doi&&
+      original.source_records.every(r=>!r.doi&&r.journal_key===target.journal_key))
+      return {record,anchor:{source:original.source_records[0].source,source_id:original.source_records[0].source_id},method:'deepseek_reviewed_identity'};
+  }
   if (!original || !target || original.id === target.id || original.doi || !target.doi ||
     original.journal_key !== target.journal_key || record.journal_key !== target.journal_key || record.doi !== target.doi ||
     !isIsoTime(checkedAt) || [original, target].some(p => !isIsoTime(p.last_checked_at) || Date.parse(p.last_checked_at) > Date.parse(checkedAt)) ||
@@ -52,7 +60,7 @@ export function duplicateMergeProof(original, target, input, checkedAt) {
 export function mergeConfirmedDuplicate(original, target, input, checkedAt) {
   const proof = duplicateMergeProof(original, target, input, checkedAt);
   assertLibrary(proof, '重复记录缺少可追溯的同一论文身份证据');
-  let merged = structuredClone(target);
+  let merged = proof.method==='deepseek_reviewed_identity'?applyReviewedSource(target,proof.record,{allowCorrection:true,checkedAt}).paper:structuredClone(target);
   const candidates = [...original.source_records, proof.record];
   for (const row of candidates) if (!merged.source_records.some(existing => stableJson(existing) === stableJson(row))) merged.source_records.push(structuredClone(row));
   merged.sources = [...new Set(merged.source_records.map(row => row.source))].sort();

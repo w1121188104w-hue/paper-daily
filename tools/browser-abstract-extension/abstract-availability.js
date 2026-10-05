@@ -14,4 +14,6 @@ export function applyAbstractAvailability(record){
   }
   return out;
 }
-export const abstractRetryComplete=r=>!!r.abstract||applyAbstractAvailability(r).abstract_status==='confirmed_absent';
+export const abstractRetryComplete=r=>!!r.abstract||
+  r.abstract_status==='confirmed_absent'&&r.abstract_absence?.method==='deepseek_source_checked'&&r.abstract_absence.proofs?.length>0&&r.review_status==='source_checked_candidate'||
+  applyAbstractAvailability(r).abstract_status==='confirmed_absent';

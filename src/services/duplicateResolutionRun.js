@@ -64,3 +64,32 @@ export async function runDuplicateResolution(config, { root, journalKey, maxPape
     return { committed: true, status: 'success', run_id: runId, stats, report };
   });
 }
+
+// Called under the existing import writer lock. The ordinary archival validator
+// replays these merges and retains both before-images; no history is deleted.
+export async function saveReviewedDuplicateMerges(config,{root,previous,sources,at,save}){
+  const checkedAt=at.toISOString(),claims=[];let working=previous.papers;
+  for(const record of sources.filter(s=>s.doi)){
+    const target=working.find(p=>p.journal_key===record.journal_key&&p.doi===record.doi);
+    if(!target)continue;
+    const originals=working.filter(p=>!p.doi&&duplicateMergeProof(p,target,record,checkedAt)?.method==='deepseek_reviewed_identity');
+    for(const original of originals){
+      const claim={original_id:original.id,target_id:target.id,record};
+      working=applyDuplicateResolutions(working,[claim],checkedAt).papers;claims.push(claim);
+    }
+  }
+  if(!claims.length)return {previous,merged:0};
+  const result=applyDuplicateResolutions(previous.papers,claims,checkedAt),state=duplicateWorkingState(previous,result.papers);
+  if(!save)return {previous:{...previous,papers:result.papers},merged:claims.length,merges:result.merges};
+  const runId=newRunId(at),day=dateInShanghai(at),abstracts=result.papers.filter(p=>!previous.papers.find(o=>o.id===p.id)?.abstract_original&&p.abstract_original)
+    .map(p=>({paper_id:p.id,journal_key:p.journal_key,doi:p.doi,status:'found',abstract_source:p.provenance.abstract_original.source,attempts:[]}));
+  const stats={added:0,merged:claims.length,abstracts_filled:abstracts.length,abstracts_checked:abstracts.length,pending_candidates:0};
+  const report={schema_version:1,run_id:runId,stage:'duplicate_resolution',status:'success',checked_at:checkedAt,from_date:day,to_date:day,
+    stats,journals:[],abstracts,merges:result.merges,archived_issues:state.archived_issues,archived_abstract_state:state.archived_abstract_state};
+  const log={schema_version:1,run_id:runId,kind:'duplicate_resolution',run_date:day,started_at:checkedAt,finished_at:checkedAt,
+    from_date:day,to_date:day,status:'success',stats,report:{}};
+  validateEnrichmentReport(report,log);log.report=await writeLibraryJson(root,`snapshots/${runId}/enrichment-report.json`,report);
+  await publishLibrarySnapshot({root,config,previous,papers:result.papers,enrichment:log,enrichmentState:state.enrichmentState,
+    audit:{...previous.audit,duplicates:[...(previous.audit?.duplicates||[]),...result.merges.map(m=>({type:'reviewed_identity_merge',original_id:m.original.id,target_id:m.resolution.target_id,evidence:log.report.path}))]}});
+  return {previous:await readJournalLibrary({root,config}),merged:claims.length,merges:result.merges};
+}

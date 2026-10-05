@@ -9,6 +9,8 @@ import { evidence } from './paperMerge.js';
 import { publicationFor } from './masterList.js';
 import { journalIdentity, knownJournalMismatch } from './journalIdentity.js';
 import { needsCarEnglishAbstract, missingOriginalAbstract } from './carAbstractLanguage.js';
+import {confirmedAbstractAbsent} from '../../tools/browser-abstract-extension/collection-policy.js';
+import {sourceReviewProof} from './reviewedCorrection.js';
 
 // Explicit public fields: never serialize a library snapshot or raw source response directly.
 const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_category', 'journal_category_zh',
@@ -21,6 +23,8 @@ const publicSource = (source) => ['crossref', 'openalex', 'publisher', 'semantic
 function publicationInfo(paper) {
   const publication = publicationFor(paper), dates = {}, sources = {}, conflicts = [];
   for (const field of DATE_FIELDS) {
+    const reviewed=[...paper.source_records].reverse().find(r=>sourceReviewProof(r)?.verdict.fields[field]&&r[field]===paper[field]);
+    if(reviewed){dates[field]=paper[field];sources[field]=publicSource(reviewed.source);continue;}
     const rows = evidence(paper.source_records, field).filter(r => r[field]);
     const years = new Set(rows.map(r => r[field].slice(0, 4)));
     const months = new Set(rows.filter(r => r[field].length >= 7).map(r => r[field].slice(0, 7)));
@@ -47,7 +51,7 @@ function abstractInfo(paper, state, repairState) {
   let url = record?.source_evidence?.url || '';
   if (!url && record?.source === 'crossref' && paper.doi) url = `https://api.crossref.org/works/${encodeURIComponent(paper.doi)}`;
   if (!url && record?.source === 'openalex' && /^W\d+$/.test(record.source_id)) url = `https://openalex.org/${record.source_id}`;
-  return { abstract_status: needsCarEnglishAbstract(paper) ? 'english_missing' : paper.abstract_original ? record?.source_evidence ? 'found' : 'available' : retry?.status || 'missing',
+  return { abstract_status: confirmedAbstractAbsent(paper)?'confirmed_absent':needsCarEnglishAbstract(paper) ? 'english_missing' : paper.abstract_original ? record?.source_evidence ? 'found' : 'available' : retry?.status || 'missing',
     abstract_source: publicSource(provenance?.source), abstract_source_url: url,
     abstract_last_checked_at: retry?.last_checked_at || record?.last_checked_at || null,
     abstract_next_retry_at: missingOriginalAbstract(paper) ? retry?.next_retry_at || null : null };
@@ -103,7 +107,7 @@ export function presentJournalLibrary(library, config) {
     pending: select(library.queue, ['paper_count', 'field_count']),
     enrichment: { latest: [...(library.enrichments || [])].sort((a,b) => b.started_at.localeCompare(a.started_at))[0] ?
       select([...(library.enrichments || [])].sort((a,b) => b.started_at.localeCompare(a.started_at))[0], ['started_at','finished_at','from_date','to_date','status','stats']) : null,
-      journals: [], missing_abstracts: papers.filter(missingOriginalAbstract).length },
+      journals: [], missing_abstracts: papers.filter(p=>p.abstract_status!=='confirmed_absent'&&missingOriginalAbstract(p)).length },
     attempt_warning: null
   };
 }

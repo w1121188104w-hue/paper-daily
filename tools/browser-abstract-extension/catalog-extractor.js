@@ -4,6 +4,7 @@ export function readCatalogDocument() {
   const visible = el => !!el && !el.closest('[hidden],[aria-hidden="true"]') && el.getBoundingClientRect().height > 0;
   const safeLink = el => { try { const u = new URL(el.getAttribute('href'), location.href); const id=u.hostname==='www.aeaweb.org'&&u.pathname==='/articles'?u.searchParams.get('id'):null; u.search = ''; u.hash = ''; if(id&&/^10\.1257\/aer\.[^\s?#]+$/i.test(id))u.searchParams.set('id',id); return u.href; } catch { return ''; } };
   const body = text(document.body), page_title = document.title;
+  const sort_evidence=[...document.querySelectorAll('select option:checked,[aria-pressed="true"],[aria-selected="true"]')].map(text).find(s=>/first (?:online|published)/i.test(s)&&/newest|descending|latest first/i.test(s))||null;
   const gate = [...document.querySelectorAll('iframe[src*="captcha"],iframe[src*="challenge"],#challenge-running,#challenge-stage,.g-recaptcha')].some(visible);
   const challenge = gate || /just a moment|access denied|robot check|are you (?:a )?robot\s*\?|verify (?:you are|that you)|checking your browser|security verification|unusual traffic|请稍候|验证您是否|人机验证/i.test(page_title + ' ' + body.slice(0, 1800));
   const page_not_found = /^(?:404\b|not found\b|page not found\b)/i.test(page_title.trim()) ||
@@ -132,8 +133,12 @@ export function readCatalogDocument() {
   const issue_links = [...document.querySelectorAll('a[href]')].filter(a => /^current issue$/i.test(text(a)) || /\/volumes-and-issues\/\d+-[\d-]+$/.test(a.pathname)).map(a=>({url:a.href,label:text(a)}));
   const observed_article_links = [...new Set([...document.querySelectorAll('a[href]')].filter(a=>!exclude(a)&&articlePath(a.href)&&text(a).length>20&&!/^(?:https?:|10\.|full text|download|view|add to|open the)/i.test(text(a))).map(safeLink))];
   const unmatched_article_links = observed_article_links.filter(url=>!items.some(i=>i.url===url));
+  const article_link_contexts=[...document.querySelectorAll('a[href]')].filter(a=>unmatched_article_links.includes(safeLink(a))).map(a=>{
+    const section=a.closest('section,aside,.widget,.related-content')||a.parentElement;
+    return {url:safeLink(a),section:text(section?.querySelector('h1,h2,h3,h4')).slice(0,300),text:text(section).slice(0,2500)};
+  }).slice(0,100);
   return { url: location.href, page_title, headings, issns, challenge, page_not_found, items, raw_card_count: roots.length,
-    adapter: roots.length ? 'publisher_cards' : 'heading_fallback', issue_heading,
+    adapter: roots.length ? 'publisher_cards' : 'heading_fallback', issue_heading,article_link_contexts,sort_evidence,sort_order:sort_evidence?'first_online_desc':null,
     next_links: [...new Set(next_links)], pagination_current, pagination_unresolved, more_controls, navigation_links, issue_links, observed_article_links, unmatched_article_links,
     empty_message: body.match(/(?:this journal currently does not have articles in press|no articles (?:are )?(?:currently )?available|there are currently no articles|no results found)/i)?.[0] || null,
     warnings: [ ...(unmatched_article_links.length ? ['unmatched_article_links:' + unmatched_article_links.length] : []), ...(roots.length > 500 ? ['card_limit_500'] : []), ...(navigationText ? ['pagination_present:' + navigationText] : []),

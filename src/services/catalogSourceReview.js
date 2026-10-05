@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {makeReviewJobs,reviewedCatalogPapers} from '../../tools/browser-abstract-extension/review-core.js';
+import {makeReviewJobs,reviewedCatalogPapers,reviewedCatalogCoverage} from '../../tools/browser-abstract-extension/review-core.js';
+import {reviewRecord} from '../../tools/browser-abstract-extension/review-decisions.js';
 import {prepareReviewPlan,canRetryReview} from '../../tools/browser-abstract-extension/review-client.js';
 import {canonicalEvidence} from '../../tools/browser-abstract-extension/article-review.js';
 import {reviewJob} from './sourceReview.js';
@@ -11,8 +12,8 @@ export async function readCatalogReviews(repo){
     if(value.version!==1||!value.results||Array.isArray(value.results))throw Error('INVALID_CATALOG_REVIEWS');return value.results;
   }catch(e){if(e.code==='ENOENT')return {};throw e;}
 }
-export async function reviewCatalogPages(repo,pages,{request,maxJobs=500,checkpoint=async()=>{}}={}){
-  const results=await readCatalogReviews(repo),catalog={pages},plan=await prepareReviewPlan(makeReviewJobs(catalog,null),results);let processed=0;
+export async function reviewCatalogPages(repo,pages,{request,maxJobs=500,knownPapers=[],checkpoint=async()=>{}}={}){
+  const results=await readCatalogReviews(repo),catalog={pages,review_context:{known_papers:knownPapers.map(reviewRecord)}},plan=await prepareReviewPlan(makeReviewJobs(catalog,null),results);let processed=0;
   for(const job of plan.jobs){
     if(results[job.hash]&&canonicalEvidence(results[job.hash].input)!==canonicalEvidence(job.input))delete results[job.hash];
     const prior=results[job.hash],unbilled=prior&&!prior.fingerprint&&['SESSION_LIMIT','BUSY'].includes(prior.error);
@@ -23,5 +24,5 @@ export async function reviewCatalogPages(repo,pages,{request,maxJobs=500,checkpo
       if(results[job.hash].global_failure)break;
     }
   }
-  return {papers:reviewedCatalogPapers(catalog,plan,results),results,processed};
+  return {papers:reviewedCatalogPapers(catalog,plan,results),coverage:reviewedCatalogCoverage(catalog,plan,results),catalog,results,processed};
 }

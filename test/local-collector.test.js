@@ -24,7 +24,8 @@ test('plugin-controlled Python captures feed real shared reviewer and independen
   const service=createSourceReviewer({apiKey:'test-placeholder-key',stateDir:path.join(repo,'reviews'),fetchImpl:async(u,opts)=>{
     paid++;const input=JSON.parse(JSON.parse(opts.body).messages[1].content),fields={title:{status:'confirmed',spans:[{block_id:input.kind==='catalog'?'card':'title',quote:title}]}};
     if(input.kind==='article'){fields.doi={status:'confirmed',spans:[{block_id:'doi',quote:doi}]};fields.abstract={status:'confirmed',block_ids:['abstract']};}
-    return new Response(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({identity_match:true,fields})}}]}));
+    return new Response(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({identity_match:true,fields,
+      ...(input.kind==='catalog'?{catalog_membership:{status:'in_scope',spans:[{block_id:'card',quote:title}]}}:{})})}}]}));
   }});
   const collector=createLocalCollector({repositoryRoot:repo,stateDir,config,coordinator,pythonExecutable:'python-test',
     requestReview:async(input,options)=>(await service.review(input,{retryHeader:options.retryAttempt})).data,
@@ -43,7 +44,8 @@ test('plugin-controlled Python captures feed real shared reviewer and independen
   await fs.writeFile(path.join(current.dir,'state.json'),JSON.stringify({run_id:run.id,phase:'paused',items,queue:[],cursor:2,remaining:[{doi,reason:'missing_affiliations'}]}));
   processHandle.emit('exit',0);await collector.pulse();await drain(coordinator);assert.ifError(failure);
   const library=await readJournalLibrary({root:path.join(repo,'data/journal-store'),config});assert.equal(library.papers[0].abstract_original,abstract);assert.equal(published,1);assert.equal(paid,2);
-  assert.ok((await readFieldTasks(repo)).papers[0].missing_fields.includes('affiliations'));
+  assert.deepEqual((await readFieldTasks(repo)).papers[0].missing_fields,[]);
+  assert.equal((await readFieldTasks(repo)).papers[0].status,'complete');
   await collector.pulse();await drain(coordinator);assert.equal(paid,2);assert.equal(published,1);
   const fallback=await collector.fallback();assert.equal(fallback.run.browser_snapshot.records.length,1);assert.equal(Object.keys(fallback.run.catalog_review_results).length,2);
   await collector.resume();assert.equal(spawnCount,2);assert.equal((await collector.current()).id,run.id);processHandle.emit('exit',0);
@@ -58,7 +60,8 @@ test('incremental batches do not freeze the parent and reviewed catalog metadata
     status:'catalog_candidates',job_key:'test',items:[{doi,title,journal:'RP',url,evidence:{version:2,text:title,catalog_url:task.url}}]};
   const data={kind:'paper_project',workflow_run_id:run.id,records:[],catalog:{pages:[page],cursor:0,queue:[{task_id:task.id,url:task.url}]},ai_review_results:{},catalog_review_results:{}};
   const plan=await prepareReviewPlan(makeReviewJobs(data.catalog,null));const job=plan.jobs[0];
-  data.catalog_review_results[job.hash]={input:job.input,verdict:validateReviewOutput(job.input,{identity_match:true,fields:{title:{status:'confirmed',spans:[{block_id:'card',quote:title}]}}})};
+  data.catalog_review_results[job.hash]={input:job.input,verdict:validateReviewOutput(job.input,{identity_match:true,
+    catalog_membership:{status:'in_scope',spans:[{block_id:'card',quote:title}]},fields:{title:{status:'confirmed',spans:[{block_id:'card',quote:title}]}}})};
   const first=await c.checkpointCapture(run.id,data);await drain(c);assert.ifError(failure);
   const library=await readJournalLibrary({root:path.join(repo,'data/journal-store'),config});assert.equal(library.papers.length,1);assert.equal(library.papers[0].abstract_original,'');
   assert.equal((await c.checkpointCapture(run.id,data)).duplicate,true);

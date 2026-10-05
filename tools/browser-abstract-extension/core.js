@@ -36,7 +36,7 @@ export function validateSamples(input) {
 export function identityMatches(paper, dois, titles) {
   const expected = normalizeDoi(paper.doi), actual = [...new Set(dois.map(normalizeDoi).filter(Boolean))];
   // Contradictory article metadata is never overridden by a similar title.
-  if (actual.some(d => d !== expected)) return { ok: false, reason: 'doi_conflict' };
+  if (expected && actual.some(d => d !== expected)) return { ok: false, reason: 'doi_conflict' };
   if (actual.includes(expected)) return { ok: true, method: 'exact_doi' };
   if (titles.some(t => normalizeTitle(t) === normalizeTitle(paper.title))) return { ok: true, method: 'exact_normalized_title' };
   return { ok: false, reason: 'identity_unconfirmed' };
@@ -46,7 +46,7 @@ export function assessCapture(paper, capture) {
   if (!source || new URL(source).hostname === 'doi.org') return { ...base, status: 'unsupported_page' };
   if (capture.challenge) return { ...base, status: 'needs_user_verification' };
   const identity = identityMatches(paper, capture.dois || [], capture.titles || []);
-  if (!identity.ok) return { ...base, status: identity.reason };
+  if (!identity.ok) return { ...base, status: identity.reason, identity };
   if (capture.noAbstract) return { ...base, status: 'no_abstract_stated', identity };
   let partial = false;
   for (const candidate of capture.candidates || []) {

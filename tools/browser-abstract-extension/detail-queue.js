@@ -1,10 +1,11 @@
 import {normalizeDoi,safeSourceUrl} from './core.js';
 import {catalogOtherSource,detailOtherSource} from './article-type.js';
 import {applyAbstractAvailability} from './abstract-availability.js';
-import {excludedJpePaper} from './collection-policy.js';
+import {excludedJpePaper,collectionScope,needsAbstract} from './collection-policy.js';
+import {taskIdentity,samePaper} from './paper-identity.js';
 export function applyDetailTypes(papers,records=[]){
   return papers.map(p=>{
-    const record=records.find(r=>r.doi===p.doi&&r.journal===p.journal);
+    const record=records.find(r=>samePaper(r,p));
     const source=catalogOtherSource(p)||(record&&detailOtherSource(record));
     return source?{...p,type:'other',field_sources:{...p.field_sources,type:source}}:{...p};
   });
@@ -41,13 +42,13 @@ export function validateFrozenDetailPapers(papers,max=500){
   if(!Array.isArray(papers)||papers.length>max)throw Error('旧队列数量或格式无效，未覆盖旧数据。');
   const seen=new Set();
   for(const p of papers){
-    if(!p||typeof p.doi!=='string'||!normalizeDoi(p.doi)||normalizeDoi(p.doi)!==p.doi||seen.has(p.doi))
+    if(!p||typeof p.doi!=='string'||(p.doi&&normalizeDoi(p.doi)!==p.doi)||(!p.doi&&!safeSourceUrl(p.url))||seen.has(taskIdentity(p)))
       throw Error('旧队列 DOI 无效或重复，未覆盖旧数据。');
     if(typeof p.title!=='string'||!p.title.trim()||p.title.length>1500||typeof p.journal!=='string'||!p.journal.trim())
       throw Error('旧队列标题或期刊无效，未覆盖旧数据。');
     if(typeof p.url!=='string'||!safeSourceUrl(p.url)||safeSourceUrl(p.url)!==p.url)
       throw Error('旧队列网址未通过安全校验，未覆盖旧数据。');
-    seen.add(p.doi);
+    seen.add(taskIdentity(p));
   }
   return papers;
 }
@@ -68,26 +69,28 @@ export function buildCatalogSample(catalogPapers,tasks,runStartedAt){
 export function reconcileDetailQueue(saved,current){
   if(!saved?.detail_papers)return {papers:current,saved};
   const prior=validateFrozenDetailPapers(saved.detail_papers);
-  if(prior.length!==saved.detail_papers.length || JSON.stringify(prior.map(p=>p.doi))!==JSON.stringify(saved.sample_dois) || !Array.isArray(saved.queue))throw Error('详情进度不匹配，未覆盖旧记录。');
-  const known=new Set(prior.map(p=>p.doi)),fresh=current.filter(p=>!known.has(p.doi));
+  if(prior.length!==saved.detail_papers.length || JSON.stringify(prior.map(taskIdentity))!==JSON.stringify(saved.sample_dois) || !Array.isArray(saved.queue))throw Error('详情进度不匹配，未覆盖旧记录。');
+  const fresh=current.filter(p=>!prior.some(q=>samePaper(p,q)));
   if(prior.length+fresh.length>500)throw Error('累计详情队列超过500条，请先导出；未删除旧记录。');
   const papers=[...prior,...fresh];
-  return {papers,saved:{...saved,sample_dois:papers.map(p=>p.doi),detail_papers:papers,queue:[...saved.queue,...fresh.map(p=>p.doi)]}};
+  return {papers,saved:{...saved,sample_dois:papers.map(taskIdentity),detail_papers:papers,queue:[...saved.queue,...fresh.map(taskIdentity)]}};
 }
-export function buildDetailQueue(catalogPapers,{preserveExisting=false}={}) {
+export function buildDetailQueue(catalogPapers,{preserveExisting=false,now=new Date()}={}) {
   const papers=[],excluded=[],seen=new Set();
   for(const p of preserveExisting?catalogPapers:applyDetailTypes(catalogPapers)){
     const doi=normalizeDoi(p.doi),url=safeSourceUrl(p.url);
-    let reason=!preserveExisting&&excludedJpePaper(p)?'excluded_by_user':!preserveExisting&&p.type==='other'?'other':!doi?'no_doi_yet':!url?'unsupported_url':!p.title?'missing_title':seen.has(doi)?'duplicate':null;
+    const scope=collectionScope(p,now);
+    const key=taskIdentity(p);
+    let reason=!preserveExisting&&excludedJpePaper(p)?'excluded_by_user':!preserveExisting&&!needsAbstract(p)?'abstract_complete':!preserveExisting&&!scope.eligible&&!scope.needs_review?scope.status:!url?'unsupported_url':!p.title?'missing_title':seen.has(key)?'duplicate':null;
     if(reason){excluded.push({doi:doi||null,title:p.title,reason});continue;}
     if(papers.length>=500){excluded.push({doi,title:p.title,reason:'queue_limit_500'});continue;}
-    seen.add(doi);papers.push({doi,title:p.title,journal:p.journal,url});
+    seen.add(key);papers.push({doi,title:p.title,journal:p.journal,url,...(!doi?{task_key:key}:{})});
   }
   return {papers,excluded};
 }
 export function mergeDetailPapers(catalogPapers,records){
   return applyDetailTypes(catalogPapers,records).map(p=>{
-    const r=records.find(x=>x.doi===p.doi && x.journal===p.journal);
+    const r=records.find(x=>samePaper(x,p));
     if(!r)return {...p};
     const out={...p,detail_status:r.review_status,affiliations:p.affiliations||[],affiliation_status:p.affiliation_status||r.affiliation_status,
       detail_source_url:r.source_url,field_sources:{...p.field_sources}};

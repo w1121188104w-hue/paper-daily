@@ -47,7 +47,9 @@ export async function prepareReviewPlan(plan, results = {}) {
   const jobs = [];
   for (const job of plan.jobs) {
     let input=job.input, hash=await reviewFingerprint(input);
-    if(!results[hash] && job.legacy_input){
+    // A newly supplied database record changes the question. A legacy verdict
+    // that never saw it cannot authorize a correction or a duplicate merge.
+    if(!results[hash] && job.legacy_input&&!job.input.existing_records?.length){
       const oldHash=await reviewFingerprint(job.legacy_input), old=results[oldHash];
       if(old && !old.error && old.verdict?.status==='source_checked_candidate' && canonicalEvidence(old.input)===canonicalEvidence(job.legacy_input)){
         const checked=validateReviewOutput(job.legacy_input,verdictOutput(job.legacy_input,old.verdict));

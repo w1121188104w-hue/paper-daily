@@ -1,5 +1,6 @@
 import { assertLibrary, isObject, isIsoTime, isDay, isCount, stableJson } from './libraryValidation.js';
 import { validateCatalogSearchState } from './catalogSearchState.js';
+import {correctionAuthority,applyReviewedSource} from './reviewedCorrection.js';
 
 export const ABSTRACT_STATUSES = ['found', 'missing', 'not_found', 'publisher_no_abstract', 'access_restricted', 'retry_later', 'identity_unverified'];
 export const emptyEnrichmentState = () => ({ schema_version: 1, abstracts: {}, official_last_run_date: '' });
@@ -85,17 +86,19 @@ export function validateEnrichmentOnlyChange(previous, next) {
   }
 }
 
-/** Reviewed incremental imports may fill empty fields; no existing value changes. */
+/** Corrections replay the exact old record and model-selected source evidence. */
 export function validateReviewedEnrichmentOnlyChange(previous,next){
-  const fields=['abstract_original','authors','published_online_date','published_print_date','publication_date','volume','issue','pages','affiliations'];
-  const bookkeeping=['abstract_translation_status','source_text_hash','sources','source_records','provenance','last_checked_at'];
+  const fields=['title_original','abstract_original','authors','published_online_date','published_print_date','publication_date','volume','issue','pages','affiliations','url','doi','doi_url'];
+  const bookkeeping=['title_translation_status','abstract_translation_status','source_text_hash','sources','source_records','provenance','last_checked_at'];
   const rest=p=>Object.fromEntries(Object.entries(p).filter(([k])=>![...fields,...bookkeeping].includes(k)));
   const present=v=>Array.isArray(v)?v.length>0:Boolean(v);
   for(const old of previous){
-    const p=next.find(p=>p.id===old.id);assertLibrary(p&&stableJson(rest(p))===stableJson(rest(old)),'增量审核不能改动已有标题、身份或译文');
+    const p=next.find(p=>p.id===old.id);assertLibrary(p&&stableJson(rest(p))===stableJson(rest(old)),'审核不能改动无关身份或清除译文');
     const changed=fields.filter(f=>stableJson(old[f])!==stableJson(p[f]));
-    for(const f of changed)assertLibrary(!present(old[f])&&present(p[f]),'增量审核只能填入缺失字段');
-    assertLibrary(p.source_text_hash.title===old.source_text_hash.title,'增量审核不能改变标题哈希');
+    const corrections=p.source_records.filter(s=>correctionAuthority(s,old)).map(s=>applyReviewedSource(old,s,{allowCorrection:true,checkedAt:p.last_checked_at}).paper);
+    for(const f of changed)assertLibrary(!present(old[f])&&present(p[f])||corrections.some(r=>stableJson(r[f])===stableJson(p[f])),'已有字段修改必须有审核看过的旧值和原文证据');
+    if(changed.includes('title_original'))assertLibrary(p.title_translation_status===(old.title_zh?'outdated':'pending'),'纠正标题后翻译状态无效');
+    else assertLibrary(p.source_text_hash.title===old.source_text_hash.title&&p.title_translation_status===old.title_translation_status,'未改标题不能改变翻译状态');
     if(changed.includes('abstract_original'))assertLibrary(p.abstract_translation_status===(old.abstract_zh?'outdated':'pending'),'新增摘要翻译状态无效');
     else assertLibrary(p.abstract_translation_status===old.abstract_translation_status&&p.source_text_hash.abstract===old.source_text_hash.abstract,'未修改摘要不能改变翻译状态');
     for(const [key,value] of Object.entries(old.provenance))if(!changed.includes(key))assertLibrary(stableJson(value)===stableJson(p.provenance[key]),'已有字段来源不能改变');

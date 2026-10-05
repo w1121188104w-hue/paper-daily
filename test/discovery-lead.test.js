@@ -7,13 +7,26 @@ import {discoverCollectionTasks} from '../src/services/collectionDiscovery.js';
 import fs from 'node:fs';
 function assess(key,url,baseline){
  const catalogs=ACTIVE_CATALOG_TASKS.filter(t=>t.journal===key),issue=catalogs.find(t=>t.collection==='issue');
- return assessDiscoveryLead({url,title:'Example',snippet:''},{journal:{key,name:issue.name},catalogs,state:emptyWorkflow(),papers:baseline?[{journal_key:key,catalog_memberships:[{task_id:issue.id,catalog_url:baseline}]}]:[]});
+ return assessDiscoveryLead({url,title:'Example',snippet:''},{journal:{key,name:issue.name},catalogs,state:emptyWorkflow(),papers:[],baselines:baseline?[{catalog_id:issue.id,rank:issueRank(baseline,issue)}]:[]});
 }
+test('one paper in an issue does not certify a complete catalog',()=>{
+ const catalogs=ACTIVE_CATALOG_TASKS.filter(t=>t.journal==='JAR'),issue=catalogs.find(t=>t.collection==='issue');
+ const url='https://onlinelibrary.wiley.com/toc/1475679x/2026/64/5';
+ const out=assessDiscoveryLead({url,title:'Example',snippet:''},{journal:{key:'JAR',name:issue.name},catalogs,state:emptyWorkflow(),papers:[{journal_key:'JAR',catalog_memberships:[{task_id:issue.id,catalog_url:url}]}]});
+ assert.equal(out.reason,'issue_baseline_missing');
+});
 test('Wiley old and equal issues do not alert, newer issue does',()=>{
  const base='https://onlinelibrary.wiley.com/toc/1475679x/2026/64/4';
  assert.equal(assess('JAR',base.replace('/64/4','/64/3'),base).reason,'known_or_older_issue');
  assert.equal(assess('JAR',base,base).reason,'known_or_older_issue');
  assert.equal(assess('JAR',base.replace('/64/4','/64/5'),base).reason,'newer_issue_candidate');
+});
+
+test('issue discovery compares the year before a reset volume/issue number',()=>{
+ const c=context('JAR');c.baselines=[{catalog_id:c.catalogs.find(t=>t.collection==='issue').id,rank:[64,12],issue_year:'2026'}];
+ const lead={url:'https://onlinelibrary.wiley.com/toc/1475679x/2027/1/1',title:'Journal of Accounting Research',snippet:''};
+ assert.equal(assessDiscoveryLead(lead,c).reason,'newer_issue_candidate');
+ assert.equal(assessDiscoveryLead({...lead,url:'https://onlinelibrary.wiley.com/toc/1475679x/2025/65/1'},c).reason,'known_or_older_issue');
 });
 test('online directory is online but its existence alone is not a new article',()=>{
  const out=assess('JAR','https://onlinelibrary.wiley.com/toc/1475679x/0/0');

@@ -1,3 +1,4 @@
+import {taskIdentity,identityUrl} from './paper-identity.js';
 import { safeSourceUrl } from './core.js';
 import {abstractRetryComplete} from './abstract-availability.js';
 import {excludedJpePaper,excludedJpeRecord} from './collection-policy.js';
@@ -6,12 +7,12 @@ export const STATE_KEY = 'paper_abstract_trial_v1';
 export class QueueEngine {
   constructor(papers, env) {
     this.papers = papers; this.env = env; this.epoch = 0; this.busy = false; this.saveChain = Promise.resolve();
-    this.s = { schema_version: 1, sample_dois: papers.map(p => p.doi), queue: papers.map(p => p.doi), cursor: 0,
+    this.s = { schema_version: 1, sample_dois: papers.map(taskIdentity), queue: papers.map(taskIdentity), cursor: 0,
       mode: 'paused', reason: '准备好了，点击“开始补摘要”。', records: [], history: [], attempts: 0 };
     this.owned = null; this.nextAt = 0;
   }
-  current() { return this.papers.find(p => p.doi === this.s.queue[this.s.cursor]); }
-  excluded(p){return excludedJpePaper(p)||excludedJpeRecord(this.s.records.find(r=>r.doi===p.doi))||!!this.env.excludedDois?.includes(p.doi);}
+  current() { return this.papers.find(p => taskIdentity(p) === this.s.queue[this.s.cursor]); }
+  excluded(p){return excludedJpePaper(p)||excludedJpeRecord(this.s.records.find(r=>taskIdentity(r)===taskIdentity(p)))||!!this.env.excludedDois?.includes(p.doi);}
   async init() {
     const saved = await this.env.load();
     if (saved) {
@@ -24,7 +25,7 @@ export class QueueEngine {
       const done=saved.cursor===saved.queue.length && saved.records.length>0;
       this.s = { ...saved, mode: done?'done':'paused', attempts: 0, reason: done?'采集已完成，正在恢复核对结果。':'已恢复进度；点击开始/继续，不会自动访问网页。' };
     }
-    this.s.queue=[...this.s.queue.slice(0,this.s.cursor),...this.s.queue.slice(this.s.cursor).filter(doi=>!this.excluded(this.papers.find(p=>p.doi===doi)))];
+    this.s.queue=[...this.s.queue.slice(0,this.s.cursor),...this.s.queue.slice(this.s.cursor).filter(doi=>!this.excluded(this.papers.find(p=>taskIdentity(p)===doi)))];
     if(this.s.cursor===this.s.queue.length){this.s.mode='done';this.s.reason='本轮已结束；已放弃的 JPE 图片文章不再采集，历史记录保留。';}
     this.owned = await this.env.loadSession();
     if (this.owned && (!Number.isInteger(this.owned.tabId) || !this.s.sample_dois.includes(this.owned.doi))) this.owned = null;
@@ -50,7 +51,7 @@ export class QueueEngine {
   async finish(result) {
     const paper = this.current(); if (!paper) return;
     const record = { ...paper, ...result, extracted_at: new Date(this.env.now()).toISOString() };
-    const old = this.s.records.findIndex(r => r.doi === paper.doi);
+    const old = this.s.records.findIndex(r => taskIdentity(r) === taskIdentity(paper));
     if (old >= 0) { this.s.history.push(this.s.records[old]); this.s.records[old] = record; }
     else this.s.records.push(record);
     this.s.cursor++; this.s.attempts = 0; this.nextAt = this.env.now() + 10000;
@@ -66,15 +67,15 @@ export class QueueEngine {
   async retry({excludedDois=[],checkedDois=[]}={}) {
     if (this.s.mode === 'running' || this.busy) return;
     this.epoch++;
-    const success = new Set([...checkedDois,...excludedDois,...this.s.records.filter(r => r.status === 'candidate_extracted'||abstractRetryComplete(r)).map(r => r.doi)]);
-    this.s.queue = this.papers.filter(p => !this.excluded(p)&&!success.has(p.doi)).map(p => p.doi);
+    const success = new Set([...checkedDois,...excludedDois,...this.s.records.filter(r => r.status === 'candidate_extracted'||abstractRetryComplete(r)).map(taskIdentity)]);
+    this.s.queue = this.papers.filter(p => !this.excluded(p)&&!success.has(taskIdentity(p))).map(taskIdentity);
     this.s.cursor = 0; this.s.attempts = 0;
-    this.s.mode = 'paused'; this.s.reason = `未成功项 ${this.s.queue.length} 篇已重新排队；点击开始。已有成功结果、已确认无摘要和已确认的“其他”条目不会重跑。`;
+    this.s.mode = 'paused'; this.s.reason = `未成功项 ${this.s.queue.length} 篇已重新排队；点击开始。已有成功结果和经审核确认无需摘要的条目不会重跑。`;
     await this.persist();
   }
   async recheck() {
     if (this.s.mode === 'running' || this.busy) return;
-    this.epoch++; this.s.queue = this.papers.filter(p=>!this.excluded(p)).map(p => p.doi); this.s.cursor = 0; this.s.attempts = 0;
+    this.epoch++; this.s.queue = this.papers.filter(p=>!this.excluded(p)).map(taskIdentity); this.s.cursor = 0; this.s.attempts = 0;
     this.s.mode = 'paused'; this.s.reason = `${this.s.queue.length} 篇已重新排队；已放弃的 JPE 图片文章除外，旧结果保留。点击开始。`; await this.persist();
   }
   async retryJpe(checkedDois=[]){
@@ -91,7 +92,7 @@ export class QueueEngine {
       if(!url||tab.status==='loading')throw Error('请等待论文页面加载完成。');
       const result=await this.env.inspect(tabId,paper),after=await this.env.getTab(tabId);
       if(epoch!==this.epoch)return;
-      if(safeSourceUrl(after.url)!==url || result.source_url!==url || !result.identity?.ok || result.status==='needs_user_verification')
+      if(safeSourceUrl(after.url)!==url || result.source_url!==url || (!result.identity?.ok && !(result.evidence_version===2 && identityUrl(url)===identityUrl(paper.url))) || result.status==='needs_user_verification')
         throw Error('本页不是当前论文、尚未通过验证或读取时发生跳转；未保存。');
       if(result.pending_affiliations)throw Error('已展开作者信息，请稍等再点读取本页。');
       this.owned=null;await this.env.saveSession(null);this.s.mode='running';await this.finish(result);
@@ -121,18 +122,18 @@ export class QueueEngine {
       if (!tab) {
         // Never search for or take over an existing user tab.
         tab = await this.env.createTab(paper.url);
-        this.owned = { tabId: tab.id, doi: paper.doi };
+        this.owned = { tabId: tab.id, doi: taskIdentity(paper) };
         await this.env.saveSession(this.owned);
         if (!live()) return;
         this.nextAt = this.env.now() + 7000; this.s.reason = '论文已打开，等待网页加载……'; await this.persist(); return;
       }
-      if (this.owned.doi !== paper.doi) {
+      if (this.owned.doi !== taskIdentity(paper)) {
         // If the user repurposed the owned tab to another website, leave it alone and create a new one.
         if (!safeSourceUrl(tab.url)) {
           this.owned = null; await this.env.saveSession(null); this.nextAt = this.env.now(); return;
         }
         await this.env.navigate(tab.id, paper.url);
-        this.owned = { tabId: tab.id, doi: paper.doi }; await this.env.saveSession(this.owned);
+        this.owned = { tabId: tab.id, doi: taskIdentity(paper) }; await this.env.saveSession(this.owned);
         if (!live()) return;
         this.nextAt = this.env.now() + 7000; this.s.reason = '已打开下一篇，等待网页加载……'; await this.persist(); return;
       }
@@ -145,6 +146,7 @@ export class QueueEngine {
       if (!live()) return; // Ignore stale extraction when the user paused/skipped during an async read.
       if(result.panel_cleanup_failed){await this.pause('作者侧栏未能自动关闭，已暂停。请关闭论文页的作者侧栏后继续；不会操作其他弹窗。');return;}
       this.s.attempts++;
+      if (result.evidence_version===2 && result.evidence?.length && ['identity_unconfirmed','doi_conflict'].includes(result.status)) { await this.finish(result); return; }
       if (['candidate_extracted', 'no_abstract_stated'].includes(result.status) && (!result.pending_affiliations || this.s.attempts>=3)) { await this.finish(result); return; }
       if (['needs_user_verification', 'doi_conflict', 'unsupported_page'].includes(result.status)) {
         await this.pause(result.status === 'needs_user_verification'

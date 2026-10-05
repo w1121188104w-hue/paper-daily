@@ -63,7 +63,8 @@ export function publisherRecord(lead, journal) {
   return normalizeSourceRecord({ source: 'publisher', source_id: canonicalPublisherUrl(lead.url),
     ...journalFields(journal), doi: lead.doi, title: lead.title, authors: lead.authors,
     abstract: lead.abstract || '', raw_abstract: lead.raw_abstract || lead.abstract || '',
-    publication_date: unverifiedDate ? '' : lead.date, raw_dates: { publisher_date: lead.raw_date || lead.date, date_role: lead.date_role || 'publisher_publication' },
+    publication_date: unverifiedDate ? '' : lead.date,published_online_date:lead.published_online_date||'',published_print_date:lead.published_print_date||'',
+    raw_dates: { publisher_date: lead.raw_date || lead.date, date_role: lead.date_role || 'publisher_publication' },
     url: canonicalPublisherUrl(lead.url), last_checked_at: lead.evidence.fetched_at,
     type: lead.type || 'journal-article', source_evidence: lead.evidence });
 }
@@ -131,7 +132,7 @@ export function parsePublisherArticle(response, journal, expected = {}) {
   const issns = meta('citation_issn'), journalConfirmed = compact(journalName) === compact(journal.name) || issns.some(i => [journal.print_issn,journal.electronic_issn].includes(i));
   if (journalName && compact(journalName) !== compact(journal.name) && !issns.some(i => [journal.print_issn,journal.electronic_issn].includes(i))) throw new EvidenceError('JOURNAL_MISMATCH');
   if (expected.doi && doi && doi !== normalizeDoi(expected.doi)) throw new EvidenceError('DOI_CONFLICT');
-  if (expected.title && title && compact(expected.title) !== compact(title)) throw new EvidenceError('TITLE_MISMATCH');
+  if (!expected.semanticReview && expected.title && title && compact(expected.title) !== compact(title)) throw new EvidenceError('TITLE_MISMATCH');
   // No abstract adoption based only on landing URL or a related-article title.
   if (!(expected.doi && doi === normalizeDoi(expected.doi)) && !journalConfirmed) throw new EvidenceError('UNVERIFIED_IDENTITY');
   const discoveryIdentity = expected.discovery === true && journalConfirmed && Boolean(meta('citation_title')[0] || jsonArticle);
@@ -151,7 +152,8 @@ export function parsePublisherArticle(response, journal, expected = {}) {
     node.find('h2,h3,h4,.title,.boxTitle').each((i,n) => { if (/^abstract\s*$/i.test($(n).text().trim())) $(n).remove(); });
     rawAbstract = node.text().trim(); method = 'article_dom_abstract';
   }
-  return { title, doi, authors, date, raw_date: rawDate, abstract: authenticAbstract(rawAbstract), raw_abstract: rawAbstract,
+  return { title, doi, authors, date, raw_date: rawDate, abstract: expected.semanticReview?cleanAbstract(rawAbstract):authenticAbstract(rawAbstract), raw_abstract: rawAbstract,
+    published_online_date:publicationDate(meta('citation_online_date')[0]||''),published_print_date:publicationDate(meta('citation_print_date')[0]||''),
     url: canonicalPublisherUrl(response.url), type: meta('citation_article_type')[0] || 'journal-article',
     evidence: evidence(response, method || 'article_without_abstract', expected.scope_url), journal_confirmed: journalConfirmed };
 }

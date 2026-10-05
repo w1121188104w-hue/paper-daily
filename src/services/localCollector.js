@@ -14,7 +14,10 @@ import {prepareReviewPlan,canRetryReview} from '../../tools/browser-abstract-ext
 import {verifiedPages} from './browserImport.js';
 import {catalogRepairJobs} from '../../tools/browser-abstract-extension/catalog-engine.js';
 import {reviewJob} from './sourceReview.js';
-import {normalizeOupControlLabel} from '../../tools/local-collector/workflow-compat.mjs';
+import {taskIdentity,samePaper} from '../../tools/browser-abstract-extension/paper-identity.js';
+import {collectionScope,needsAbstract} from '../../tools/browser-abstract-extension/collection-policy.js';
+import {catalogMembership} from '../../tools/browser-abstract-extension/catalog-scope.js';
+import {captureProgress} from '../../tools/browser-abstract-extension/pending-summary.js';
 const digest=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 async function json(file,fallback=null){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return fallback;throw e;}}
 export async function findLocalPython(repo,env=process.env){
@@ -69,8 +72,9 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
       const jobs=(scope==='articles'?[]:run.jobs).filter(j=>!run.direct_pages?.some(p=>p.task_id===j.catalog_id&&p.requested_url===j.url))
         .map(j=>({kind:'catalog',catalog_id:j.catalog_id,journal:ACTIVE_CATALOG_TASKS.find(t=>t.id===j.catalog_id).journal,url:j.url,depth:0}));
       for(const page of run.direct_pages||[])for(const p of page.items||[]){
-        if(catalog_run_id&&!run.handoff_papers?.some(h=>h.journal===p.journal&&h.doi&&h.doi===p.doi))continue;
-        if(p.doi&&p.type!=='other')jobs.push({kind:'article',catalog_id:page.task_id,journal:page.journal,doi:p.doi,title:p.title,url:p.url});
+        if(catalog_run_id&&!run.handoff_papers?.some(h=>samePaper(h,p)))continue;
+        const scope=collectionScope({...p,catalog_memberships:[catalogMembership(page,ACTIVE_CATALOG_TASKS.find(t=>t.id===page.task_id))]});
+        if(p.url&&needsAbstract(p)&&(scope.eligible||scope.needs_review))jobs.push({kind:'article',catalog_id:page.task_id,journal:page.journal,doi:p.doi||'',title:p.title,url:p.url});
       }
       // Previously reviewed metadata may exist before any directory succeeds.
       // Revisit its actual publisher URL independently when it is available.
@@ -102,20 +106,18 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
         if(old>=0)pages[old]=capture.result;else pages.push(capture.result);}
       else if(row.kind==='article')records.push({...capture.task,...capture.result});
     }
-    for(const record of records){const capture=captures.find(x=>x.task.kind==='article'&&x.task.doi===record.doi)?.capture;
-      if(capture)normalizeOupControlLabel(record,pages,capture);}
     const capturedQueue=pages.map(p=>({task_id:p.task_id,url:p.requested_url||p.source_url,depth:0}));
     const pendingQueue=state.queue.filter(t=>t.kind==='catalog'&&!pages.some(p=>p.task_id===t.catalog_id&&p.requested_url===t.url))
       .map(t=>({task_id:t.catalog_id,url:t.url,depth:t.depth||0}));
-    const catalog={schema_version:1,run_started_at:run.created_at,scope_task_ids:run.jobs.map(j=>j.catalog_id),pages,
+    const catalog={schema_version:1,run_started_at:run.created_at,review_context:run.review_context,scope_task_ids:run.jobs.map(j=>j.catalog_id),pages,
       queue:[...capturedQueue,...pendingQueue],cursor:capturedQueue.length,history:[],mode:'paused'};
-    return {run,state,data:{kind:'paper_project',workflow_run_id:c.id,collector:'local_python',records,catalog,
+    return {run,state,data:{kind:'paper_project',workflow_run_id:c.id,collector:'local_python',review_context:run.review_context,records,catalog,
       ai_review_results:{},catalog_review_results:{}}};
   }
   async function reviewCapture(c){
     try{
       const {data,state}=await snapshot(c),cache=await json(path.join(c.dir,'reviews.json'),{});
-      const plan=await prepareReviewPlan(makeReviewJobs({pages:verifiedPages(data)},data),cache);
+      const plan=await prepareReviewPlan(makeReviewJobs({...data.catalog,pages:verifiedPages(data)},data),cache);
       let processed=0,reviewError=null;
       for(const job of [...plan.jobs].sort((a,b)=>Number(b.input.kind==='article')-Number(a.input.kind==='article'))){
         if(cache[job.hash]&&!canRetryReview(cache[job.hash])||processed>=3)continue;
@@ -125,14 +127,16 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
       }
       for(const job of plan.jobs)if(cache[job.hash])(job.input.kind==='catalog'?data.catalog_review_results:data.ai_review_results)[job.hash]=cache[job.hash];
       const reviewed=await reviewedArticleRecords(data,plan,cache);
-      const ready=new Set(reviewed.filter(r=>['source_checked_candidate','needs_attention'].includes(r.review_status)).map(r=>r.doi));
-      data.records=data.records.filter(r=>ready.has(r.doi));
+      const processing_papers=data.records.map((r,i)=>captureProgress(r,reviewed[i]));
+      const ready=new Set(reviewed.filter(r=>['source_checked_candidate','needs_attention'].includes(r.review_status)).map(taskIdentity));
+      data.records=data.records.filter(r=>ready.has(taskIdentity(r)));
       const fingerprint=digest(data),last=await json(path.join(c.dir,'submitted.json'));
       const settled=plan.jobs.every(j=>cache[j.hash]&&!canRetryReview(cache[j.hash]));
       if(last?.fingerprint!==fingerprint&&(settled||!last?.at||Date.now()-Date.parse(last.at)>=120000)&&Object.values(cache).some(r=>r.verdict?.status==='source_checked_candidate')){
         try{await coordinator.checkpointCapture(c.id,data);await atomic(path.join(c.dir,'submitted.json'),{fingerprint,at:new Date().toISOString()});}catch{/* Another writer is publishing; retry saved proof on the next pulse. */}
       }
       await atomic(path.join(c.dir,'review-status.json'),{review_total:plan.jobs.length,review_done:plan.jobs.filter(j=>cache[j.hash]?.verdict?.status==='source_checked_candidate').length,
+        processing_papers,
         review_pending:plan.jobs.filter(j=>!cache[j.hash]).length,review_attention:plan.jobs.filter(j=>cache[j.hash]?.error).length,review_error:reviewError,review_service_ready:!reviewError});
       if(state.phase==='captured'&&settled)try{await coordinator.captureFinished?.(c.id,{remaining:state.remaining?.length||0});}catch{/* A publication writer is active; retry next pulse. */}
     }finally{}

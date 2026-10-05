@@ -6,7 +6,7 @@ import path from 'node:path';
 import {loadJournalConfig} from '../src/services/journals.js';
 import {normalizeSourceRecord} from '../src/services/paperModel.js';
 import {sourceReviewInput,reviewedSource,reviewJob} from '../src/services/sourceReview.js';
-import {enqueueSourceReviews,processSourceReviews,readSourceReviewQueue} from '../src/services/sourceReviewQueue.js';
+import {enqueueSourceReviews,processSourceReviews,readSourceReviewQueue,saveSourceReviewQueue} from '../src/services/sourceReviewQueue.js';
 import {readJournalLibrary} from '../src/services/journalLibrary.js';
 import {readCloudQueue} from '../src/services/cloudPublication.js';
 import {createSourceReviewer} from '../tools/browser-abstract-extension/review-provider.mjs';
@@ -77,4 +77,27 @@ test('unbilled limit resumes without a paid retry header; latest proof survives 
   assert.equal(paper.abstract_original,abstract);assert.equal(paper.authors.length,2);
   await processSourceReviews(repo,config);
   assert.equal((await readCloudQueue(repo)).requests.length,1);
+});
+
+test('online scope skips old evidence before review and never imports an unknown first-online date',async t=>{
+  const repo=await temp(t),now=new Date('2026-10-05T13:00:00Z'),root=path.join(repo,'data/journal-store');let calls=0;
+  const old=await enqueueSourceReviews(repo,[source({published_online_date:'2026-08-04'})],{enforceCollectionScope:true,now});
+  assert.equal(old.queued,0);assert.equal(old.rejected.length,1);
+  await enqueueSourceReviews(repo,[source({published_online_date:''})],{enforceCollectionScope:true,now});
+  const service=createSourceReviewer({apiKey:'test-placeholder-key',stateDir:path.join(repo,'provider'),fetchImpl:async(u,o)=>{calls++;return providerResponse(o);}});
+  const unknown=await processSourceReviews(repo,config,{request:async i=>(await service.review(i)).data});
+  assert.equal(unknown.imported.committed,false);assert.equal((await readJournalLibrary({root,config})).papers.length,0);assert.equal(calls,1);
+  await enqueueSourceReviews(repo,[source({published_online_date:'2026-08-05'})],{enforceCollectionScope:true,now});
+  await processSourceReviews(repo,config,{request:async i=>(await service.review(i)).data});
+  assert.equal((await readJournalLibrary({root,config})).papers[0].published_online_date,'2026-08-05');assert.equal(calls,2);
+});
+
+test('saved legacy source reviews replay without changing their evidence fingerprint or paying again',async t=>{
+  const repo=await temp(t),record=source(),input=sourceReviewInput(record,{legacy:true});
+  assert.equal(input.blocks.find(b=>b.id==='abstract').context,'source:abstract; candidate extracted from raw_abstract');
+  const service=createSourceReviewer({apiKey:'test-placeholder-key',stateDir:path.join(repo,'provider'),fetchImpl:async(u,o)=>providerResponse(o)});
+  const {hash,result}=await reviewJob(input,async i=>(await service.review(i)).data);
+  await saveSourceReviewQueue(repo,{version:1,jobs:[{id:hash,input,record,status:'reviewed',result}]});
+  const out=await processSourceReviews(repo,config,{request:()=>assert.fail('must reuse saved review')});
+  assert.equal(out.imported.stats.added,1);
 });

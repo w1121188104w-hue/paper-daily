@@ -1,4 +1,6 @@
 import {catalogUrl,articleUrl,titleKey,cleanDoi} from '../../tools/browser-abstract-extension/catalog-core.js';
+import {onlineWindow} from '../../tools/browser-abstract-extension/collection-policy.js';
+import {catalogMembership} from '../../tools/browser-abstract-extension/catalog-scope.js';
 
 export function discoveryCatalogEvidenceUrl(value,task){
   try{
@@ -43,13 +45,13 @@ export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baseline
   if(exact&&!textRank)return {reason:exact.collection==='online'?'online_directory_without_change_evidence':'generic_directory_without_change_evidence',collection:exact.collection};
   const issue=textRank?issueSurface:catalogs.find(t=>t.collection==='issue'&&issueRank(lead.url,t));
   if(issue){
-    const rank=textRank||issueRank(lead.url,issue),baselines=verifiedBaselines.filter(b=>b.catalog_id===issue.id&&Array.isArray(b.rank)&&b.rank.length===2&&b.rank.every(Number.isInteger)&&b.rank[0]>0&&b.rank[1]>=0).map(b=>b.rank);
-    for(const t of state.tasks.filter(t=>t.catalog_id===issue.id&&t.status==='processed'))baselines.push(issueRank(t.url,issue));
-    for(const p of papers.filter(p=>p.journal_key===journal.key))for(const m of p.catalog_memberships||[])
-      if(m.task_id===issue.id)baselines.push(issueRank(m.catalog_url,issue));
-    const baseline=baselines.filter(Boolean).sort(compare).at(-1);
+    const rank=textRank||issueRank(lead.url,issue),baselines=verifiedBaselines.filter(b=>b.catalog_id===issue.id&&Array.isArray(b.rank)&&b.rank.length===2&&b.rank.every(Number.isInteger)&&b.rank[0]>0&&b.rank[1]>=0);
+    for(const t of state.tasks.filter(t=>t.catalog_id===issue.id&&t.status==='processed'))baselines.push({rank:issueRank(t.url,issue),issue_year:catalogMembership({source_url:t.url},issue).issue_year});
+    const order=(a,b)=>a.issue_year&&b.issue_year&&+a.issue_year!==+b.issue_year?+a.issue_year-+b.issue_year:compare(a.rank,b.rank);
+    const prior=baselines.filter(b=>b.rank).sort(order).at(-1),baseline=prior?.rank;
     if(!baseline)return {reason:'issue_baseline_missing',collection:'issue',rank};
-    if(compare(rank,baseline)<=0)return {reason:'known_or_older_issue',collection:'issue',rank,baseline};
+    const issue_year=catalogMembership({source_url:lead.url,issue_heading:lead.title+' '+lead.snippet},issue).issue_year;
+    if(order({rank,issue_year},prior)<=0)return {reason:'known_or_older_issue',collection:'issue',rank,baseline};
     return {reason:'newer_issue_candidate',task:issue,catalog_url:catalogUrl(lead.url,issue)||issue.url,doi:null,rank,baseline};
   }
   // Non-concrete catalog pages are not article evidence.
@@ -68,8 +70,8 @@ export function assessDiscoveryLead(lead,{journal,catalogs,papers,state,baseline
   const dateMatch=(lead.snippet||'').slice(0,1600).match(/(?:First published(?: online)?|Published(?: Online)?|Available online|Version of Record online)\s*:?\s*((?:\d{1,2}\s+[A-Za-z]+\s+\d{4})|(?:[A-Za-z]+\s+\d{1,2},?\s+\d{4})|(?:\d{4}-\d{2}-\d{2}))/i);
   const published=dateMatch?Date.parse(dateMatch[1]+' UTC'):NaN;
   if(!Number.isFinite(published))return {reason:'article_recency_unconfirmed'};
-  const age=now.getTime()-published;
-  if(age< -86400000||age>60*86400000)return {reason:'old_or_future_article'};
+  const day=new Date(published).toISOString().slice(0,10),window=onlineWindow(now);
+  if(day<window.from||day>window.to)return {reason:'old_or_future_article'};
   return {reason:'new_article_candidate',task,doi,catalog_url:task.url};
 }
 function taskDoiFromUrl(url,decoded){

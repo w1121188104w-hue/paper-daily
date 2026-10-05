@@ -8,13 +8,18 @@ export function explicitMonth(text){
 }
 export function catalogMembership(page,task){
   const heading=String(page.issue_heading||'');
-  const volume=heading.match(/\bVolume\s+(\d+)\b/i)?.[1]||null;
-  const issue=heading.match(/\b(?:Issue|Number|No\.)\s+(\d+)\b/i)?.[1]||null;
+  let volume=heading.match(/\bVol(?:ume)?\.?\s+(\d+)\b/i)?.[1]||null;
+  let issue=heading.match(/\b(?:Issue|Number|No\.)\s+(\d+)\b/i)?.[1]||null;
+  let route;try{route=new URL(page.source_url).pathname;}catch{route='';}
+  const pair=route.match(/\/volumes-and-issues\/(\d+)-(\d+)/)||route.match(/\/vol\/(\d+)\/issue\/(\d+)/)||route.match(/\/toc\/[^/]+\/(?:\d{4}\/)?(\d+)\/(\d+)\/?$/)||route.match(/\/issue\/(\d+)\/(\d+)\/?$/);
+  if(task?.collection==='issue'){volume ||= pair?.[1]||route.match(/\/vol\/(\d+)/)?.[1]||null;issue ||= pair?.[2]||null;}
   // No date inference from article cards or a journal's archive year range.
   const issueSegment=heading.split('|').map(s=>s.trim()).find(s=>/\bVolume\s+\d+\b/i.test(s));
   const issueMonth=task?.collection==='issue'&&volume?explicitMonth(issueSegment):null;
+  const years=[...new Set(heading.match(/\b(?:19|20)\d{2}\b/g)||[])];
+  const year=task?.collection==='issue'?(issueMonth?.slice(0,4)||route.match(/\/((?:19|20)\d{2})\//)?.[1]||(years.length===1?years[0]:null)):null;
   return {task_id:page.task_id,collection:task?.collection||null,catalog_url:page.source_url,
-    captured_at:page.captured_at||null,volume,issue,issue_month:issueMonth,issue_heading:heading||null};
+    captured_at:page.captured_at||null,volume,issue,issue_year:year,issue_month:issueMonth,issue_heading:heading||null};
 }
 export function withTypedDates(paper){
   const p={...paper},text=p.evidence?.text||'';

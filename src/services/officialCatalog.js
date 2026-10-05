@@ -6,13 +6,14 @@ import {makeEvidenceHttp,evidenceHash} from './evidenceHttp.js';
 import {doiFromPublisherUrl,parsePublisherArticle,publisherRecord} from './publisherParsers.js';
 import {writeWorkflowJson} from './workflowStorage.js';
 import {assertLibrary} from './libraryValidation.js';
-import {importBrowserExport} from './browserImport.js';
+import {importBrowserExport,prepareBrowserImport} from './browserImport.js';
 import {readJournalLibrary} from './journalLibrary.js';
 import {addDiscoverySignals} from './collectionWorkflow.js';
 import {recordCatalogBaseline} from './catalogBaseline.js';
 import {readOfficialFeeds,knownFeedSource} from './officialFeeds.js';
 import {reviewCatalogPages,readCatalogReviews} from './catalogSourceReview.js';
 import {cleanText} from './paperModel.js';
+import {collectionScope,onlinePaginationStop} from '../../tools/browser-abstract-extension/collection-policy.js';
 
 export const OFFICIAL_CACHE_PATH='data/collection-workflow/official-catalogs.json';
 const cardSelector='.js-article-list-item,.article-list-item,.issue-item,.toc-item,.toc__item,.table-of-content__item,.al-article-item,.al-article-list-item,.c-listing__item,.c-card,.journal-article,article.journal-article';
@@ -50,7 +51,13 @@ export function parseOfficialCatalog(response,task){
   // Catch title links outside recognized cards, rather than silently declaring
   // the subset found by the selectors to be a complete catalog.
   for(const a of $('a[href]').toArray())if(allowed(a)&&text($,a).length>20&&!/^(https?:|10\.|full text|download|view|add to|open the)/i.test(text($,a))){const u=articleUrl(href(a),task);if(u)seen.add(u);}
-  const headings=[$('title').text(),...$('h1,.journal-title,.journal-name,.journal-header,meta[name="citation_journal_title"]').toArray().map(n=>$(n).attr('content')||text($,n))];
+  const article_link_contexts=[];
+  for(const a of $('a[href]').toArray()){
+    const link=articleUrl(href(a),task);if(!link||!seen.has(link))continue;
+    const section=$(a).closest('section,article,li,[class*="related"],[class*="recommend"]');
+    article_link_contexts.push({url:link,title:text($,a),section:section.find('h2,h3,h4').first().text(),text:text($,section.length?section:$(a).parent()).slice(0,3000)});
+  }
+  const headings=[$('title').text(),...$('h1,h2,h3,.journal-title,.journal-name,.journal-header,meta[name="citation_journal_title"]').toArray().map(n=>$(n).attr('content')||text($,n))];
   for(const a of $('a[href]').toArray()){
     const u=new URL(href(a)||url),code=new URL(task.url).pathname.split('/')[1];
     if(u.origin===new URL(url).origin&&[`/${code}`,`/${code}/`,`/${code}/issue`].includes(u.pathname))
@@ -73,12 +80,14 @@ export function parseOfficialCatalog(response,task){
     if(/^(load more|show more|view more|show all|view all)( articles| results)?$/i.test(label))more_controls.push(label);
   }
   const body=text($,$('body')),page_title=$('title').text();
+  const sortEvidence=$('select option[selected],[aria-pressed="true"],[aria-selected="true"]').toArray().map(n=>text($,n)).find(s=>/first (?:online|published)/i.test(s)&&/newest|descending|latest first/i.test(s));
   const capture={url,page_title,headings,issns,items,raw_card_count:items.length,adapter:'official_static_html',
+    sort_evidence:sortEvidence||null,sort_order:sortEvidence?'first_online_desc':null,
     challenge:/just a moment|access denied|verify (?:you are|that you)|checking your browser|error 500|internal server error/i.test(page_title+' '+body.slice(0,1600)),
     page_not_found:/^(404|page not found|not found)/i.test(page_title),
     issue_heading:$('h1,h2,.volume-issue,.issue-header,.issue-info').toArray().map(n=>text($,n)).filter(s=>/volume|issue|ahead|early|press|\bvol\.|\bno\./i.test(s)).join(' | ').slice(0,1500),
     issue_links,next_links:[...new Set(next_links)],more_controls,pagination_unresolved,
-    observed_article_links:[...seen],unmatched_article_links:[...seen].filter(u=>!items.some(i=>i.url===u)),
+    observed_article_links:[...seen],article_link_contexts,unmatched_article_links:[...seen].filter(u=>!items.some(i=>i.url===u)),
     empty_message:body.match(/this journal currently does not have articles in press|there are currently no articles|no articles (?:are )?(?:currently )?available/i)?.[0]||null,
     warnings:unscoped?[`unmatched_article_links:${unscoped}`]:[]};
   return {...assessCatalog(task,capture),captured_at:response.fetched_at,requested_url:response.requested_url,
@@ -96,11 +105,15 @@ export async function readOfficialCatalog(task,http,{maxPages=6}={}){
       if(signature&&contents.has(signature)){code='REPEATED_PAGE';break;}
       if(signature)contents.add(signature);
       if(!['catalog_candidates','catalog_empty','catalog_landing'].includes(page.status)){code=page.status.toUpperCase();break;}
-      if(page.more_controls?.length||page.pagination_unresolved||page.unmatched_article_links?.length){code='DYNAMIC_OR_PARTIAL_LIST';break;}
-      for(const next of [...(page.next_links||[]),...(page.issue_target?[page.issue_target]:[])])if(!seen.has(next))queue.push(next);
+      if(page.more_controls?.length||page.pagination_unresolved){code='DYNAMIC_OR_PARTIAL_LIST';break;}
+      if(onlinePaginationStop(page,task))page.online_window_complete=true;
+      for(const next of [...(page.online_window_complete?[]:page.next_links||[]),...(page.issue_target?[page.issue_target]:[])])if(!seen.has(next))queue.push(next);
     }
   }catch(e){code=cleanCode(e);}
-  return {catalog_id:task.id,url:task.url,checked_at:new Date().toISOString(),complete:!code&&pages.length>0&&!queue.length,
+  const loading_complete=!code&&pages.length>0&&!queue.length;
+  const collected=new Set(pages.flatMap(p=>(p.items||[]).map(i=>i.url)));
+  if(!code&&pages.some(p=>p.unmatched_article_links?.some(u=>!collected.has(u))))code='UNREVIEWED_LINKS';
+  return {catalog_id:task.id,url:task.url,checked_at:new Date().toISOString(),loading_complete,complete:!code&&loading_complete,
     code,pages,papers:mergeCatalog(pages)};
 }
 export async function readOfficialCache(repo){
@@ -142,20 +155,29 @@ export async function collectOfficialCatalogs(config,state,{repositoryRoot,root,
     const catalog=blocked.has(task.host)?{catalog_id:task.id,url:task.url,checked_at:new Date().toISOString(),complete:false,code:'HOST_UNAVAILABLE',pages:[],papers:[]}:await readOfficialCatalog(task,http);
     if(['ACCESS_RESTRICTED','ROBOTS_UNAVAILABLE','RATE_LIMITED','NETWORK_ERROR','TIMEOUT'].includes(catalog.code))blocked.add(task.host);
     cache.catalogs.push(catalog);
+    const audited=await reviewCatalogPages(repositoryRoot,catalog.pages,{request:requestReview,knownPapers:library.papers,checkpoint:reviewCheckpoint});
+    catalog.review_context=audited.catalog.review_context;
+    catalog.complete=!!catalog.loading_complete&&audited.coverage.every(p=>!p.unmatched_article_links?.length)&&
+      audited.papers.every(p=>p.review_status==='source_checked_candidate'&&p.review_decisions?.catalog_membership?.status!=='uncertain');
+    if(catalog.complete&&catalog.code==='UNREVIEWED_LINKS')catalog.code=null;
+    if(!catalog.complete&&!catalog.code)catalog.code='REVIEW_INCOMPLETE';
+    const catalogImport=await prepareBrowserImport({kind:'paper_project',records:[],catalog:audited.catalog,catalog_review_results:audited.results,ai_review_results:{}},config);
+    if(catalogImport.sources.length){await importBrowserExport(config,{root,prepared:catalogImport,save:true});library=await readJournalLibrary({root,config});}
     next.monitors=next.monitors.filter(m=>!(m.journal===task.journal&&m.source==='official'&&m.catalog_id===task.id));
     next.monitors.push({journal:task.journal,source:'official',catalog_id:task.id,status:catalog.complete?'ok':catalog.pages.length?'partial':'failed',checked_at:catalog.checked_at,code:catalog.code});
-    for(const p of catalog.papers){
-      if(p.type==='other')continue;
+    for(const p of audited.papers){
+      const scope=collectionScope(p);
+      if(p.review_decisions?.catalog_membership?.status==='out_of_scope'||p.abstract_status==='confirmed_absent'||!scope.eligible&&!scope.needs_review)continue;
       const old=library.papers.find(x=>x.journal_key===p.journal&&((x.doi&&x.doi===p.doi)||titleKey(x.title_original)===titleKey(p.title)));
       if(old?.abstract_original||sources.some(s=>s.doi&&s.doi===p.doi&&s.abstract))continue;
       if(detailCount<maxDetails&&!blocked.has(task.host)){
         detailCount++;
         try{
           const response=await http.request(p.url,task.hosts||[task.host]);
-          const lead=parsePublisherArticle(response,journal,{doi:p.doi||undefined,title:p.title,scope_url:catalog.url,discovery:true});
-          if(lead.abstract&&(lead.abstract.length<150||(lead.abstract.match(/\b[A-Za-z]+\b/g)||[]).length<25||/^(?:highlights|graphical abstract)\b/i.test(lead.abstract))){lead.abstract='';lead.raw_abstract='';}
-          if(lead.doi&&lead.journal_confirmed&&titleKey(lead.title)===titleKey(p.title)){
+          const lead=parsePublisherArticle(response,journal,{doi:p.doi||undefined,title:p.title,scope_url:catalog.url,discovery:true,semanticReview:true});
+          if(lead.journal_confirmed&&(!p.doi||p.doi===lead.doi)){
             const source=publisherRecord(lead,journal);
+            source.raw_dates.catalog_memberships=p.catalog_memberships||[];
             source.raw_dates.source_capture={text:cleanText(response.body).slice(0,40000),body_sha256:response.sha256};sources.push(source);
           }
         }catch(e){if(['ACCESS_RESTRICTED','ROBOTS_UNAVAILABLE','RATE_LIMITED'].includes(e.code))blocked.add(task.host);}
@@ -166,15 +188,15 @@ export async function collectOfficialCatalogs(config,state,{repositoryRoot,root,
     onProgress({catalog:task.id,complete:catalog.complete,papers:catalog.papers.length,code:catalog.code});
   }
   // No deterministic parser result may bypass the shared semantic review.
-  const accepted=reviewSources?await reviewSources(sources):[];
+  const reviewed=reviewSources?await reviewSources(sources):[];
+  const accepted=reviewed.filter(s=>collectionScope({...s,catalog_memberships:s.raw_dates?.catalog_memberships||[]}).eligible);
   const prepared={input_sha256:evidenceHash(JSON.stringify(accepted)),sources:accepted,decisions:[],raw_record_count:sources.length};
   const imported=await importBrowserExport(config,{root,prepared,save:true});library=await readJournalLibrary({root,config});
   for(const c of cache.catalogs.filter(c=>c.complete)){
-    const {papers:checked}=await reviewCatalogPages(repositoryRoot,c.pages,{request:requestReview,checkpoint:reviewCheckpoint});
+    const {papers:checked}=await reviewCatalogPages(repositoryRoot,c.pages,{knownPapers:c.review_context?.known_papers||[],checkpoint:reviewCheckpoint});
     if(checked.some(p=>p.review_status!=='source_checked_candidate'))continue;
     recordCatalogBaseline(next,{catalog_id:c.catalog_id,url:c.url},c.pages,checked,{receiptId:'official:'+c.checked_at,inputHash:evidenceHash(JSON.stringify(c.pages))});
-    const allComplete=c.papers.every(p=>p.type==='other'||library.papers.some(x=>x.journal_key===p.journal&&((p.doi&&x.doi===p.doi)||titleKey(x.title_original)===titleKey(p.title))&&x.abstract_original));
-    if(allComplete)for(const t of next.tasks.filter(t=>t.catalog_id===c.catalog_id&&t.url===c.url)){
+    for(const t of next.tasks.filter(t=>t.catalog_id===c.catalog_id&&t.url===c.url)){
       // A successful current catalog alone cannot resolve an index signal about
       // an article not actually seen on this page (e.g. a stale publisher cache).
       if(t.signals.every(s=>c.papers.some(p=>s.doi&&p.doi===s.doi||titleKey(p.title)===titleKey(s.title)))){t.status='processed';t.checked_at=c.checked_at;}

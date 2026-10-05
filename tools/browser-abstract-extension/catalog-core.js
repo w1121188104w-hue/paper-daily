@@ -163,6 +163,8 @@ export function assessCatalog(task, capture) {
     adapter: capture.adapter, raw_card_count: capture.raw_card_count, excluded,
     observed_article_links: (capture.observed_article_links || []).map(u=>articleUrl(u,task)).filter(Boolean),
     unmatched_article_links: (capture.unmatched_article_links || []).map(u=>articleUrl(u,task)).filter(Boolean),
+    article_link_contexts:(capture.article_link_contexts||[]).map(c=>({...c,url:articleUrl(c.url,task)})).filter(c=>c.url),
+    sort_order:capture.sort_order||null,sort_evidence:capture.sort_evidence||null,
     empty_message: capture.empty_message || null, next_links: [...new Set(next)],
     pagination_current: capture.pagination_current || null, pagination_unresolved: !!capture.pagination_unresolved,
     more_controls: capture.more_controls || [], navigation_links: (capture.navigation_links || []).map(x => catalogUrl(x, task)).filter(Boolean),

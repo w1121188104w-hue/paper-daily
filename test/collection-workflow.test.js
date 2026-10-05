@@ -25,10 +25,10 @@ const abstract='We study firm investment using evidence from financial markets. 
 const signal={catalog_id:task.id,title,doi,source:'crossref'};
 async function temp(t){const base=path.resolve(os.tmpdir()),dir=await fs.mkdtemp(path.join(base,'workflow-test-'));
   t.after(async()=>{assert.equal(path.dirname(path.resolve(dir)),base);assert.ok(path.basename(dir).startsWith('workflow-test-'));await fs.rm(dir,{recursive:true,force:true});});return dir;}
-async function capture(run,{missing=false,empty=false,review=true}={}){
+async function capture(run,{missing=false,empty=false,review=true,issueHeading=null}={}){
   const item={doi,title,journal:'RP',url,evidence:{version:2,text:title,catalog_url:task.url}};
   const page={task_id:task.id,journal:'RP',source_url:task.url,requested_url:task.url,page_title:'Research Policy',captured_at:later,
-    status:empty?'catalog_empty':'catalog_candidates',job_key:task.id+'|'+task.url,items:empty?[]:[item]};
+    status:empty?'catalog_empty':'catalog_candidates',job_key:task.id+'|'+task.url,items:empty?[]:[item],issue_heading:issueHeading};
   const record={doi,title,journal:'RP',url,source_url:url,extracted_at:later,identity:{ok:true},evidence_version:2,abstract:missing?null:abstract,
     evidence:[{id:'title',kind:'title',text:title},{id:'doi',kind:'doi',text:doi},...(!missing?[{id:'abstract',kind:'abstract',text:abstract,language:'en',context:'Abstract'}]:[])]};
   const data={kind:'paper_project_trial',workflow_run_id:run.id,records:empty?[]:[record],catalog:{pages:[page],run_started_at:run.created_at,
@@ -36,7 +36,8 @@ async function capture(run,{missing=false,empty=false,review=true}={}){
   if(review)for(const catalog of [true,false]){const plan=await prepareReviewPlan(makeReviewJobs(catalog?data.catalog:null,catalog?null:data));
     for(const j of plan.jobs){const fields={title:{status:'confirmed',spans:[{block_id:catalog?'card':'title',quote:title}]}};
       if(!catalog){fields.doi={status:'confirmed',spans:[{block_id:'doi',quote:doi}]};if(!missing)fields.abstract={status:'confirmed',block_ids:['abstract']};}
-      (catalog?data.catalog_review_results:data.ai_review_results)[j.hash]={input:j.input,error:null,verdict:validateReviewOutput(j.input,{identity_match:true,fields})};}}
+      (catalog?data.catalog_review_results:data.ai_review_results)[j.hash]={input:j.input,error:null,verdict:validateReviewOutput(j.input,{identity_match:true,fields,
+        ...(catalog?{catalog_membership:{status:'in_scope',spans:[{block_id:'card',quote:title}]}}:{})})};}}
   return data;
 }
 test('daily scope, full fallback, stable cross-source signals and no acknowledgment on start',()=>{
@@ -82,6 +83,29 @@ test('explicit empty catalog can finish; newer concurrent signal is never cleare
   assert.equal((await applyCollectionReceipt(out,run,data,prepared,{papers:[]})).receipts.length,1);
   const newer=addDiscoverySignals(s,[{...signal,doi:'10.1016/j.respol.2026.106666'}]);
   assert.equal((await applyCollectionReceipt(newer,run,data,prepared,{papers:[]})).tasks[0].status,'pending');
+});
+
+test('field approval without valid membership proof keeps the catalog pending',async()=>{
+  const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now}),data=await capture(run);
+  for(const result of Object.values(data.catalog_review_results))result.verdict.catalog_membership=null;
+  const prepared=await prepareBrowserImport(data,config),out=await applyCollectionReceipt(s,run,data,prepared,{papers:[]},{now});
+  assert.equal(out.receipts[0].completed_catalogs,0);
+  assert.equal(out.receipts[0].pending_catalog_details[0].reason,'membership_review_pending');
+  assert.equal(out.catalog_baselines.length,0);assert.equal(out.tasks[0].status,'pending');
+});
+
+test('source-authenticated cached page remains valid after reviewed recommendation links are removed',async()=>{
+  const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now}),data=await capture(run);
+  const page=data.catalog.pages[0],related=url+'9';page.captured_at='2026-09-23T07:00:00Z';
+  page.unmatched_article_links=[related];page.article_link_contexts=[{url:related,text:'Recommended reading'}];page.warnings=['unmatched_article_links:1'];
+  run.direct_pages=[structuredClone(page)];const job=(await prepareReviewPlan(makeReviewJobs(data.catalog,null))).jobs[0];
+  data.catalog_review_results={[job.hash]:{input:job.input,verdict:validateReviewOutput(job.input,{identity_match:true,
+    fields:{title:{status:'confirmed',spans:[{block_id:'card',quote:title}]}},
+    catalog_membership:{status:'in_scope',spans:[{block_id:'card',quote:title}]},
+    catalog_links:[{url:related,status:'out_of_scope',spans:[{block_id:'link-context-0',quote:'Recommended reading'}]}]})}};
+  const prepared=await prepareBrowserImport(data,config),out=await applyCollectionReceipt(s,run,data,prepared,{papers:[]},{now});
+  assert.equal(out.receipts[0].completed_catalogs,1);assert.equal(out.catalog_baselines.length,1);
+  assert.equal(out.catalog_baselines[0].checked_at,page.captured_at);
 });
 test('authenticated pre-run direct capture can finish; changed cached content remains pending',async()=>{
   const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now});
@@ -216,7 +240,7 @@ test('legacy ledger is readable but never invents a verified catalog baseline',(
 
 test('verified receipt persists issue, DOI set and capture time independently of abstract completion',async t=>{
   const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now});
-  const data=await capture(run,{missing:true});data.catalog.pages[0].issue_heading='Volume 55, Issue 10';
+  const data=await capture(run,{missing:true,issueHeading:'Volume 55, Issue 10'});
   const prepared=await prepareBrowserImport(data,config),out=await applyCollectionReceipt(s,run,data,prepared,{papers:[]},{now:new Date('2026-09-25T00:00:00Z')});
   const b=out.catalog_baselines[0];assert.deepEqual(b.rank,[55,10]);assert.equal(b.papers[0].doi,doi);
   assert.equal(b.checked_at,later);assert.equal(b.input_sha256,prepared.input_sha256);assert.equal(out.receipts[0].pending_papers.length,1);
@@ -243,8 +267,7 @@ test('partial or wrong-identity linked pages cannot advance the baseline or clea
 });
 
 test('offline seed replays original proof, preserves reminders and uses original date; duplicate is free and idempotent',async()=>{
-  const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now}),data=await capture(run);
-  data.catalog.pages[0].issue_heading='Volume 55, Issue 10';
+  const s=addDiscoverySignals(emptyWorkflow(),[signal],{now}),run=createCollectionRun(s,[],{now}),data=await capture(run,{issueHeading:'Volume 55, Issue 10'});
   const seeded=await seedCatalogBaselines(s,data,'b'.repeat(64),{now:new Date(later)});
   assert.equal(seeded.catalog_baselines.length,1);assert.deepEqual(seeded.tasks,s.tasks);assert.deepEqual(seeded.receipts,[]);
   assert.equal(seeded.catalog_baselines[0].checked_at,later);

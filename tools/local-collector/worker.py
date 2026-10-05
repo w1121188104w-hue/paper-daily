@@ -34,11 +34,11 @@ def safe_url(url, hosts):
 
 def enqueue(state, tasks, plan):
     known = {key(t) for t in state['queue']}
-    completed = {p['doi'] for p in plan.get('known_papers', []) if p.get('complete') and p.get('doi')}
+    completed = [p for p in plan.get('known_papers', []) if p.get('complete')]
     for task in tasks:
         if not safe_url(task['url'], plan['allowed_hosts']):
             continue
-        if task['kind'] == 'article' and task.get('doi') in completed:
+        if task['kind'] == 'article' and len([p for p in completed if same_article(task, p)]) == 1:
             continue
         if task['kind'] == 'article' and plan.get('allowed_article_dois') is not None and task.get('doi') not in plan['allowed_article_dois']:
             continue
@@ -46,9 +46,23 @@ def enqueue(state, tasks, plan):
             state['remaining'].append({**task, 'reason': 'catalog_page_limit'})
             continue
         identity = key(task)
+        if task['kind'] == 'article' and any(t['kind'] == 'article' and same_article(task, t) for t in state['queue']):
+            continue
         if identity not in known:
             state['queue'].append(task)
             known.add(identity)
+
+
+def same_article(a, b):
+    if (a.get('journal') or a.get('journal_key')) != (b.get('journal') or b.get('journal_key')):
+        return False
+    ad, bd = (a.get('doi') or '').lower(), (b.get('doi') or '').lower()
+    if ad and bd:
+        return ad == bd
+    def urls(p):
+        values = [p.get('url'), *(p.get('identity_urls') or [])]
+        return {urlsplit(u)._replace(query='', fragment='').geturl().rstrip('/') for u in values if u}
+    return bool(urls(a) & urls(b))
 
 
 def run(plan_file, state_file, control_file, node, profile, driver_factory=None):

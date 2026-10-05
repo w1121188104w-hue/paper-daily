@@ -2,7 +2,7 @@ import { collectJournals } from './collectJournals.js';
 import { ACTIVE_CATALOG_TASKS, titleKey } from '../../tools/browser-abstract-extension/catalog-core.js';
 import { addDiscoverySignals, validateWorkflow } from './collectionWorkflow.js';
 import { knownJournalMismatch } from './journalIdentity.js';
-import {collectionWindow} from './journalRun.js';
+import {onlineWindow} from '../../tools/browser-abstract-extension/collection-policy.js';
 import {baselineKnownPapers} from './catalogBaseline.js';
 
 // Production entry point: deliberately allowlist options. Old probe adapters,
@@ -16,7 +16,7 @@ export function discoverIndexedCollectionTasks(config,state,papers,{now,collect,
 export async function discoverCollectionTasks(config, state, papers, {now=new Date(), collect=collectJournals,
   sourceOptions={}, onJournal=async()=>{}}={}) {
   let next=structuredClone(validateWorkflow(state));
-  const at=now.toISOString(),{fromDate,toDate}=collectionWindow({now,lookbackDays:60});
+  const at=now.toISOString(),{from:fromDate,to:toDate}=onlineWindow(now);
   const seenPapers=[...papers,...baselineKnownPapers(next)];
   const known=p=>seenPapers.some(x=>x.journal_key===p.journal_key&&((x.doi&&x.doi===p.doi)||(!p.doi&&titleKey(x.title_original)===titleKey(p.title))));
   const monitor=(journal,source,status)=>{next.monitors=next.monitors.filter(m=>m.journal!==journal||m.source!==source);

@@ -1,5 +1,5 @@
 import { CATALOG_TASKS, ACTIVE_CATALOG_TASKS, catalogUrl, sameCatalogList, assessCatalog, mergeCatalog } from './catalog-core.js';
-import {disabledCatalogUrl} from './collection-policy.js';
+import {disabledCatalogUrl,onlinePaginationStop} from './collection-policy.js';
 const key = job => `${job.task_id}|${job.url}`;
 export const MAX_CATALOG_PAGES = 50;
 const taskPageLimit = task => task?.landing ? MAX_CATALOG_PAGES : MAX_CATALOG_PAGES - 1;
@@ -45,6 +45,7 @@ export function catalogRepairJobs(state) {
       const replacement=updatedEntry(url,task);
       if(replacement!==url){if(!read(task,replacement))add({task_id:task.id,url:replacement,depth:0});continue;}
       if (!capturedOK(page) || state.last_attempts?.[page.job_key]) { add({task_id:task.id,url,depth}); continue; }
+      if(onlinePaginationStop(page,task,new Date(state.run_started_at||Date.now())))continue;
       if (page.status === 'catalog_landing' && page.issue_target && !read(task, page.issue_target)) add({task_id:task.id,url:page.issue_target,depth:1});
       const next = (page.next_links || []).filter(u => sameCatalogList(page.source_url, u, task) && !read(task, u));
       if (next.length && !['repeated_catalog_page','catalog_page_limit_reached'].includes(page.pagination_note)) {
@@ -165,7 +166,8 @@ export class CatalogEngine {
         !this.s.queue.some(j => j.task_id === job.task_id && j.url === page.issue_target)) {
       this.s.queue.splice(this.s.cursor + 1, 0, {task_id:job.task_id,url:page.issue_target,depth:1});
     }
-    if (page.status === 'catalog_candidates' && page.next_links?.length) {
+    if(onlinePaginationStop(page,this.task(),new Date(this.env.now())))page.online_window_complete=true;
+    if (page.status === 'catalog_candidates' && page.next_links?.length&&!page.online_window_complete) {
       // Explicit same-list pagination only; no next issue or next article.
       const sameList = page.next_links.filter(u => sameCatalogList(page.source_url, u, this.task()));
       const next = sameList.find(url => !this.s.queue.some(j => j.task_id === job.task_id && j.url === url) &&

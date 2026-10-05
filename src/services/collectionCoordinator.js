@@ -11,19 +11,32 @@ import {enqueuePublication,readCloudQueue} from './cloudPublication.js';
 import {readFieldTasks,reconcileFieldTasks} from './collectionFieldTasks.js';
 import {ACTIVE_CATALOG_TASKS} from '../../tools/browser-abstract-extension/catalog-core.js';
 import {captureContains} from './captureCoverage.js';
+import {activeMissingFields} from '../../tools/browser-abstract-extension/collection-policy.js';
 
 const idOK=id=>typeof id==='string'&&/^[a-f0-9-]{36}$/.test(id);
 const transportStages=new Set(['syncing','uploading','publishing']);
 async function optional(file){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return null;throw e;}}
 export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync,checkpoint=async()=>{},publish,checkPublication,onFailure=()=>{},prepareRun=async r=>r}){
-  const root=path.join(repositoryRoot,'data/journal-store');let busy=false,lastWorkflow=null;
+  const root=path.join(repositoryRoot,'data/journal-store');let busy=false,lastWorkflow=null,lastPapers=[];
   const runFile=id=>{assertLibrary(idOK(id),'任务 ID 无效');return path.join(stateDir,id,'run.json');};
   async function load(id){const r=await optional(runFile(id));assertLibrary(r?.run?.id===id,'任务未找到');return r;}
   const store=r=>atomic(runFile(r.run.id),r);
-  async function status(){if(!busy){const lib=await readJournalLibrary({root,config});lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});}
-    const workflow={...(lastWorkflow||publicWorkflow(emptyWorkflow())),field_tasks:(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending')};
+  async function status(){if(!busy){const lib=await readJournalLibrary({root,config});lastPapers=lib.papers;lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});}
+    const workflow={...(lastWorkflow||publicWorkflow(emptyWorkflow())),field_tasks:(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending'&&activeMissingFields(p.missing_fields).length)};
     let dirs=[];try{dirs=await fs.readdir(stateDir);}catch(e){if(e.code!=='ENOENT')throw e;}
-    const runs=[];for(const id of dirs.filter(idOK)){const r=await load(id);if(r.phase==='superseded')continue;runs.push({id,mode:r.run.mode,scope:r.run.scope||'all',parent_run_id:r.run.parent_run_id||null,created_at:r.submitted_at||r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields??null,failed_stage:r.failed_stage||null});}
+    const runs=[],records=[];for(const id of dirs.filter(idOK)){const r=await load(id);if(r.phase==='superseded')continue;records.push(r);runs.push({id,mode:r.run.mode,scope:r.run.scope||'all',parent_run_id:r.run.parent_run_id||null,created_at:r.submitted_at||r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields??null,failed_stage:r.failed_stage||null});}
+    const processing=await optional(path.join(repositoryRoot,'data/collection-workflow/source-review-progress.json'))||[];
+    const clouds=(await readCloudQueue(repositoryRoot)).requests;
+    for(const paper of lastPapers){
+      if(!paper.abstract_original)continue;
+      const uploads=records.filter(r=>r.paper_ids?.includes(paper.id)&&r.phase!=='published');
+      const cloud=clouds.filter(r=>r.paper_ids.includes(paper.id)).at(-1),run=uploads.at(-1);
+      const translation_pending=paper.abstract_translation_status!=='done';
+      const processing_stage=run?(run.phase==='awaiting_publication'?'awaiting_publication':'awaiting_upload'):
+        cloud&&!records.some(r=>r.run.id===cloud.id&&r.phase==='published')?(cloud.rounds>0?'awaiting_publication':'awaiting_upload'):translation_pending?'awaiting_translation':null;
+      if(processing_stage)processing.push({id:paper.id,doi:paper.doi,journal:paper.journal_key,title:paper.title_original,url:paper.url,processing_stage,translation_pending});
+    }
+    workflow.processing_papers=processing;
     return {version:2,busy,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
   async function exclusive(fn){assertLibrary(!busy,'另一个正式任务正在处理');busy=true;try{return await fn();}finally{busy=false;}}
   async function start(mode,{scope='all',catalogRunId=null}={}){return exclusive(async()=>{
@@ -40,9 +53,10 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       handoff=input.data;
       baseRun.catalog_run_id=catalogRunId;
       baseRun.jobs=parent.run.jobs;
-      baseRun.handoff_papers=(await checkedCatalogPapers(handoff)).filter(p=>p.review_status==='source_checked_candidate'&&p.type!=='other');
+      baseRun.handoff_papers=(await checkedCatalogPapers(handoff)).filter(p=>p.review_status==='source_checked_candidate'&&p.abstract_status!=='confirmed_absent'&&p.review_decisions?.catalog_membership?.status!=='out_of_scope');
     }
-    const fields=(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending'&&(mode==='full'||!p.next_retry_at||Date.parse(p.next_retry_at)<=Date.now()));
+    await reconcileFieldTasks(repositoryRoot,lib.papers);
+    const fields=(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending'&&activeMissingFields(p.missing_fields).length&&(mode==='full'||!p.next_retry_at||Date.parse(p.next_retry_at)<=Date.now()));
     if(scope==='all')for(const p of fields)for(const task of ACTIVE_CATALOG_TASKS.filter(t=>t.journal===p.journal))
       if(!baseRun.jobs.some(j=>j.catalog_id===task.id&&j.url===task.url))baseRun.jobs.push({catalog_id:task.id,url:task.url,signal_at:null});
     baseRun.pending_field_tasks=fields;
@@ -103,11 +117,11 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       const input=await readBrowserExport(path.join(stateDir,id,'export.json'));
       assertLibrary(input.sha256===record.export_hash,'导出文件校验失败');
       const prepared=await prepareBrowserImport(input.data,config,input.sha256,{knownPapers:(await readJournalLibrary({root,config})).papers});
-      await advance('importing','按原始证据核验并合并；已有内容不覆盖。');
+      await advance('importing','执行有原文依据的审核纠错、关联和合并，保留修改记录。');
       const imported=await importBrowserExport(config,{root,prepared,save:true});
       record.import_stats=imported.stats;await store(record);
       const captured=await checkedCatalogPapers(input.data),current=await readJournalLibrary({root,config});
-      const accepted=imported.decisions.filter(d=>['added','abstract_filled','metadata_filled','unchanged'].includes(d.action));
+      const accepted=imported.decisions.filter(d=>['added','abstract_filled','metadata_filled','corrected','review_recorded','unchanged'].includes(d.action));
       const existingCloud=(await readCloudQueue(repositoryRoot)).requests.find(r=>r.id===id);
       const paperIds=existingCloud?.paper_ids||current.papers.filter(p=>accepted.some(d=>p.journal_key===d.journal_key&&(d.doi?p.doi===d.doi:p.title_original===d.title))||
         captured.some(c=>c.review_status==='source_checked_candidate'&&c.journal===p.journal_key&&(c.doi?c.doi===p.doi:c.title===p.title_original))).map(p=>p.id);

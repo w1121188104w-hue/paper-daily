@@ -29,7 +29,7 @@ async function main(){
       stateDir:path.join(repositoryRoot,REVIEW_PROVIDER_PATH),beforeRequest:checkpoint,afterRequest:checkpoint}):null;
     const request=provider?async(input,options={})=>{const r=await provider.review(input,{retryHeader:options.retryAttempt});return r.data;}:null;
     const collect=async(c,opts)=>{const result=await collectJournals(c,opts);
-      if(v['save-sources'])await enqueueSourceReviews(repositoryRoot,result.source_results.flatMap(r=>r.records),{papers:library.papers});
+      if(v['save-sources'])await enqueueSourceReviews(repositoryRoot,result.source_results.flatMap(r=>r.records),{papers:library.papers,enforceCollectionScope:true});
       return result;};
     let state=await discoverIndexedCollectionTasks(config,await readWorkflow(repositoryRoot),library.papers,{collect,
       sourceOptions,
@@ -38,7 +38,7 @@ async function main(){
       // Indexed metadata can complete this branch without waiting for a browser.
       await processSourceReviews(repositoryRoot,config,{root,request,checkpoint});
       const official=await collectOfficialCatalogs(config,state,{repositoryRoot,root,requestReview:request,reviewCheckpoint:checkpoint,
-        reviewSources:async sources=>{await enqueueSourceReviews(repositoryRoot,sources,{papers:(await readJournalLibrary({root,config})).papers});
+        reviewSources:async sources=>{await enqueueSourceReviews(repositoryRoot,sources,{papers:(await readJournalLibrary({root,config})).papers,enforceCollectionScope:true});
           await processSourceReviews(repositoryRoot,config,{root,request,checkpoint});return [];},
         onProgress:row=>console.log(JSON.stringify(row))});
       state=official.state;await saveWorkflow(repositoryRoot,state);

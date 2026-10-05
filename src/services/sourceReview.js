@@ -4,6 +4,8 @@ import {knownJournalMismatch} from './journalIdentity.js';
 import {compactArticleInput,verdictOutput,canonicalEvidence} from '../../tools/browser-abstract-extension/article-review.js';
 import {validateReviewInput,validateReviewOutput,SOURCE_REVIEW_FIELDS} from '../../tools/browser-abstract-extension/review-core.js';
 import {checkedResponse,reviewFingerprint,canRetryReview} from '../../tools/browser-abstract-extension/review-client.js';
+import {attachReviewContext} from '../../tools/browser-abstract-extension/review-decisions.js';
+import {sourceDate} from '../../tools/browser-abstract-extension/collection-policy.js';
 const sha=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const dateFields=['publication_date','published_online_date','published_print_date'];
 function sourceUrl(r){
@@ -13,14 +15,15 @@ function sourceUrl(r){
   return r.url;
 }
 /** Evidence is captured BEFORE field selection, never assembled from model output. */
-export function sourceReviewInput(value){
+export function sourceReviewInput(value,{knownPapers=[],legacy=false}={}){
   const record=normalizeSourceRecord(value);
   if(knownJournalMismatch(record))throw Error('WRONG_JOURNAL');
   const blocks=[],put=(id,kind,text,context)=>{if(text)blocks.push({id,kind,text,context});};
   put('title','title',record.title,'source:title');
   put('doi','doi',record.doi,'source:doi');
   put('authors','context',record.authors.map(a=>a.name).join('; '),'source:authors; preserve original array boundaries');
-  put('abstract','abstract',record.abstract,'source:abstract; candidate extracted from raw_abstract');
+  put('abstract','abstract',legacy?record.abstract:record.abstract||cleanText(record.raw_abstract),legacy?'source:abstract; candidate extracted from raw_abstract':'source:abstract; candidate label is provisional, judge its actual role and completeness');
+  if(!legacy)put('captured-page','context',record.raw_dates?.source_capture?.text,'publisher page as captured, including surrounding headings and labels');
   for(const f of [...dateFields,'volume','issue','pages','type'])put(f.replaceAll('_','-'),'context',record[f],`source:${f}`);
   const {last_checked_at,source_created_at,source_updated_at,source_evidence,...original}=record;
   // Fetch times / body hashes are retained by the queue, but not part of the
@@ -28,9 +31,9 @@ export function sourceReviewInput(value){
   put('original-record','context',JSON.stringify(original),'original_record: complete captured source record');
   const proposed=Object.fromEntries(['title','doi','abstract',...dateFields,'volume','issue','pages','type'].map(f=>[f,record[f]||null]));
   proposed.authors=record.authors.map(a=>a.name).join('; ')||null;
-  const input=compactArticleInput({kind:'article',source_url:sourceUrl(record),source_kind:record.source,source_record_review_version:1,
-    identity:{title:record.title,doi:record.doi||null,journal:record.journal_key},blocks,proposed});
-  return validateReviewInput(input);
+  const input=compactArticleInput({kind:'article',...(!legacy?{decision_version:1}:{}),source_url:sourceUrl(record),source_kind:record.source,source_record_review_version:1,
+    identity:{title:record.title,doi:record.doi||null,journal:record.journal_key,...(!legacy?{url:record.url||null}:{})},blocks,proposed});
+  return validateReviewInput(legacy?input:attachReviewContext(input,knownPapers));
 }
 export async function reviewJob(input,request,{retry=false,cached}={}){
   const hash=await reviewFingerprint(input);
@@ -48,13 +51,14 @@ export function reviewedSource(value,input,result){
   if(!result?.input||canonicalEvidence(result.input)!==canonicalEvidence(input))return null;
   if(!result?.verdict||(result.error&&result.error!=='PROVIDER_ABSTRACT_NOT_EXTRACTED'))return null;
   const checked=validateReviewOutput(input,verdictOutput(input,result.verdict));
-  if(checked.status!=='source_checked_candidate'||!checked.fields.title||cleanText(checked.fields.title)!==original.title||
+  if(checked.status!=='source_checked_candidate'||!checked.fields.title||
     original.doi&&checked.fields.doi!==original.doi)return null;
-  const selected={...original,abstract:checked.fields.abstract||'',authors:[],publication_date:'',published_online_date:'',published_print_date:'',volume:'',issue:'',pages:'',type:'',
+  const selected={...original,title:checked.fields.title,doi:checked.fields.doi||original.doi,abstract:checked.fields.abstract||'',authors:[],publication_date:'',published_online_date:'',published_print_date:'',volume:'',issue:'',pages:'',type:'',
     ...(original.affiliations!==undefined?{affiliations:checked.affiliations||[]}:{})};
   if(checked.fields.authors===original.authors.map(a=>a.name).join('; '))selected.authors=original.authors;
+  else if(checked.fields.authors)selected.authors=checked.proofs.authors.flatMap(s=>s.text.split(';').map(name=>({name:name.trim()})));
   for(const f of [...dateFields,...SOURCE_REVIEW_FIELDS]){
-    const v=checked.fields[f];if(v&&v===original[f])selected[f]=dateFields.includes(f)?normalizePartialDate(v):v;
+    const v=checked.fields[f];if(v)selected[f]=dateFields.includes(f)?sourceDate(v)||normalizePartialDate(v):v;
   }
   // Unselected raw text is retained as evidence, not materialized paper content.
   selected.raw_dates={...original.raw_dates,source_review:{version:1,input_sha256:sha(input),input,
@@ -69,6 +73,8 @@ export function missingPaperFields(paper){
 export function hasNewSourceFields(record,papers){
   const old=papers.find(p=>p.journal_key===record.journal_key&&(record.doi?p.doi===record.doi:p.source_records.some(r=>r.source===record.source&&r.source_id===record.source_id)));
   if(!old)return true;
-  return !old.abstract_original&&!!record.abstract||!old.authors.length&&!!record.authors.length||
-    dateFields.some(f=>!old[f]&&!!record[f])||!old.affiliations?.length&&!!record.affiliations?.length;
+  return !!record.title&&record.title!==old.title_original||!!record.abstract&&record.abstract!==old.abstract_original||
+    !!record.authors.length&&JSON.stringify(record.authors)!==JSON.stringify(old.authors)||
+    [...dateFields,'volume','issue','pages'].some(f=>!!record[f]&&record[f]!==old[f])||
+    !!record.affiliations?.length&&JSON.stringify(record.affiliations)!==JSON.stringify(old.affiliations);
 }

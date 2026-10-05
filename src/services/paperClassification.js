@@ -1,4 +1,5 @@
 import { cleanText, normalizeTitleForMatch } from './paperModel.js';
+import {sourceReviewProof} from './reviewedCorrection.js';
 
 const ADMIN_TITLES = new Set(['front matter', 'back matter', 'table of contents', 'contents',
   'editorial board', 'masthead', 'cover', 'cover image', 'author index', 'subject index', 'copyright information']);
@@ -93,6 +94,13 @@ export function classificationRecords(paper) {
 
 // A read-time overlay: historical Master List versions retain their original rules.
 export function classifyPaper(paper, { historical = false, includePrefixedBoards = true, includeOther = true } = {}) {
+  if(!historical){
+    const decision=[...(paper.source_records||[])].reverse().map(sourceReviewProof).find(p=>p?.verdict.article_type)?.verdict.article_type;
+    if(decision){
+      const kind={research:'candidate',correction:'possible_correction',retraction:'possible_retraction',cover:'other',editorial_policy:'other',announcement:'other',other:'other',uncertain:'needs_review'}[decision.value];
+      if(kind)return result(kind,'deepseek_source_reviewed_type');
+    }
+  }
   const records = paper.source_records?.length ? (historical ? paper.source_records : classificationRecords(paper)) :
     [{ title: paper.title_original, journal_key: paper.journal_key }];
   const classes = records.map(row => classifySourceRecord(row, { includePrefixedBoards, includeOther })), kinds = new Set(classes.map((item) => item.kind));
