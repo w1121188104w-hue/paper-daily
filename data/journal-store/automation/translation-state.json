@@ -44381,7 +44381,7 @@
       "batch_id": "batch-fb1b6e7c2c6389f059a83b10a16084bcaaba982d86788c13a0a423928427db7f",
       "mode": "backfill",
       "created_at": "2026-10-05T05:38:52.005Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T05:41:09.305Z",
       "items": [
         {
           "id": "doi:10.1287/mnsc.2023.00012",
@@ -44395,10 +44395,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 751,
+            "completion_tokens": 290,
+            "total_tokens": 1041
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2023.00212",
@@ -44412,10 +44418,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 667,
+            "completion_tokens": 197,
+            "total_tokens": 864
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2023.00239",
@@ -44429,10 +44441,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 789,
+            "completion_tokens": 292,
+            "total_tokens": 1081
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1287/mnsc.2023.00254",
@@ -44446,10 +44464,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 656,
+            "completion_tokens": 147,
+            "total_tokens": 803
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }
