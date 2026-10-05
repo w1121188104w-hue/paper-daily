@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-a1d61b5c9c1c1e93ec5e8fba54858094be4ce2a661ebb9e97f6486a0d91ad7d2",
+  "stats": {
+    "completed_fields": 1,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.respol.2026.105639",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
