@@ -49412,6 +49412,235 @@
           ]
         }
       ]
+    },
+    {
+      "id": "1167d887-8a36-44d6-ba3a-b69afd450867",
+      "batch_id": "batch-8941c4882e46b2bdd2114773a057c8e1c328b137e5ff93ed1c5627e93141a9e5",
+      "mode": "backfill",
+      "created_at": "2026-10-05T13:15:52.023Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1177/01492063251386745",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "c2e78b8910e5262f1544317a5dd497fa77f8c5f27e7b9a08b17be910f3569e27",
+              "task_id": "task:f8c81f2656c047bc27c837f48b28c05fe6e39fb6c970b6dc01eb099a20288e70"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "4cb852e9d1026886fbf242c2f19522a987539c5f57fc3fa8e40fc65b54f12577",
+              "task_id": "task:81fb7c6b5f387d483e94f6ac2bac547a4014c071a1004c3cc3c4647dc350352c"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251387664",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "416ec5d2217f0f3802ffa9125135ce9a668e501232cf7a35308d818c7e71e391",
+              "task_id": "task:3378ff7b20313eef73d38ef99d789f21148514c3da3b5694bf10a6594316c60c"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "d74c61c400c7f0840908591e587866778d19d155068cd4184b47aa1feeea43f2",
+              "task_id": "task:f3f18863cd7cc4437f0c5903f5a7efb426b2983d181b6b59d578c31ec81357e8"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251389880",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "219a2a1cbc1177ac21919bb26ea34c6161233205e73be37ffe17033f45770957",
+              "task_id": "task:04617b92bb1ea04876f81f8801979683208a4824e0752aec678a17a6e303ef75"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "6288a37714bf8c7d978c18b1d868c8423164a4c3f7cd3dcb17a6ecf53bb43683",
+              "task_id": "task:84ab1ee43f27ca25be7341c038015219e9e77eb1e68de9619af492becd1331ed"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251389882",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "1a47b8414c04415edbc5795cffd8bc5a0b0971c25fec73bb3674a66cb6ddf669",
+              "task_id": "task:5711e288458d52e73b7476dd186e04a61e224be6487bb8b2b9767bc26c368da5"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "dfe66259f2060a1d9d40956564cc6e857d971582a42ea76fc7e2313fa712dbc4",
+              "task_id": "task:fc350768072bf22c4f18525ef36efcb8f2813839a52c5566da27356f345ffbd0"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251390419",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "6e97838686dc1c1cf585a08faf14243d87830ab0c5a93bf3d37e4139270230fc",
+              "task_id": "task:75aea94b9c70b2c79c700aedae75d253602f1b3932abfbfeb39ff5aaf0d4129f"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "c2324afa9fb1f78b5263411dd8c79db636d7d2e3aee3eb935f6d2e29c792494f",
+              "task_id": "task:13ce790a3014b6adaf7ab0197127f6d3bf787492a7e5dbf9916e4b3a23ac14e5"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251390850",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "b9aaaf251a0fdab71c87036e177c48dbd3c5cde178549eddedc47871595dbe1e",
+              "task_id": "task:20ef056e941f49e4aa882a82587e06ec538eec4327e3035c7062e99bd29755b1"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "3139223c68acdade711c61757f5c0b32963168a31f2108cfe8fc0dff93224a6a",
+              "task_id": "task:9b70e5c839c97fdb8209a8fdc339b0199fc15f00074f3e38a4fedc622f32b5bb"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251390855",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "d2f780e7730977206dafa2c74f580438525b5a09030eaddab7b2cf6eaa10a814",
+              "task_id": "task:2ee5f0c9ed2e78d83609f30e42428163fec5b20089b29a0a82af14966a1d40a6"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "06415dbd4db51f89cea1bbd237ab323f726ebb5f4c83ec25acbf13dda42dcb7d",
+              "task_id": "task:d9504acd10619fee8c52ed5ec9367a5328546b0c96e24da9f970b2bcf1cb40fb"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251392213",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "78c6bdb68f0e63ecb3af53c2808e0d58ca03ed6a464e5b6f3a5a76a1b0492ef1",
+              "task_id": "task:fc95074da60912b6953b67cec2696b7192b050152e1e45a94c7fa3c6ed45b2c4"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "fbb02a3bab1e286fbb9a07502349bfea65f9a98213dad6aa01225342e8fe51aa",
+              "task_id": "task:a3940de41c88f5d271d87a8a1914ad1649ff4aa5ab32efdd19915a731000b599"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251395674",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "e0fd59cd10cf98e2de796e9536622e3ac378b90a0b0195207744cef7b8e7c6bf",
+              "task_id": "task:e8e6470f9103388958639fad1d70e2ca7b07cb79869b194d9d5537f7b79558b1"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "4167c16496568e50ce4f55e302bdf71a84cd4738de810cdfe0386cd1488aed0a",
+              "task_id": "task:fb9909ee763fbacf0cef4a8208c3a2f83edbf5b34ca233b0084db27d85c54464"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251397362",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "f13489d616dcbc330759c756812ab44b6025261ee7d9d04e24b20ba93a592ddb",
+              "task_id": "task:dc384726fcbcbab1ae6fb7285a7bdafdd28656c72d21d0982a2479dd0d9c0c50"
+            },
+            {
+              "field": "abstract",
+              "source_hash": "7f1be0c5a097e0de564cf7f7d76b7a181b8c918439f890d4a8513a209c7e4b8d",
+              "task_id": "task:e537c280fd56e173e116cc3e9454201117aa24ad480a18018ecb9dd15b28d10f"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
