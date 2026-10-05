@@ -52459,7 +52459,7 @@
       "batch_id": "batch-85c3ed4b98caefebc89113c30140de661e207d59c24920e1cd3cd988e6df2e92",
       "mode": "backfill",
       "created_at": "2026-10-05T16:24:46.689Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T16:26:39.709Z",
       "items": [
         {
           "id": "doi:10.1093/restud/rdag021",
@@ -52473,11 +52473,17 @@
           "retry_of": {
             "abstract": "92a6aac0-5717-42f9-91f4-e347bd2fa8ca"
           },
-          "field_errors": {},
+          "field_errors": {
+            "abstract": "MISSING_NUMBERS"
+          },
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 802,
+            "completion_tokens": 243,
+            "total_tokens": 1045
+          },
           "completed_fields": []
         }
       ]
