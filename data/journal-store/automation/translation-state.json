@@ -47757,7 +47757,7 @@
       "batch_id": "batch-d577635ac8aa25a9099646e4b19886067f2e5d614ad7a8e88f931afe56aa0cda",
       "mode": "backfill",
       "created_at": "2026-10-05T12:07:15.972Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T12:09:48.366Z",
       "items": [
         {
           "id": "doi:10.1093/restud/rdag048",
@@ -47771,10 +47771,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 660,
+            "completion_tokens": 160,
+            "total_tokens": 820
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }

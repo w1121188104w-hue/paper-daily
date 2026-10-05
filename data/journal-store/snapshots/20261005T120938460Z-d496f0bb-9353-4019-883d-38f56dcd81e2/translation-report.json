@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-d577635ac8aa25a9099646e4b19886067f2e5d614ad7a8e88f931afe56aa0cda",
+  "stats": {
+    "completed_fields": 1,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1093/restud/rdag048",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
