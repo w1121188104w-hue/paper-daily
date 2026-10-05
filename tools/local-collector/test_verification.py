@@ -141,6 +141,76 @@ class VerificationTests(unittest.TestCase):
     def test_diagnostics_strip_credentials_query_and_fragment(self):
         self.assertEqual(page_summary({'url': 'https://user:pass@host.test/a?token=secret#private'})['url'], 'https://host.test/a')
 
+    def test_image_transition_has_own_budget_and_publisher_continue(self):
+        driver = Browser(info={'provider':'recaptcha','kind':'checkbox','component':True})
+        counts = {'checkbox':0,'image':0,'continue':0}
+        def checkbox(**kwargs):
+            counts['checkbox'] += 1
+            if counts['checkbox'] == 4:
+                driver.info['kind'] = 'image'
+            return True
+        def image(kind,**kwargs):
+            self.assertEqual(kind,'image')
+            counts['image'] += 1
+            if counts['image'] == 3:
+                driver.info.update(solved=True,continue_required=True)
+            return {'state':'submitted','engine':'local','value':'private-answer','token':'secret'}
+        def follow(**kwargs):
+            counts['continue'] += 1
+            driver.page = CONTENT
+            return True
+        driver.click_checkbox_once,driver.solve_challenge_once,driver.continue_after_verification = checkbox,image,follow
+        _, trace = self.resolve(driver)
+        self.assertEqual(counts,{'checkbox':4,'image':3,'continue':1})
+        self.assertEqual(trace['outcome'],'challenge_cleared')
+        self.assertEqual(len(driver.reloads),1)
+        self.assertNotIn('private-answer',str(trace))
+        self.assertNotIn('secret',str(trace))
+
+    def test_local_solver_failure_gets_retries_without_reloading_puzzle(self):
+        driver = Browser(info={'provider':'recaptcha','kind':'image','component':True})
+        calls = []
+        def fail(kind,**kwargs):
+            calls.append(kind)
+            raise RuntimeError('private-url')
+        driver.solve_challenge_once = fail
+        _, trace = self.resolve(driver)
+        self.assertEqual(calls,['image']*5)
+        self.assertEqual(driver.reloads,[])
+        self.assertEqual(trace['outcome'],'image_attempt_limit')
+        self.assertNotIn('private-url',str(trace))
+
+    def test_local_solver_timeout_can_still_have_cleared_gate(self):
+        driver = Browser(info={'provider':'recaptcha','kind':'image','component':True})
+        def solve(kind,**kwargs):
+            driver.page = CONTENT
+            raise TimeoutError()
+        driver.solve_challenge_once = solve
+        _, trace = self.resolve(driver)
+        self.assertEqual(trace['outcome'],'challenge_cleared')
+        self.assertEqual(len(trace['attempts']),1)
+
+    def test_response_presence_alone_is_not_content_success(self):
+        driver = Browser(info={'provider':'recaptcha','kind':'checkbox','component':True,'solved':True,'continue_required':True})
+        driver.continue_after_verification = lambda **kwargs: True
+        _, trace = self.resolve(driver)
+        self.assertEqual(finish_verification(trace,'needs_user_verification')['outcome'],'attempt_limit')
+
+    def test_article_probe_detects_automatic_gate_before_widget_exists(self):
+        driver = Browser()
+        initial = {'url':URL,'challenge':False,'titles':['academic.oup.com'],'candidates':[]}
+        driver.page = initial
+        driver.inspect_verification = lambda **kw: ({'provider':'cloudflare','kind':'automatic','component':False}
+                                                    if driver.page is initial else {})
+        def read(*args,**kwargs):
+            driver.page = CONTENT
+            return copy.deepcopy(CONTENT)
+        driver.execute_script = read
+        clock = Clock()
+        _, trace = resolve_verification(driver,'extract',copy.deepcopy(initial),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(trace['outcome'],'challenge_cleared')
+        self.assertEqual(trace['attempts'][0]['action'],'wait_for_automatic_check')
+
 
 if __name__ == '__main__':
     unittest.main()

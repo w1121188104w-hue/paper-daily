@@ -82,7 +82,6 @@ class CDPDriver:
                 time.sleep(0.5)
             if not ready:
                 self.stop_process()
-                print(log_path.read_text(encoding='utf-8', errors='replace')[-6000:], flush=True)
                 raise RuntimeError('Browser startup readiness failed; see browser-startup.log')
             options.update(config=config, host=config.host, port=config.port)
         try:
@@ -133,6 +132,27 @@ class CDPDriver:
     def inspect_verification(self, timeout=5):
         script = Path(__file__).with_name('verification-probe.js').read_text(encoding='utf-8')
         return self.execute_script(script, timeout=timeout)
+
+    def solve_challenge_once(self, kind, timeout=25):
+        from captcha_browser import CaptchaBrowser
+        if not hasattr(self, '_captcha_browser'):
+            self._captcha_browser = CaptchaBrowser(self)
+        adapter = self._captcha_browser
+        operation = adapter.grid(timeout) if kind == 'image' else adapter.local_widget(kind, timeout)
+        return self.client.loop.run_until_complete(asyncio.wait_for(operation, timeout=timeout))
+
+    def continue_after_verification(self, timeout=10):
+        # OUP has an explicit second step after reCAPTCHA succeeds. Inspect the
+        # existing response only as a boolean, never read or synthesize tokens.
+        deadline = time.monotonic() + timeout
+        ready = self.execute_script("return location.hostname==='academic.oup.com' && location.pathname.startsWith('/crawlprevention/') && !!document.querySelector('textarea[name=\"g-recaptcha-response\"]')?.value?.trim() && !!document.querySelector('#btnSubmit:not([disabled])');", timeout=timeout)
+        if not ready:
+            return False
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutException('Publisher continuation timed out')
+        self.client.loop.run_until_complete(asyncio.wait_for(self.client.page.click('#btnSubmit', timeout=min(2, remaining)), timeout=remaining))
+        return True
 
     def quit(self):
         try:
