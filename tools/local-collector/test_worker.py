@@ -46,6 +46,17 @@ class ResumeTests(unittest.TestCase):
         self.assertEqual(capture['result'], {'status': 'capture_failed', 'error_stage': 'browser_start', 'error_type': 'RuntimeError'})
         self.assertNotIn('private', json.dumps(capture))
 
+    def test_loading_timeout_preserves_result_but_retains_task(self):
+        (self.root / 'captures').mkdir()
+        self.save('captures/' + worker.key(self.task) + '.json',
+                  {'task': self.task, 'capture': {'content_loading_timeout': True},
+                   'result': {'status': 'candidate_extracted', 'abstract': 'Previously captured content'}, 'next': []})
+        state = self.run_worker(lambda _: self.fail('saved content must be reused'))
+        self.assertEqual(state['items'][0]['status'], 'candidate_extracted')
+        self.assertEqual(state['remaining'][0]['reason'], 'content_loading_timeout')
+        saved = json.loads((self.root / state['items'][0]['file']).read_text(encoding='utf8'))
+        self.assertEqual(saved['result']['abstract'], 'Previously captured content')
+
     def test_unsafe_url_and_short_interval_rejected(self):
         self.assertFalse(worker.safe_url('https://www.sciencedirect.com.evil.test/a', self.plan['allowed_hosts']))
         self.plan['interval_seconds'] = 1

@@ -21,4 +21,5 @@ const expired=component&&/verification expired|challenge expired|验证已过期
 const load_failed=component&&/failed to load|unable to connect|加载失败/.test(text);
 const solved=!!document.querySelector('textarea[name="g-recaptcha-response"],textarea[name="h-captcha-response"],input[name="cf-turnstile-response"]')?.value?.trim();
 const continue_required=solved&&location.hostname==='academic.oup.com'&&location.pathname.startsWith('/crawlprevention/')&&has('#btnSubmit:not([disabled])');
-return {provider,kind,component,access,expired,load_failed,solved,continue_required};
+const content_busy=has('main[aria-busy="true"],main [aria-busy="true"],[role="main"][aria-busy="true"],[role="main"] [aria-busy="true"]');
+return {provider,kind,component,access,expired,load_failed,solved,continue_required,ready_state:document.readyState,content_busy};

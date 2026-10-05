@@ -189,7 +189,9 @@ def run(plan_file, state_file, control_file, node, profile, driver_factory=None)
             if not any(i['key'] == identity for i in state['items']):
                 state['items'].append({'key': identity, 'kind': task['kind'], 'journal': task['journal'],
                                        'doi': task.get('doi'), 'file': 'captures/' + identity + '.json', 'status': status})
-            if status not in ('candidate_extracted', 'catalog_candidates', 'catalog_empty', 'catalog_landing', 'no_abstract_stated'):
+            if (captured.get('capture') or {}).get('content_loading_timeout'):
+                state['remaining'].append({**task, 'reason': 'content_loading_timeout'})
+            elif status not in ('candidate_extracted', 'catalog_candidates', 'catalog_empty', 'catalog_landing', 'no_abstract_stated'):
                 state['remaining'].append({**task, 'reason': status})
             enqueue(state, captured.get('next', []), plan)
             state['cursor'] += 1

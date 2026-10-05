@@ -211,6 +211,150 @@ class VerificationTests(unittest.TestCase):
         self.assertEqual(trace['outcome'],'challenge_cleared')
         self.assertEqual(trace['attempts'][0]['action'],'wait_for_automatic_check')
 
+    def test_slow_automatic_check_gets_time_before_clicking(self):
+        clock = Clock()
+        driver = Browser(info={'provider':'cloudflare','kind':'automatic','component':False})
+        def read(*args,**kwargs):
+            if clock.now() >= 24:
+                driver.page = CONTENT
+            return copy.deepcopy(driver.page)
+        driver.execute_script = read
+        _, trace = resolve_verification(driver,'extract',copy.deepcopy(GATE),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(driver.calls,0)
+        self.assertEqual(trace['outcome'],'challenge_cleared')
+        self.assertGreaterEqual(clock.now(),24)
+
+    def test_click_result_arriving_after_twelve_seconds_does_not_reclick(self):
+        clock = Clock()
+        driver = Browser([True])
+        def read(*args,**kwargs):
+            if clock.now() >= 12:
+                driver.page = CONTENT
+            return copy.deepcopy(driver.page)
+        driver.execute_script = read
+        _, trace = resolve_verification(driver,'extract',copy.deepcopy(GATE),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(driver.calls,1)
+        self.assertEqual(trace['outcome'],'challenge_cleared')
+
+    def test_after_gate_waits_for_slow_catalog_cards(self):
+        clock = Clock()
+        driver = Browser(['cleared'])
+        def read(*args,**kwargs):
+            return copy.deepcopy(CONTENT) if clock.now() >= 30 else {'url':URL,'items':[],'page_title':'Journal issue'}
+        driver.execute_script = read
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(GATE),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(capture['items'],CONTENT['items'])
+        self.assertGreaterEqual(clock.now(),33)
+        self.assertLess(clock.now(),60)
+        self.assertEqual(trace['content_status'],'ready')
+
+    def test_content_loading_has_budget_after_verification_budget_is_used(self):
+        clock = Clock()
+        driver = Browser(['cleared'])
+        driver.execute_script = lambda *a,**kw: copy.deepcopy(CONTENT) if clock.now() >= 24 else {'url':URL,'items':[]}
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(GATE),clock=clock.now,sleep=clock.sleep,total_seconds=10)
+        self.assertTrue(capture['items'])
+        self.assertEqual(finish_verification(trace,'catalog_candidates')['outcome'],'passed')
+        self.assertGreater(clock.now(),10)
+        self.assertLess(clock.now(),70)
+
+    def test_initial_page_with_title_only_waits_for_content(self):
+        clock = Clock()
+        driver = Browser()
+        initial = {'url':URL,'items':[],'page_title':'Journal issue'}
+        driver.page = initial
+        def read(*args,**kwargs):
+            if clock.now() >= 18:
+                driver.page = CONTENT
+            return copy.deepcopy(driver.page)
+        driver.execute_script = read
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(initial),clock=clock.now,sleep=clock.sleep)
+        self.assertTrue(capture['items'])
+        self.assertEqual(trace['outcome'],'not_detected')
+        self.assertEqual(trace['content_status'],'ready')
+        self.assertEqual(driver.calls,0)
+
+    def test_partial_dom_is_not_ready_until_document_finishes(self):
+        clock = Clock()
+        driver = Browser()
+        driver.inspect_verification = lambda **kw: {'ready_state':'interactive' if clock.now()<15 else 'complete'}
+        driver.execute_script = lambda *a,**kw: {'url':URL,'items':[{'title':str(i)} for i in range(1 if clock.now()<12 else 3)]}
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(CONTENT),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(len(capture['items']),3)
+        self.assertGreaterEqual(clock.now(),18)
+        self.assertEqual(trace['content_status'],'ready')
+
+    def test_changed_items_with_same_count_need_another_stable_read(self):
+        clock = Clock()
+        driver = Browser()
+        driver.page = CONTENT
+        driver.execute_script = lambda *a,**kw: {'url':URL,'items':[{'title':'Replacement'}]}
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(CONTENT),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(capture['items'][0]['title'],'Replacement')
+        self.assertGreaterEqual(clock.now(),6)
+        self.assertEqual(trace['content_status'],'ready')
+
+    def test_explicit_busy_content_is_not_ready_even_when_document_complete(self):
+        clock = Clock()
+        driver = Browser()
+        driver.page = CONTENT
+        driver.inspect_verification = lambda **kw: {'ready_state':'complete','content_busy':clock.now()<21}
+        _, trace = resolve_verification(driver,'extract',copy.deepcopy(CONTENT),clock=clock.now,sleep=clock.sleep)
+        self.assertGreaterEqual(clock.now(),24)
+        self.assertEqual(trace['content_status'],'ready')
+
+    def test_empty_loading_timeout_keeps_catalog_pending(self):
+        clock = Clock()
+        driver = Browser()
+        driver.page = {'url':URL,'items':[]}
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(driver.page),clock=clock.now,sleep=clock.sleep)
+        self.assertTrue(capture['content_loading_timeout'])
+        self.assertTrue(capture['pagination_unresolved'])
+        self.assertEqual(trace['content_status'],'time_limit')
+        self.assertAlmostEqual(clock.now(),60)
+
+    def test_partial_cards_survive_timeout_without_claiming_complete_page(self):
+        clock = Clock()
+        driver = Browser(['cleared'])
+        driver.inspect_verification = lambda **kw: {'ready_state':'loading'}
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(GATE),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(capture['items'],CONTENT['items'])
+        self.assertTrue(capture['pagination_unresolved'])
+        self.assertEqual(finish_verification(trace,'catalog_candidates')['outcome'],'cleared_but_content_unconfirmed')
+
+    def test_article_metadata_does_not_end_wait_before_abstract_arrives(self):
+        clock = Clock()
+        driver = Browser()
+        initial = {'url':URL,'titles':['Paper'],'dois':['10.1234/example'],'candidates':[]}
+        driver.page = initial
+        driver.execute_script = lambda *a,**kw: {**initial,'candidates':[{'text':'Full abstract'}] if clock.now()>=24 else []}
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(initial),clock=clock.now,sleep=clock.sleep)
+        self.assertTrue(capture['candidates'])
+        self.assertGreaterEqual(clock.now(),27)
+        self.assertEqual(trace['content_status'],'ready')
+
+    def test_pause_during_content_wait_stops_without_marking_timeout(self):
+        clock = Clock()
+        driver = Browser()
+        driver.page = {'url':URL,'items':[]}
+        capture, trace = resolve_verification(driver,'extract',copy.deepcopy(driver.page),clock=clock.now,sleep=clock.sleep,paused=lambda:clock.now()>=12)
+        self.assertEqual(trace['outcome'],'paused')
+        self.assertNotIn('content_loading_timeout',capture)
+        self.assertLess(clock.now(),13)
+
+    def test_gate_reappearing_during_loading_is_processed_again(self):
+        clock = Clock()
+        driver = Browser(['cleared','cleared'])
+        def read(*args,**kwargs):
+            if clock.now()>=6 and driver.calls==1:
+                driver.page = GATE
+            return copy.deepcopy(driver.page)
+        driver.execute_script = read
+        _, trace = resolve_verification(driver,'extract',copy.deepcopy(GATE),clock=clock.now,sleep=clock.sleep)
+        self.assertEqual(driver.calls,2)
+        self.assertEqual(trace['content_waits'][0]['state'],'challenge_reappeared')
+        self.assertEqual(trace['content_status'],'ready')
+
 
 if __name__ == '__main__':
     unittest.main()

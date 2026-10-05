@@ -1,5 +1,6 @@
 """Bounded retries with private diagnostics; a helper return is not a pass."""
 from datetime import datetime, timezone
+import json
 import time
 import traceback
 from pathlib import Path
@@ -9,6 +10,9 @@ MAX_ATTEMPTS = 5
 MAX_TOTAL_ATTEMPTS = MAX_ATTEMPTS * 4
 TOTAL_SECONDS = 150
 POLL_SECONDS = 3
+AUTOMATIC_WAIT_SECONDS = 30
+RESULT_WAIT_SECONDS = 15
+CONTENT_WAIT_SECONDS = 60
 
 
 def is_challenge(capture):
@@ -26,6 +30,23 @@ def content_visible(capture):
         return bool(capture.get('items') or capture.get('empty_message') or capture.get('issue_links'))
     return bool(capture.get('candidates') or capture.get('noAbstract') or
                 capture.get('dois') and capture.get('titles'))
+
+
+def content_ready(capture):
+    # A title/DOI can arrive before the abstract, just as an issue heading can
+    # arrive before its cards. Only waitable content is a readiness signal.
+    if not content_visible(capture):
+        return False
+    if 'items' not in capture and not (capture.get('candidates') or capture.get('noAbstract')):
+        return False
+    state = capture.get('verification_state') or {}
+    return not state.get('content_busy') and state.get('ready_state') not in ('loading', 'interactive')
+
+
+def content_signature(capture):
+    fields = ('items', 'empty_message', 'issue_links', 'next_links', 'pagination_current',
+              'candidates', 'noAbstract', 'dois', 'titles', 'affiliation_candidates')
+    return json.dumps({key: capture.get(key) for key in fields}, sort_keys=True, ensure_ascii=False)
 
 
 def page_summary(capture):
@@ -46,11 +67,12 @@ def resolve_verification(driver, script, capture, *, paused=lambda: False,
                          sleep=time.sleep, total_seconds=TOTAL_SECONDS, target_url=None):
     started = clock()
     deadline = started + total_seconds
-    trace = {'version': 3, 'started_at': datetime.now(timezone.utc).isoformat(),
+    content_remaining = CONTENT_WAIT_SECONDS
+    trace = {'version': 4, 'started_at': datetime.now(timezone.utc).isoformat(),
              'max_attempts': MAX_TOTAL_ATTEMPTS, 'max_stage_attempts': MAX_ATTEMPTS,
-             'timeout_seconds': total_seconds,
+             'timeout_seconds': total_seconds, 'content_timeout_seconds': CONTENT_WAIT_SECONDS,
              'initial': page_summary(capture), 'attempts': [], 'settling': [],
-             'navigations': [], 'outcome': 'not_detected'}
+             'navigations': [], 'content_waits': [], 'outcome': 'not_detected'}
 
     def persist(outcome=None):
         if outcome:
@@ -58,16 +80,18 @@ def resolve_verification(driver, script, capture, *, paused=lambda: False,
         trace['elapsed_seconds'] = round(clock() - started, 3)
         save(trace)
 
-    def wait(seconds):
-        until = min(clock() + seconds, deadline)
+    def wait(seconds, limit=None):
+        limit = deadline if limit is None else limit
+        until = min(clock() + seconds, limit)
         while clock() < until and not paused():
             sleep(min(0.2, until - clock()))
-        return not paused() and clock() < deadline
+        return not paused() and clock() < limit
 
-    def inspect(page):
-        if callable(getattr(driver, 'inspect_verification', None)) and clock() < deadline:
+    def inspect(page, limit=None):
+        limit = deadline if limit is None else limit
+        if callable(getattr(driver, 'inspect_verification', None)) and clock() < limit:
             try:
-                info = driver.inspect_verification(timeout=min(5, deadline - clock()))
+                info = driver.inspect_verification(timeout=min(5, limit - clock()))
                 info = info if isinstance(info, dict) else {}
                 page['verification_state'] = info
                 if info.get('solved') and content_visible(page) and not info.get('continue_required'):
@@ -77,26 +101,64 @@ def resolve_verification(driver, script, capture, *, paused=lambda: False,
         page['challenge'] = is_challenge(page)
         return page
 
-    def read_page():
-        page = driver.execute_script(script, timeout=min(10, max(0.01, deadline - clock())))
-        return inspect(page)
+    def read_page(limit=None):
+        limit = deadline if limit is None else limit
+        page = driver.execute_script(script, timeout=min(10, max(0.01, limit - clock())))
+        return inspect(page, limit)
+
+    def settle_content(page, reason):
+        nonlocal content_remaining
+        # This is a separate, shared page-loading allowance. A challenge
+        # consuming most of its 150 seconds must not leave the article 1 second
+        # to load; repeated gates cannot reset this allowance indefinitely.
+        waiting_started = clock()
+        content_deadline = waiting_started + content_remaining
+        row = {'reason': reason, 'started_after_seconds': round(clock() - started, 3),
+               'observations': [], 'state': 'waiting'}
+        trace['content_waits'].append(row)
+        previous = None
+        while True:
+            state = page.get('verification_state') or {}
+            if paused():
+                row['state'] = 'paused'
+                break
+            if state.get('access') or is_challenge(page):
+                row['state'] = state.get('access') or 'challenge_reappeared'
+                break
+            current = content_signature(page) if content_ready(page) else None
+            if current is not None and current == previous:
+                row['state'] = 'ready'
+                break
+            previous = current
+            if not wait(POLL_SECONDS, content_deadline):
+                row['state'] = 'paused' if paused() else 'time_limit'
+                break
+            try:
+                page = read_page(content_deadline)
+                row['observations'].append({'after_seconds': round(clock() - started, 3),
+                                            'page': page_summary(page)})
+            except Exception as error:
+                previous = None
+                row['observations'].append({'error_type': type(error).__name__})
+            persist()
+        if row['state'] == 'time_limit':
+            page['content_loading_timeout'] = True
+            # Preserve usable cards and their normal review path, while the
+            # existing completeness check keeps this directory on the queue.
+            if 'items' in page:
+                page['pagination_unresolved'] = True
+                page['warnings'] = list(dict.fromkeys([*(page.get('warnings') or []), 'content_loading_timeout']))
+        content_remaining = max(0, content_remaining - (clock() - waiting_started))
+        row['elapsed_seconds'] = round(clock() - waiting_started, 3)
+        trace['content_status'] = row['state']
+        persist()
+        return page
 
     capture = inspect(capture)
     trace['initial'] = page_summary(capture)
 
-    # The document can arrive before its cards/abstract, or before its challenge.
-    # Give either a chance to appear instead of recording an empty directory.
-    for _ in range(3):
-        if is_challenge(capture) or content_visible(capture):
-            break
-        if not wait(POLL_SECONDS):
-            break
-        try:
-            capture = read_page()
-            trace['settling'].append({'page': page_summary(capture)})
-        except Exception as error:
-            trace['settling'].append({'error_type': type(error).__name__})
-        persist()
+    if not is_challenge(capture):
+        capture = settle_content(capture, 'initial_page')
     if paused():
         persist('paused')
         return capture, trace
@@ -167,7 +229,9 @@ def resolve_verification(driver, script, capture, *, paused=lambda: False,
         persist()
         # Re-read even after a helper exception. Its action may have succeeded
         # before timing out; never classify the stale pre-click page as final.
-        for _ in range(3):
+        observation_seconds = AUTOMATIC_WAIT_SECONDS if action in ('wait_for_component', 'wait_for_automatic_check') else RESULT_WAIT_SECONDS
+        attempt['result_wait_seconds'] = observation_seconds
+        for _ in range(observation_seconds // POLL_SECONDS):
             if not wait(POLL_SECONDS):
                 break
             try:
@@ -183,23 +247,14 @@ def resolve_verification(driver, script, capture, *, paused=lambda: False,
                 persist(capture['verification_state']['access'])
                 return capture, trace
             if not is_challenge(capture):
-                # A cleared gate can still be a loading page. Wait for content
-                # and detect a gate that reappears before declaring it cleared.
-                for _ in range(3):
-                    if content_visible(capture) or not wait(POLL_SECONDS):
-                        break
-                    try:
-                        capture = read_page()
-                        attempt['observations'].append({'page': page_summary(capture)})
-                    except Exception as error:
-                        attempt['observations'].append({'error_type': type(error).__name__})
-                    persist()
-                    if is_challenge(capture):
-                        break
+                capture = settle_content(capture, 'after_verification')
                 if paused():
                     break
+                if (capture.get('verification_state') or {}).get('access'):
+                    persist(capture['verification_state']['access'])
+                    return capture, trace
                 if is_challenge(capture):
-                    continue
+                    break
                 persist('challenge_cleared')
                 return capture, trace
             current_state = capture.get('verification_state') or {}
@@ -225,8 +280,15 @@ def resolve_verification(driver, script, capture, *, paused=lambda: False,
                     capture = read_page()
                     navigation['page'] = page_summary(capture)
                     if not is_challenge(capture):
-                        persist('challenge_cleared')
-                        return capture, trace
+                        capture = settle_content(capture, 'after_reload')
+                        if paused():
+                            break
+                        if (capture.get('verification_state') or {}).get('access'):
+                            persist(capture['verification_state']['access'])
+                            return capture, trace
+                        if not is_challenge(capture):
+                            persist('challenge_cleared')
+                            return capture, trace
                 except Exception as error:
                     navigation['read_error'] = type(error).__name__
             persist()
@@ -276,7 +338,7 @@ def navigate(driver, url, script, *, paused=lambda: False, sleep=time.sleep):
 def finish_verification(trace, status):
     trace['assessment_status'] = status
     if trace['outcome'] == 'challenge_cleared':
-        trace['outcome'] = ('passed' if status in ('candidate_extracted', 'no_abstract_stated',
+        trace['outcome'] = ('passed' if trace.get('content_status') != 'time_limit' and status in ('candidate_extracted', 'no_abstract_stated',
                             'catalog_candidates', 'catalog_empty', 'catalog_landing')
                             else 'cleared_but_content_unconfirmed')
     return trace
