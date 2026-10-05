@@ -48022,6 +48022,185 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f13f8986-85e5-41c0-84d9-654d214894cc",
+      "batch_id": "batch-d800eb75c183be91fa632be6c03d7283b1e77dd42cfc9b11642f576d470e2999",
+      "mode": "backfill",
+      "created_at": "2026-10-05T12:31:22.290Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1093/restud/rdag045",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "843fdccce0162d87df4fae0fbc1d8112de199b9690e6f9795aec7f01b4266d7f",
+              "task_id": "task:5e04aa916bbcd97c7f54eebe1fb323a43ceb84f99da8dc693f5c34cc47c37b59"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251337067",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "ff17a8e62d04cfe85868ad94b0a6743bfa1205ce0813cbd7e83f06904a2e30cd",
+              "task_id": "task:93211e00c0875c2bfd5d95bf8196b577b5908654035152af7591662953347457"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251342209",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "b1a733ecd5f7a6160271a4abbedaf6a50d8e86057f953ddb3b94953e220a61b5",
+              "task_id": "task:47b787841fa1e55c595d827780d4627520caf7a56d9b943b3e9a98fba8d32204"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251342219",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "e0783add2e893a02dee108a3d01d2523eb985ab6aa79e8481a8989b55a9373cc",
+              "task_id": "task:e479ff7071153837b4e909943c338f574b5e0e4b28d7f9252f997e8d50fe1099"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251345482",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "ede66c6894cc86dc7c48873d8a5413b69705bc7ad76f2653fd017ac980d3a224",
+              "task_id": "task:5f42c0a13a4117da9ffebabeb19c626918b9018011c2cf2ce5e5c009ba36ac37"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251346401",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "0d057c41aa429e34722d7c62699e1e06152dca011122b03f587f78c451f53260",
+              "task_id": "task:49759a60bcbfd1427d95f2ff391dd041589eb817e9ef2abb5b606b13e831d346"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251346406",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "f03a069a94b9234fef424f3fd3b7ca4fcf5a521c37aff99e83749305c39c809d",
+              "task_id": "task:770af6fdb0f41db716caa46d28a0105f6458fae080ed707e2b6cb594e43d6bc7"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251355258",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "6c46474019c02f891bacd95776ab3479b137cb055f374982b66a4fd7330ca27f",
+              "task_id": "task:329a2c02a852f4462f9a6bde9faf81b4c88a3d412753fc846dd6b5c0efd1b868"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251358215",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "c36c5662332a6bb11539100df623b8863c9340037624d9273787ce51026893cd",
+              "task_id": "task:cabddc8680b04bee128306e7db1a56fa96ab6d5aca8cfd856665405580b0cd9e"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        },
+        {
+          "id": "doi:10.1177/01492063251359201",
+          "tasks": [
+            {
+              "field": "abstract",
+              "source_hash": "62db35a0a3ca2ea88c9baad6ba4a4786fd2b77a013769483b4582d9079529c2d",
+              "task_id": "task:194815fadaa92a266f975b5437ad5920ec5297c5c1c2468caaef929f3ae0c60f"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
