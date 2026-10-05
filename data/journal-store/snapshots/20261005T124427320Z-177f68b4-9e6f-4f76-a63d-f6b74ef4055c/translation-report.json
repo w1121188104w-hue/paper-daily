@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-22b8ced1364db99b888b50b107e8a7837c73b5e3e03f42b38302c1558be129c6",
+  "stats": {
+    "completed_fields": 16,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 10
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1177/01492063261448465",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1177/01492063261448817",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1177/01492063261449752",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1177/01492063261449752",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1177/01492063261449761",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1177/01492063261452157",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1177/01492063261452157",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "doi:10.1177/01492063261453875",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 6,
+      "id": "doi:10.1177/01492063261456641",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 6,
+      "id": "doi:10.1177/01492063261456641",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 7,
+      "id": "doi:10.1177/01492063261456644",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 7,
+      "id": "doi:10.1177/01492063261456644",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 8,
+      "id": "doi:10.1177/01492063261459096",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 8,
+      "id": "doi:10.1177/01492063261459096",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 9,
+      "id": "doi:10.1177/01492063261461210",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 9,
+      "id": "doi:10.1177/01492063261461210",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
