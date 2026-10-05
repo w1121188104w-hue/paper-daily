@@ -51,6 +51,15 @@ test('retry keeps daily scope, does not silently enqueue all journals',async()=>
   const engine=new CatalogEngine({now:()=>now.getTime(),save:async()=>{},saveSession:async()=>{},render:()=>{}});
   engine.s={...engine.s,...s};await engine.recheck();assert.equal(engine.s.queue.length,1);
 });
+
+test('catalog-only scope does not re-enqueue directories for papers already discovered',()=>{
+  const s=emptyWorkflow();s.receipts.push({id:'old',at:now.toISOString(),mode:'daily',completed_catalogs:1,pending_catalogs:0,
+    pending_papers:[{doi,title,journal:'RP',catalog_memberships:[{task_id:task.id,catalog_url:task.url}],next_retry_at:'2020-01-01T00:00:00Z'}]});
+  assert.equal(createCollectionRun(s,[],{now,scope:'catalog'}).jobs.length,0);
+  assert.equal(createCollectionRun(s,[],{now,scope:'all'}).jobs.length,1);
+  assert.equal(createCollectionRun(s,[],{now,scope:'catalog',mode:'full'}).jobs.length,ACTIVE_CATALOG_TASKS.length);
+  assert.equal(createCollectionRun(s,[],{now,scope:'articles'}).jobs.length,0);
+});
 test('only new/due papers enter detail queue; raw unreviewed candidates never start',()=>{
   const p={doi,title,journal:'RP',review_status:'source_checked_candidate'};
   assert.equal(incrementalPapers([p],{known_papers:[{...p,complete:true}]}).length,0);

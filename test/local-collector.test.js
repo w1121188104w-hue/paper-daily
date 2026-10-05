@@ -65,3 +65,33 @@ test('incremental batches do not freeze the parent and reviewed catalog metadata
   const second=await c.checkpointCapture(run.id,{...data,catalog:{...data.catalog,cursor:1}});assert.notEqual(second.id,first.id);await drain(c);assert.ifError(failure);
   assert.equal((await c.run(run.id)).run.id,run.id);
 });
+
+test('catalog-only handoff starts reviewed articles while cloud is busy, without catalog or unreviewed article jobs',async t=>{
+  const repo=await temp(t),stateDir=path.join(repo,'private');let failure,child;
+  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[{catalog_id:task.id,title,doi,source:'crossref'}]));
+  const c=createCollectionCoordinator({repositoryRoot:repo,stateDir,config,sync:async({forWrite=false}={})=>{
+    if(forWrite)throw Object.assign(Error('cloud active'),{code:'CLOUD_WRITER_ACTIVE'});
+  },publish:async()=>{},checkPublication:async()=>false,onFailure:e=>{if(e.code!=='CLOUD_WRITER_ACTIVE')failure=e;}});
+  const {run}=await c.start('daily',{scope:'catalog'});
+  assert.equal(run.scope,'catalog');assert.equal(run.jobs.length,1);
+  const {makeReviewJobs,validateReviewOutput}=await import('../tools/browser-abstract-extension/review-core.js');
+  const {prepareReviewPlan}=await import('../tools/browser-abstract-extension/review-client.js');
+  const page={task_id:task.id,journal:'RP',source_url:task.url,requested_url:task.url,page_title:'Research Policy',captured_at:new Date(Date.now()+1000).toISOString(),
+    status:'catalog_candidates',job_key:task.id+'|'+task.url,items:[{doi,title,journal:'RP',url,evidence:{version:2,text:title,catalog_url:task.url}},
+      {doi:'10.1016/j.respol.2026.109999',title:'Unreviewed paper',journal:'RP',url:url.replace('0555','9999'),evidence:{version:2,text:'Unreviewed paper',catalog_url:task.url}}]};
+  const data={kind:'paper_project',workflow_run_id:run.id,records:[],catalog:{pages:[page],cursor:1,queue:[{task_id:task.id,url:task.url}],scope_task_ids:[task.id]},ai_review_results:{},catalog_review_results:{}};
+  const plan=await prepareReviewPlan(makeReviewJobs(data.catalog,null)),job=plan.jobs.find(j=>j.input.identity.doi===doi);
+  data.catalog_review_results[job.hash]={input:job.input,verdict:validateReviewOutput(job.input,{identity_match:true,fields:{title:{status:'confirmed',spans:[{block_id:'card',quote:title}]}}})};
+  const collector=createLocalCollector({repositoryRoot:repo,stateDir,config,coordinator:c,pythonExecutable:'test-python',requestReview:()=>{throw Error('not needed');},
+    spawnImpl:()=>{child=new EventEmitter();return child;}});
+  await assert.rejects(collector.start({scope:'articles',catalog_run_id:run.id}),/目录尚未完成提交/);
+  await c.submit(run.id,data);await drain(c);assert.ifError(failure);
+  assert.equal((await c.status()).runs.find(r=>r.id===run.id).phase,'waiting_for_cloud');
+  await collector.start({scope:'articles',catalog_run_id:run.id});
+  const current=await collector.current(),pythonPlan=JSON.parse(await fs.readFile(path.join(current.dir,'plan.json'),'utf8'));
+  assert.deepEqual(pythonPlan.jobs.map(j=>[j.kind,j.doi]),[['article',doi]]);
+  assert.equal(pythonPlan.interval_seconds,3);
+  assert.equal((await c.run(current.id)).run.catalog_run_id,run.id);
+  assert.equal((await c.run(current.id)).run.direct_pages.length,1);
+  child.emit('exit',0);
+});

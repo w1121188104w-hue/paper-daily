@@ -57,17 +57,19 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
       const owned=child;child.on('error',()=>{if(child===owned)child=null;});child.on('exit',()=>{if(child===owned)child=null;});
     }finally{await out.close();}
   }
-  async function start({mode='daily'}={}){
+  async function start({mode='daily',scope='all',catalog_run_id=null}={}){
+    assertLibrary(['all','articles'].includes(scope),'Python 采集范围无效');
     assertLibrary(!starting&&!child,'已有 Python 任务正在启动或运行');starting=true;
     try{
       const old=await status();assertLibrary(!old.id||['captured','idle'].includes(old.phase),'请先继续或处理现有 Python 任务');
-      const {run}=await coordinator.start(mode),dir=directory(run.id);await fs.mkdir(dir,{recursive:true});
+      const {run}=await coordinator.start(mode,{scope,catalogRunId:catalog_run_id}),dir=directory(run.id);await fs.mkdir(dir,{recursive:true});
       const library=await readJournalLibrary({root:path.join(repositoryRoot,'data/journal-store'),config});
       const pending=run.pending_field_tasks||[];
       const known=run.known_papers;
-      const jobs=run.jobs.filter(j=>!run.direct_pages?.some(p=>p.task_id===j.catalog_id&&p.requested_url===j.url))
+      const jobs=(scope==='articles'?[]:run.jobs).filter(j=>!run.direct_pages?.some(p=>p.task_id===j.catalog_id&&p.requested_url===j.url))
         .map(j=>({kind:'catalog',catalog_id:j.catalog_id,journal:ACTIVE_CATALOG_TASKS.find(t=>t.id===j.catalog_id).journal,url:j.url,depth:0}));
       for(const page of run.direct_pages||[])for(const p of page.items||[]){
+        if(catalog_run_id&&!run.handoff_papers?.some(h=>h.journal===p.journal&&h.doi&&h.doi===p.doi))continue;
         if(p.doi&&p.type!=='other')jobs.push({kind:'article',catalog_id:page.task_id,journal:page.journal,doi:p.doi,title:p.title,url:p.url});
       }
       // Previously reviewed metadata may exist before any directory succeeds.
@@ -82,7 +84,9 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
       }
       await atomic(path.join(dir,'plan.json'),{version:1,run_id:run.id,interval_seconds:3,settle_seconds:3,max_catalog_pages:50,
         allowed_hosts:[...ALLOWED_HOSTS],known_papers:known,jobs,scripts:{catalog:`return (${readCatalogDocument.toString()})();`,article:`return (${readArticleDocument.toString()})();`}});
-      await atomic(path.join(dir,'run.json'),run);await atomic(indexFile,{id:run.id});await launch({id:run.id,dir});return status();
+      await atomic(path.join(dir,'run.json'),run);
+      if(run.catalog_review_results)await atomic(path.join(dir,'reviews.json'),run.catalog_review_results);
+      await atomic(indexFile,{id:run.id});await launch({id:run.id,dir});return status();
     }finally{starting=false;}
   }
   async function pause(){const c=await current();assertLibrary(c,'没有 Python 任务');await atomic(path.join(c.dir,'control.json'),{pause:true});return {phase:'pausing'};}

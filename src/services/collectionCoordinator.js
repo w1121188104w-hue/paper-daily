@@ -5,7 +5,7 @@ import {createHash,randomUUID} from 'node:crypto';
 import {writeWorkflowJson as atomic} from './workflowStorage.js';
 import {emptyWorkflow,readWorkflow,saveWorkflow,publicWorkflow,createCollectionRun,applyCollectionReceipt,checkedCatalogPapers} from './collectionWorkflow.js';
 import {readJournalLibrary} from './journalLibrary.js';
-import {readBrowserExport,prepareBrowserImport,importBrowserExport} from './browserImport.js';
+import {readBrowserExport,prepareBrowserImport,importBrowserExport,verifiedPages} from './browserImport.js';
 import {assertLibrary} from './libraryValidation.js';
 import {enqueuePublication,readCloudQueue} from './cloudPublication.js';
 import {readFieldTasks,reconcileFieldTasks} from './collectionFieldTasks.js';
@@ -23,19 +23,32 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
   async function status(){if(!busy){const lib=await readJournalLibrary({root,config});lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});}
     const workflow={...(lastWorkflow||publicWorkflow(emptyWorkflow())),field_tasks:(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending')};
     let dirs=[];try{dirs=await fs.readdir(stateDir);}catch(e){if(e.code!=='ENOENT')throw e;}
-    const runs=[];for(const id of dirs.filter(idOK)){const r=await load(id);if(r.phase==='superseded')continue;runs.push({id,mode:r.run.mode,created_at:r.submitted_at||r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields??null,failed_stage:r.failed_stage||null});}
+    const runs=[];for(const id of dirs.filter(idOK)){const r=await load(id);if(r.phase==='superseded')continue;runs.push({id,mode:r.run.mode,scope:r.run.scope||'all',parent_run_id:r.run.parent_run_id||null,created_at:r.submitted_at||r.run.created_at,phase:r.phase,message:r.message||'',has_export:!!r.export_hash,pending_translation_fields:r.pending_translation_fields??null,failed_stage:r.failed_stage||null});}
     return {version:2,busy,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
   async function exclusive(fn){assertLibrary(!busy,'另一个正式任务正在处理');busy=true;try{return await fn();}finally{busy=false;}}
-  async function start(mode){return exclusive(async()=>{
+  async function start(mode,{scope='all',catalogRunId=null}={}){return exclusive(async()=>{
     let stage='SYNC';
     try{
-    await sync();stage='LOAD_RUN';const lib=await readJournalLibrary({root,config}),baseRun=createCollectionRun(await readWorkflow(repositoryRoot),lib.papers,{mode});
+    await sync();stage='LOAD_RUN';const lib=await readJournalLibrary({root,config}),baseRun=createCollectionRun(await readWorkflow(repositoryRoot),lib.papers,{mode,scope});
+    let handoff=null;
+    if(catalogRunId){
+      assertLibrary(scope==='articles','目录交接只允许论文采集');
+      const parent=await load(catalogRunId);
+      assertLibrary(parent.run.scope==='catalog'&&parent.export_hash,'目录尚未完成提交');
+      const input=await readBrowserExport(path.join(stateDir,catalogRunId,'export.json'));
+      assertLibrary(input.sha256===parent.export_hash,'目录交接证据变化');
+      handoff=input.data;
+      baseRun.catalog_run_id=catalogRunId;
+      baseRun.jobs=parent.run.jobs;
+      baseRun.handoff_papers=(await checkedCatalogPapers(handoff)).filter(p=>p.review_status==='source_checked_candidate'&&p.type!=='other');
+    }
     const fields=(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending'&&(mode==='full'||!p.next_retry_at||Date.parse(p.next_retry_at)<=Date.now()));
-    for(const p of fields)for(const task of ACTIVE_CATALOG_TASKS.filter(t=>t.journal===p.journal))
+    if(scope==='all')for(const p of fields)for(const task of ACTIVE_CATALOG_TASKS.filter(t=>t.journal===p.journal))
       if(!baseRun.jobs.some(j=>j.catalog_id===task.id&&j.url===task.url))baseRun.jobs.push({catalog_id:task.id,url:task.url,signal_at:null});
     baseRun.pending_field_tasks=fields;
     baseRun.known_papers=baseRun.known_papers.map(p=>fields.some(f=>f.journal===p.journal&&f.doi===p.doi)?{...p,complete:false,next_retry_at:null}:p);
     stage='PREPARE_RUN';const run=await prepareRun(baseRun);
+    if(handoff){run.direct_pages=verifiedPages(handoff);run.catalog_review_results=handoff.catalog_review_results||{};}
     lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});
     stage='SAVE_RUN';await store({run,phase:'collecting',message:'等待采集；已取得内容将独立审核和发布。'});return {run};
     }catch(error){error.workflowStage=stage;throw error;}
@@ -190,7 +203,7 @@ export function collectionHttpServer(coordinator,{extensionId,port=17328}){
       if(req.url==='/status'){reply(200,await coordinator.status());return;}
       if(req.url.startsWith('/python/')){assertLibrary(coordinator.python,'本地 Python 尚未配置');reply(200,await coordinator.python[req.url.split('/')[2]](body));return;}
       if(req.url==='/checkpoint'){reply(200,await coordinator.checkpointCapture(body.id,body.data));return;}
-      const result=req.url==='/run'?await coordinator.run(body.id):req.url==='/start'?await coordinator.start(body.mode):req.url==='/submit'?await coordinator.submit(body.id,body.data):
+      const result=req.url==='/run'?await coordinator.run(body.id):req.url==='/start'?await coordinator.start(body.mode,{scope:body.scope}):req.url==='/submit'?await coordinator.submit(body.id,body.data):
         req.url==='/finish'?await coordinator.finish(body.id):req.url==='/check-publication'?await coordinator.check(body.id):await coordinator.sync();
       reply(200,result||{ok:true});
     }catch(error){reply(409,{code:['SYNC','LOAD_RUN','PREPARE_RUN','SAVE_RUN'].includes(error.workflowStage)?'WORKFLOW_'+error.workflowStage:'WORKFLOW_NOT_COMPLETE',message:'正式流程未完成请求；保留原有数据。请确认没有其他任务运行、任务 ID 正确且 Git 同步可用。'});}

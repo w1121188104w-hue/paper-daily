@@ -94,18 +94,18 @@ export function publicWorkflow(state, { now = new Date(), papers = [] } = {}) {
         next_retry_at:checked?.status==='missing'?checked.next_retry_at:null};}),generated_at:now.toISOString()};
 }
 
-export function createCollectionRun(state, papers, { mode='daily', now=new Date(), maxRequests=100 }={}) {
+export function createCollectionRun(state, papers, { mode='daily', scope='all', now=new Date(), maxRequests=100 }={}) {
   validateWorkflow(state);
-  assertLibrary(['daily','full'].includes(mode) && Number.isInteger(maxRequests) && maxRequests>0 && maxRequests<=1000,'运行参数无效');
+  assertLibrary(['daily','full'].includes(mode) && ['all','catalog','articles'].includes(scope) && Number.isInteger(maxRequests) && maxRequests>0 && maxRequests<=1000,'运行参数无效');
   const active=state.tasks.filter(t=>t.status==='pending');
-  const jobs=mode==='full'?ACTIVE_CATALOG_TASKS.map(t=>({catalog_id:t.id,url:t.url})):active.map(t=>({catalog_id:t.catalog_id,url:t.url}));
+  const jobs=scope==='articles'?[]:mode==='full'?ACTIVE_CATALOG_TASKS.map(t=>({catalog_id:t.id,url:t.url})):active.map(t=>({catalog_id:t.catalog_id,url:t.url}));
   // Full audits also retain explicitly discovered intermediate issue URLs.
-  for(const t of active) if(!jobs.some(j=>j.catalog_id===t.catalog_id&&j.url===t.url)) jobs.push({catalog_id:t.catalog_id,url:t.url});
+  if(scope!=='articles')for(const t of active) if(!jobs.some(j=>j.catalog_id===t.catalog_id&&j.url===t.url)) jobs.push({catalog_id:t.catalog_id,url:t.url});
   // Revisit only the relevant directories when an unfinished paper is due.
-  for(const p of pendingWorkflowPapers(state,papers)) if(!p.next_retry_at || Date.parse(p.next_retry_at)<=now.getTime())
+  if(scope==='all')for(const p of pendingWorkflowPapers(state,papers)) if(!p.next_retry_at || Date.parse(p.next_retry_at)<=now.getTime())
     for(const m of p.catalog_memberships||[]) {const task=taskFor(m.task_id),url=task&&catalogUrl(m.catalog_url,task);
       if(url&&!jobs.some(j=>j.catalog_id===task.id&&j.url===url))jobs.push({catalog_id:task.id,url});}
-  return {version:1,id:randomUUID(),mode,created_at:now.toISOString(),max_requests:maxRequests,
+  return {version:1,id:randomUUID(),mode,scope,created_at:now.toISOString(),max_requests:maxRequests,
     jobs:jobs.map(j=>({...j,signal_at:active.find(t=>t.catalog_id===j.catalog_id&&t.url===j.url)?.updated_at||null})), task_versions:active.map(t=>({id:t.id,signals:t.signals.map(s=>s.key)})),
     known_papers:publicWorkflow(state,{papers,now}).known_papers};
 }
@@ -128,6 +128,7 @@ export function pendingWorkflowPapers(state,papers=[]) {
 }
 
 export function validateCollectionRun(run) {
+  assertLibrary(run.scope===undefined||['all','catalog','articles'].includes(run.scope),'运行范围无效');
   assertLibrary(run?.version===1 && /^[a-f0-9-]{36}$/.test(run.id) && ['daily','full'].includes(run.mode) && time(run.created_at) &&
     Array.isArray(run.jobs) && run.jobs.length<=2000 && Array.isArray(run.task_versions) && Array.isArray(run.known_papers),'运行清单无效');
   assertLibrary(new Set(run.jobs.map(j=>j.catalog_id+'|'+j.url)).size===run.jobs.length && run.jobs.every(j=>{
@@ -180,7 +181,9 @@ export async function applyCollectionReceipt(input, run, data, prepared, library
       if(old) Object.assign(old,value); else state.checked_papers.push(value);
     }
   }
-  for(const captured of completeJobs) {
+  // Article-only handoffs reuse older catalog evidence, never acknowledge a
+  // newer directory signal or advance a directory baseline from that evidence.
+  for(const captured of run.scope==='articles'?[]:completeJobs) {
     recordCatalogBaseline(state,captured,pages.filter(inRun),checked,
       {receiptId:run.id,inputHash:prepared.input_sha256});
     const task=state.tasks.find(t=>t.catalog_id===captured.catalog_id&&t.url===captured.url);

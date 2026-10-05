@@ -114,6 +114,15 @@ export function assessCatalog(task, capture) {
     identity_evidence: { headings: (capture.headings || []).slice(0, 15).map(s => String(s).slice(0, 300)),
       observed_issns: (capture.issns || []).slice(0, 15), raw_card_count: capture.raw_card_count || 0 },
     page_title: String(capture.page_title || '').slice(0, 500), warnings: capture.warnings || [] };
+  // Publisher verification can redirect outside the journal's catalog path.
+  // Diagnose that gate without accepting its URL or content as catalog evidence.
+  if (!source && capture.challenge) {
+    try {
+      const u = new URL(capture.url);
+      if(u.protocol==='https:' && (task.hosts||[task.host]).includes(u.hostname) && !u.port && !u.username && !u.password)
+        return {...base,status:'needs_user_verification'};
+    } catch {}
+  }
   if (!source) return { ...base, status: 'wrong_catalog' };
   if (capture.challenge) return { ...base, status: 'needs_user_verification' };
   if (capture.page_not_found) return { ...base, status: 'catalog_not_found' };

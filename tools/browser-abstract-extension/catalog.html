@@ -1,5 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>目录采集</title><link rel="stylesheet" href="style.css"></head>
-<body><main><header><span class="tag">PAPER DAILY</span><h1>① 目录采集</h1><p>官网已完整读取的目录不重复打开。目录完成后自动核对原文，再采集新增与到期未完成论文。</p><a href="workflow.html">返回采集首页</a></header>
+<body><main><header><span class="tag">PAPER DAILY</span><h1>目录采集</h1><p id="scope-note">官网已完整读取的目录不重复打开。目录完成后自动核对原文，再采集新增与到期未完成论文。</p><a href="workflow.html">返回采集首页</a></header>
+<section id="catalog-handoff" hidden><h2>目录交接</h2><p id="handoff-status" role="status">目录采集和 DeepSeek 核对完成后自动提交。</p><button id="python-remaining" disabled>启动 Python 采集剩余论文</button></section>
 <section><p id="status" role="status"></p><p id="current"></p><p id="counts"></p><div class="buttons"><button id="start" disabled>继续</button><button id="pause" disabled>暂停</button><button id="skip" disabled>跳过当前目录</button></div>
 <p>请保留任务面板。遇验证码后手动处理，程序会自动检测并继续；不会点击或绕过验证码。</p>
 <p><a id="manual-link" target="_blank" rel="noopener noreferrer" hidden>自动打不开？手动打开当前目录 ↗</a>，然后点扩展的“读取本页并继续任务”。</p>

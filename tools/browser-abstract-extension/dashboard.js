@@ -147,6 +147,7 @@ async function inspect(tabId, paper) {
 async function boot(){
   if(!runId){location.replace('workflow.html');return;}
   workflowRun=await storedRun(runId);
+  if(workflowRun.scope==='catalog'){location.replace(`catalog.html?run=${runId}`);return;}
   document.querySelector('.tag').textContent='PAPER DAILY · '+chrome.runtime.getManifest().version;
   const catalog=(await chrome.storage.local.get(catalogKey(runId)))[catalogKey(runId)];
   if(!catalog)throw Error('目录任务尚未准备，请返回采集首页。');

@@ -96,10 +96,11 @@ class CDPDriver:
         self.capabilities = {"browserName": args.browser, "platformName": platform.system(),
                              "browserVersion": self.execute_script('return navigator.userAgent')}
 
-    def get(self, url):
+    def get(self, url, timeout=None):
         try:
             self.client.loop.run_until_complete(asyncio.wait_for(
-                self.client.page.get(url), timeout=self.timeout))
+                self.client.page.get(url),
+                timeout=min(self.timeout, timeout) if timeout is not None else self.timeout))
         except asyncio.TimeoutError as exc:
             raise TimeoutException("CDP navigation timed out") from exc
 
@@ -107,10 +108,11 @@ class CDPDriver:
     def current_url(self):
         return self.execute_script("return location.href")
 
-    def execute_script(self, script):
+    def execute_script(self, script, timeout=None):
         try:
             return self.client.loop.run_until_complete(asyncio.wait_for(
-                self.client.page.evaluate("(() => {" + script + "})()"), timeout=self.timeout))
+                self.client.page.evaluate("(() => {" + script + "})()"),
+                timeout=min(self.timeout, timeout) if timeout is not None else self.timeout))
         except asyncio.TimeoutError as exc:
             raise TimeoutException("CDP evaluation timed out") from exc
 
@@ -122,10 +124,15 @@ class CDPDriver:
             raise TimeoutException("CDP screenshot timed out") from exc
         return True
 
-    def click_checkbox_once(self):
+    def click_checkbox_once(self, timeout=None):
         # One bounded helper call. Return value is never treated as proof of success.
         return self.client.loop.run_until_complete(asyncio.wait_for(
-            self.client.page.solve_captcha(), timeout=min(self.timeout, 20)))
+            self.client.page.solve_captcha(),
+            timeout=min(self.timeout, 20, timeout if timeout is not None else 20)))
+
+    def inspect_verification(self, timeout=5):
+        script = Path(__file__).with_name('verification-probe.js').read_text(encoding='utf-8')
+        return self.execute_script(script, timeout=timeout)
 
     def quit(self):
         try:

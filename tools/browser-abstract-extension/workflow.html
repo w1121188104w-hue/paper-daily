@@ -3,6 +3,7 @@
 <section><h2>本地自动补采</h2><div class="buttons"><button id="services-start">启动本机服务</button></div><p id="services-status" role="status">关机重开或连接中断时，可点击启动采集与原文审核服务。</p><p id="python-status" role="status">连接本机采集服务……</p>
 <div class="buttons"><button id="python-start" disabled>启动本地 Python 补采</button><button id="python-pause" disabled>暂停</button><button id="python-resume" disabled>继续</button><button id="python-fallback" disabled>用插件处理剩余任务</button></div>
 <p class="note">访问间隔至少 3 秒。关闭面板后本地采集仍可继续；再次打开可查看进度。遇到无法自动处理的页面会保留待办，已取得的内容继续审核发布。</p></section>
+<section><h2>插件补充目录</h2><p>只读取最新一期与在线发表目录，自动交给 DeepSeek 核对。目录提交后，可启动 Python 采集剩余论文。</p><div class="buttons"><button id="catalog-only" disabled>仅补充待处理目录</button><button id="catalog-full" disabled>仅巡检全刊目录</button></div></section>
 <section><h2>插件疑难处理</h2><p id="status" role="status">连接本机服务……</p><div class="buttons"><button id="daily" disabled>插件处理增量任务</button><button id="full" disabled>插件全刊巡检</button><button id="refresh">刷新状态</button></div>
 <p class="note">采集期间保留任务面板，遇验证码手动处理即可。每周或两周可全刊巡检一次；只看最新一期与在线发表，不回溯全部历史。</p>
 <h2>需要浏览器处理</h2><div id="tasks"></div><p id="audit"></p></section>
