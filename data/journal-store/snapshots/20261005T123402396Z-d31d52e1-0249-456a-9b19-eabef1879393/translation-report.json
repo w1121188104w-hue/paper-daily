@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-d800eb75c183be91fa632be6c03d7283b1e77dd42cfc9b11642f576d470e2999",
+  "stats": {
+    "completed_fields": 10,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 10
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1093/restud/rdag045",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1177/01492063251337067",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1177/01492063251342209",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1177/01492063251342219",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "doi:10.1177/01492063251345482",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "doi:10.1177/01492063251346401",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 6,
+      "id": "doi:10.1177/01492063251346406",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 7,
+      "id": "doi:10.1177/01492063251355258",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 8,
+      "id": "doi:10.1177/01492063251358215",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 9,
+      "id": "doi:10.1177/01492063251359201",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
