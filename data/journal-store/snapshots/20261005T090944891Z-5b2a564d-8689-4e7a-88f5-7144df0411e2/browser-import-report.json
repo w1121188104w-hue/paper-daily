@@ -1,0 +1,3057 @@
+{
+  "schema_version": 1,
+  "run_id": "20261005T090944891Z-5b2a564d-8689-4e7a-88f5-7144df0411e2",
+  "status": "partial",
+  "from_date": "2026-10-05",
+  "to_date": "2026-10-05",
+  "stats": {
+    "added": 1,
+    "abstracts_filled": 1,
+    "abstracts_checked": 1,
+    "metadata_filled": 1,
+    "pending_candidates": 48
+  },
+  "journals": [
+    {
+      "journal_key": "AER",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 84,
+      "official_in_window_count": 0,
+      "matched_count": 38,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 1,
+      "entries": [
+        {
+          "doi": "10.1257/aer.20230557",
+          "title": "Sophisticated Consumers with Inertia: Long-Term Implications from a Large-Scale Field Experiment",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230557",
+          "paper_id": "doi:10.1257/aer.20230557",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240491",
+          "title": "Monetary Policy, Segmentation, and the Term Structure",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240491",
+          "paper_id": "doi:10.1257/aer.20240491",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20250781",
+          "title": "Sources of Market Power in Web Search: Evidence from a Field Experiment",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250781",
+          "paper_id": "doi:10.1257/aer.20250781",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20221434",
+          "title": "Refugee Return and Conflict: Evidence from a Natural Experiment",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221434",
+          "paper_id": "doi:10.1257/aer.20221434",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20241802",
+          "title": "The Economic Impacts of Sexual Assault",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241802",
+          "paper_id": "doi:10.1257/aer.20241802",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20250605",
+          "title": "Numbers Tell, Words Sell",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250605",
+          "paper_id": "doi:10.1257/aer.20250605",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20251660",
+          "title": "Job Search, Wages, and Inflation",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251660",
+          "paper_id": "doi:10.1257/aer.20251660",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20250578",
+          "title": "Associative Networks in Decision Making",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250578",
+          "paper_id": "doi:10.1257/aer.20250578",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240041",
+          "title": "The Dawn of Civilization Metal Trade and the Rise of Hierarchy",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240041",
+          "paper_id": "doi:10.1257/aer.20240041",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20230421",
+          "title": "The Contribution of High-Skilled Immigrants to Innovation in the United States",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230421",
+          "paper_id": "doi:10.1257/aer.20230421",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20221562",
+          "title": "Quota Adjustment Process",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221562",
+          "paper_id": "doi:10.1257/aer.20221562",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20231640",
+          "title": "Eclipse of Rent-Sharing: The Effects of Managers’ Business Education on Wages and the Labor Share in the US and Denmark",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231640",
+          "paper_id": "doi:10.1257/aer.20231640",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240108",
+          "title": "Buy Big or Buy Small? Procurement Policies, Firms’ Financing, and the Macroeconomy",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240108",
+          "paper_id": "doi:10.1257/aer.20240108",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240584",
+          "title": "The Long-run Effect of Air Pollution on Survival",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240584",
+          "paper_id": "doi:10.1257/aer.20240584",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20241592",
+          "title": "Self-Selection and the Diminishing Returns of Research",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241592",
+          "paper_id": "doi:10.1257/aer.20241592",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240338",
+          "title": "Optimal Monetary Policy during a Cost-of-Living Crisis",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240338",
+          "paper_id": "doi:10.1257/aer.20240338",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240168",
+          "title": "Investment, Emissions, and Reliability in Electricity Markets",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240168",
+          "paper_id": "doi:10.1257/aer.20240168",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20231366",
+          "title": "Validating Hospital Quality Indicators and the Causal Effect of Hospital Closures",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231366",
+          "paper_id": "doi:10.1257/aer.20231366",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20241072",
+          "title": "Default and Interest Rate Shocks: Renegotiation Matters",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241072",
+          "paper_id": "doi:10.1257/aer.20241072",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20250446",
+          "title": "The Inflation Accelerator",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250446",
+          "paper_id": "doi:10.1257/aer.20250446",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20241283",
+          "title": "Disentangling Exploration from Exploitation",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241283",
+          "paper_id": "doi:10.1257/aer.20241283",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20231717",
+          "title": "Patient Costs and Physicians’ Information",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231717",
+          "paper_id": "doi:10.1257/aer.20231717",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240410",
+          "title": "Myths, Morals, and Movies",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240410",
+          "paper_id": "doi:10.1257/aer.20240410",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240699",
+          "title": "Generalized Double Auctions: Maximizing Welfare Guarantees in Bilateral Trade",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240699",
+          "paper_id": "doi:10.1257/aer.20240699",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240137",
+          "title": "Difference-in-Differences with a Continuous Treatment",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240137",
+          "paper_id": "doi:10.1257/aer.20240137",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20231651",
+          "title": "Reproducible Aggregation of Sample-Split Statistics",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231651",
+          "paper_id": "doi:10.1257/aer.20231651",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20231684",
+          "title": "The Returns to Government R&D: Evidence from US Appropriations Shocks",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231684",
+          "paper_id": "doi:10.1257/aer.20231684",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20241027",
+          "title": "Firm Adaptation in Production Networks: Evidence from Extreme Weather Events in Pakistan",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241027",
+          "paper_id": "doi:10.1257/aer.20241027",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20230586",
+          "title": "Becoming Legible to the State: The Necessary but Not Sufficient Role of Identification in Taxation",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230586",
+          "paper_id": "doi:10.1257/aer.20230586",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20250051",
+          "title": "The Inflation Attention Threshold and Inflation Surges",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250051",
+          "paper_id": "doi:10.1257/aer.20250051",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20250081",
+          "title": "The Causal Effects of Global Supply Chain Disruptions on Macroeconomic Outcomes: Evidence and Theory",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250081",
+          "paper_id": "doi:10.1257/aer.20250081",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20251956",
+          "title": "Predictably Unpredictable Inspections",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251956",
+          "paper_id": "doi:10.1257/aer.20251956",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240179",
+          "title": "Residential Segregation and Unequal Access to Local Public Services in India: Evidence from 1.5 Million Neighborhoods",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240179",
+          "paper_id": "doi:10.1257/aer.20240179",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240766",
+          "title": "Union Bargaining Power and the Amenity-Wage Tradeoff",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240766",
+          "paper_id": "doi:10.1257/aer.20240766",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240666",
+          "title": "Durables and the Marginal Propensity to Spend",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240666",
+          "paper_id": "doi:10.1257/aer.20240666",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20241561",
+          "title": "Inequality and Racial Backlash: Evidence from the Reconstruction Era and the Freedmen’s Bureau",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241561",
+          "paper_id": "doi:10.1257/aer.20241561",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20230448",
+          "title": "The Unequal Economic Consequences of Carbon Pricing",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230448",
+          "paper_id": "doi:10.1257/aer.20230448",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20231486",
+          "title": "Combinatorial Discrete Choice: Theory and Application to Multinational Production",
+          "journal_key": "AER",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231486",
+          "paper_id": "doi:10.1257/aer.20231486",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1257/aer.20240576",
+          "title": "Contextually Private Mechanisms",
+          "journal_key": "AER",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240576",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "CAR",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 58,
+      "official_in_window_count": 0,
+      "matched_count": 2,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 19,
+      "entries": [
+        {
+          "doi": "10.1111/1911-3846.70077",
+          "title": "Specialists' Evidence Evaluation and Judgments in Audits",
+          "journal_key": "CAR",
+          "action": "metadata_filled",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70077",
+          "filled_fields": [
+            "affiliations"
+          ],
+          "paper_id": "doi:10.1111/1911-3846.70077",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/1911-3846.70086",
+          "title": "Issue Information",
+          "journal_key": "CAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70086",
+          "paper_id": "doi:10.1111/1911-3846.70086",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/1911-3846.70046",
+          "title": "A Survey of the Archival Audit LiteratureUne revue de la littérature en matière d'audit fondée sur les données archivales",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70046",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70049",
+          "title": "Prosocial CEOs and Accounting ManipulationLe comportement prosocial des PDG et la manipulation comptable",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70049",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70064",
+          "title": "Tax Payments in Loss FirmsPaiements de l'impôt sur les sociétés affichant des pertes",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70064",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70051",
+          "title": "Out of the Office: Market Impacts of Institutional Investor DistractionAbsence du bureau : la distraction des grands investisseurs et ses impacts sur le marché",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70051",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70062",
+          "title": "Does Mobile Communication Technology Have Capital Market Consequences? Evidence From Worldwide Launches of 3G NetworksLa technologie cellulaire a-t-elle des incidences sur les marchés financiers? Données issues du déploiement mondial des réseaux 3G",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70062",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70072",
+          "title": "Do Key Audit Matters in Hong Kong and Mainland China Provide Incremental Information and Improve Audit Quality?Les questions clés de l'audit à Hong Kong et en Chine continentale fournissent-elles des renseignements supplémentaires et améliorent-elles la qualité de l'audit?",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70072",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70058",
+          "title": "Analysts' Cultural Long-Term Orientation and Their Information ProductionOrientation culturelle à long terme des analystes et production d'information",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70058",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70054",
+          "title": "Seek and Ye Might Not Find: The Effects of Contract Framing on Knowledge Sharing and Knowledge SeekingQui cherche ne trouve pas toujours : les effets liés à la formulation des contrats sur le partage et la recherche de renseignements",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70054",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70059",
+          "title": "Product Market Threats: Implications for Future Performance and Use by Market ParticipantsMenaces sur le marché des produits : incidences sur le rendement futur et utilisation par les participants au marché",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70059",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70056",
+          "title": "Regulatory Intermediation in Times of Crisis: The Impact of Independent Oversight on the Functioning of Professional Accounting BodiesIntermédiation réglementaire en temps de crise : incidence de la surveillance indépendante sur le fonctionnement des organismes comptables professionnels",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70056",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70057",
+          "title": "SEC Attention, A to ZL'attention de la SEC, de A à Z",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70057",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70061",
+          "title": "Cost Information, Insider Trading, and Product Market EquilibriumRenseignements sur les coûts, opération d'initié et équilibre du marché des produits",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70061",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70060",
+          "title": "The Questioning of Special Items During Conference Calls: High Quality or Highly Questionable?Réexaminer des éléments exceptionnels lors des conférences téléphoniques : une pratique d'excellence ou très contestable?",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70060",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70069",
+          "title": "The Falling Roe and Relocation of Skilled WomenLa remise en cause de l'arrêt Roe et le déplacement des femmes qualifiées",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70069",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70066",
+          "title": "Behind Closed Doors: Interaction Rituals and the Building of Social Ties in Private Company-Investor MeetingsÀ huis clos : rituels d'interaction et construction de liens sociaux lors des réunions privées entre sociétés et investisseurs",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70066",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70053",
+          "title": "Analyst IntegrityL'intégrité des analystes",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70053",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70067",
+          "title": "From Words to Actions: The Impact of Specificity and Causality in Narrative Feedback on Employee Performance ImprovementDes paroles aux actes : incidence de la spécificité et de la causalité dans la rétroaction narrative sur l'amélioration du rendement des employés",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70067",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70070",
+          "title": "Black Representation Through the University to Audit Firm PipelineReprésentation des personnes noires dans le parcours universitaire menant aux cabinets d'audit",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70070",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/1911-3846.70065",
+          "title": "L'envolée épistémique de la recherche comptable en économie financière : une étude historique sur la conception de l'utilité de la comptabilité",
+          "journal_key": "CAR",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70065",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JF",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 44,
+      "official_in_window_count": 0,
+      "matched_count": 15,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 3,
+      "entries": [
+        {
+          "doi": "10.1111/jofi.13353",
+          "title": "ISSUE INFORMATION",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.13353",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.70063",
+          "title": "Jay R. Ritter",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70063",
+          "paper_id": "doi:10.1111/jofi.70063",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70076",
+          "title": "Can Small Businesses Survive Chapter 11?",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70076",
+          "paper_id": "doi:10.1111/jofi.70076",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70072",
+          "title": "Board Dynamics over the Startup Life Cycle",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70072",
+          "paper_id": "doi:10.1111/jofi.70072",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70065",
+          "title": "M&As, Employee Costs, and Labor Reallocation",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70065",
+          "paper_id": "doi:10.1111/jofi.70065",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70064",
+          "title": "Personal Costs of Executive Turnovers",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70064",
+          "paper_id": "doi:10.1111/jofi.70064",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70062",
+          "title": "Learning to Navigate a New Financial Technology",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70062",
+          "paper_id": "doi:10.1111/jofi.70062",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70040",
+          "title": "Learning in the Limit: Income Inference from Credit Extensions",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70040",
+          "paper_id": "doi:10.1111/jofi.70040",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70067",
+          "title": "The Cross-Section of Household Preferences",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70067",
+          "paper_id": "doi:10.1111/jofi.70067",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70046",
+          "title": "The Equilibrium Effects of Eviction Policies",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70046",
+          "paper_id": "doi:10.1111/jofi.70046",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70074",
+          "title": "Marginal Q",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70074",
+          "paper_id": "doi:10.1111/jofi.70074",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70058",
+          "title": "Twin Defaults and Bank Capital Requirements",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70058",
+          "paper_id": "doi:10.1111/jofi.70058",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70066",
+          "title": "The Rising Tide Lifts Some Interest Rates: Climate Change, Natural Disasters, and Loan Pricing",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70066",
+          "paper_id": "doi:10.1111/jofi.70066",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70071",
+          "title": "Climate Change, Demand Uncertainty, and Firms' Investments: Evidence from Planned Power Plants",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70071",
+          "paper_id": "doi:10.1111/jofi.70071",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70068",
+          "title": "Sequential Search for Corporate Bonds",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70068",
+          "paper_id": "doi:10.1111/jofi.70068",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70069",
+          "title": "Dynamic Self-Fulfilling Fire Sales",
+          "journal_key": "JF",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70069",
+          "paper_id": "doi:10.1111/jofi.70069",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1111/jofi.70019",
+          "title": "ANNOUNCEMENTS",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70019",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1111/jofi.13354",
+          "title": "AMERICAN FINANCE ASSOCIATION",
+          "journal_key": "JF",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.13354",
+          "status": "pending"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "TAR",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 51,
+      "official_in_window_count": 0,
+      "matched_count": 17,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 2,
+      "entries": [
+        {
+          "doi": "",
+          "title": "Covers and Front Matter",
+          "journal_key": "TAR",
+          "action": "conflict",
+          "reason": "AMBIGUOUS_TITLE_AUTHOR_DATE",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/i/27963/Covers-and-Front-Matter",
+          "status": "pending"
+        },
+        {
+          "doi": "",
+          "title": "Editorial Policy",
+          "journal_key": "TAR",
+          "action": "conflict",
+          "reason": "AMBIGUOUS_TITLE_AUTHOR_DATE",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/505/27961/Editorial-Policy",
+          "status": "pending"
+        },
+        {
+          "doi": "10.2308/tar-2023-0727",
+          "title": "Burn It or Return It? The Effects of the Possibility to Return Budget Surplus and the Moderating Role of Uncertainty on Capital Budgeting",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/1/24127/Burn-It-or-Return-It-The-Effects-of-the",
+          "paper_id": "doi:10.2308/tar-2023-0727",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2025-0276",
+          "title": "Aggregate Disclosure Incentives: The Role of Supply Market Investments",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/23/27494/Aggregate-Disclosure-Incentives-The-Role-of-Supply",
+          "paper_id": "doi:10.2308/tar-2025-0276",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2025-0459",
+          "title": "Selling Its Soul? Private Equity and the Commercialization of the Attest Profession",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/51/27374/Selling-Its-Soul-Private-Equity-and-the",
+          "paper_id": "doi:10.2308/tar-2025-0459",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0369",
+          "title": "Passed Over for Promotion: Evidence from Middle-Level Managers",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/77/27383/Passed-Over-for-Promotion-Evidence-from-Middle",
+          "paper_id": "doi:10.2308/tar-2024-0369",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2023-0638",
+          "title": "The Influence of Data Visualizations on Investor Information Processing: Evidence from Earnings Conference Call Slideshows",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/103/27384/The-Influence-of-Data-Visualizations-on-Investor",
+          "paper_id": "doi:10.2308/tar-2023-0638",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0289",
+          "title": "The Academics of Standard Setting: A Field Study of Financial Reporting Standard Setters’ Engagement with Academic Research",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/135/24229/The-Academics-of-Standard-Setting-A-Field-Study-of",
+          "paper_id": "doi:10.2308/tar-2024-0289",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0705",
+          "title": "Transparency and Bank Liability Structure",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/161/24108/Transparency-and-Bank-Liability-Structure",
+          "paper_id": "doi:10.2308/tar-2024-0705",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2023-0649",
+          "title": "The Impact of the SEC’s Office of Minority and Women Inclusion: Evidence from the Filing Review Process",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/191/24093/The-Impact-of-the-SEC-s-Office-of-Minority-and",
+          "paper_id": "doi:10.2308/tar-2023-0649",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0327",
+          "title": "Disclosure Spillovers Through ESG Ratings",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/225/27480/Disclosure-Spillovers-Through-ESG-Ratings",
+          "paper_id": "doi:10.2308/tar-2024-0327",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2022-0542",
+          "title": "Modern Privacy Regulation, Internal Information Quality, and Operational Efficiency: Evidence from the General Data Protection Regulation",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/255/24098/Modern-Privacy-Regulation-Internal-Information",
+          "paper_id": "doi:10.2308/tar-2022-0542",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2021-0511",
+          "title": "Year-to-Year Adjustments of Performance Measure Weights: The Relevance of Prior Target Achievement",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/289/24119/Year-to-Year-Adjustments-of-Performance-Measure",
+          "paper_id": "doi:10.2308/tar-2021-0511",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0762",
+          "title": "Financial Reporting Consequences of Exempting Low-Revenue Issuers from the Internal Control Audit Requirement",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/321/27376/Financial-Reporting-Consequences-of-Exempting-Low",
+          "paper_id": "doi:10.2308/tar-2024-0762",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2025-0139",
+          "title": "The Rich Get Richer: An Examination of Tax Haven Concentration and the New “Top 7”",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/353/24107/The-Rich-Get-Richer-An-Examination-of-Tax-Haven",
+          "paper_id": "doi:10.2308/tar-2025-0139",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0328",
+          "title": "Market Leaders’ Tax-Motivated Income Shifting and U.S. Domestic Firms’ Investment Efficiency",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/381/24109/Market-Leaders-Tax-Motivated-Income-Shifting-and-U",
+          "paper_id": "doi:10.2308/tar-2024-0328",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0472",
+          "title": "Contractual Private Disclosures in Supply Chains and Managerial Learning from Financial Markets",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/411/24099/Contractual-Private-Disclosures-in-Supply-Chains",
+          "paper_id": "doi:10.2308/tar-2024-0472",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2024-0592",
+          "title": "AI-Augmented Design and the Expertise Bias in Subjective Evaluations of Creative Output",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/445/24100/AI-Augmented-Design-and-the-Expertise-Bias-in",
+          "paper_id": "doi:10.2308/tar-2024-0592",
+          "status": "existing"
+        },
+        {
+          "doi": "10.2308/tar-2023-0569",
+          "title": "Earnings Pressure and Corporate Product Refocus",
+          "journal_key": "TAR",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/467/24143/Earnings-Pressure-and-Corporate-Product-Refocus",
+          "paper_id": "doi:10.2308/tar-2023-0569",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "JPE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 51,
+      "official_in_window_count": 0,
+      "matched_count": 16,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 2,
+      "entries": [
+        {
+          "doi": "10.1086/744158",
+          "title": "Front Matter",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/744158",
+          "paper_id": "doi:10.1086/744158",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742422",
+          "title": "Rent Guarantee Insurance",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742422",
+          "paper_id": "doi:10.1086/742422",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742423",
+          "title": "The Effect of Education Policy on Crime: An Intergenerational Perspective",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742423",
+          "paper_id": "doi:10.1086/742423",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742434",
+          "title": "From Doubt to Devotion: Trials and Learning-Based Pricing",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742434",
+          "paper_id": "doi:10.1086/742434",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742424",
+          "title": "Debiasing and t-Tests for Synthetic Control Inference on Average Causal Effects",
+          "journal_key": "JPE",
+          "action": "abstract_filled",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742424",
+          "paper_id": "doi:10.1086/742424",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742418",
+          "title": "Optimal Tests Following Sequential Experiments",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742418",
+          "paper_id": "doi:10.1086/742418",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742435",
+          "title": "Illiquid Lemon Markets and the Macroeconomy",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742435",
+          "paper_id": "doi:10.1086/742435",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742420",
+          "title": "Markups: A Search-Theoretic Perspective",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742420",
+          "paper_id": "doi:10.1086/742420",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/743929",
+          "title": "JPE Turnaround Times",
+          "journal_key": "JPE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/743929",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1086/744159",
+          "title": "Recent Referees",
+          "journal_key": "JPE",
+          "action": "conflict",
+          "reason": "TITLE_DOI_CONFLICT",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/744159",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1086/742715",
+          "title": "Online Business Models, Digital Ads, and User Welfare",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742715",
+          "paper_id": "doi:10.1086/742715",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742710",
+          "title": "Why Is Intermediating Houses So Difficult? Evidence from iBuyers",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742710",
+          "paper_id": "doi:10.1086/742710",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742724",
+          "title": "Silence to Solidarity: How Communication about a Minority Affects Discrimination",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742724",
+          "paper_id": "doi:10.1086/742724",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742716",
+          "title": "Quota Mechanisms: Finite-Sample Optimality and Robustness",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742716",
+          "paper_id": "doi:10.1086/742716",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742725",
+          "title": "Regulatory Competition in the US Life Insurance Industry",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742725",
+          "paper_id": "doi:10.1086/742725",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742713",
+          "title": "Environmental Consequences of Hydrocarbon Infrastructure Policy",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742713",
+          "paper_id": "doi:10.1086/742713",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742714",
+          "title": "Peer Effects and Rank Concerns in the Classroom",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742714",
+          "paper_id": "doi:10.1086/742714",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1086/742712",
+          "title": "The Impact of Unions on Nonunion Wage Setting: Threats and Bargaining",
+          "journal_key": "JPE",
+          "action": "unchanged",
+          "reason": "existing_abstract_preserved",
+          "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742712",
+          "paper_id": "doi:10.1086/742712",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "QJE",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 33,
+      "official_in_window_count": 0,
+      "matched_count": 21,
+      "missing_count": 1,
+      "added_count": 1,
+      "pending_count": 12,
+      "entries": [
+        {
+          "doi": "10.1093/qje/qjag027",
+          "title": "The Power of Proximity to Coworkers",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/1825/8676722",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag017",
+          "title": "Making the Invisible Hand Visible: Managers and the Allocation of Workers to Jobs",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/article/141/3/1871/8537773",
+          "paper_id": "doi:10.1093/qje/qjag017",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag023",
+          "title": "A Cognitive Theory of Reasoning and Choice",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/article/141/3/1921/8703194",
+          "paper_id": "doi:10.1093/qje/qjag023",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag021",
+          "title": "Codification, Technology Absorption, and the Globalization of the Industrial RevolutionGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/1965/8651080",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag018",
+          "title": "Technology Sophistication Across EstablishmentsGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2025/8537769",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag019",
+          "title": "“Compensate the Losers?” Economic Policy and the Origins of U.S. Partisan RealignmentGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2087/8571578",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag024",
+          "title": "Why Doesn’t the United States Have National Health Insurance? The Political Role of the American Medical Association",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2147/8669893",
+          "paper_id": "doi:10.1093/qje/qjag024",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag022",
+          "title": "The Effects of Mandatory Profit-Sharing on Workers and Firms: Evidence from FranceGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2205/8662148",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag025",
+          "title": "International Reserve Management Under Rollover CrisesGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2269/8676721",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag029",
+          "title": "Business, Liquidity, and Information Cycles",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2313/8698258",
+          "paper_id": "doi:10.1093/qje/qjag029",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag026",
+          "title": "Praying for Rain",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2363/8676046",
+          "paper_id": "doi:10.1093/qje/qjag026",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag016",
+          "title": "The Effects of Gender Integration on Men: Evidence from the U.S. Military",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2423/8551347",
+          "paper_id": "doi:10.1093/qje/qjag016",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag015",
+          "title": "Peer Effects and the Gender Gap in Corporate Leadership: Evidence from MBA StudentsGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2499/8507231",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag020",
+          "title": "Collusion with Optimal Information DisclosureGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2555/8651503",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag028",
+          "title": "Public Services Under Private Management",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/article/141/3/2597/8676724",
+          "paper_id": "doi:10.1093/qje/qjag028",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag035",
+          "title": "Retrieval Failures and Consumption Smoothing: A Field Experiment on Seasonal Poverty",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag035/8859066",
+          "paper_id": "doi:10.1093/qje/qjag035",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag048",
+          "title": "The Origin of RiskGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag048/8855718",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag043",
+          "title": "BUSING TO OPPORTUNITY? THE IMPACTS OF THE METCO VOLUNTARY SCHOOL DESEGREGATION PROGRAM ON URBAN STUDENTS OF COLORGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag043/8836709",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag046",
+          "title": "How Does Wage Inequality Affect the Labor Movement?Get access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag046/8836148",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag045",
+          "title": "Bringing Work Home: Flexible Work Arrangements as Gateway Jobs for Women in West Bengal",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag045/8825393",
+          "paper_id": "doi:10.1093/qje/qjag045",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag047",
+          "title": "Attention to the Macroeconomy",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag047/8802089",
+          "paper_id": "doi:10.1093/qje/qjag047",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag044",
+          "title": "FAIRNESS ACROSS THE WORLD",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag044/8787618",
+          "paper_id": "doi:10.1093/qje/qjag044",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag038",
+          "title": "Wealth and Property Taxation in the United States",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag038/8786007",
+          "paper_id": "doi:10.1093/qje/qjag038",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag042",
+          "title": "The Employment Effects of a Guaranteed Income: Experimental Evidence from Two U.S. States",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag042/8761769",
+          "paper_id": "doi:10.1093/qje/qjag042",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag040",
+          "title": "Clause and Effect: Theory and Field Experimental Evidence on Noncompete Clauses",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag040/8756424",
+          "paper_id": "doi:10.1093/qje/qjag040",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag041",
+          "title": "Capital Services in Global Value ChainsGet access",
+          "journal_key": "QJE",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag041/8746428",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/qje/qjag036",
+          "title": "Correction to: A Further Augmentation of the Solow Model and the Empirics of Economic Growth for OECD Countries",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag036/8742218",
+          "paper_id": "doi:10.1093/qje/qjag036",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag037",
+          "title": "The Transmission of Reliable and Unreliable Information",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag037/8741820",
+          "paper_id": "doi:10.1093/qje/qjag037",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag039",
+          "title": "Mental Models of the Stock Market",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag039/8741817",
+          "paper_id": "doi:10.1093/qje/qjag039",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag033",
+          "title": "In Their Shoes: Empathy Through Information",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag033/8725759",
+          "paper_id": "doi:10.1093/qje/qjag033",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag030",
+          "title": "Global Working Hours",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag030/8723919",
+          "paper_id": "doi:10.1093/qje/qjag030",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag034",
+          "title": "Who Pays for Unions?Get access",
+          "journal_key": "QJE",
+          "action": "added",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag034/8723324",
+          "paper_id": "doi:10.1093/qje/qjag034",
+          "status": "added"
+        },
+        {
+          "doi": "10.1093/qje/qjag031",
+          "title": "What Jobs Come to Mind? Stereotypes About Fields of Study",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag031/8713481",
+          "paper_id": "doi:10.1093/qje/qjag031",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/qje/qjag032",
+          "title": "Beliefs About the Economy Are Excessively Sensitive to Household-Level Shocks: Evidence from Linked Survey and Administrative Data",
+          "journal_key": "QJE",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag032/8711394",
+          "paper_id": "doi:10.1093/qje/qjag032",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    },
+    {
+      "journal_key": "RES",
+      "coverage": "partial",
+      "official_observed_count": null,
+      "existing_total_count": 63,
+      "official_in_window_count": 0,
+      "matched_count": 7,
+      "missing_count": 0,
+      "added_count": 0,
+      "pending_count": 9,
+      "entries": [
+        {
+          "doi": "10.1093/restud/rdaf098",
+          "title": "Markups Across Space and TimeGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/2847/8407380",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdag001",
+          "title": "The Macroeconomics of Irreversibility",
+          "journal_key": "RES",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/article/93/5/2875/8424284",
+          "paper_id": "doi:10.1093/restud/rdag001",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/restud/rdag005",
+          "title": "Patent Term, Innovation, and the Role of Technology Disclosure ExternalitiesGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/2912/8429481",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdaf097",
+          "title": "Diversification, Market Entry, and the Global Internet Backbone",
+          "journal_key": "RES",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/article/93/5/2950/8320390",
+          "paper_id": "doi:10.1093/restud/rdaf097",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/restud/rdaf108",
+          "title": "Inflation Risk and the Finance-Growth NexusGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/2986/8404427",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdag002",
+          "title": "Education and the Margins of Cyclical Adjustment in the Labour MarketGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3023/8442448",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdag004",
+          "title": "The Illiquidity of Water MarketsGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3054/8427442",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdag003",
+          "title": "Selection in Surveys: Using Randomized Incentives to Detect and Account for Nonresponse BiasGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3086/8494738",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdaf109",
+          "title": "Devaluations, Deposit Dollarization, and Household HeterogeneityGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3133/8404442",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdaf099",
+          "title": "Life-Cycle Wages and Human Capital Investments: Selection and Missing DataGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3173/8328957",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdaf107",
+          "title": "Bank Information Production Over the Business Cycle",
+          "journal_key": "RES",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3209/8404305",
+          "paper_id": "doi:10.1093/restud/rdaf107",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/restud/rdaf106",
+          "title": "The Economics of Equilibrium with Indivisible Goods",
+          "journal_key": "RES",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3245/8407116",
+          "paper_id": "doi:10.1093/restud/rdaf106",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/restud/rdaf102",
+          "title": "Latent Heterogeneity in the Marginal Propensity to ConsumeGet access",
+          "journal_key": "RES",
+          "action": "conflict",
+          "reason": "existing_title_conflict",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3274/8489895",
+          "status": "pending"
+        },
+        {
+          "doi": "10.1093/restud/rdaf103",
+          "title": "A Robust Test for Weak Instruments for 2SLS with Multiple Endogenous Regressors",
+          "journal_key": "RES",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3303/8407128",
+          "paper_id": "doi:10.1093/restud/rdaf103",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/restud/rdaf100",
+          "title": "Firm Quality Dynamics and the Slippery Slope of Credit Intervention",
+          "journal_key": "RES",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3337/8349802",
+          "paper_id": "doi:10.1093/restud/rdaf100",
+          "status": "existing"
+        },
+        {
+          "doi": "10.1093/restud/rdaf101",
+          "title": "Choice and Opportunity Costs",
+          "journal_key": "RES",
+          "action": "unchanged",
+          "reason": "",
+          "source_url": "https://academic.oup.com/restud/article/93/5/3372/8361829",
+          "paper_id": "doi:10.1093/restud/rdaf101",
+          "status": "existing"
+        }
+      ],
+      "attempts": []
+    }
+  ],
+  "abstracts": [
+    {
+      "paper_id": "doi:10.1086/742424",
+      "journal_key": "JPE",
+      "doi": "10.1086/742424",
+      "status": "found",
+      "abstract_source": "publisher"
+    }
+  ],
+  "decisions": [
+    {
+      "doi": "10.1257/aer.20230557",
+      "title": "Sophisticated Consumers with Inertia: Long-Term Implications from a Large-Scale Field Experiment",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230557"
+    },
+    {
+      "doi": "10.1257/aer.20240491",
+      "title": "Monetary Policy, Segmentation, and the Term Structure",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240491"
+    },
+    {
+      "doi": "10.1257/aer.20250781",
+      "title": "Sources of Market Power in Web Search: Evidence from a Field Experiment",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250781"
+    },
+    {
+      "doi": "10.1111/1911-3846.70077",
+      "title": "Specialists' Evidence Evaluation and Judgments in Audits",
+      "journal_key": "CAR",
+      "action": "metadata_filled",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70077",
+      "filled_fields": [
+        "affiliations"
+      ]
+    },
+    {
+      "doi": "10.1257/aer.20221434",
+      "title": "Refugee Return and Conflict: Evidence from a Natural Experiment",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221434"
+    },
+    {
+      "doi": "10.1111/jofi.13353",
+      "title": "ISSUE INFORMATION",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.13353"
+    },
+    {
+      "doi": "10.1111/jofi.70063",
+      "title": "Jay R. Ritter",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70063"
+    },
+    {
+      "doi": "10.1111/jofi.70076",
+      "title": "Can Small Businesses Survive Chapter 11?",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70076"
+    },
+    {
+      "doi": "10.1111/jofi.70072",
+      "title": "Board Dynamics over the Startup Life Cycle",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70072"
+    },
+    {
+      "doi": "10.1111/jofi.70065",
+      "title": "M&As, Employee Costs, and Labor Reallocation",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70065"
+    },
+    {
+      "doi": "10.1111/jofi.70064",
+      "title": "Personal Costs of Executive Turnovers",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70064"
+    },
+    {
+      "doi": "10.1111/jofi.70062",
+      "title": "Learning to Navigate a New Financial Technology",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70062"
+    },
+    {
+      "doi": "10.1111/jofi.70040",
+      "title": "Learning in the Limit: Income Inference from Credit Extensions",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70040"
+    },
+    {
+      "doi": "10.1111/jofi.70067",
+      "title": "The Cross-Section of Household Preferences",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70067"
+    },
+    {
+      "doi": "10.1111/jofi.70046",
+      "title": "The Equilibrium Effects of Eviction Policies",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70046"
+    },
+    {
+      "doi": "10.1111/jofi.70074",
+      "title": "Marginal Q",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70074"
+    },
+    {
+      "doi": "10.1111/jofi.70058",
+      "title": "Twin Defaults and Bank Capital Requirements",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70058"
+    },
+    {
+      "doi": "10.1111/jofi.70066",
+      "title": "The Rising Tide Lifts Some Interest Rates: Climate Change, Natural Disasters, and Loan Pricing",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70066"
+    },
+    {
+      "doi": "10.1111/jofi.70071",
+      "title": "Climate Change, Demand Uncertainty, and Firms' Investments: Evidence from Planned Power Plants",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70071"
+    },
+    {
+      "doi": "10.1111/jofi.70068",
+      "title": "Sequential Search for Corporate Bonds",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70068"
+    },
+    {
+      "doi": "10.1111/jofi.70069",
+      "title": "Dynamic Self-Fulfilling Fire Sales",
+      "journal_key": "JF",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70069"
+    },
+    {
+      "doi": "10.1111/jofi.70019",
+      "title": "ANNOUNCEMENTS",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.70019"
+    },
+    {
+      "doi": "10.1111/jofi.13354",
+      "title": "AMERICAN FINANCE ASSOCIATION",
+      "journal_key": "JF",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/jofi.13354"
+    },
+    {
+      "doi": "",
+      "title": "Covers and Front Matter",
+      "journal_key": "TAR",
+      "action": "conflict",
+      "reason": "AMBIGUOUS_TITLE_AUTHOR_DATE",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/i/27963/Covers-and-Front-Matter"
+    },
+    {
+      "doi": "",
+      "title": "Editorial Policy",
+      "journal_key": "TAR",
+      "action": "conflict",
+      "reason": "AMBIGUOUS_TITLE_AUTHOR_DATE",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/505/27961/Editorial-Policy"
+    },
+    {
+      "doi": "10.2308/tar-2023-0727",
+      "title": "Burn It or Return It? The Effects of the Possibility to Return Budget Surplus and the Moderating Role of Uncertainty on Capital Budgeting",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/1/24127/Burn-It-or-Return-It-The-Effects-of-the"
+    },
+    {
+      "doi": "10.2308/tar-2025-0276",
+      "title": "Aggregate Disclosure Incentives: The Role of Supply Market Investments",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/23/27494/Aggregate-Disclosure-Incentives-The-Role-of-Supply"
+    },
+    {
+      "doi": "10.2308/tar-2025-0459",
+      "title": "Selling Its Soul? Private Equity and the Commercialization of the Attest Profession",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/51/27374/Selling-Its-Soul-Private-Equity-and-the"
+    },
+    {
+      "doi": "10.2308/tar-2024-0369",
+      "title": "Passed Over for Promotion: Evidence from Middle-Level Managers",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/77/27383/Passed-Over-for-Promotion-Evidence-from-Middle"
+    },
+    {
+      "doi": "10.2308/tar-2023-0638",
+      "title": "The Influence of Data Visualizations on Investor Information Processing: Evidence from Earnings Conference Call Slideshows",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/103/27384/The-Influence-of-Data-Visualizations-on-Investor"
+    },
+    {
+      "doi": "10.2308/tar-2024-0289",
+      "title": "The Academics of Standard Setting: A Field Study of Financial Reporting Standard Setters’ Engagement with Academic Research",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/135/24229/The-Academics-of-Standard-Setting-A-Field-Study-of"
+    },
+    {
+      "doi": "10.2308/tar-2024-0705",
+      "title": "Transparency and Bank Liability Structure",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/161/24108/Transparency-and-Bank-Liability-Structure"
+    },
+    {
+      "doi": "10.2308/tar-2023-0649",
+      "title": "The Impact of the SEC’s Office of Minority and Women Inclusion: Evidence from the Filing Review Process",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/191/24093/The-Impact-of-the-SEC-s-Office-of-Minority-and"
+    },
+    {
+      "doi": "10.2308/tar-2024-0327",
+      "title": "Disclosure Spillovers Through ESG Ratings",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/225/27480/Disclosure-Spillovers-Through-ESG-Ratings"
+    },
+    {
+      "doi": "10.2308/tar-2022-0542",
+      "title": "Modern Privacy Regulation, Internal Information Quality, and Operational Efficiency: Evidence from the General Data Protection Regulation",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/255/24098/Modern-Privacy-Regulation-Internal-Information"
+    },
+    {
+      "doi": "10.2308/tar-2021-0511",
+      "title": "Year-to-Year Adjustments of Performance Measure Weights: The Relevance of Prior Target Achievement",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/289/24119/Year-to-Year-Adjustments-of-Performance-Measure"
+    },
+    {
+      "doi": "10.2308/tar-2024-0762",
+      "title": "Financial Reporting Consequences of Exempting Low-Revenue Issuers from the Internal Control Audit Requirement",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/321/27376/Financial-Reporting-Consequences-of-Exempting-Low"
+    },
+    {
+      "doi": "10.2308/tar-2025-0139",
+      "title": "The Rich Get Richer: An Examination of Tax Haven Concentration and the New “Top 7”",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/353/24107/The-Rich-Get-Richer-An-Examination-of-Tax-Haven"
+    },
+    {
+      "doi": "10.2308/tar-2024-0328",
+      "title": "Market Leaders’ Tax-Motivated Income Shifting and U.S. Domestic Firms’ Investment Efficiency",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/381/24109/Market-Leaders-Tax-Motivated-Income-Shifting-and-U"
+    },
+    {
+      "doi": "10.2308/tar-2024-0472",
+      "title": "Contractual Private Disclosures in Supply Chains and Managerial Learning from Financial Markets",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/411/24099/Contractual-Private-Disclosures-in-Supply-Chains"
+    },
+    {
+      "doi": "10.2308/tar-2024-0592",
+      "title": "AI-Augmented Design and the Expertise Bias in Subjective Evaluations of Creative Output",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/445/24100/AI-Augmented-Design-and-the-Expertise-Bias-in"
+    },
+    {
+      "doi": "10.2308/tar-2023-0569",
+      "title": "Earnings Pressure and Corporate Product Refocus",
+      "journal_key": "TAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://publications.aaahq.org/accounting-review/article/101/5/467/24143/Earnings-Pressure-and-Corporate-Product-Refocus"
+    },
+    {
+      "doi": "10.1111/1911-3846.70086",
+      "title": "Issue Information",
+      "journal_key": "CAR",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70086"
+    },
+    {
+      "doi": "10.1111/1911-3846.70046",
+      "title": "A Survey of the Archival Audit LiteratureUne revue de la littérature en matière d'audit fondée sur les données archivales",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70046"
+    },
+    {
+      "doi": "10.1111/1911-3846.70049",
+      "title": "Prosocial CEOs and Accounting ManipulationLe comportement prosocial des PDG et la manipulation comptable",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70049"
+    },
+    {
+      "doi": "10.1111/1911-3846.70064",
+      "title": "Tax Payments in Loss FirmsPaiements de l'impôt sur les sociétés affichant des pertes",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70064"
+    },
+    {
+      "doi": "10.1111/1911-3846.70051",
+      "title": "Out of the Office: Market Impacts of Institutional Investor DistractionAbsence du bureau : la distraction des grands investisseurs et ses impacts sur le marché",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70051"
+    },
+    {
+      "doi": "10.1111/1911-3846.70062",
+      "title": "Does Mobile Communication Technology Have Capital Market Consequences? Evidence From Worldwide Launches of 3G NetworksLa technologie cellulaire a-t-elle des incidences sur les marchés financiers? Données issues du déploiement mondial des réseaux 3G",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70062"
+    },
+    {
+      "doi": "10.1111/1911-3846.70072",
+      "title": "Do Key Audit Matters in Hong Kong and Mainland China Provide Incremental Information and Improve Audit Quality?Les questions clés de l'audit à Hong Kong et en Chine continentale fournissent-elles des renseignements supplémentaires et améliorent-elles la qualité de l'audit?",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70072"
+    },
+    {
+      "doi": "10.1111/1911-3846.70058",
+      "title": "Analysts' Cultural Long-Term Orientation and Their Information ProductionOrientation culturelle à long terme des analystes et production d'information",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70058"
+    },
+    {
+      "doi": "10.1111/1911-3846.70054",
+      "title": "Seek and Ye Might Not Find: The Effects of Contract Framing on Knowledge Sharing and Knowledge SeekingQui cherche ne trouve pas toujours : les effets liés à la formulation des contrats sur le partage et la recherche de renseignements",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70054"
+    },
+    {
+      "doi": "10.1111/1911-3846.70059",
+      "title": "Product Market Threats: Implications for Future Performance and Use by Market ParticipantsMenaces sur le marché des produits : incidences sur le rendement futur et utilisation par les participants au marché",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70059"
+    },
+    {
+      "doi": "10.1111/1911-3846.70056",
+      "title": "Regulatory Intermediation in Times of Crisis: The Impact of Independent Oversight on the Functioning of Professional Accounting BodiesIntermédiation réglementaire en temps de crise : incidence de la surveillance indépendante sur le fonctionnement des organismes comptables professionnels",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70056"
+    },
+    {
+      "doi": "10.1111/1911-3846.70057",
+      "title": "SEC Attention, A to ZL'attention de la SEC, de A à Z",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70057"
+    },
+    {
+      "doi": "10.1111/1911-3846.70061",
+      "title": "Cost Information, Insider Trading, and Product Market EquilibriumRenseignements sur les coûts, opération d'initié et équilibre du marché des produits",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70061"
+    },
+    {
+      "doi": "10.1111/1911-3846.70060",
+      "title": "The Questioning of Special Items During Conference Calls: High Quality or Highly Questionable?Réexaminer des éléments exceptionnels lors des conférences téléphoniques : une pratique d'excellence ou très contestable?",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70060"
+    },
+    {
+      "doi": "10.1111/1911-3846.70069",
+      "title": "The Falling Roe and Relocation of Skilled WomenLa remise en cause de l'arrêt Roe et le déplacement des femmes qualifiées",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70069"
+    },
+    {
+      "doi": "10.1111/1911-3846.70066",
+      "title": "Behind Closed Doors: Interaction Rituals and the Building of Social Ties in Private Company-Investor MeetingsÀ huis clos : rituels d'interaction et construction de liens sociaux lors des réunions privées entre sociétés et investisseurs",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70066"
+    },
+    {
+      "doi": "10.1111/1911-3846.70053",
+      "title": "Analyst IntegrityL'intégrité des analystes",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70053"
+    },
+    {
+      "doi": "10.1111/1911-3846.70067",
+      "title": "From Words to Actions: The Impact of Specificity and Causality in Narrative Feedback on Employee Performance ImprovementDes paroles aux actes : incidence de la spécificité et de la causalité dans la rétroaction narrative sur l'amélioration du rendement des employés",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70067"
+    },
+    {
+      "doi": "10.1111/1911-3846.70070",
+      "title": "Black Representation Through the University to Audit Firm PipelineReprésentation des personnes noires dans le parcours universitaire menant aux cabinets d'audit",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70070"
+    },
+    {
+      "doi": "10.1111/1911-3846.70065",
+      "title": "L'envolée épistémique de la recherche comptable en économie financière : une étude historique sur la conception de l'utilité de la comptabilité",
+      "journal_key": "CAR",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.70065"
+    },
+    {
+      "doi": "10.1086/744158",
+      "title": "Front Matter",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/744158"
+    },
+    {
+      "doi": "10.1086/742422",
+      "title": "Rent Guarantee Insurance",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742422"
+    },
+    {
+      "doi": "10.1086/742423",
+      "title": "The Effect of Education Policy on Crime: An Intergenerational Perspective",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742423"
+    },
+    {
+      "doi": "10.1086/742434",
+      "title": "From Doubt to Devotion: Trials and Learning-Based Pricing",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742434"
+    },
+    {
+      "doi": "10.1086/742424",
+      "title": "Debiasing and t-Tests for Synthetic Control Inference on Average Causal Effects",
+      "journal_key": "JPE",
+      "action": "abstract_filled",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742424"
+    },
+    {
+      "doi": "10.1086/742418",
+      "title": "Optimal Tests Following Sequential Experiments",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742418"
+    },
+    {
+      "doi": "10.1086/742435",
+      "title": "Illiquid Lemon Markets and the Macroeconomy",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742435"
+    },
+    {
+      "doi": "10.1086/742420",
+      "title": "Markups: A Search-Theoretic Perspective",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742420"
+    },
+    {
+      "doi": "10.1086/743929",
+      "title": "JPE Turnaround Times",
+      "journal_key": "JPE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/743929"
+    },
+    {
+      "doi": "10.1086/744159",
+      "title": "Recent Referees",
+      "journal_key": "JPE",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/744159"
+    },
+    {
+      "doi": "10.1086/742715",
+      "title": "Online Business Models, Digital Ads, and User Welfare",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742715"
+    },
+    {
+      "doi": "10.1086/742710",
+      "title": "Why Is Intermediating Houses So Difficult? Evidence from iBuyers",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742710"
+    },
+    {
+      "doi": "10.1086/742724",
+      "title": "Silence to Solidarity: How Communication about a Minority Affects Discrimination",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742724"
+    },
+    {
+      "doi": "10.1086/742716",
+      "title": "Quota Mechanisms: Finite-Sample Optimality and Robustness",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742716"
+    },
+    {
+      "doi": "10.1086/742725",
+      "title": "Regulatory Competition in the US Life Insurance Industry",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742725"
+    },
+    {
+      "doi": "10.1086/742713",
+      "title": "Environmental Consequences of Hydrocarbon Infrastructure Policy",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742713"
+    },
+    {
+      "doi": "10.1086/742714",
+      "title": "Peer Effects and Rank Concerns in the Classroom",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742714"
+    },
+    {
+      "doi": "10.1086/742712",
+      "title": "The Impact of Unions on Nonunion Wage Setting: Threats and Bargaining",
+      "journal_key": "JPE",
+      "action": "unchanged",
+      "reason": "existing_abstract_preserved",
+      "source_url": "https://www.journals.uchicago.edu/doi/10.1086/742712"
+    },
+    {
+      "doi": "10.1093/qje/qjag027",
+      "title": "The Power of Proximity to Coworkers",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/1825/8676722"
+    },
+    {
+      "doi": "10.1093/qje/qjag017",
+      "title": "Making the Invisible Hand Visible: Managers and the Allocation of Workers to Jobs",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/article/141/3/1871/8537773"
+    },
+    {
+      "doi": "10.1093/qje/qjag023",
+      "title": "A Cognitive Theory of Reasoning and Choice",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/article/141/3/1921/8703194"
+    },
+    {
+      "doi": "10.1093/qje/qjag021",
+      "title": "Codification, Technology Absorption, and the Globalization of the Industrial RevolutionGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/1965/8651080"
+    },
+    {
+      "doi": "10.1093/qje/qjag018",
+      "title": "Technology Sophistication Across EstablishmentsGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2025/8537769"
+    },
+    {
+      "doi": "10.1093/qje/qjag019",
+      "title": "“Compensate the Losers?” Economic Policy and the Origins of U.S. Partisan RealignmentGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2087/8571578"
+    },
+    {
+      "doi": "10.1093/qje/qjag024",
+      "title": "Why Doesn’t the United States Have National Health Insurance? The Political Role of the American Medical Association",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2147/8669893"
+    },
+    {
+      "doi": "10.1093/qje/qjag022",
+      "title": "The Effects of Mandatory Profit-Sharing on Workers and Firms: Evidence from FranceGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2205/8662148"
+    },
+    {
+      "doi": "10.1093/qje/qjag025",
+      "title": "International Reserve Management Under Rollover CrisesGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2269/8676721"
+    },
+    {
+      "doi": "10.1093/qje/qjag029",
+      "title": "Business, Liquidity, and Information Cycles",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2313/8698258"
+    },
+    {
+      "doi": "10.1093/qje/qjag026",
+      "title": "Praying for Rain",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2363/8676046"
+    },
+    {
+      "doi": "10.1093/qje/qjag016",
+      "title": "The Effects of Gender Integration on Men: Evidence from the U.S. Military",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2423/8551347"
+    },
+    {
+      "doi": "10.1093/qje/qjag015",
+      "title": "Peer Effects and the Gender Gap in Corporate Leadership: Evidence from MBA StudentsGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2499/8507231"
+    },
+    {
+      "doi": "10.1093/qje/qjag020",
+      "title": "Collusion with Optimal Information DisclosureGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2555/8651503"
+    },
+    {
+      "doi": "10.1093/qje/qjag028",
+      "title": "Public Services Under Private Management",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/article/141/3/2597/8676724"
+    },
+    {
+      "doi": "10.1093/qje/qjag035",
+      "title": "Retrieval Failures and Consumption Smoothing: A Field Experiment on Seasonal Poverty",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag035/8859066"
+    },
+    {
+      "doi": "10.1093/qje/qjag048",
+      "title": "The Origin of RiskGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag048/8855718"
+    },
+    {
+      "doi": "10.1093/qje/qjag043",
+      "title": "BUSING TO OPPORTUNITY? THE IMPACTS OF THE METCO VOLUNTARY SCHOOL DESEGREGATION PROGRAM ON URBAN STUDENTS OF COLORGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag043/8836709"
+    },
+    {
+      "doi": "10.1093/qje/qjag046",
+      "title": "How Does Wage Inequality Affect the Labor Movement?Get access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag046/8836148"
+    },
+    {
+      "doi": "10.1093/qje/qjag045",
+      "title": "Bringing Work Home: Flexible Work Arrangements as Gateway Jobs for Women in West Bengal",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag045/8825393"
+    },
+    {
+      "doi": "10.1093/qje/qjag047",
+      "title": "Attention to the Macroeconomy",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag047/8802089"
+    },
+    {
+      "doi": "10.1093/qje/qjag044",
+      "title": "FAIRNESS ACROSS THE WORLD",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag044/8787618"
+    },
+    {
+      "doi": "10.1093/qje/qjag038",
+      "title": "Wealth and Property Taxation in the United States",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag038/8786007"
+    },
+    {
+      "doi": "10.1093/qje/qjag042",
+      "title": "The Employment Effects of a Guaranteed Income: Experimental Evidence from Two U.S. States",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag042/8761769"
+    },
+    {
+      "doi": "10.1093/qje/qjag040",
+      "title": "Clause and Effect: Theory and Field Experimental Evidence on Noncompete Clauses",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag040/8756424"
+    },
+    {
+      "doi": "10.1093/qje/qjag041",
+      "title": "Capital Services in Global Value ChainsGet access",
+      "journal_key": "QJE",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag041/8746428"
+    },
+    {
+      "doi": "10.1093/qje/qjag036",
+      "title": "Correction to: A Further Augmentation of the Solow Model and the Empirics of Economic Growth for OECD Countries",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag036/8742218"
+    },
+    {
+      "doi": "10.1093/qje/qjag037",
+      "title": "The Transmission of Reliable and Unreliable Information",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag037/8741820"
+    },
+    {
+      "doi": "10.1093/qje/qjag039",
+      "title": "Mental Models of the Stock Market",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag039/8741817"
+    },
+    {
+      "doi": "10.1093/qje/qjag033",
+      "title": "In Their Shoes: Empathy Through Information",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag033/8725759"
+    },
+    {
+      "doi": "10.1093/qje/qjag030",
+      "title": "Global Working Hours",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag030/8723919"
+    },
+    {
+      "doi": "10.1093/qje/qjag034",
+      "title": "Who Pays for Unions?Get access",
+      "journal_key": "QJE",
+      "action": "added",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag034/8723324"
+    },
+    {
+      "doi": "10.1093/qje/qjag031",
+      "title": "What Jobs Come to Mind? Stereotypes About Fields of Study",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag031/8713481"
+    },
+    {
+      "doi": "10.1093/qje/qjag032",
+      "title": "Beliefs About the Economy Are Excessively Sensitive to Household-Level Shocks: Evidence from Linked Survey and Administrative Data",
+      "journal_key": "QJE",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/qje/advance-article/doi/10.1093/qje/qjag032/8711394"
+    },
+    {
+      "doi": "10.1093/restud/rdaf098",
+      "title": "Markups Across Space and TimeGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/2847/8407380"
+    },
+    {
+      "doi": "10.1093/restud/rdag001",
+      "title": "The Macroeconomics of Irreversibility",
+      "journal_key": "RES",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/article/93/5/2875/8424284"
+    },
+    {
+      "doi": "10.1093/restud/rdag005",
+      "title": "Patent Term, Innovation, and the Role of Technology Disclosure ExternalitiesGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/2912/8429481"
+    },
+    {
+      "doi": "10.1093/restud/rdaf097",
+      "title": "Diversification, Market Entry, and the Global Internet Backbone",
+      "journal_key": "RES",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/article/93/5/2950/8320390"
+    },
+    {
+      "doi": "10.1093/restud/rdaf108",
+      "title": "Inflation Risk and the Finance-Growth NexusGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/2986/8404427"
+    },
+    {
+      "doi": "10.1093/restud/rdag002",
+      "title": "Education and the Margins of Cyclical Adjustment in the Labour MarketGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3023/8442448"
+    },
+    {
+      "doi": "10.1093/restud/rdag004",
+      "title": "The Illiquidity of Water MarketsGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3054/8427442"
+    },
+    {
+      "doi": "10.1093/restud/rdag003",
+      "title": "Selection in Surveys: Using Randomized Incentives to Detect and Account for Nonresponse BiasGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3086/8494738"
+    },
+    {
+      "doi": "10.1093/restud/rdaf109",
+      "title": "Devaluations, Deposit Dollarization, and Household HeterogeneityGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3133/8404442"
+    },
+    {
+      "doi": "10.1093/restud/rdaf099",
+      "title": "Life-Cycle Wages and Human Capital Investments: Selection and Missing DataGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3173/8328957"
+    },
+    {
+      "doi": "10.1093/restud/rdaf107",
+      "title": "Bank Information Production Over the Business Cycle",
+      "journal_key": "RES",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3209/8404305"
+    },
+    {
+      "doi": "10.1093/restud/rdaf106",
+      "title": "The Economics of Equilibrium with Indivisible Goods",
+      "journal_key": "RES",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3245/8407116"
+    },
+    {
+      "doi": "10.1093/restud/rdaf102",
+      "title": "Latent Heterogeneity in the Marginal Propensity to ConsumeGet access",
+      "journal_key": "RES",
+      "action": "conflict",
+      "reason": "existing_title_conflict",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3274/8489895"
+    },
+    {
+      "doi": "10.1093/restud/rdaf103",
+      "title": "A Robust Test for Weak Instruments for 2SLS with Multiple Endogenous Regressors",
+      "journal_key": "RES",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3303/8407128"
+    },
+    {
+      "doi": "10.1093/restud/rdaf100",
+      "title": "Firm Quality Dynamics and the Slippery Slope of Credit Intervention",
+      "journal_key": "RES",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3337/8349802"
+    },
+    {
+      "doi": "10.1093/restud/rdaf101",
+      "title": "Choice and Opportunity Costs",
+      "journal_key": "RES",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://academic.oup.com/restud/article/93/5/3372/8361829"
+    },
+    {
+      "doi": "10.1257/aer.20241802",
+      "title": "The Economic Impacts of Sexual Assault",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241802"
+    },
+    {
+      "doi": "10.1257/aer.20250605",
+      "title": "Numbers Tell, Words Sell",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250605"
+    },
+    {
+      "doi": "10.1257/aer.20251660",
+      "title": "Job Search, Wages, and Inflation",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251660"
+    },
+    {
+      "doi": "10.1257/aer.20250578",
+      "title": "Associative Networks in Decision Making",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250578"
+    },
+    {
+      "doi": "10.1257/aer.20240041",
+      "title": "The Dawn of Civilization Metal Trade and the Rise of Hierarchy",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240041"
+    },
+    {
+      "doi": "10.1257/aer.20230421",
+      "title": "The Contribution of High-Skilled Immigrants to Innovation in the United States",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230421"
+    },
+    {
+      "doi": "10.1257/aer.20221562",
+      "title": "Quota Adjustment Process",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20221562"
+    },
+    {
+      "doi": "10.1257/aer.20231640",
+      "title": "Eclipse of Rent-Sharing: The Effects of Managers’ Business Education on Wages and the Labor Share in the US and Denmark",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231640"
+    },
+    {
+      "doi": "10.1257/aer.20240108",
+      "title": "Buy Big or Buy Small? Procurement Policies, Firms’ Financing, and the Macroeconomy",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240108"
+    },
+    {
+      "doi": "10.1257/aer.20240584",
+      "title": "The Long-run Effect of Air Pollution on Survival",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240584"
+    },
+    {
+      "doi": "10.1257/aer.20241592",
+      "title": "Self-Selection and the Diminishing Returns of Research",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241592"
+    },
+    {
+      "doi": "10.1257/aer.20240338",
+      "title": "Optimal Monetary Policy during a Cost-of-Living Crisis",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240338"
+    },
+    {
+      "doi": "10.1257/aer.20240168",
+      "title": "Investment, Emissions, and Reliability in Electricity Markets",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240168"
+    },
+    {
+      "doi": "10.1257/aer.20231366",
+      "title": "Validating Hospital Quality Indicators and the Causal Effect of Hospital Closures",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231366"
+    },
+    {
+      "doi": "10.1257/aer.20241072",
+      "title": "Default and Interest Rate Shocks: Renegotiation Matters",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241072"
+    },
+    {
+      "doi": "10.1257/aer.20250446",
+      "title": "The Inflation Accelerator",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250446"
+    },
+    {
+      "doi": "10.1257/aer.20241283",
+      "title": "Disentangling Exploration from Exploitation",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241283"
+    },
+    {
+      "doi": "10.1257/aer.20231717",
+      "title": "Patient Costs and Physicians’ Information",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231717"
+    },
+    {
+      "doi": "10.1257/aer.20240410",
+      "title": "Myths, Morals, and Movies",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240410"
+    },
+    {
+      "doi": "10.1257/aer.20240699",
+      "title": "Generalized Double Auctions: Maximizing Welfare Guarantees in Bilateral Trade",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240699"
+    },
+    {
+      "doi": "10.1257/aer.20240137",
+      "title": "Difference-in-Differences with a Continuous Treatment",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240137"
+    },
+    {
+      "doi": "10.1257/aer.20231651",
+      "title": "Reproducible Aggregation of Sample-Split Statistics",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231651"
+    },
+    {
+      "doi": "10.1257/aer.20231684",
+      "title": "The Returns to Government R&D: Evidence from US Appropriations Shocks",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231684"
+    },
+    {
+      "doi": "10.1257/aer.20241027",
+      "title": "Firm Adaptation in Production Networks: Evidence from Extreme Weather Events in Pakistan",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241027"
+    },
+    {
+      "doi": "10.1257/aer.20230586",
+      "title": "Becoming Legible to the State: The Necessary but Not Sufficient Role of Identification in Taxation",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230586"
+    },
+    {
+      "doi": "10.1257/aer.20250051",
+      "title": "The Inflation Attention Threshold and Inflation Surges",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250051"
+    },
+    {
+      "doi": "10.1257/aer.20250081",
+      "title": "The Causal Effects of Global Supply Chain Disruptions on Macroeconomic Outcomes: Evidence and Theory",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20250081"
+    },
+    {
+      "doi": "10.1257/aer.20251956",
+      "title": "Predictably Unpredictable Inspections",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20251956"
+    },
+    {
+      "doi": "10.1257/aer.20240179",
+      "title": "Residential Segregation and Unequal Access to Local Public Services in India: Evidence from 1.5 Million Neighborhoods",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240179"
+    },
+    {
+      "doi": "10.1257/aer.20240766",
+      "title": "Union Bargaining Power and the Amenity-Wage Tradeoff",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240766"
+    },
+    {
+      "doi": "10.1257/aer.20240666",
+      "title": "Durables and the Marginal Propensity to Spend",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240666"
+    },
+    {
+      "doi": "10.1257/aer.20241561",
+      "title": "Inequality and Racial Backlash: Evidence from the Reconstruction Era and the Freedmen’s Bureau",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20241561"
+    },
+    {
+      "doi": "10.1257/aer.20230448",
+      "title": "The Unequal Economic Consequences of Carbon Pricing",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20230448"
+    },
+    {
+      "doi": "10.1257/aer.20231486",
+      "title": "Combinatorial Discrete Choice: Theory and Application to Multinational Production",
+      "journal_key": "AER",
+      "action": "unchanged",
+      "reason": "",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20231486"
+    },
+    {
+      "doi": "10.1257/aer.20240576",
+      "title": "Contextually Private Mechanisms",
+      "journal_key": "AER",
+      "action": "conflict",
+      "reason": "TITLE_DOI_CONFLICT",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.20240576"
+    }
+  ],
+  "input_sha256": "025722003d65f065b52bcb1b7f290ccb84302b63c588060fcde76b7d3b93b274",
+  "scope": "captured_details_only",
+  "stage": "browser_import",
+  "note": "Capture import date, not publication window; does not establish complete journal coverage."
+}
