@@ -50800,7 +50800,7 @@
       "batch_id": "batch-af1386f948643612fdbef6fcb3322e6977a581d5cff50bdf8b31d65b8dedfb57",
       "mode": "backfill",
       "created_at": "2026-10-05T15:37:56.881Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T15:41:07.978Z",
       "items": [
         {
           "id": "doi:10.1016/j.aos.2026.101657",
@@ -50814,10 +50814,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 683,
+            "completion_tokens": 197,
+            "total_tokens": 880
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.aos.2026.101660",
@@ -50831,10 +50837,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 686,
+            "completion_tokens": 191,
+            "total_tokens": 877
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jcorpfin.2026.103081",
@@ -50848,10 +50860,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 668,
+            "completion_tokens": 195,
+            "total_tokens": 863
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jcorpfin.2026.103094",
@@ -50865,10 +50883,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 727,
+            "completion_tokens": 189,
+            "total_tokens": 916
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jcorpfin.2026.103090",
@@ -50882,10 +50906,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 604,
+            "completion_tokens": 155,
+            "total_tokens": 759
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104350",
@@ -50899,10 +50929,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 641,
+            "completion_tokens": 148,
+            "total_tokens": 789
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jcorpfin.2026.103091",
@@ -50916,10 +50952,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 582,
+            "completion_tokens": 92,
+            "total_tokens": 674
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jfineco.2026.104362",
@@ -50933,10 +50975,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 569,
+            "completion_tokens": 126,
+            "total_tokens": 695
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jcorpfin.2026.103079",
@@ -50950,10 +50998,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 546,
+            "completion_tokens": 90,
+            "total_tokens": 636
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.jcorpfin.2026.103096",
@@ -50967,10 +51021,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 542,
+            "completion_tokens": 74,
+            "total_tokens": 616
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }
