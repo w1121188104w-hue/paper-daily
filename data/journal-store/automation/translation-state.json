@@ -45913,7 +45913,7 @@
       "batch_id": "batch-550c41cd74ed600027e31993468ad9bb9b7ea8a0e21d1dee1635705ed519195a",
       "mode": "backfill",
       "created_at": "2026-10-05T10:01:12.010Z",
-      "finished_at": null,
+      "finished_at": "2026-10-05T10:03:40.918Z",
       "items": [
         {
           "id": "doi:10.1086/742424",
@@ -45927,10 +45927,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 589,
+            "completion_tokens": 123,
+            "total_tokens": 712
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag044",
@@ -45944,10 +45950,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 448,
+            "completion_tokens": 9,
+            "total_tokens": 457
+          },
+          "completed_fields": [
+            "title"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag043",
@@ -45966,10 +45978,17 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 764,
+            "completion_tokens": 260,
+            "total_tokens": 1024
+          },
+          "completed_fields": [
+            "title",
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1093/qje/qjag034",
@@ -45983,10 +46002,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 448,
+            "completion_tokens": 14,
+            "total_tokens": 462
+          },
+          "completed_fields": [
+            "title"
+          ]
         }
       ]
     }
