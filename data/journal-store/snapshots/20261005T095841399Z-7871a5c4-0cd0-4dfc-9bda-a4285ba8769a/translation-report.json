@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-b507ae0731b91b9b483102dc39a29e25cdf6749687646e99be5163dbcc5caeee",
+  "stats": {
+    "completed_fields": 2,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 2
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "publisher:1f894a44704491df5cb1d491",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "publisher:8a6c02c0a48720a212defb13",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
