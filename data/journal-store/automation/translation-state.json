@@ -54077,7 +54077,7 @@
       "batch_id": "batch-060735561a0b342bc48177d9c355b935e0189fe4d424e02bd1d4f6a0ba26dff7",
       "mode": "backfill",
       "created_at": "2026-10-06T21:06:05.551Z",
-      "finished_at": null,
+      "finished_at": "2026-10-06T21:09:30.903Z",
       "items": [
         {
           "id": "doi:10.1016/j.jfineco.2026.104376",
@@ -54091,10 +54091,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 607,
+            "completion_tokens": 130,
+            "total_tokens": 737
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.respol.2026.105639",
@@ -54108,10 +54114,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 841,
+            "completion_tokens": 305,
+            "total_tokens": 1146
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }

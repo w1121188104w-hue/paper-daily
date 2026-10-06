@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-060735561a0b342bc48177d9c355b935e0189fe4d424e02bd1d4f6a0ba26dff7",
+  "stats": {
+    "completed_fields": 2,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 2
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.jfineco.2026.104376",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1016/j.respol.2026.105639",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
