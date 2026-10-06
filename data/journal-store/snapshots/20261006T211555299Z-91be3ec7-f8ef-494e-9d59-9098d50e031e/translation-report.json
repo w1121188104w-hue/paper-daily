@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-4f262ca3fb32b7992452353347f0c983f20ee37064013825d4a82692b5571f95",
+  "stats": {
+    "completed_fields": 1,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1287/mnsc.2024.07399",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
