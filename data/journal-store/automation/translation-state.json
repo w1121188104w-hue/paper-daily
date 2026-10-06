@@ -53439,7 +53439,7 @@
       "batch_id": "batch-9b9393fce7643ab07c5351fdfc59e4ec4742a6ad416921540e025baf5295c550",
       "mode": "backfill",
       "created_at": "2026-10-06T09:28:06.759Z",
-      "finished_at": null,
+      "finished_at": "2026-10-06T09:30:46.432Z",
       "items": [
         {
           "id": "doi:10.1111/1911-3846.70046",
@@ -53453,11 +53453,17 @@
           "retry_of": {
             "title": "46e57c02-6183-44b5-9fab-9c7c4e121023"
           },
-          "field_errors": {},
+          "field_errors": {
+            "title": "TOO_SHORT"
+          },
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 467,
+            "completion_tokens": 11,
+            "total_tokens": 478
+          },
           "completed_fields": []
         }
       ]
