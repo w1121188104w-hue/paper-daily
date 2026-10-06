@@ -16,6 +16,7 @@ import {catalogMembership} from '../../tools/browser-abstract-extension/catalog-
 import {reviewRecord} from '../../tools/browser-abstract-extension/review-decisions.js';
 import {findPaper,groupPaperIdentities} from '../../tools/browser-abstract-extension/paper-identity.js';
 import {collectionScope,confirmedAbstractAbsent,onlinePaginationStop} from '../../tools/browser-abstract-extension/collection-policy.js';
+import {validateDiscoveryHistory} from './collectionActivity.js';
 
 export const WORKFLOW_PATH = 'data/collection-workflow/state.json';
 const sha = x => createHash('sha256').update(JSON.stringify(x)).digest('hex');
@@ -27,6 +28,7 @@ export function validateWorkflow(s) {
   assertLibrary(s?.schema_version === 1 && ['tasks','monitors','receipts','checked_papers'].every(k => Array.isArray(s[k])), '任务账本格式无效');
   assertLibrary(s.tasks.length <= 20000 && s.receipts.length <= 10000, '任务账本需要归档，不能截断历史');
   validateBaselines(s.catalog_baselines);
+  validateDiscoveryHistory(s.discovery_history);
   assertLibrary(s.audit_interval_days===undefined||[7,14].includes(s.audit_interval_days),'巡检间隔只支持7或14天');
   const ids = new Set();
   for (const t of s.tasks) {

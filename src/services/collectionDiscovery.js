@@ -4,6 +4,7 @@ import { addDiscoverySignals, validateWorkflow } from './collectionWorkflow.js';
 import { knownJournalMismatch } from './journalIdentity.js';
 import {onlineWindow} from '../../tools/browser-abstract-extension/collection-policy.js';
 import {baselineKnownPapers} from './catalogBaseline.js';
+import {mergeDiscoveryHistory} from './collectionActivity.js';
 
 // Production entry point: deliberately allowlist options. Old probe adapters,
 // environment switches and search callbacks cannot turn paid search back on.
@@ -16,6 +17,7 @@ export function discoverIndexedCollectionTasks(config,state,papers,{now,collect,
 export async function discoverCollectionTasks(config, state, papers, {now=new Date(), collect=collectJournals,
   sourceOptions={}, onJournal=async()=>{}}={}) {
   let next=structuredClone(validateWorkflow(state));
+  next.discovery_history=mergeDiscoveryHistory(next.discovery_history||[],next.monitors);
   const at=now.toISOString(),{from:fromDate,to:toDate}=onlineWindow(now);
   const seenPapers=[...papers,...baselineKnownPapers(next)];
   const known=p=>seenPapers.some(x=>x.journal_key===p.journal_key&&((x.doi&&x.doi===p.doi)||(!p.doi&&titleKey(x.title_original)===titleKey(p.title))));
@@ -37,6 +39,7 @@ export async function discoverCollectionTasks(config, state, papers, {now=new Da
       }
     }
     monitor(journal.key,'search','disabled');
+    next.discovery_history=mergeDiscoveryHistory(next.discovery_history,next.monitors);
     next.updated_at=at;validateWorkflow(next);await onJournal(next);
   }
   return next;

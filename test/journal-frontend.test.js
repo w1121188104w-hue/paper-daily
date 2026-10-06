@@ -76,6 +76,24 @@ test('两页HTML控件ID唯一、模块引用相对，不加载旧设置或第�
     for (const forbidden of ['settings.js', 'home.js', 'src="/', 'fonts.googleapis', 'llmApiKey', 'fetchDayBtn', 'enrichmentJournals', '官网漏收核对明细']) assert.ok(!text.includes(forbidden));
   }
 });
+
+test('calendar and headline use real new collection evidence even with no legacy runs or new papers',async t=>{
+  const data=payload({papers:[],collection_activity:[{date:'2026-09-07',journal_key:'AER',captured_at:'2026-09-07T01:00:00Z'}],
+    discovery_checks:['crossref','openalex'].map(source=>({journal:'AER',source,status:source==='openalex'?'failed':'ok',checked_at:'2026-09-07T01:00:00Z'}))});
+  const ui=await app(t,{data,search:'?month=2026-09&q=no-match&kind=other'});
+  const cell=ui.get('calendarGrid').children.find(e=>e.href?.includes('date=2026-09-07'));
+  assert.match(cell.textContent,/0条.*已采集，部分来源失败/);
+  assert.equal(ui.get('statusBadge').textContent,'已采集，部分来源失败');
+  assert.match(ui.get('statusText').textContent,/2026年9月7日/);
+  assert.doesNotMatch(ui.get('statusText').textContent,/尚未建立/);
+});
+test('day coverage separates captures, source checks and first-seen paper counts under journal filters',async t=>{
+  const data=payload({collection_activity:[{date:'2026-09-07',journal_key:'AER',captured_at:'2026-09-07T01:00:00Z'}]});
+  const ui=await app(t,{data,day:true,search:'?date=2026-09-07&journal=AER&q=absent'});
+  assert.match(ui.get('dayCoverage').textContent,/1\/1 刊有官网采集证据，0\/1 刊 Crossref\/OpenAlex/);
+  assert.match(ui.get('dayCoverage').textContent,/零条不代表没有采集/);
+  assert.match(ui.get('listMeta').textContent,/找到 0 条/);
+});
 test('提醒和巡检分开展示，未建基线不显示零篇，刷新保留展开状态',async t=>{
   const collection_workflow={tasks:[],monitors:[],receipts:[],catalog_checks:[{catalog_id:'test',journal:'JF',collection:'issue',checked_at:null,paper_count:0}],audit_interval_days:14};
   const ui=await app(t,{data:payload({collection_workflow})});
@@ -168,7 +186,7 @@ test('日期页保留筛选，只显示首次发现当日，不扩大至全部�
   const ui = await app(t, { day: true, search: '?date=2026-09-06&journal=AER&q=credit' });
   assert.ok(ui.get('listMeta').textContent.includes('找到 0 条'));
   assert.ok(ui.get('backToCalendar').href.includes('journal=AER')); assert.ok(ui.get('backToCalendar').href.includes('month=2026-09'));
-  assert.ok(ui.get('dayCoverage').textContent.includes('未采集'));
+  assert.ok(ui.get('dayCoverage').textContent.includes('暂无采集记录'));
 });
 test('日期参数错误清晰提示，不借用今日日期', async (t) => {
   const ui = await app(t, { day: true, search: '?date=2026-02-30' });

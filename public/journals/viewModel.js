@@ -121,6 +121,36 @@ export function coverageForDay(runs, date, keys) {
 export function paperTitle(paper) {
   return paper.title_translation_status === 'done' && paper.title_zh ? paper.title_zh : paper.title_original;
 }
+
+export function collectionStatusForDay(data, date, keys) {
+  const runs = [...(data.runs || [])], groups = new Map();
+  for (const check of data.discovery_checks || []) {
+    if (!['crossref','openalex'].includes(check.source) || !keys.includes(check.journal) ||
+        !Number.isFinite(Date.parse(check.checked_at)) || beijingDay(new Date(check.checked_at)) !== date) continue;
+    const key = check.journal+'|'+new Date(check.checked_at).toISOString();
+    if (!groups.has(key)) groups.set(key, {run_date:date,started_at:new Date(check.checked_at).toISOString(),
+      journal_keys:[check.journal],status:'success',sources:[]});
+    groups.get(key).sources.push({journal_key:check.journal,source:check.source,ok:check.status==='ok',complete:check.status==='ok'});
+  }
+  runs.push(...groups.values());
+  const coverage = coverageForDay(runs,date,keys);
+  const captures = (data.collection_activity || []).filter(row => row.date===date && keys.includes(row.journal_key));
+  const captured = new Set(captures.map(row=>row.journal_key)).size;
+  let label = coverage.label;
+  if (!keys.length) label = '无匹配期刊';
+  else if (coverage.failed) label = captured ? '已采集，部分来源失败' : '采集不完整';
+  else if (captured && coverage.complete < keys.length) label = captured < keys.length ? '已采集（部分期刊）' : '已有采集记录';
+  else if (!coverage.attempted) label = '暂无采集记录';
+  return {...coverage,captured,label};
+}
+
+export function latestCollectionActivity(data) {
+  const times = [...(data.collection_activity||[]).map(row=>row.captured_at),
+    ...(data.discovery_checks||[]).map(row=>row.checked_at)].filter(value=>Number.isFinite(Date.parse(value)));
+  if (!times.length) return null;
+  const at = new Date(times.reduce((last,value)=>Math.max(last,Date.parse(value)),0)).toISOString();
+  return {at,date:beijingDay(new Date(at))};
+}
 export function doiHref(doi) {
   // Build the link from a validated DOI, never from a source-provided URL.
   return typeof doi === 'string' && /^10\.\d{4,9}\/\S+$/i.test(doi) && !/[<>"\x00-\x20]/.test(doi)

@@ -1,6 +1,6 @@
 import { RUN_LABELS, TRANSLATION_LABELS, DOCUMENT_LABELS, CLASSIFICATION_REASONS, documentKind, normalizeDocumentFilter,
   beijingDay, validDay, validMonth, shiftMonth, monthCells,
-  filterPapers, countsByDay, selectedJournalKeys, coverageForDay, paperTitle, doiHref, pageHref,
+  filterPapers, countsByDay, selectedJournalKeys, collectionStatusForDay, latestCollectionActivity, paperTitle, doiHref, pageHref,
   sourceLabel, publicationDateText, publicationMonthText, ABSTRACT_LABELS, abstractSourceHref, workflowAuditChecks } from './viewModel.js';
 
 const $ = (id) => document.getElementById(id);
@@ -37,6 +37,13 @@ function renderStatus() {
     latest?.status === 'partial_failure' ? 'partial' : latest ? 'ready' : ''}`;
   $('statusText').textContent = latest ? `最近已保存的采集：${timeText(latest.finished_at)}。范围：${latest.journal_keys.join('、')}（${latest.journal_keys.length}/${data.journals.length}刊）；回查发表日期 ${latest.from_date} 至 ${latest.to_date}。本轮新增 ${latest.stats.added} 条、更新 ${latest.stats.updated} 条文献记录。` :
     '尚未建立真实采集记录。页面中的空白不代表这些期刊没有论文；浏览页面不会启动采集。';
+  const activity=latestCollectionActivity(data);
+  if(activity&&(!latest||Date.parse(activity.at)>=Date.parse(latest.finished_at))){
+    const coverage=collectionStatusForDay(data,activity.date,data.journals.map(j=>j.key));
+    $('statusBadge').textContent=coverage.label;
+    $('statusBadge').className=`status-badge ${coverage.failed?'partial':'ready'}`;
+    $('statusText').textContent=`最近已保存的采集或来源检查：${timeText(activity.at)}。当日 ${coverage.captured}/${coverage.total} 刊有官网采集证据；Crossref/OpenAlex ${coverage.complete}/${coverage.total} 刊双源检查完成，${coverage.failed} 刊来源失败或不完整。目录是否完整以目录核对结果为准。`;
+  }
   const counts = data.papers.reduce((all, paper) => { const kind = documentKind(paper); all[kind] = (all[kind] || 0) + 1; return all; }, {});
   const kinds = Object.entries(DOCUMENT_LABELS).filter(([key]) => key !== 'all' && counts[key])
     .map(([key, label]) => `${label} ${counts[key]} 条`).join('；');
@@ -126,7 +133,7 @@ function renderCalendar(papers) {
   const cells = ['一', '二', '三', '四', '五', '六', '日'].map((label) => node('div', label, 'weekday'));
   for (const date of monthCells(state.month)) {
     if (!date) { const blank = node('div', '', 'day-cell empty'); blank.setAttribute('aria-hidden', 'true'); cells.push(blank); continue; }
-    const coverage = coverageForDay(state.data.runs, date, keys), count = counts[date] || 0;
+    const coverage = collectionStatusForDay(state.data, date, keys), count = counts[date] || 0;
     const link = node('a', '', `day-cell ${count ? 'has-recommendations' : ''} ${date === today ? 'today' : ''} ${date > today ? 'future' : ''}`);
     link.href = pageHref('day.html', state.filters, { date });
     link.setAttribute('aria-label', `${date}${date === today ? ' 今天' : ''}，${count}条匹配记录，${date > today ? '未来日期' : coverage.label}`);
@@ -250,8 +257,8 @@ function render() {
   const papers = filterPapers(state.data.papers, { ...state.filters, date: isDayPage ? selectedDate : '' });
   if (isDayPage) {
     $('dayTitle').textContent = `${selectedDate} 论文详情`;
-    const coverage = coverageForDay(state.data.runs, selectedDate, selectedJournalKeys(state.data.journals, state.filters));
-    $('dayCoverage').textContent = `已保存记录显示：${selectedDate > today ? '未来日期' : coverage.label}；所选期刊 ${coverage.complete}/${coverage.total} 刊双源完成。采集状态不受搜索关键词或文献类型影响，数据源收录仍可能有延迟。`;
+    const coverage = collectionStatusForDay(state.data, selectedDate, selectedJournalKeys(state.data.journals, state.filters));
+    $('dayCoverage').textContent = `已保存记录显示：${selectedDate > today ? '未来日期' : coverage.label}；所选期刊 ${coverage.captured}/${coverage.total} 刊有官网采集证据，${coverage.complete}/${coverage.total} 刊 Crossref/OpenAlex 双源检查完成，${coverage.failed} 刊来源失败或不完整。采集状态不受搜索关键词或文献类型影响；论文条数按首次入库日期统计，零条不代表没有采集，目录完整性见核对结果。`;
     document.title = `${selectedDate} 论文详情 · 经管顶刊`;
   } else renderCalendar(papers);
   renderList(papers);

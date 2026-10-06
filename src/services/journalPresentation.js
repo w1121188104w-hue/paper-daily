@@ -11,6 +11,7 @@ import { journalIdentity, knownJournalMismatch } from './journalIdentity.js';
 import { needsCarEnglishAbstract, missingOriginalAbstract } from './carAbstractLanguage.js';
 import {confirmedAbstractAbsent} from '../../tools/browser-abstract-extension/collection-policy.js';
 import {sourceReviewProof} from './reviewedCorrection.js';
+import {collectionActivity,mergeDiscoveryHistory} from './collectionActivity.js';
 
 // Explicit public fields: never serialize a library snapshot or raw source response directly.
 const PAPER_FIELDS = ['id', 'doi', 'journal_key', 'journal_name', 'journal_category', 'journal_category_zh',
@@ -108,6 +109,8 @@ export function presentJournalLibrary(library, config) {
     enrichment: { latest: [...(library.enrichments || [])].sort((a,b) => b.started_at.localeCompare(a.started_at))[0] ?
       select([...(library.enrichments || [])].sort((a,b) => b.started_at.localeCompare(a.started_at))[0], ['started_at','finished_at','from_date','to_date','status','stats']) : null,
       journals: [], missing_abstracts: papers.filter(p=>p.abstract_status!=='confirmed_absent'&&missingOriginalAbstract(p)).length },
+    collection_activity: collectionActivity(library.papers,[],config.journals.filter(j=>j.enabled).map(j=>j.key)),
+    discovery_checks: [],
     attempt_warning: null
   };
 }
@@ -157,6 +160,10 @@ export async function loadJournalPresentation(config, { root = DEFAULT_LIBRARY_R
     }
   }
   data.attempt_warning = await latestAttemptWarning(root, library);
-  data.collection_workflow=publicWorkflow(await readWorkflow(path.resolve(root,'../..')),{papers:library.papers});
+  const workflow=await readWorkflow(path.resolve(root,'../..'));
+  data.collection_workflow=publicWorkflow(workflow,{papers:library.papers});
+  data.collection_activity=collectionActivity(library.papers,workflow.catalog_baselines,data.journals.map(j=>j.key));
+  data.discovery_checks=mergeDiscoveryHistory(workflow.discovery_history||[],workflow.monitors)
+    .filter(row=>data.journals.some(j=>j.key===row.journal));
   return data;
 }
