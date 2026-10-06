@@ -189,6 +189,46 @@ test('cloud writer delays publication without blocking new capture or consuming 
   await c.pulse();while((await c.status()).busy)await new Promise(r=>setTimeout(r,10));
   assert.equal(JSON.parse(await fs.readFile(file,'utf8')).phase,'awaiting_publication');assert.equal(dispatched,1);
 });
+
+test('slow publication sync does not lock new capture or let another formal writer in',async t=>{
+  const repo=await temp(t),stateDir=path.join(repo,'private-runs');
+  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));
+  const fieldFile=path.join(repo,'data/collection-workflow/field-tasks.json');
+  const fields=JSON.stringify({version:1,papers:[{id:'old-other-field',status:'pending',missing_fields:['authors']}]});
+  await fs.writeFile(fieldFile,fields);
+  let releaseSync,enteredSync,syncs=0;
+  const held=new Promise(resolve=>releaseSync=resolve),entered=new Promise(resolve=>enteredSync=resolve);
+  const c=createCollectionCoordinator({repositoryRoot:repo,stateDir,config,
+    sync:async options=>{syncs++;assert.equal(options.forWrite,true);enteredSync();await held;},
+    publish:async()=>({}),checkPublication:async()=>false});
+  const {run}=await c.start('daily');assert.equal(syncs,0,'capture creation needs no network');
+  await c.submit(run.id,await capture(run));await entered;
+  try{
+    const status=await c.status();assert.equal(status.busy,true);assert.equal(status.capture_busy,false);
+    const next=await c.start('daily',{scope:'catalog'});
+    assert.notEqual(next.run.id,run.id);assert.equal(next.run.jobs.length,1);
+    assert.deepEqual(next.run.pending_field_tasks,[],'metadata-only tasks are still excluded');
+    assert.equal(await fs.readFile(fieldFile,'utf8'),fields,'start cannot overwrite the publisher field queue');
+    await assert.rejects(c.finish(run.id),/另一个正式任务/);
+    await assert.rejects(c.sync(),/另一个正式任务/);
+    assert.equal(syncs,1,'capture did not start a competing Git sync');
+  }finally{releaseSync();while((await c.status()).busy)await new Promise(resolve=>setTimeout(resolve,10));}
+});
+
+test('capture creation has its own lock and releases it after preparation failure',async t=>{
+  const repo=await temp(t),stateDir=path.join(repo,'private-runs');
+  await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));
+  let release,entered,fail=true;
+  const hold=new Promise(resolve=>release=resolve),preparing=new Promise(resolve=>entered=resolve);
+  const c=createCollectionCoordinator({repositoryRoot:repo,stateDir,config,sync:async()=>{throw Error('offline');},
+    prepareRun:async run=>{entered();await hold;if(fail)throw Error('invalid cache');return run;}});
+  const first=c.start('daily');await preparing;
+  assert.equal((await c.status()).capture_busy,true);
+  await assert.rejects(c.start('full'),/另一个采集任务/);
+  const rejected=assert.rejects(first,/invalid cache/);release();await rejected;
+  assert.equal((await c.status()).capture_busy,false);
+  fail=false;assert.ok((await c.start('daily')).run.id);
+});
 test('scoped source import preserves data; cloud receipt is required to confirm deployment',async t=>{
   const repo=await temp(t),root=path.join(repo,'data/journal-store'),stateDir=path.join(repo,'private-runs');
   await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[signal],{now}));let failure,live=false;

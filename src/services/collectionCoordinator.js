@@ -8,7 +8,7 @@ import {readJournalLibrary} from './journalLibrary.js';
 import {readBrowserExport,prepareBrowserImport,importBrowserExport,verifiedPages} from './browserImport.js';
 import {assertLibrary} from './libraryValidation.js';
 import {enqueuePublication,readCloudQueue} from './cloudPublication.js';
-import {readFieldTasks,reconcileFieldTasks} from './collectionFieldTasks.js';
+import {readFieldTasks,projectFieldTasks,reconcileFieldTasks} from './collectionFieldTasks.js';
 import {ACTIVE_CATALOG_TASKS} from '../../tools/browser-abstract-extension/catalog-core.js';
 import {captureContains} from './captureCoverage.js';
 import {activeMissingFields} from '../../tools/browser-abstract-extension/collection-policy.js';
@@ -17,7 +17,7 @@ const idOK=id=>typeof id==='string'&&/^[a-f0-9-]{36}$/.test(id);
 const transportStages=new Set(['syncing','uploading','publishing']);
 async function optional(file){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return null;throw e;}}
 export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync,checkpoint=async()=>{},publish,checkPublication,onFailure=()=>{},prepareRun=async r=>r}){
-  const root=path.join(repositoryRoot,'data/journal-store');let busy=false,lastWorkflow=null,lastPapers=[];
+  const root=path.join(repositoryRoot,'data/journal-store');let busy=false,captureStarting=false,lastWorkflow=null,lastPapers=[];
   const runFile=id=>{assertLibrary(idOK(id),'任务 ID 无效');return path.join(stateDir,id,'run.json');};
   async function load(id){const r=await optional(runFile(id));assertLibrary(r?.run?.id===id,'任务未找到');return r;}
   const store=r=>atomic(runFile(r.run.id),r);
@@ -37,12 +37,16 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       if(processing_stage)processing.push({id:paper.id,doi:paper.doi,journal:paper.journal_key,title:paper.title_original,url:paper.url,processing_stage,translation_pending});
     }
     workflow.processing_papers=processing;
-    return {version:2,busy,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
+    return {version:2,busy,capture_busy:captureStarting,workflow,runs:runs.sort((a,b)=>b.created_at.localeCompare(a.created_at))};}
   async function exclusive(fn){assertLibrary(!busy,'另一个正式任务正在处理');busy=true;try{return await fn();}finally{busy=false;}}
-  async function start(mode,{scope='all',catalogRunId=null}={}){return exclusive(async()=>{
-    let stage='SYNC';
+  async function start(mode,{scope='all',catalogRunId=null}={}){
+    assertLibrary(!captureStarting,'另一个采集任务正在建立');captureStarting=true;
+    let stage='LOAD_RUN';
     try{
-    await sync();stage='LOAD_RUN';const lib=await readJournalLibrary({root,config}),baseRun=createCollectionRun(await readWorkflow(repositoryRoot),lib.papers,{mode,scope});
+    // Capture only reads validated local data and saves a new private run. Remote
+    // sync and the formal writer lock belong to publication, not task creation.
+    // Import still syncs and deduplicates against the latest library before saving.
+    const lib=await readJournalLibrary({root,config}),state=await readWorkflow(repositoryRoot),baseRun=createCollectionRun(state,lib.papers,{mode,scope});
     let handoff=null;
     if(catalogRunId){
       assertLibrary(scope==='articles','目录交接只允许论文采集');
@@ -55,18 +59,18 @@ export function createCollectionCoordinator({repositoryRoot,stateDir,config,sync
       baseRun.jobs=parent.run.jobs;
       baseRun.handoff_papers=(await checkedCatalogPapers(handoff)).filter(p=>p.review_status==='source_checked_candidate'&&p.abstract_status!=='confirmed_absent'&&p.review_decisions?.catalog_membership?.status!=='out_of_scope');
     }
-    await reconcileFieldTasks(repositoryRoot,lib.papers);
-    const fields=(await readFieldTasks(repositoryRoot)).papers.filter(p=>p.status==='pending'&&activeMissingFields(p.missing_fields).length&&(mode==='full'||!p.next_retry_at||Date.parse(p.next_retry_at)<=Date.now()));
+    const fields=projectFieldTasks(await readFieldTasks(repositoryRoot),lib.papers).papers.filter(p=>p.status==='pending'&&activeMissingFields(p.missing_fields).length&&(mode==='full'||!p.next_retry_at||Date.parse(p.next_retry_at)<=Date.now()));
     if(scope==='all')for(const p of fields)for(const task of ACTIVE_CATALOG_TASKS.filter(t=>t.journal===p.journal))
       if(!baseRun.jobs.some(j=>j.catalog_id===task.id&&j.url===task.url))baseRun.jobs.push({catalog_id:task.id,url:task.url,signal_at:null});
     baseRun.pending_field_tasks=fields;
     baseRun.known_papers=baseRun.known_papers.map(p=>fields.some(f=>f.journal===p.journal&&f.doi===p.doi)?{...p,complete:false,next_retry_at:null}:p);
     stage='PREPARE_RUN';const run=await prepareRun(baseRun);
     if(handoff){run.direct_pages=verifiedPages(handoff);run.catalog_review_results=handoff.catalog_review_results||{};}
-    lastWorkflow=publicWorkflow(await readWorkflow(repositoryRoot),{papers:lib.papers});
+    lastPapers=lib.papers;lastWorkflow=publicWorkflow(state,{papers:lib.papers});
     stage='SAVE_RUN';await store({run,phase:'collecting',message:'等待采集；已取得内容将独立审核和发布。'});return {run};
     }catch(error){error.workflowStage=stage;throw error;}
-    });}
+    finally{captureStarting=false;}
+  }
   async function submit(id,data){const result=await exclusive(async()=>{
     const record=await load(id);assertLibrary(data?.workflow_run_id===id&&Array.isArray(data.catalog?.pages)&&Array.isArray(data.records),'结果不是当前批次');
     assertLibrary(data.catalog.pages.every(p=>record.run.jobs.some(j=>j.catalog_id===p.task_id)),'结果包含本批次以外目录');

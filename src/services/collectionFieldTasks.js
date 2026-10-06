@@ -18,8 +18,8 @@ export function pendingFields(paper){
     applyAbstractAvailability({doi:paper.doi,journal:paper.journal_key,title:paper.title_original}).abstract_status==='confirmed_absent';
   return absent?[]:activeMissingFields(missingPaperFields(paper));
 }
-export async function reconcileFieldTasks(repo,papers,{paperIds=[],branch='browser',now=new Date()}={}){
-  const q=await readFieldTasks(repo),selected=new Set([...paperIds,...q.papers.map(p=>p.id)]);
+export function projectFieldTasks(queue,papers,{paperIds=[],branch='browser',now=new Date()}={}){
+  const q=structuredClone(queue),selected=new Set([...paperIds,...q.papers.map(p=>p.id)]);
   for(const old of q.papers){
     const canonical=papers.find(p=>p.id===old.id)||findPaper(old,papers);
     if(canonical)selected.add(canonical.id);
@@ -35,5 +35,9 @@ export async function reconcileFieldTasks(repo,papers,{paperIds=[],branch='brows
       next_retry_at:old?new Date(now.getTime()+7*86400000).toISOString():null};
     if(old)q.papers[q.papers.indexOf(old)]=row;else q.papers.push(row);
   }
+  return q;
+}
+export async function reconcileFieldTasks(repo,papers,options={}){
+  const q=projectFieldTasks(await readFieldTasks(repo),papers,options);
   await writeWorkflowJson(path.join(repo,FIELD_TASKS_PATH),q);return q;
 }
