@@ -18,6 +18,7 @@ import {taskIdentity,samePaper} from '../../tools/browser-abstract-extension/pap
 import {collectionScope,needsAbstract} from '../../tools/browser-abstract-extension/collection-policy.js';
 import {catalogMembership} from '../../tools/browser-abstract-extension/catalog-scope.js';
 import {captureProgress} from '../../tools/browser-abstract-extension/pending-summary.js';
+import {initializeCaptureReviewPolicy,captureReviewPolicy,newCaptureReviewData,captureReviewCounts} from './localReviewPolicy.js';
 const digest=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 async function json(file,fallback=null){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return fallback;throw e;}}
 export async function findLocalPython(repo,env=process.env){
@@ -90,6 +91,7 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
         allowed_hosts:[...ALLOWED_HOSTS],known_papers:known,jobs,scripts:{catalog:`return (${readCatalogDocument.toString()})();`,article:`return (${readArticleDocument.toString()})();`}});
       await atomic(path.join(dir,'run.json'),run);
       if(run.catalog_review_results)await atomic(path.join(dir,'reviews.json'),run.catalog_review_results);
+      await initializeCaptureReviewPolicy(dir,{pages:run.direct_pages||[],results:run.catalog_review_results||{}});
       await atomic(indexFile,{id:run.id});await launch({id:run.id,dir});return status();
     }finally{starting=false;}
   }
@@ -116,7 +118,14 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
   }
   async function reviewCapture(c){
     try{
-      const {data,state}=await snapshot(c),cache=await json(path.join(c.dir,'reviews.json'),{});
+      const captured=await snapshot(c),cache=await json(path.join(c.dir,'reviews.json'),{});
+      const policy=await captureReviewPolicy(c.dir,captured.data,cache),state=captured.state;
+      const data=newCaptureReviewData(captured.data,policy);
+      if(!data.records.length&&!data.catalog.pages.length){
+        await atomic(path.join(c.dir,'review-status.json'),{...captureReviewCounts(policy),processing_papers:[],
+          review_error:null,review_service_ready:true});
+        return;
+      }
       const plan=await prepareReviewPlan(makeReviewJobs({...data.catalog,pages:verifiedPages(data)},data),cache);
       let processed=0,reviewError=null;
       for(const job of [...plan.jobs].sort((a,b)=>Number(b.input.kind==='article')-Number(a.input.kind==='article'))){
@@ -135,9 +144,11 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
       if(last?.fingerprint!==fingerprint&&(settled||!last?.at||Date.now()-Date.parse(last.at)>=120000)&&Object.values(cache).some(r=>r.verdict?.status==='source_checked_candidate')){
         try{await coordinator.checkpointCapture(c.id,data);await atomic(path.join(c.dir,'submitted.json'),{fingerprint,at:new Date().toISOString()});}catch{/* Another writer is publishing; retry saved proof on the next pulse. */}
       }
-      await atomic(path.join(c.dir,'review-status.json'),{review_total:plan.jobs.length,review_done:plan.jobs.filter(j=>cache[j.hash]?.verdict?.status==='source_checked_candidate').length,
+      await atomic(path.join(c.dir,'review-status.json'),{...captureReviewCounts(policy,{total:plan.jobs.length,
+        done:plan.jobs.filter(j=>cache[j.hash]?.verdict?.status==='source_checked_candidate').length,
+        pending:plan.jobs.filter(j=>!cache[j.hash]).length,attention:plan.jobs.filter(j=>cache[j.hash]?.error).length}),
         processing_papers,
-        review_pending:plan.jobs.filter(j=>!cache[j.hash]).length,review_attention:plan.jobs.filter(j=>cache[j.hash]?.error).length,review_error:reviewError,review_service_ready:!reviewError});
+        review_error:reviewError,review_service_ready:!reviewError});
       if(state.phase==='captured'&&settled)try{await coordinator.captureFinished?.(c.id,{remaining:state.remaining?.length||0});}catch{/* A publication writer is active; retry next pulse. */}
     }finally{}
   }
@@ -146,16 +157,18 @@ export function createLocalCollector({repositoryRoot,stateDir,config,coordinator
     try{
       const active=await current();if(!active)return;
       const others=(await fs.readdir(base)).filter(id=>/^[a-f0-9-]{36}$/.test(id)&&id!==active.id);
-      // A new capture run must not strand the review queue of an older run.
+      // Continue fresh captures in any run; archived evidence never re-enters
+      // the queue just because an upgrade changes review input hashes.
       for(const c of [active,...others.map(id=>({id,dir:directory(id)}))])await reviewCapture(c);
     }finally{processing=false;}
   }
   async function fallback(){
     const c=await current();assertLibrary(c&&!child,'请先暂停本地 Python');
-    const {run,data}=await snapshot(c),results=await json(path.join(c.dir,'reviews.json'),{});
+    const captured=await snapshot(c),run=captured.run,results=await json(path.join(c.dir,'reviews.json'),{});
+    const policy=await captureReviewPolicy(c.dir,captured.data,results),data=newCaptureReviewData(captured.data,policy);
     const latest=(await coordinator.status()).workflow;
     const known=latest.known_papers.map(p=>latest.field_tasks.some(f=>f.journal===p.journal&&f.doi&&f.doi===p.doi)?{...p,complete:false,next_retry_at:null}:p);
-    const catalog={...data.catalog,queue:catalogRepairJobs(data.catalog),cursor:0,reason:'继续处理 Python 剩余目录；已有证据与核对结果保留。'};
+    const catalog={...data.catalog,queue:catalogRepairJobs(captured.data.catalog),cursor:0,reason:'继续处理 Python 剩余目录；已有证据与核对结果保留。'};
     return {run:{...run,known_papers:known,browser_snapshot:{catalog,records:data.records,review_results:results},catalog_review_results:results}};
   }
   return {start,pause,resume,fallback,status,pulse,snapshot,current};

@@ -12,6 +12,7 @@ import {createSourceReviewer} from '../tools/browser-abstract-extension/review-p
 import {readJournalLibrary} from '../src/services/journalLibrary.js';
 import {readFieldTasks} from '../src/services/collectionFieldTasks.js';
 import {ACTIVE_CATALOG_TASKS} from '../tools/browser-abstract-extension/catalog-core.js';
+import {validateReviewOutput} from '../tools/browser-abstract-extension/review-core.js';
 const config=await loadJournalConfig(),task=ACTIVE_CATALOG_TASKS.find(t=>t.id==='catalog-1');
 const doi='10.1016/j.respol.2026.105555',title='Credit markets and firm investment',url='https://www.sciencedirect.com/science/article/pii/S0048733326000555';
 const abstract='We study firm investment using evidence from financial markets. The results suggest that credit supply affects investment across firms and regions. This study provides new evidence on the information environment and the allocation of capital.';
@@ -31,6 +32,8 @@ test('plugin-controlled Python captures feed real shared reviewer and independen
     requestReview:async(input,options)=>(await service.review(input,{retryHeader:options.retryAttempt})).data,
     spawnImpl:(command,args,options)=>{spawnCount++;assert.equal(command,'python-test');assert.ok(args.includes('--profile'));assert.equal(options.windowsHide,true);assert.equal(options.env.DEEPSEEK_API_KEY,undefined);processHandle=new EventEmitter();return processHandle;}});
   const started=await collector.start(),current=await collector.current(),run=(await coordinator.run(started.id)).run;
+  const reviewPolicy=JSON.parse(await fs.readFile(path.join(current.dir,'review-policy.json'),'utf8'));
+  assert.equal(reviewPolicy.mode,'new_captures_only');assert.equal(reviewPolicy.archived_at,null);
   await assert.rejects(collector.start());await collector.pause();assert.equal(JSON.parse(await fs.readFile(path.join(current.dir,'control.json'),'utf8')).pause,true);
   const capturedAt=new Date(Date.now()+1000).toISOString();
   const page={task_id:task.id,journal:'RP',source_url:task.url,requested_url:task.url,page_title:'Research Policy',captured_at:capturedAt,
@@ -49,6 +52,84 @@ test('plugin-controlled Python captures feed real shared reviewer and independen
   await collector.pulse();await drain(coordinator);assert.equal(paid,2);assert.equal(published,1);
   const fallback=await collector.fallback();assert.equal(fallback.run.browser_snapshot.records.length,1);assert.equal(Object.keys(fallback.run.catalog_review_results).length,2);
   await collector.resume();assert.equal(spawnCount,2);assert.equal((await collector.current()).id,run.id);processHandle.emit('exit',0);
+});
+
+test('upgrades archive old captures without paid retries, exports or false completion; only new captures get the new reviewer',async t=>{
+  const repo=await temp(t),stateDir=path.join(repo,'private'),id='10000000-0000-4000-8000-000000000001';
+  const dir=path.join(stateDir,'python',id);await fs.mkdir(path.join(dir,'captures'),{recursive:true});
+  const run={id,created_at:'2026-10-05T00:00:00.000Z',jobs:[],direct_pages:[]};
+  await fs.writeFile(path.join(dir,'run.json'),JSON.stringify(run));
+  await fs.writeFile(path.join(stateDir,'python','active.json'),JSON.stringify({id}));
+  const old={doi,title,journal:'RP',url,source_url:url,identity:{ok:true},evidence_version:2,
+    evidence:[{id:'title',kind:'title',text:title},{id:'doi',kind:'doi',text:doi},{id:'abstract',kind:'abstract',text:abstract,language:'en',context:'Abstract'}]};
+  const key='a'.repeat(64),file='captures/'+key+'.json';
+  const capturedText=JSON.stringify({task:{kind:'article',journal:'RP',url},result:old});
+  await fs.writeFile(path.join(dir,file),capturedText);
+  const state={phase:'captured',items:[{kind:'article',key,file}],queue:[],cursor:1,remaining:[]};
+  await fs.writeFile(path.join(dir,'state.json'),JSON.stringify(state));
+  const cacheText=JSON.stringify({previous:{verdict:{status:'source_checked_candidate'}},failed:{error:'PROVIDER_TIMEOUT',attempt:1}});
+  await fs.writeFile(path.join(dir,'reviews.json'),cacheText);
+  let calls=0,completed=0;const exports=[];
+  const coordinator={checkpointCapture:async(id,data)=>exports.push(structuredClone(data)),captureFinished:async()=>completed++,
+    status:async()=>({workflow:{known_papers:[],field_tasks:[]}})};
+  const requestReview=async input=>{
+    calls++;assert.equal(input.decision_version,1);assert.equal(input.identity.title,title+' newly captured');
+    return {verdict:validateReviewOutput(input,{identity_match:true,fields:{
+      title:{status:'confirmed',spans:[{block_id:'title',quote:input.identity.title}]},
+      doi:{status:'confirmed',spans:[{block_id:'doi',quote:doi}]},abstract:{status:'confirmed',block_ids:['abstract']}}})};
+  };
+  const options={repositoryRoot:repo,stateDir,config,coordinator,requestReview};
+  let collector=createLocalCollector(options);await collector.pulse();
+  assert.equal(calls,0);assert.equal(exports.length,0);assert.equal(completed,0);
+  const frozen=await fs.readFile(path.join(dir,'review-policy.json'),'utf8');
+  let status=await collector.status();assert.equal(status.review_pending,0);assert.equal(status.review_done,1);assert.equal(status.review_attention,1);
+  assert.equal(status.historical_captures_retained,1);assert.equal(status.review_policy,'new_captures_only');
+  assert.equal(await fs.readFile(path.join(dir,'reviews.json'),'utf8'),cacheText);
+  assert.equal(await fs.readFile(path.join(dir,file),'utf8'),capturedText);
+  // Changed context and a new process cannot turn the old page into new work.
+  await fs.writeFile(path.join(dir,'run.json'),JSON.stringify({...run,review_context:{known_papers:[{id:'old-record',journal:'RP',doi,title}]}}));
+  collector=createLocalCollector(options);await collector.pulse();assert.equal(calls,0);
+  assert.equal(await fs.readFile(path.join(dir,'review-policy.json'),'utf8'),frozen);
+  assert.equal((await collector.fallback()).run.browser_snapshot.records.length,0);
+  // Continuing that SAME run with newly captured evidence still uses v1 decisions.
+  const newKey='b'.repeat(64),newFile='captures/'+newKey+'.json';
+  const fresh={...old,title:title+' newly captured',evidence:old.evidence.map(b=>b.id==='title'?{...b,text:title+' newly captured'}:b)};
+  await fs.writeFile(path.join(dir,newFile),JSON.stringify({task:{kind:'article',journal:'RP',url},result:fresh}));
+  state.items.push({kind:'article',key:newKey,file:newFile});state.cursor++;
+  await fs.writeFile(path.join(dir,'state.json'),JSON.stringify(state));
+  await collector.pulse();assert.equal(calls,1);assert.equal(exports.length,1);
+  assert.deepEqual(exports[0].records.map(r=>r.title),[fresh.title]);
+  await collector.pulse();assert.equal(calls,1);assert.equal(exports.length,1);
+  status=await collector.status();assert.equal(status.review_pending,0);assert.equal(status.review_done,2);
+  assert.equal((await collector.fallback()).run.browser_snapshot.records.length,1);
+});
+
+test('legacy captures without saved verdicts remain historical, not fabricated as reviewed',async t=>{
+  const {captureReviewPolicy,newCaptureReviewData,captureReviewCounts,initializeCaptureReviewPolicy}=await import('../src/services/localReviewPolicy.js');
+  const dir=await temp(t),page={task_id:'one',captured_at:'2026-10-05T00:00:00Z',items:[]};
+  const data={records:[{title:'Old unreviewed evidence'}],catalog:{pages:[page],queue:[{task_id:'one'}],cursor:1}};
+  const policy=await captureReviewPolicy(dir,data,{}),filtered=newCaptureReviewData(data,policy);
+  assert.equal(filtered.records.length,0);assert.equal(filtered.catalog.pages.length,0);
+  assert.deepEqual(captureReviewCounts(policy),{review_total:0,review_done:0,review_pending:0,review_attention:0,
+    historical_review_total:0,historical_review_done:0,historical_captures_retained:2,review_policy:'new_captures_only'});
+  const freshPage={...page,captured_at:'2026-10-06T00:00:00Z'};
+  assert.deepEqual(newCaptureReviewData({...data,catalog:{...data.catalog,pages:[freshPage]}},policy).catalog.pages,[freshPage]);
+  await initializeCaptureReviewPolicy(dir);
+  assert.deepEqual(await captureReviewPolicy(dir,data,{}),policy);
+  await fs.writeFile(path.join(dir,'review-policy.json'),JSON.stringify({...policy,archived_at:null}));
+  await assert.rejects(captureReviewPolicy(dir,data,{}),/审核保护记录无效/);
+  await fs.writeFile(path.join(dir,'review-policy.json'),JSON.stringify({version:2}));
+  await assert.rejects(captureReviewPolicy(dir,data,{}),/审核保护记录无效/);
+});
+
+test('new runs do not re-review old directory evidence reused for an article handoff',async t=>{
+  const {captureReviewPolicy,newCaptureReviewData,initializeCaptureReviewPolicy}=await import('../src/services/localReviewPolicy.js');
+  const dir=await temp(t),page={task_id:'one',captured_at:'2026-10-05T00:00:00Z',items:[]};
+  await initializeCaptureReviewPolicy(dir,{pages:[page],results:{saved:{verdict:{status:'source_checked_candidate'}}}});
+  const data={records:[{title:'Newly captured article'}],catalog:{pages:[page],queue:[{task_id:'one'}],cursor:1}};
+  const policy=await captureReviewPolicy(dir,data,{}),fresh=newCaptureReviewData(data,policy);
+  assert.equal(policy.historical_reviews.done,1);assert.equal(fresh.catalog.pages.length,0);
+  assert.deepEqual(fresh.records,data.records);
 });
 test('incremental batches do not freeze the parent and reviewed catalog metadata can publish before details',async t=>{
   const repo=await temp(t);await saveWorkflow(repo,addDiscoverySignals(emptyWorkflow(),[{catalog_id:task.id,title,doi,source:'crossref'}]));let failure;
