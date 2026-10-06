@@ -53473,7 +53473,7 @@
       "batch_id": "batch-51ada72133563599990c8b3f191aacb0b056e0c6e169864883b7b3e0f39d4d81",
       "mode": "backfill",
       "created_at": "2026-10-06T09:33:14.445Z",
-      "finished_at": null,
+      "finished_at": "2026-10-06T09:35:52.492Z",
       "items": [
         {
           "id": "doi:10.1111/1911-3846.70056",
@@ -53487,11 +53487,17 @@
           "retry_of": {
             "title": "2c8b0173-62b4-411c-b5c0-71b453a0444d"
           },
-          "field_errors": {},
+          "field_errors": {
+            "title": "TOO_SHORT"
+          },
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 490,
+            "completion_tokens": 19,
+            "total_tokens": 509
+          },
           "completed_fields": []
         },
         {
@@ -53506,11 +53512,17 @@
           "retry_of": {
             "title": "2c8b0173-62b4-411c-b5c0-71b453a0444d"
           },
-          "field_errors": {},
+          "field_errors": {
+            "title": "NUMERIC_MARKER_MISMATCH"
+          },
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
-          "code": null,
-          "usage": null,
+          "status": "failed",
+          "code": "MECHANICAL_CHECK_FAILED",
+          "usage": {
+            "prompt_tokens": 543,
+            "completion_tokens": 29,
+            "total_tokens": 572
+          },
           "completed_fields": []
         }
       ]
