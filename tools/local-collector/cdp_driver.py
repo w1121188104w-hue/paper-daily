@@ -6,11 +6,13 @@ import platform
 import shutil
 import socket
 import subprocess
+import threading
 import time
 import urllib.request
 
 from seleniumbase import sb_cdp
 from seleniumbase.undetected.cdp_driver import cdp_util
+from seleniumbase.undetected.cdp_driver.browser import get_registered_instances
 from selenium.common.exceptions import TimeoutException
 
 
@@ -154,9 +156,33 @@ class CDPDriver:
         self.client.loop.run_until_complete(asyncio.wait_for(self.client.page.click('#btnSubmit', timeout=min(2, remaining)), timeout=remaining))
         return True
 
-    def quit(self):
+    def quit(self, timeout=5):
+        if getattr(self, '_closing', False):
+            return
+        self._closing = True
+        # SeleniumBase's synchronous quit can wait forever for Browser.close
+        # after the browser has already disconnected. We own this instance and
+        # its subprocess, so bound graceful cleanup and always reap that process.
+        # Remove only our instance from its exit hook, which otherwise retries
+        # the same unbounded close when this Python worker exits.
+        client = getattr(self, 'client', None)
+        if client:
+            driver = getattr(client.driver, 'cdp_base', client.driver)
+            get_registered_instances().discard(driver)
+
+        def close():
+            try:
+                if client:
+                    client.quit()
+            except Exception:
+                pass
+
         try:
-            self.client.quit()
+            cleanup = threading.Thread(target=close, name='paper-browser-close', daemon=True)
+            cleanup.start()
+            cleanup.join(timeout=timeout)
+            if cleanup.is_alive():
+                print('LOCAL_BROWSER_CLOSE_TIMEOUT: stopping owned browser', flush=True)
         finally:
             self.stop_process()
 
