@@ -54126,6 +54126,32 @@
           ]
         }
       ]
+    },
+    {
+      "id": "5d96aef3-18a4-4dc0-99ee-d2782f189629",
+      "batch_id": "batch-4f262ca3fb32b7992452353347f0c983f20ee37064013825d4a82692b5571f95",
+      "mode": "backfill",
+      "created_at": "2026-10-06T21:12:48.101Z",
+      "finished_at": null,
+      "items": [
+        {
+          "id": "doi:10.1287/mnsc.2024.07399",
+          "tasks": [
+            {
+              "field": "title",
+              "source_hash": "4408305fd55e6f739497d6d183de051498a16bfb00d27aa5239cb8341f18e799",
+              "task_id": "task:85fabf7c24aee08fda5bd5b9c148856a86ae1327419047748e1b92db57af1e81"
+            }
+          ],
+          "retry_of": {},
+          "field_errors": {},
+          "request_profile": "numeric_placeholders_v2",
+          "status": "reserved",
+          "code": null,
+          "usage": null,
+          "completed_fields": []
+        }
+      ]
     }
   ]
 }
