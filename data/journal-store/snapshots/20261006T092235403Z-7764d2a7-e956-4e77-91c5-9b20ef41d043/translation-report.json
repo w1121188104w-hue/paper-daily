@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-57a570c1ccf0a7fb68ab90494c0d4dc68c5e26f2f9c697fe18394f48537f0105",
+  "stats": {
+    "completed_fields": 4,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 4
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.respol.2026.105568",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1016/j.respol.2026.105570",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1016/j.respol.2026.105571",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1016/j.respol.2026.105572",
+      "field": "abstract",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}

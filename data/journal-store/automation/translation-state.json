@@ -53338,7 +53338,7 @@
       "batch_id": "batch-57a570c1ccf0a7fb68ab90494c0d4dc68c5e26f2f9c697fe18394f48537f0105",
       "mode": "backfill",
       "created_at": "2026-10-06T09:19:05.654Z",
-      "finished_at": null,
+      "finished_at": "2026-10-06T09:22:47.837Z",
       "items": [
         {
           "id": "doi:10.1016/j.respol.2026.105568",
@@ -53352,10 +53352,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 765,
+            "completion_tokens": 281,
+            "total_tokens": 1046
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.respol.2026.105570",
@@ -53369,10 +53375,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 675,
+            "completion_tokens": 161,
+            "total_tokens": 836
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.respol.2026.105571",
@@ -53386,10 +53398,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 599,
+            "completion_tokens": 129,
+            "total_tokens": 728
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         },
         {
           "id": "doi:10.1016/j.respol.2026.105572",
@@ -53403,10 +53421,16 @@
           "retry_of": {},
           "field_errors": {},
           "request_profile": "numeric_placeholders_v2",
-          "status": "reserved",
+          "status": "succeeded",
           "code": null,
-          "usage": null,
-          "completed_fields": []
+          "usage": {
+            "prompt_tokens": 691,
+            "completion_tokens": 161,
+            "total_tokens": 852
+          },
+          "completed_fields": [
+            "abstract"
+          ]
         }
       ]
     }
