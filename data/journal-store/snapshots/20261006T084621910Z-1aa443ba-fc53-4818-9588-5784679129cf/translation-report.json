@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-d3673c86a48f9df5de3038a238d9cdf239c08f6a7c056ba010a491f1200bd571",
+  "status": "success",
+  "stats": {
+    "completed_fields": 4,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 4
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1111/1911-3846.70057",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "doi:10.1111/1911-3846.70059",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "doi:10.1111/1911-3846.70060",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "doi:10.1111/1911-3846.70061",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "recovery": {
+    "source_manifest": {
+      "path": "snapshots/20260917T013314129Z-042a7d7c-5066-440f-b62e-ffb70558fca7/manifest.json",
+      "sha256": "52c4d1f24fc079b62c717eebbbcc3da0e3906d370c113016d6200d6d7ee38dc3"
+    },
+    "source_report": {
+      "path": "snapshots/20260917T013314129Z-042a7d7c-5066-440f-b62e-ffb70558fca7/translation-report.json",
+      "sha256": "500c1d827acec646513ba47590b75b23f1c39e58d5cb56a5d61b89d858d258a3"
+    },
+    "paid_requests": 0
+  }
+}
