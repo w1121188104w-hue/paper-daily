@@ -8,9 +8,11 @@ import {promptForReview} from './review-prompt.js';
 import {ARTICLE_REVIEW_PROTOCOL,expectsAbstract} from './article-review.js';
 import {MAX_REVIEW_ATTEMPTS,reviewErrorPolicy} from './retry-policy.js';
 export const providerFingerprint=input=>createHash('sha256').update(JSON.stringify({version:2,prompt:promptForReview(input),input})).digest('hex');
+// Allow an explicitly authorized allowance extension without resetting usage.
+export const MAX_REVIEW_ALLOWANCE=1000000;
 export function createSourceReviewer({apiKey,stateDir,fetchImpl=fetch,maxCalls=500,budgetFile=null,beforeRequest=async()=>{},afterRequest=async()=>{}}){
   if(typeof apiKey!=='string'||apiKey.length<16||/\s/.test(apiKey))throw Error('CONFIG_REQUIRED');
-  if(!Number.isInteger(maxCalls)||maxCalls<1||maxCalls>3000)throw Error('INVALID_LIMIT');
+  if(!Number.isInteger(maxCalls)||maxCalls<1||maxCalls>MAX_REVIEW_ALLOWANCE)throw Error('INVALID_LIMIT');
   let calls=0,busy=false;
   const budgetReady=budgetFile?fs.readFile(budgetFile,'utf8').then(raw=>{
     const b=JSON.parse(raw);if(b.version!==1||!Number.isSafeInteger(b.calls)||b.calls<0)throw Error('INVALID_BUDGET');calls=b.calls;return true;

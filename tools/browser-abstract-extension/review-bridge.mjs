@@ -4,11 +4,11 @@ import path from 'node:path';
 import os from 'node:os';
 import { pathToFileURL } from 'node:url';
 import {runLocalOcr} from './ocr-service.mjs';
-import {createSourceReviewer} from './review-provider.mjs';
+import {createSourceReviewer,MAX_REVIEW_ALLOWANCE} from './review-provider.mjs';
 export {REVIEW_PROMPT,promptForReview} from './review-prompt.js';
 export function createReviewServer({ extensionId, apiKey, stateDir, fetchImpl = fetch, maxCalls = 500, ocrImpl=runLocalOcr, budgetFile = null }) {
   if (!/^[a-p]{32}$/.test(extensionId || '') || typeof apiKey !== 'string' || apiKey.length < 16 || /\s/.test(apiKey)) throw Error('CONFIG_REQUIRED');
-  if (!Number.isInteger(maxCalls) || maxCalls < 1 || maxCalls > 3000) throw Error('INVALID_LIMIT');
+  if (!Number.isInteger(maxCalls) || maxCalls < 1 || maxCalls > MAX_REVIEW_ALLOWANCE) throw Error('INVALID_LIMIT');
   const origin = `chrome-extension://${extensionId}`; let busy = false;
   const reviewer = createSourceReviewer({apiKey,stateDir,fetchImpl,maxCalls,budgetFile});
   return http.createServer(async (req, res) => {

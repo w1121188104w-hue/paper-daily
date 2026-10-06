@@ -27,6 +27,6 @@ function Read-PaperReviewConfig {
   param([string]$Path)
   $value = Import-Clixml -LiteralPath $Path
   if ($value.Version -ne 1 -or $value.ExtensionId -cnotmatch '^[a-p]{32}$' -or $value.Secret -isnot [Security.SecureString] -or
-    $value.Secret.Length -lt 16 -or $value.Secret.Length -gt 256 -or $value.MaxCalls -lt 1 -or $value.MaxCalls -gt 3000) { throw 'INVALID_CONFIG' }
+    $value.Secret.Length -lt 16 -or $value.Secret.Length -gt 256 -or $value.MaxCalls -lt 1 -or $value.MaxCalls -gt 1000000) { throw 'INVALID_CONFIG' }
   return $value
 }
