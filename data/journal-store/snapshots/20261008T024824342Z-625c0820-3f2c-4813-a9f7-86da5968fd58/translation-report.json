@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-b0233eb780dda559cacda606c8fe8b123153a6d69db88bc3dbb1e2277cd312dc",
+  "stats": {
+    "completed_fields": 1,
+    "failed_fields": 0,
+    "rejected_fields": 0,
+    "rejected_rows": 0,
+    "unchanged_fields": 0,
+    "changed_papers": 1
+  },
+  "fields": [
+    {
+      "index": 0,
+      "id": "doi:10.1016/j.jacceco.2026.101953",
+      "field": "title",
+      "action": "completed",
+      "code": null,
+      "message": null
+    }
+  ],
+  "status": "success"
+}
