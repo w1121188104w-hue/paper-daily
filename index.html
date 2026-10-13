@@ -27,19 +27,23 @@
         <h2 id="statusTitle">采集概况</h2>
         <button class="secondary" type="button" popovertarget="collectionOverview" popovertargetaction="hide" aria-label="关闭采集概况">关闭</button>
       </div>
+      <div class="popover-body">
       <span id="statusBadge" class="status-badge">正在读取</span>
       <p id="statusText" class="meta" role="status">正在读取已发布的论文库…</p>
       <p id="attemptWarning" class="notice" role="status" hidden></p>
       <div id="libraryMeta" class="meta"></div>
       <p id="enrichmentStatus" class="meta" role="status"></p>
       <button id="reload" class="secondary" type="button">重新读取网页数据</button>
+      </div>
     </section>
     <section id="catalogOverview" class="panel header-popover" popover="auto" aria-labelledby="workflowTitle">
       <div class="popover-heading">
         <h2 id="workflowTitle">期刊目录状态</h2>
         <button class="secondary" type="button" popovertarget="catalogOverview" popovertargetaction="hide" aria-label="关闭期刊目录状态">关闭</button>
       </div>
-      <div id="workflowStatus" role="status">正在读取任务清单…</div>
+      <div class="popover-body">
+        <div id="workflowStatus" role="status">正在读取任务清单…</div>
+      </div>
     </section>
   </header>
   <main id="main" class="calendar-layout single journal-layout">

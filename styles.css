@@ -11,10 +11,40 @@ body { font-family: "IBM Plex Sans", "Microsoft YaHei", system-ui, sans-serif; f
 .calendar-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px 24px; }
 .header-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
 .header-tools .ghost-link { font: inherit; font-weight: 600; }
-.header-popover { position: fixed; inset: 96px max(22px, calc((100vw - 1136px) / 2)) auto auto; margin: 0; width: min(560px, calc(100vw - 28px)); max-height: calc(100dvh - 120px); overflow: auto; color: var(--ink); background: #fff; }
-.popover-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.header-popover { position: fixed; inset: 96px max(22px, calc((100vw - 1136px) / 2)) auto auto; margin: 0; width: min(560px, calc(100vw - 28px)); max-height: calc(100dvh - 120px); overflow: hidden; padding: 0; color: var(--ink); background: #fff; }
+.header-popover:popover-open { display: flex; flex-direction: column; }
+.popover-heading { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding: 14px 18px; border-bottom: 1px solid var(--line); }
 .popover-heading h2 { margin: 0; font-size: 1.2rem; }
+.popover-heading button { flex: 0 0 auto; }
+.popover-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 18px; }
 .header-popover p { max-width: none; }
+.overview-stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin: 18px 0; }
+.overview-stat { padding: 14px; border: 1px solid #dbe8e2; border-radius: 14px; background: #f4f9f6; }
+.overview-stat dt { color: var(--muted); font-size: .8125rem; }
+.overview-stat dd { margin: 4px 0 0; color: #155e57; font-size: 1.65rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.journal-status-list { display: grid; gap: 10px; }
+.journal-status { min-width: 0; border: 1px solid #dbe8e2; border-radius: 14px; overflow: hidden; background: #fff; }
+.journal-status > summary { display: flex; align-items: center; gap: 10px; padding: 12px 14px; list-style: none; background: #f4f9f6; }
+.journal-status > summary::-webkit-details-marker { display: none; }
+.journal-status > summary::after { content: ''; flex: 0 0 6px; width: 6px; height: 6px; border-right: 2px solid #64847a; border-bottom: 2px solid #64847a; transform: rotate(45deg); margin: -4px 2px 0 4px; }
+.journal-status[open] > summary::after { transform: rotate(225deg); margin-top: 4px; }
+.journal-status-name { display: grid; flex: 1; min-width: 0; gap: 2px; }
+.journal-status-name strong { color: var(--ink); font-size: 1rem; }
+.journal-status-name .meta { color: var(--muted); font-size: .75rem; }
+.journal-status-count { flex: 0 0 auto; font-size: .8125rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.journal-status-content { padding: 0 14px; }
+.catalog-status-row { padding: 12px 0; }
+.catalog-status-row + .catalog-status-row { border-top: 1px solid #e6eeea; }
+.catalog-status-heading { display: flex; align-items: baseline; gap: 12px; font-size: .875rem; line-height: 1.6; }
+.catalog-status-label { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.catalog-status-count { flex: 0 0 auto; color: #155e57; font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.catalog-status-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; font-size: .75rem; line-height: 1.5; }
+.catalog-state { padding: 2px 7px; border-radius: 6px; }
+.catalog-state.complete { color: #50635b; background: #edf2ef; }
+.catalog-state.collecting { color: #996010; background: #fff3d9; }
+.catalog-baseline { color: var(--muted); }
+.header-popover .catalog-status-intro { margin: 0 0 14px; }
+.header-popover .catalog-status-note { margin: 16px 0 0; font-size: .75rem; }
 .catalog-issue-filters { margin-top: 20px; }
 .catalog-issue-filters label:has(#catalog) { flex-grow: 2; flex-basis: 320px; }
 .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,240px),1fr)); gap: 10px; }
@@ -77,7 +107,16 @@ details > summary { cursor: pointer; padding: 9px 0; color: #0e5c57; }
 :focus-visible { outline: 3px solid #b45309; outline-offset: 3px; }
 @media (max-width: 600px) {
   .journal-hero { padding: 24px 14px 4px; }
-  .header-popover { inset: 132px 14px auto auto; max-height: calc(100dvh - 156px); }
+  .journal-hero:has(.header-tools) { position: relative; padding-top: 52px; }
+  .header-tools { position: absolute; top: 10px; right: 14px; flex-wrap: nowrap; gap: 6px; margin: 0; }
+  .header-tools .ghost-link { min-height: 30px; padding: 5px 9px; font-size: .75rem; line-height: 1.5; white-space: nowrap; }
+  .header-popover.panel { inset: auto 8px max(8px,env(safe-area-inset-bottom)) 8px; width: auto; max-height: calc(100dvh - max(24px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom))); padding: 0; border-radius: 20px; }
+  .header-popover::backdrop { background: rgba(15,35,30,.28); }
+  body:has(.header-popover:popover-open) { overflow: hidden; }
+  .popover-heading { padding: 12px 16px; }
+  .popover-heading h2 { font-size: 1.125rem; }
+  .popover-body { padding: 16px; }
+  .header-popover #reload { width: 100%; }
   .journal-layout { padding: 8px 10px 20px; gap: 12px; }
   .panel { padding: 14px; border-radius: 18px; }
   .calendar-grid { gap: 4px; }

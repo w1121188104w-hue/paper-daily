@@ -45,6 +45,14 @@ function syncUrl() {
 }
 
 
+function renderOverviewStats(data) {
+  const grid=node('dl','','overview-stats');
+  for(const [label,value] of [['文献记录',data.papers.length],['期刊目录',data.local_rss.catalogs.length],
+    ['待翻译',data.pending.paper_count],['待补摘要',data.enrichment.missing_abstracts]]) {
+    const item=node('div','','overview-stat');item.append(node('dt',label),node('dd',Number(value).toLocaleString('zh-CN')));grid.append(item);
+  }
+  $('libraryMeta').replaceChildren(grid);
+}
 function renderLocalStatus(data) {
   const rss=data.local_rss,job=rss.job,latest=data.runs[0];
   const running=job?.status==='running';
@@ -52,7 +60,8 @@ function renderLocalStatus(data) {
   $('statusBadge').className='status-badge '+(running?'':job?.status==='complete'?'ready':'partial');
   $('statusText').textContent=(job?.stage||'从插件点击“请求 RSS”开始。')+
     (latest?' 最近完成：'+timeText(latest.finished_at)+'；新增 '+latest.stats.added+' 条，更新 '+latest.stats.updated+' 条。':'');
-  $('libraryMeta').textContent='本地共 '+data.papers.length+' 条记录；待翻译 '+data.pending.paper_count+' 条、'+data.pending.field_count+' 个字段。当前请求范围：'+rss.active_journals.join('、')+'。';
+  renderOverviewStats(data);
+  $('libraryMeta').append(node('p','待翻译共 '+data.pending.field_count+' 个字段；当前请求范围 '+rss.active_journals.length+' 刊。','meta'));
   const failures=(rss.failures||[]).filter(f=>f.status==='open');
   $('attemptWarning').hidden=!(job?.errors?.length||failures.length);
   if(job?.errors?.length||failures.length) {
@@ -63,26 +72,46 @@ function renderLocalStatus(data) {
   renderLocalCatalogs(data);
 }
 function renderLocalCatalogs(data) {
-  const target=$('workflowStatus');if(!target)return;target.replaceChildren();
+  const target=$('workflowStatus');if(!target)return;
+  const expanded=new Set([...target.querySelectorAll('details[data-journal][open]')].map(e=>e.dataset.journal));
+  const scroller=target.closest('.popover-body'),scrollTop=scroller?.scrollTop||0;
+  target.replaceChildren();
   const catalogs=data.local_rss.catalogs||[];
-  target.append(node('p','沿用出版社真实卷期编号。首次返回多少收录多少；以后确认下一正式期出现，就完成上一期。','meta'));
+  target.append(node('p','按期刊展开查看卷期、收录数量和状态。','meta catalog-status-intro'));
+  const list=node('div','','journal-status-list');target.append(list);
   for(const key of data.local_rss.active_journals) {
-    target.append(node('h3',key));
     const rows=catalogs.filter(c=>c.journal_key===key);
-    if(!rows.length) target.append(node('p','尚未建立目录','meta'));
-    for(const catalog of rows) target.append(node('p',catalog.label+' · '+catalog.paper_count+' 条'+
-      (catalog.collection==='issue'?' · '+(catalog.status==='complete'?'已完成':'持续收录')+(catalog.baseline?' · 起始卷期，不补历史缺项':''):''),'meta'));
+    const group=node('details','','journal-status');group.dataset.journal=key;group.open=expanded.has(key);
+    const summary=node('summary'),name=node('span','','journal-status-name');
+    name.append(node('strong',key),node('span',rows.length+' 个目录','meta'));
+    summary.append(name,node('span',rows.reduce((total,c)=>total+c.paper_count,0).toLocaleString('zh-CN')+' 条','journal-status-count'));
+    const content=node('div','','journal-status-content');group.append(summary,content);
+    if(!rows.length) content.append(node('p','尚未建立目录','meta'));
+    for(const catalog of rows) {
+      const row=node('div','','catalog-status-row'),heading=node('div','','catalog-status-heading');
+      heading.append(node('span',catalog.label,'catalog-status-label'),node('strong',catalog.paper_count+' 条','catalog-status-count'));row.append(heading);
+      if(catalog.collection==='issue') {
+        const meta=node('div','','catalog-status-meta');
+        meta.append(node('span',catalog.status==='complete'?'已完成':'持续收录','catalog-state '+(catalog.status==='complete'?'complete':'collecting')));
+        if(catalog.baseline)meta.append(node('span','起始卷期','catalog-baseline'));
+        row.append(meta);
+      }
+      content.append(row);
+    }
+    list.append(group);
   }
+  target.append(node('p','卷期沿用出版社编号；起始卷期不补历史缺项，确认下一正式期后将上一期标为已完成。','meta catalog-status-note'));
+  if(scroller)scroller.scrollTop=scrollTop;
 }
 
 function renderStatus() {
   if(state.data.publication) {
     const data=state.data;
     $('statusBadge').textContent='已发布';$('statusBadge').className='status-badge ready';
-    $('statusText').textContent='论文在本地采集和处理后发布，浏览网页不会触发采集或翻译。';
-    $('libraryMeta').textContent='共 '+data.papers.length+' 条文献记录、'+data.local_rss.catalogs.length+' 个目录；待翻译 '+data.pending.paper_count+' 条。';
+    $('statusText').textContent='各期刊已收录的文献与目录概览。';
+    renderOverviewStats(data);
     $('attemptWarning').hidden=true;
-    if($('enrichmentStatus'))$('enrichmentStatus').textContent='缺少摘要 '+data.enrichment.missing_abstracts+' 条；原文未提供的内容保持留空。';
+    if($('enrichmentStatus'))$('enrichmentStatus').textContent='待补摘要不含出版社已确认未提供摘要的记录。';
     renderLocalCatalogs(data);return;
   }
   if(state.data.local_rss) {renderLocalStatus(state.data);return;}
