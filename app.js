@@ -79,8 +79,12 @@ function renderLocalCatalogs(data) {
   const catalogs=data.local_rss.catalogs||[];
   target.append(node('p','按期刊展开查看卷期、收录数量和状态。','meta catalog-status-intro'));
   const list=node('div','','journal-status-list');target.append(list);
+  const collectionOrder={issue:0,online:1,other:2};
   for(const key of data.local_rss.active_journals) {
-    const rows=catalogs.filter(c=>c.journal_key===key);
+    const rows=catalogs.filter(c=>c.journal_key===key).sort((a,b)=>
+      (collectionOrder[a.collection]??3)-(collectionOrder[b.collection]??3)||
+      numberOrder.compare(b.year||'',a.year||'')||numberOrder.compare(b.volume||'',a.volume||'')||
+      numberOrder.compare(b.issue||'',a.issue||''));
     const group=node('details','','journal-status');group.dataset.journal=key;group.open=expanded.has(key);
     const summary=node('summary'),name=node('span','','journal-status-name');
     name.append(node('strong',key),node('span',rows.length+' 个目录','meta'));
