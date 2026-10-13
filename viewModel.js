@@ -1,0 +1,188 @@
+export const RUN_LABELS = { success: '采集成功', no_updates: '采集完成，无新增或更新',
+  partial_failure: '部分来源失败', full_failure: '采集失败' };
+export const TRANSLATION_LABELS = { pending: '待翻译', done: '已翻译', failed: '翻译失败，待重试',
+  outdated: '原文已更新，待重译', no_abstract: '来源未提供摘要' };
+export const DOCUMENT_LABELS = { candidate: '研究论文', other: '其他', all: '全部文献记录',
+  possible_correction: '疑似更正通知', possible_retraction: '疑似撤稿通知', needs_review: '待人工核查' };
+export const CLASSIFICATION_REASONS = {
+  named_lecture_or_address: '明确标为诺贝尔讲座或会长演讲，归入其他，原文及译文仍保留。',
+  confirmed_nonresearch_type: '现有来源一致标为社论或书评，归入其他；原始记录仍保留。',
+  retain_by_default: '未命中已知非论文规则，归为研究论文。',
+  exact_administrative_title: '标题与目录、编委会等期刊资料规则精确匹配。',
+  issue_information_title: '标题明确标为期刊信息或其征稿附页。',
+  journal_specific_administrative_title: '期刊及标题共同匹配已核查的期刊资料规则。',
+  notice_title: '标题提示这是更正或撤稿通知；请到来源核实具体内容及所指论文。',
+  source_notice_type: '来源类型提示这是更正或撤稿通知；请到来源核实。',
+  source_disagreement_notice: '来源分类不一致且含通知线索；保留提醒，不据此认定另一篇论文已撤稿。',
+  source_type_needs_review: '来源标为附属材料、编者文字或书评，需要人工核查，暂不排除。',
+  source_classification_disagreement: '来源的标题或类型分类不一致，暂不归为研究论文或期刊资料。',
+  missing_title: '缺少可用标题，需要人工核查。'
+};
+export const documentKind = (paper) => paper.classification?.kind === 'administrative' ? 'other' : Object.hasOwn(DOCUMENT_LABELS, paper.classification?.kind || '') &&
+  paper.classification.kind !== 'all' ? paper.classification.kind : 'needs_review';
+export const normalizeDocumentFilter = (value) => value === 'administrative' ? 'other' : Object.hasOwn(DOCUMENT_LABELS, value || '') ? value : 'candidate';
+export const isMissingAbstract = paper => !paper.abstract_original && (paper.publisher_directory?.collection||paper.collection)!=='other' && documentKind(paper)!=='other' && paper.abstract_status!=='no_abstract';
+
+export function beijingDay(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+  const part = (type) => parts.find((item) => item.type === type).value;
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
+export function validDay(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T00:00:00Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+export const validMonth = (value) => typeof value === 'string' && validDay(`${value}-01`);
+export function shiftMonth(month, offset) {
+  if (!validMonth(month)) throw new Error('月份无效');
+  const date = new Date(`${month}-01T00:00:00Z`);
+  date.setUTCMonth(date.getUTCMonth() + offset);
+  const result = date.toISOString().slice(0, 7);
+  return validMonth(result) ? result : month;
+}
+export function monthCells(month) {
+  if (!validMonth(month)) throw new Error('月份无效');
+  const first = new Date(`${month}-01T00:00:00Z`), last = new Date(first);
+  last.setUTCMonth(last.getUTCMonth() + 1); last.setUTCDate(0);
+  return [...Array((first.getUTCDay() + 6) % 7).fill(null),
+    ...Array.from({ length: last.getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)];
+}
+const normalized = (value) => String(value || '').normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
+export const sourceLabel = (source) => ({ first_seen: '首次发现月份', crossref: 'Crossref', openalex: 'OpenAlex', publisher: '期刊／出版社官网', semanticscholar: 'Semantic Scholar', repec: 'RePEc 期刊记录' })[source] || '来源未标明';
+export const ABSTRACT_LABELS = { available: '已有原始摘要', found: '已从真实来源补全', missing: '待补全', not_found: '暂时未找到',
+  english_missing: '只有法文原文，英文摘要待补全',
+  no_abstract: '无摘要，无需补采', publisher_no_abstract: '本次官网页面未提供摘要', access_restricted: '部分来源访问受限', retry_later: '稍后自动重试', identity_unverified: '论文身份尚未核实',
+  source_unavailable: '部分来源暂不可用，等待重试', quota_exhausted: '免费搜索额度已耗尽，等待重置', identity_conflict: '摘要与论文身份尚未核实' };
+export function abstractSourceHref(value) {
+  try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password && !url.port &&
+    ['api.crossref.org','openalex.org','api.openalex.org','api.semanticscholar.org','www.semanticscholar.org','www.aeaweb.org','pubs.aeaweb.org',
+      'publications.aaahq.org','www.sciencedirect.com','rss.sciencedirect.com','api.elsevier.com','onlinelibrary.wiley.com','link.springer.com',
+      'api.springernature.com','www.journals.uchicago.edu','academic.oup.com','pubsonline.informs.org','journals.sagepub.com','ideas.repec.org'].includes(url.hostname) ? url.href : ''; }
+  catch { return ''; }
+}
+export function publicationDateText(value, source) {
+  if (!value) return '未提供';
+  const precision = /^\d{4}$/.test(value) && Number(value) > 0 ? '仅提供年份' : validMonth(value) ? '仅提供月份' :
+    validDay(value) ? '日期' : null;
+  return precision ? value + '（' + sourceLabel(source) + '；' + precision + '）' : '未提供';
+}
+export function publicationMonthText(paper) {
+  if (paper.publication_conflict) return '待自动核实（来源月份有冲突）';
+  if (validMonth(paper.publication_month)) {
+    const basis = { online: '在线发表', print: '纸刊发表', unspecified: '来源通用发表时间' }[paper.publication_basis] || '日期类型未提供';
+    return `${paper.publication_month}（${sourceLabel(paper.publication_month_source)}；${basis}）`;
+  }
+  return Number.isInteger(paper.publication_year) && paper.publication_year >= 1000 && paper.publication_year <= 9999
+    ? `${paper.publication_year}（月份待补全）` : '待补全';
+}
+export function filterPapers(papers, { journal = '', category = '', q = '', date = '', kind = 'all' } = {}) {
+  if (kind === 'administrative') kind = 'other'; // Old bookmarked URLs still work.
+  const tokens = normalized(q).split(' ').filter(Boolean);
+  return papers.filter((paper) => {
+    if ((journal && paper.journal_key !== journal) || (category && paper.journal_category !== category) ||
+        (date && paper.first_seen_date !== date) || (kind !== 'all' && documentKind(paper) !== kind)) return false;
+    if (!tokens.length) return true;
+    const haystack = normalized([paper.title_original, paper.title_zh, paper.abstract_original, paper.abstract_zh,
+      paper.doi, paper.journal_key, paper.journal_name, paper.journal_category_zh, paper.first_seen_date,
+      paper.published_online_date, paper.published_print_date, paper.published_print_month, paper.publication_date, paper.publication_month, paper.publication_year,
+      ...paper.authors.map((author) => author.name),
+      ...(paper.author_variants || []).flatMap((variant) => variant.names)].join(' '));
+    return tokens.every((token) => haystack.includes(token));
+  })
+    .sort((a, b) => b.first_seen_date.localeCompare(a.first_seen_date) || a.journal_key.localeCompare(b.journal_key) || a.id.localeCompare(b.id));
+}
+export function countsByDay(papers) {
+  const counts = {}, seen = new Set();
+  for (const paper of papers) {
+    if (seen.has(paper.id)) continue;
+    seen.add(paper.id); counts[paper.first_seen_date] = (counts[paper.first_seen_date] || 0) + 1;
+  }
+  return counts;
+}
+export function selectedJournalKeys(journals, { journal = '', category = '' } = {}) {
+  return journals.filter((item) => (!journal || item.key === journal) && (!category || item.category === category)).map((item) => item.key);
+}
+export function coverageForDay(runs, date, keys) {
+  // Use the latest attempt per journal that day; a later failure must not be hidden by an earlier success.
+  let complete = 0, failed = 0, attempted = 0;
+  for (const key of keys) {
+    const run = runs.filter((item) => item.run_date === date && item.journal_keys.includes(key))
+      .sort((a, b) => b.started_at.localeCompare(a.started_at))[0];
+    if (!run) continue;
+    attempted++;
+    if (run.status !== 'full_failure' && ['openalex', 'crossref'].every((source) =>
+      run.sources.some((item) => item.journal_key === key && item.source === source && item.ok && item.complete))) complete++;
+    else failed++;
+  }
+  const label = !keys.length ? '无匹配期刊' : !attempted ? '未采集' : failed ? '采集不完整' :
+    complete < keys.length ? '仅部分期刊已采集' : '双源采集完成';
+  return { complete, failed, attempted, total: keys.length, label };
+}
+export function paperTitle(paper) {
+  return paper.title_translation_status === 'done' && paper.title_zh ? paper.title_zh : paper.title_original;
+}
+
+export function collectionStatusForDay(data, date, keys) {
+  if(data.publication) {
+    const captured=new Set(data.papers.filter(p=>p.first_seen_date===date&&keys.includes(p.journal_key)).map(p=>p.journal_key)).size;
+    return {complete:0,failed:0,attempted:0,total:keys.length,captured,label:captured?'已有收录论文':'暂无收录论文'};
+  }
+  if(data.local_rss) {
+    const active=keys.filter(key=>data.local_rss.active_journals.includes(key));
+    let checked=0,failed=0;
+    for(const key of active) {
+      const run=(data.runs||[]).filter(r=>r.run_date===date&&r.journal_keys.includes(key))
+        .sort((a,b)=>b.started_at.localeCompare(a.started_at))[0];
+      const source=run?.sources.find(s=>s.journal_key===key&&s.source==='publisher_rss');
+      if(source?.ok)checked++;else if(source)failed++;
+    }
+    return {complete:checked,failed,attempted:checked+failed,total:active.length,captured:checked,
+      rss_checked:checked,rss_total:active.length,
+      label:!active.length?'所选期刊尚未接入本轮 RSS':failed?'部分 RSS 请求失败':checked===active.length?'RSS 请求完成':checked?'部分期刊已请求 RSS':'暂无 RSS 请求记录'};
+  }
+
+  const runs = [...(data.runs || [])], groups = new Map();
+  for (const check of data.discovery_checks || []) {
+    if (!['crossref','openalex'].includes(check.source) || !keys.includes(check.journal) ||
+        !Number.isFinite(Date.parse(check.checked_at)) || beijingDay(new Date(check.checked_at)) !== date) continue;
+    const key = check.journal+'|'+new Date(check.checked_at).toISOString();
+    if (!groups.has(key)) groups.set(key, {run_date:date,started_at:new Date(check.checked_at).toISOString(),
+      journal_keys:[check.journal],status:'success',sources:[]});
+    groups.get(key).sources.push({journal_key:check.journal,source:check.source,ok:check.status==='ok',complete:check.status==='ok'});
+  }
+  runs.push(...groups.values());
+  const coverage = coverageForDay(runs,date,keys);
+  const captures = (data.collection_activity || []).filter(row => row.date===date && keys.includes(row.journal_key));
+  const captured = new Set(captures.map(row=>row.journal_key)).size;
+  let label = coverage.label;
+  if (!keys.length) label = '无匹配期刊';
+  else if (coverage.failed) label = captured ? '已采集，部分来源失败' : '采集不完整';
+  else if (captured && coverage.complete < keys.length) label = captured < keys.length ? '已采集（部分期刊）' : '已有采集记录';
+  else if (!coverage.attempted) label = '暂无采集记录';
+  return {...coverage,captured,label};
+}
+
+export function latestCollectionActivity(data) {
+  const times = [...(data.collection_activity||[]).map(row=>row.captured_at),
+    ...(data.discovery_checks||[]).map(row=>row.checked_at)].filter(value=>Number.isFinite(Date.parse(value)));
+  if (!times.length) return null;
+  const at = new Date(times.reduce((last,value)=>Math.max(last,Date.parse(value)),0)).toISOString();
+  return {at,date:beijingDay(new Date(at))};
+}
+export function doiHref(doi) {
+  // Build the link from a validated DOI, never from a source-provided URL.
+  return typeof doi === 'string' && /^10\.\d{4,9}\/\S+$/i.test(doi) && !/[<>"\x00-\x20]/.test(doi)
+    ? `https://doi.org/${doi.split('/').map(encodeURIComponent).join('/')}` : null;
+}
+export function pageHref(page, filters = {}, extra = {}) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries({ ...filters, ...extra })) if (value) params.set(key, value);
+  return `${page}${params.size ? `?${params}` : ''}`;
+}
+// Recompute deadlines in the browser: a static Pages build must still become
+// due with time, without fetching a paid API or waiting for another deployment.
+export function workflowAuditChecks(flow,now=Date.now()) {
+  return (flow?.catalog_checks||[]).map(c=>({...c,status:!c.checked_at?'baseline_missing':
+    !Number.isFinite(Date.parse(c.next_audit_at))||Date.parse(c.next_audit_at)<=now?'audit_due':'recently_checked'}));
+}

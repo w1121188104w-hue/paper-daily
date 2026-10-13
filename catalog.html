@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="按期刊、年份和正式卷期浏览文章，或查看在线发表与其他目录。" />
+  <title>经管顶刊 · 目录浏览</title>
+  <link rel="stylesheet" href="./base.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-source="journals" data-delivery="static" data-page="catalog">
+  <a class="skip-link" href="#main">跳到目录筛选</a>
+  <header class="hero journal-hero">
+    <p class="eyebrow">经管顶刊 · 公开论文库</p>
+    <h1>按目录浏览论文</h1>
+    <p>先选期刊和目录，再查看其中的文章。正式卷期沿用出版社的年份、卷号和期号。</p>
+    <nav class="view-switch" aria-label="浏览方式">
+      <a id="calendarViewLink" class="ghost-link" href="./index.html">按日历浏览</a>
+      <a class="ghost-link" href="./catalog.html" aria-current="page">按目录浏览</a>
+    </nav>
+  </header>
+  <main id="main" class="calendar-layout single journal-layout">
+    <section class="panel" aria-labelledby="filterTitle">
+      <h2 id="filterTitle">选择目录</h2>
+      <form id="filters" role="search">
+        <div class="filter-row">
+          <label>期刊<select id="journal"><option value="">全部已建目录期刊</option></select></label>
+          <label>目录类型<select id="collection"><option value="issue">正式发表</option><option value="online">在线发表</option><option value="other">其他目录</option><option value="all">全部文献目录</option></select></label>
+        </div>
+        <div id="quickFilters" class="quick-filters" aria-label="已建目录期刊"></div>
+        <div id="collectionTabs" class="quick-filters" aria-label="目录类型"></div>
+        <div id="failureFilters" class="filter-row catalog-issue-filters" hidden>
+          <label>故障状态<select id="failureStatus"><option value="open">当前失败</option><option value="resolved">已恢复历史</option><option value="all">全部故障记录</option></select></label>
+          <label>卡住的环节<select id="failureStage"><option value="">全部环节</option><option value="rss">请求来源</option><option value="parse">解析来源</option><option value="review">DeepSeek 校对</option><option value="detail">读取论文详情</option><option value="detail_review">校对论文详情</option><option value="save">保存文章与目录</option><option value="translation">翻译标题与摘要</option><option value="pipeline">本地流程</option></select></label>
+        </div>
+        <div id="issueFilters" class="filter-row catalog-issue-filters">
+          <label>年份<select id="year"><option value="">全部年份</option></select></label>
+          <label>卷号<select id="volume"><option value="">全部卷号</option></select></label>
+          <label>具体目录<select id="catalog"><option value="">全部匹配目录</option></select></label>
+        </div>
+        <p id="catalogScope" class="meta" role="status"></p>
+        <div id="catalogGrid" class="catalog-grid" aria-label="匹配的目录" hidden></div>
+        <div class="catalog-paper-filters">
+          <div class="filter-row">
+            <label class="search-field">目录内搜索<input id="query" type="search" maxlength="500" placeholder="标题、作者、摘要或 DOI" /></label>
+            <label id="kindFilter">文献类型<select id="kind"><option value="candidate">研究论文</option></select></label>
+            <button type="submit">搜索</button><button id="reset" class="secondary" type="button">重置筛选</button>
+          </div>
+          <p id="catalogHint" class="meta">默认展示研究论文；可切换文献类型查看全部记录。目录条数不随搜索或文献类型筛选改变。</p>
+        </div>
+      </form>
+    </section>
+    <section class="panel" aria-labelledby="listTitle">
+      <h2 id="listTitle">目录中的文章</h2>
+      <div id="catalogSummary" class="catalog-summary" role="status"></div>
+      <p id="listMeta" class="meta" role="status"></p>
+      <div id="paperList" class="paper-list"></div><div id="pagination" class="pagination"></div>
+    </section>
+    <details class="panel status-panel disclosure-panel" aria-labelledby="statusTitle">
+      <summary><h2 id="statusTitle">采集概况</h2></summary>
+      <span id="statusBadge" class="status-badge">正在读取</span>
+      <p id="statusText" class="meta" role="status">正在读取本地数据…</p>
+      <p id="attemptWarning" class="notice" role="status" hidden></p>
+      <div id="libraryMeta" class="meta"></div>
+      <p id="enrichmentStatus" class="meta" role="status"></p>
+      <button id="reload" class="secondary" type="button">重新读取网页数据</button>
+    </details>
+  </main>
+  <footer class="journal-footer">本地试验版 · 与日历共用同一份文章库 · 仅本机访问</footer>
+  <noscript>请启用 JavaScript 以按目录浏览文章；本页面不会启动采集。</noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

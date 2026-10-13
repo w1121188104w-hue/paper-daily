@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="按首次发现日期查看19本经济与管理期刊的论文，支持中英文搜索与期刊筛选。" />
+  <title>经管顶刊 · 论文日历</title>
+  <link rel="stylesheet" href="./base.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-source="journals" data-delivery="static">
+  <a class="skip-link" href="#main">跳到论文日历</a>
+  <header class="hero journal-hero">
+    <div class="calendar-heading">
+      <h1>经管顶刊论文日历</h1>
+      <div class="header-tools" role="group" aria-label="状态信息">
+        <button class="ghost-link" type="button" popovertarget="collectionOverview">采集概况</button>
+        <button class="ghost-link" type="button" popovertarget="catalogOverview">期刊目录状态</button>
+      </div>
+    </div>
+    <nav class="view-switch" aria-label="浏览方式">
+      <a class="ghost-link" href="./index.html" aria-current="page">按日历浏览</a>
+      <a id="catalogViewLink" class="ghost-link" href="./catalog.html">按目录浏览</a>
+    </nav>
+    <section id="collectionOverview" class="panel header-popover" popover="auto" aria-labelledby="statusTitle">
+      <div class="popover-heading">
+        <h2 id="statusTitle">采集概况</h2>
+        <button class="secondary" type="button" popovertarget="collectionOverview" popovertargetaction="hide" aria-label="关闭采集概况">关闭</button>
+      </div>
+      <span id="statusBadge" class="status-badge">正在读取</span>
+      <p id="statusText" class="meta" role="status">正在读取已发布的论文库…</p>
+      <p id="attemptWarning" class="notice" role="status" hidden></p>
+      <div id="libraryMeta" class="meta"></div>
+      <p id="enrichmentStatus" class="meta" role="status"></p>
+      <button id="reload" class="secondary" type="button">重新读取网页数据</button>
+    </section>
+    <section id="catalogOverview" class="panel header-popover" popover="auto" aria-labelledby="workflowTitle">
+      <div class="popover-heading">
+        <h2 id="workflowTitle">期刊目录状态</h2>
+        <button class="secondary" type="button" popovertarget="catalogOverview" popovertargetaction="hide" aria-label="关闭期刊目录状态">关闭</button>
+      </div>
+      <div id="workflowStatus" role="status">正在读取任务清单…</div>
+    </section>
+  </header>
+  <main id="main" class="calendar-layout single journal-layout">
+    <section class="panel" aria-labelledby="filterTitle">
+      <h2 id="filterTitle">筛选论文</h2>
+      <form id="filters" role="search">
+        <div class="filter-row">
+          <label class="search-field">中英文搜索<input id="query" type="search" maxlength="500" placeholder="标题、作者、摘要、DOI、期刊或日期" /></label>
+          <label>学科分类<select id="category"><option value="">全部分类</option></select></label>
+          <label>期刊<select id="journal"><option value="">全部19刊</option></select></label>
+          <label>文献类型<select id="kind"><option value="candidate">研究论文</option></select></label>
+          <button type="submit">搜索</button><button id="reset" class="secondary" type="button">重置筛选</button>
+        </div>
+        <div id="quickFilters" class="quick-filters" aria-label="常用期刊"></div>
+      </form>
+    </section>
+    <section class="panel" aria-labelledby="monthTitle">
+      <div class="calendar-head"><button id="prevMonth" type="button" aria-label="上个月">上月</button><h2 id="monthTitle">论文日历</h2><button id="nextMonth" type="button" aria-label="下个月">下月</button></div>
+      <div class="calendar-tools"><p id="calendarMeta" class="meta"></p><button id="thisMonth" class="secondary" type="button">回到本月</button></div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+      <p class="meta calendar-legend">数字是当前筛选下首次发现的去重记录数。点击日期查看当日记录。</p>
+    </section>
+    <section class="panel" aria-labelledby="listTitle">
+      <h2 id="listTitle">全部日期的文献记录</h2><p id="listMeta" class="meta" role="status"></p>
+      <div id="paperList" class="paper-list"></div><div id="pagination" class="pagination"></div>
+    </section>
+  </main>
+  <footer class="journal-footer">本地试验版 · 全新数据 · 仅本机访问</footer>
+  <noscript>请启用 JavaScript 以查看日历和论文；本页面不会启动采集。</noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

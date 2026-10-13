@@ -1,6 +1,0 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>原文核对设置</title><link rel="stylesheet" href="style.css"></head><body><main>
-<header><span class="tag">PAPER DAILY</span><h1>原文核对设置与记录</h1><p>本机服务只做原文核对，翻译统一由 GitHub 执行。AI 只能引用原文，不接受编造、改写或 Highlights 冒充摘要。</p><a href="workflow.html">返回采集首页</a></header>
-<section><h2>连接设置</h2><p>平时运行扩展文件夹中的 <strong>start-workflow.cmd</strong>，会一并启动核对服务。已有 Key 无需重配；首次配置或更换 Key 才使用 <strong>configure-review.cmd</strong>。</p><p>扩展 ID：<code id="extension-id"></code></p><p>原文核对 Key 用 Windows 当前账户加密，仅保存在本机。不要将 Key 发到聊天或写入扩展。翻译使用 GitHub Secret DEEPSEEK_API_KEY。</p>
-<button id="connection">检查本地连接（免费）</button><p id="connection-status"></p></section>
-<section><h2>核对记录</h2><p>采集面板自动核对并有限重试；本页只查看记录，不另开付费任务。相同证据复用缓存，原文缺失留空。</p><button id="load">刷新记录</button><button id="export">导出核对备份</button><p id="status"></p><p id="counts"></p><div id="results"></div></section>
-</main><script type="module" src="review.js"></script></body></html>
