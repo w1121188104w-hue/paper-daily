@@ -494,6 +494,7 @@ async function load() {
     const data = await loadWebsiteData({split:isPublishedPage,signal:controller.signal});
     if (data.schema_version !== 1 || !Array.isArray(data.papers) || !Array.isArray(data.journals) || !Array.isArray(data.runs)) throw new Error('Invalid data');
     state.data = data;
+    state.page = 1;
     for (const control of $('filters').elements) control.disabled = false;
     renderStatus(); renderFilters(); render();
   } catch {

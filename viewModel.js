@@ -76,6 +76,17 @@ export function publicationMonthText(paper) {
   return Number.isInteger(paper.publication_year) && paper.publication_year >= 1000 && paper.publication_year <= 9999
     ? `${paper.publication_year}（月份待补全）` : '待补全';
 }
+function discoveryOrder(paper) {
+  const value = paper.first_seen_at;
+  // Require a complete, timezone-qualified timestamp; a date alone has no time precision.
+  const at = typeof value === 'string' && validDay(value.slice(0, 10)) &&
+    /^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value)
+    ? Date.parse(value) : NaN;
+  const precise = Number.isFinite(at);
+  // Midnight is a sorting boundary only; never write an invented time to legacy records.
+  return { precise, time: precise ? at : validDay(paper.first_seen_date)
+    ? Date.parse(`${paper.first_seen_date}T00:00:00+08:00`) : -Infinity };
+}
 export function filterPapers(papers, { journal = '', category = '', q = '', date = '', kind = 'all' } = {}) {
   if (kind === 'administrative') kind = 'other'; // Old bookmarked URLs still work.
   const tokens = normalized(q).split(' ').filter(Boolean);
@@ -90,7 +101,10 @@ export function filterPapers(papers, { journal = '', category = '', q = '', date
       ...(paper.author_variants || []).flatMap((variant) => variant.names)].join(' '));
     return tokens.every((token) => haystack.includes(token));
   })
-    .sort((a, b) => b.first_seen_date.localeCompare(a.first_seen_date) || a.journal_key.localeCompare(b.journal_key) || a.id.localeCompare(b.id));
+    .map(paper => ({ paper, ...discoveryOrder(paper) }))
+    .sort((a, b) => (a.time === b.time ? 0 : a.time > b.time ? -1 : 1) || Number(b.precise) - Number(a.precise) ||
+      a.paper.journal_key.localeCompare(b.paper.journal_key) || a.paper.id.localeCompare(b.paper.id))
+    .map(({ paper }) => paper);
 }
 export function countsByDay(papers) {
   const counts = {}, seen = new Set();
