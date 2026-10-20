@@ -35,6 +35,7 @@ if(isCatalogPage) {
 const timeText = (value) => value ? `${new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai',
   dateStyle: 'medium', timeStyle: 'short', hour12: false }).format(new Date(value))}（北京时间）` : '暂无';
 
+const journalLabel=key=>state.data?.journals.find(j=>j.key===key)?.display_name||key;
 function syncUrl() {
   const extra = isCatalogPage ? state.catalog : isDayPage ? { date: selectedDate || '' } : { month: state.month };
   history.replaceState(null, '', pageHref(isCatalogPage ? 'catalog.html' : isDayPage ? 'day.html' : 'index.html', state.filters, extra));
@@ -87,7 +88,7 @@ function renderLocalCatalogs(data) {
       numberOrder.compare(b.issue||'',a.issue||''));
     const group=node('details','','journal-status');group.dataset.journal=key;group.open=expanded.has(key);
     const summary=node('summary'),name=node('span','','journal-status-name');
-    name.append(node('strong',key),node('span',rows.length+' 个目录','meta'));
+    name.append(node('strong',journalLabel(key)),node('span',rows.length+' 个目录','meta'));
     summary.append(name,node('span',rows.reduce((total,c)=>total+c.paper_count,0).toLocaleString('zh-CN')+' 条','journal-status-count'));
     const content=node('div','','journal-status-content');group.append(summary,content);
     if(!rows.length) content.append(node('p','尚未建立目录','meta'));
@@ -200,14 +201,14 @@ function renderFilters({ syncQuery = true } = {}) {
   const option = (value, label) => { const element = node('option', label); element.value = value; return element; };
   $('category').replaceChildren(option('', '全部分类'), ...categories.map(([key, label]) => option(key, label)));
   $('journal').replaceChildren(option('', state.filters.category ? '本分类全部期刊' : `全部${journals.length}刊`),
-    ...journals.filter((item) => !state.filters.category || item.category === state.filters.category).map((item) => option(item.key, `${item.key} · ${item.name}`)));
+    ...journals.filter((item) => !state.filters.category || item.category === state.filters.category).map((item) => option(item.key, `${item.display_name||item.key} · ${item.name}`)));
   $('category').value = state.filters.category; $('journal').value = state.filters.journal;
   state.filters.kind = normalizeDocumentFilter(state.filters.kind);
   $('kind').replaceChildren(...Object.entries(DOCUMENT_LABELS).map(([key, label]) => option(key, label)));
   $('kind').value = state.filters.kind;
   if (syncQuery) $('query').value = state.filters.q;
   $('quickFilters').replaceChildren(...['', 'AER', 'JAR', 'JAE', 'CAR'].map((key) => {
-    const item = button(key || '全部19刊', () => {
+    const item = button(key || `全部${journals.length}刊`, () => {
       clearTimeout(searchTimer); state.filters.q = $('query').value.trim();
       state.filters.journal = key; state.filters.category = ''; state.page = 1; renderFilters(); render();
     });
@@ -245,7 +246,7 @@ function clearCatalogLocation() {state.catalog.year='';state.catalog.volume='';s
 function renderCatalogFilters({syncQuery=true}={}) {
   const keys=[...new Set([...(state.data.local_rss?.active_journals||[]),...(state.data.local_rss?.catalogs||[]).map(c=>c.journal_key)])];
   const journals=keys.map(key=>state.data.journals.find(j=>j.key===key)||{key,name:key});
-  catalogSelect('journal',journals.map(j=>[j.key,j.key+' · '+j.name]),'全部已建目录期刊',state.filters.journal);
+  catalogSelect('journal',journals.map(j=>[j.key,(j.display_name||j.key)+' · '+j.name]),'全部已建目录期刊',state.filters.journal);
   $('collection').value=state.catalog.collection;
   const failed=state.catalog.collection==='failed';
   $('issueFilters').hidden=['online','other','failed'].includes(state.catalog.collection);
@@ -263,13 +264,13 @@ function renderCatalogFilters({syncQuery=true}={}) {
   const volumes=[...new Set(base.filter(c=>c.collection==='issue'&&(!state.catalog.year||c.year===state.catalog.year)).map(c=>c.volume))].sort((a,b)=>numberOrder.compare(b,a));
   catalogSelect('volume',volumes.map(v=>[v,'第 '+v+' 卷']),'全部卷号',state.catalog.volume);
   const choices=catalogChoices({ignoreId:true});
-  catalogSelect('catalog',choices.map(c=>[c.id,c.journal_key+' · '+c.label]),'全部匹配目录',state.catalog.catalog);
+  catalogSelect('catalog',choices.map(c=>[c.id,journalLabel(c.journal_key)+' · '+c.label]),'全部匹配目录',state.catalog.catalog);
   catalogSelect('kind',Object.entries(DOCUMENT_LABELS).filter(([key])=>key!=='all'),'全部文献记录',state.filters.kind==='all'?'':state.filters.kind);
   // Keep the shared document-filter value, including all, for ordinary form changes.
   $('kind').options[0].value='all';$('kind').value=state.filters.kind;
   if(syncQuery) $('query').value=state.filters.q;
   $('quickFilters').replaceChildren(...['',...keys].map(key=>{
-    const item=button(key||'全部期刊',()=>{
+    const item=button(journalLabel(key)||'全部期刊',()=>{
       clearTimeout(searchTimer);state.filters.q=$('query').value.trim();state.filters.journal=key;state.page=1;
       clearCatalogLocation();renderFilters();render();
     });item.setAttribute('aria-pressed',String(state.filters.journal===key));return item;
@@ -279,7 +280,7 @@ function renderCatalogFilters({syncQuery=true}={}) {
   $('catalogGrid').replaceChildren(...choices.map(c=>{
     const item=button('',()=>{state.catalog.catalog=state.catalog.catalog===c.id?'':c.id;state.page=1;renderFilters();render();},'catalog-card');
     item.dataset.catalogId=c.id;item.setAttribute('aria-pressed',String(state.catalog.catalog===c.id));
-    item.append(node('strong',c.journal_key+' · '+c.label),node('span',c.paper_count+' 条记录','catalog-count'));
+    item.append(node('strong',journalLabel(c.journal_key)+' · '+c.label),node('span',c.paper_count+' 条记录','catalog-count'));
     if(c.collection==='issue') item.append(node('span',catalogFormalMonthText(c),'meta catalog-formal-month'));
     item.append(node('span',c.collection==='issue'?(c.status==='complete'?'已完成':'持续收录'):c.collection==='online'?'尚未归入正式卷期':'非研究文献及归属待定记录','meta'));
     if(c.collection==='online'&&c.completeness_basis==='rss_returned_list') item.append(node('span','按 RSS 认定齐全 · 持续更新','meta'));
@@ -295,7 +296,7 @@ function renderFailures() {
   const query=state.filters.q.toLocaleLowerCase().split(/\s+/).filter(Boolean);
   const rows=all.filter(f=>(state.catalog.failureStatus==='all'||f.status===state.catalog.failureStatus)&&
     (!state.catalog.failureStage||f.stage===state.catalog.failureStage)&&query.every(token=>
-      [f.title_original,f.doi,f.journal_key,f.error_code,f.explanation,f.stage_label].join(' ').toLocaleLowerCase().includes(token)));
+      [f.title_original,f.doi,f.journal_key,journalLabel(f.journal_key),f.error_code,f.explanation,f.stage_label].join(' ').toLocaleLowerCase().includes(token)));
   $('listTitle').textContent=(state.filters.journal?state.filters.journal+' · ':'')+'程序失败目录';
   const open=all.filter(f=>f.status==='open');
   $('catalogSummary').replaceChildren(node('p','当前失败 '+open.length+' 项，其中 '+open.filter(f=>f.scope==='article').length+' 项涉及文献、'+open.filter(f=>f.scope==='feed').length+' 项尚未识别到具体文献；已恢复 '+all.filter(f=>f.status==='resolved').length+' 项。'));
@@ -304,7 +305,7 @@ function renderFailures() {
   $('paperList').replaceChildren(...rows.slice((state.page-1)*pageSize,state.page*pageSize).map(f=>{
     const card=node('article','','paper-card failure-card');
     card.append(node('span',f.status==='open'?'当前失败':'已恢复','status-badge '+(f.status==='open'?'failed':'ready')),
-      node('h3',(f.journal_key?f.journal_key+' · ':'')+(f.title_original||'整批任务（尚未识别具体文献）')),
+      node('h3',(f.journal_key?journalLabel(f.journal_key)+' · ':'')+(f.title_original||'整批任务（尚未识别具体文献）')),
       node('p','卡住的环节：'+f.stage_label),node('p',f.explanation,'notice'),node('p','错误代码：'+f.error_code,'meta'),
       node('p','首次失败：'+timeText(f.first_failed_at)+'；最近失败：'+timeText(f.last_failed_at)+'；失败记录 '+f.occurrences+' 次。','meta'));
     if(f.doi)card.append(node('p','DOI：'+f.doi,'meta'));
@@ -324,7 +325,7 @@ function renderFailures() {
 function renderCatalogSummary(papers) {
   const catalogs=catalogChoices(),ids=new Set(catalogs.map(c=>c.id));
   const stored=state.data.papers.filter(p=>ids.has(p.catalog_id));
-  const title=catalogs.length===1?catalogs[0].journal_key+' · '+catalogs[0].label:
+  const title=catalogs.length===1?journalLabel(catalogs[0].journal_key)+' · '+catalogs[0].label:
     (state.filters.journal||'全部期刊')+' · '+catalogTypeLabels[state.catalog.collection];
   $('listTitle').textContent=title;
   const target=$('catalogSummary');target.replaceChildren();
@@ -362,7 +363,7 @@ function renderPaper(paper) {
   const card = node('article', '', 'paper-card');
   const tags = node('div', '', 'paper-tags');
   const kind = documentKind(paper);
-  tags.append(node('span', `${paper.journal_key} · ${paper.journal_category_zh}`, 'status-badge'),
+  tags.append(node('span', `${journalLabel(paper.journal_key)} · ${paper.journal_category_zh}`, 'status-badge'),
     node('span', DOCUMENT_LABELS[kind], `status-badge document-kind ${kind}`),
     ...paper.sources.map((source) => node('span', sourceLabel(source), 'status-badge')));
   card.append(tags, node('h3', paperTitle(paper)));

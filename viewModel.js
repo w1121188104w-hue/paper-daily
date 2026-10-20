@@ -95,7 +95,7 @@ export function filterPapers(papers, { journal = '', category = '', q = '', date
         (date && paper.first_seen_date !== date) || (kind !== 'all' && documentKind(paper) !== kind)) return false;
     if (!tokens.length) return true;
     const haystack = normalized([paper.title_original, paper.title_zh, paper.abstract_original, paper.abstract_zh,
-      paper.doi, paper.journal_key, paper.journal_name, paper.journal_category_zh, paper.first_seen_date,
+      paper.doi, paper.journal_key, paper.journal_display_name, paper.journal_name, paper.journal_category_zh, paper.first_seen_date,
       paper.published_online_date, paper.published_print_date, paper.published_print_month, paper.publication_date, paper.publication_month, paper.publication_year,
       ...paper.authors.map((author) => author.name),
       ...(paper.author_variants || []).flatMap((variant) => variant.names)].join(' '));
@@ -148,12 +148,12 @@ export function collectionStatusForDay(data, date, keys) {
     for(const key of active) {
       const run=(data.runs||[]).filter(r=>r.run_date===date&&r.journal_keys.includes(key))
         .sort((a,b)=>b.started_at.localeCompare(a.started_at))[0];
-      const source=run?.sources.find(s=>s.journal_key===key&&s.source==='publisher_rss');
-      if(source?.ok)checked++;else if(source)failed++;
+      const source=run?.sources.find(s=>s.journal_key===key&&['publisher_rss','publisher_html','local_publisher_export'].includes(s.source));
+      if(source?.ok&&source.complete!==false)checked++;else if(source)failed++;
     }
     return {complete:checked,failed,attempted:checked+failed,total:active.length,captured:checked,
       rss_checked:checked,rss_total:active.length,
-      label:!active.length?'所选期刊尚未接入本轮 RSS':failed?'部分 RSS 请求失败':checked===active.length?'RSS 请求完成':checked?'部分期刊已请求 RSS':'暂无 RSS 请求记录'};
+      label:!active.length?'所选期刊尚未接入本轮采集':failed?'部分采集步骤未完成':checked===active.length?'采集完成':checked?'部分期刊已采集':'暂无采集记录'};
   }
 
   const runs = [...(data.runs || [])], groups = new Map();
