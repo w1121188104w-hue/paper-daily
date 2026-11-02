@@ -29,10 +29,11 @@ export async function loadWebsiteData({split=false,fetchImpl=fetch,signal,crypto
   }));
   const papers=chunks.flatMap(c=>c.papers),catalogs=chunks.flatMap(c=>c.catalogs),ids=new Set(papers.map(p=>p.id));
   if(papers.length!==index.paper_count||catalogs.length!==index.catalog_count||ids.size!==papers.length||catalogs.some(c=>c.article_ids.some(id=>!ids.has(id))))throw Error('WEBSITE_TOTAL_MISMATCH');
-  const pending=papers.filter(p=>p.title_translation_status!=='done'||p.abstract_original&&p.abstract_translation_status!=='done');
+  const stopped=new Set(chunks.filter(c=>c.journal.collection_enabled===false).map(c=>c.journal.key));
+  const pending=papers.filter(p=>!stopped.has(p.journal_key)&&(p.title_translation_status!=='done'||p.abstract_original&&p.abstract_translation_status!=='done'));
   const fields=pending.reduce((n,p)=>n+(p.title_translation_status!=='done'?1:0)+(p.abstract_original&&p.abstract_translation_status!=='done'?1:0),0);
   return withJournalNames({schema_version:1,initialized:true,delivery_mode:'static',publication:{version:index.version,revision:index.revision},
     snapshot_at:null,journals:chunks.map(c=>c.journal),papers,runs:[],pending:{paper_count:pending.length,field_count:fields},
-    enrichment:{missing_abstracts:papers.filter(p=>!p.abstract_original&&p.abstract_status!=='no_abstract'&&p.collection!=='other').length},
+    enrichment:{missing_abstracts:papers.filter(p=>!stopped.has(p.journal_key)&&!p.abstract_original&&p.abstract_status!=='no_abstract'&&p.collection!=='other').length},
     local_rss:{catalogs,active_journals:index.active_journals,failures:[],job:null},quarantined:[],collection_activity:[],discovery_checks:[]});
 }

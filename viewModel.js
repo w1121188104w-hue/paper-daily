@@ -65,16 +65,22 @@ export function publicationDateText(value, source) {
   if (!value) return '未提供';
   const precision = /^\d{4}$/.test(value) && Number(value) > 0 ? '仅提供年份' : validMonth(value) ? '仅提供月份' :
     validDay(value) ? '日期' : null;
-  return precision ? value + '（' + sourceLabel(source) + '；' + precision + '）' : '未提供';
+  return precision ? value : '未提供';
 }
 export function publicationMonthText(paper) {
-  if (paper.publication_conflict) return '待自动核实（来源月份有冲突）';
+  if (paper.publication_conflict) return '来源月份有冲突，待自动核实';
   if (validMonth(paper.publication_month)) {
-    const basis = { online: '在线发表', print: '纸刊发表', unspecified: '来源通用发表时间' }[paper.publication_basis] || '日期类型未提供';
-    return `${paper.publication_month}（${sourceLabel(paper.publication_month_source)}；${basis}）`;
+    return paper.publication_month;
   }
   return Number.isInteger(paper.publication_year) && paper.publication_year >= 1000 && paper.publication_year <= 9999
-    ? `${paper.publication_year}（月份待补全）` : '待补全';
+    ? `${paper.publication_year}` : '待补全';
+}
+export function paperCollectionLabel(paper,catalogs=[]) {
+  const catalog=catalogs.find(c=>c.id===paper.catalog_id),collection=paper.collection||catalog?.collection;
+  if(collection==='online')return '在线发表';
+  if(collection==='other')return '其他';
+  if(collection==='issue')return catalog?.label||[paper.issue_year?`${paper.issue_year} 年`:'',paper.volume?`卷 ${paper.volume}`:'',paper.issue?`期 ${paper.issue}`:''].filter(Boolean).join(' · ')||'正式发表';
+  return catalog?.label||'';
 }
 function discoveryOrder(paper) {
   const value = paper.first_seen_at;
