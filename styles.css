@@ -88,7 +88,8 @@ button, select, summary, .ghost-link { min-height: 44px; }
 .paper-header .paper-tags .status-badge { max-width: 100%; white-space: normal; }
 .paper-date.status-badge { flex: 0 0 auto; white-space: nowrap; font-size: .875rem; font-variant-numeric: tabular-nums; background: #0f766e; color: #fff; border-color: #0f766e; }
 .collection-stopped.status-badge { color: #586964; background: #edf1ef; }
-.paper-abstract-source { margin-top: 12px; }
+.paper-abstract-source { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.paper-abstract-source .ghost-link { display: inline-block; max-width: 100%; }
 .paper-translation-state { margin-bottom: 0; }
 .document-kind.administrative, .document-kind.needs_review { background: #f2f4f4; color: #425851; }
 .document-kind.possible_correction, .document-kind.possible_retraction { background: #fff0dc; color: #85480c; }
