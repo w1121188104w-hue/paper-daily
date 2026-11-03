@@ -85,6 +85,7 @@ button, select, summary, .ghost-link { min-height: 44px; }
 .paper-tags .status-badge { font-size: .875rem; }
 .paper-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .paper-header .paper-tags { min-width: 0; }
+.paper-header .paper-tags .status-badge { max-width: 100%; white-space: normal; }
 .paper-date.status-badge { flex: 0 0 auto; white-space: nowrap; font-size: .875rem; font-variant-numeric: tabular-nums; background: #0f766e; color: #fff; border-color: #0f766e; }
 .collection-stopped.status-badge { color: #586964; background: #edf1ef; }
 .paper-abstract-source { margin-top: 12px; }
