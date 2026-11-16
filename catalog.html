@@ -7,6 +7,7 @@
   <title>经管顶刊 · 目录浏览</title>
   <link rel="stylesheet" href="./base.css" />
   <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./one-sentence.css" />
 </head>
 <body data-source="journals" data-delivery="static" data-page="catalog">
   <a class="skip-link" href="#main">跳到目录筛选</a>
@@ -31,7 +32,7 @@
         <div id="collectionTabs" class="quick-filters" aria-label="目录类型"></div>
         <div id="failureFilters" class="filter-row catalog-issue-filters" hidden>
           <label>故障状态<select id="failureStatus"><option value="open">当前失败</option><option value="resolved">已恢复历史</option><option value="all">全部故障记录</option></select></label>
-          <label>卡住的环节<select id="failureStage"><option value="">全部环节</option><option value="rss">请求来源</option><option value="parse">解析来源</option><option value="review">DeepSeek 校对</option><option value="detail">读取论文详情</option><option value="detail_review">校对论文详情</option><option value="save">保存文章与目录</option><option value="translation">翻译标题与摘要</option><option value="pipeline">本地流程</option></select></label>
+          <label>卡住的环节<select id="failureStage"><option value="">全部环节</option><option value="rss">请求来源</option><option value="parse">解析来源</option><option value="review">DeepSeek 校对</option><option value="detail">读取论文详情</option><option value="detail_review">校对论文详情</option><option value="save">保存文章与目录</option><option value="translation">翻译标题与摘要</option><option value="one_sentence">生成研究要点</option><option value="pipeline">本地流程</option></select></label>
         </div>
         <div id="issueFilters" class="filter-row catalog-issue-filters">
           <label>年份<select id="year"><option value="">全部年份</option></select></label>

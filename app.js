@@ -3,6 +3,7 @@ import { RUN_LABELS, TRANSLATION_LABELS, DOCUMENT_LABELS, documentKind, normaliz
   filterPapers, countsByDay, selectedJournalKeys, collectionStatusForDay, latestCollectionActivity, paperTitle, doiHref, pageHref,
   sourceLabel, publicationDateText, publicationMonthText, paperCollectionLabel, ABSTRACT_LABELS, abstractSourceHref, workflowAuditChecks } from './viewModel.js';
 import {loadWebsiteData} from './dataSource.js';
+import {renderOneSentence} from './one-sentence.js';
 
 const $ = (id) => document.getElementById(id);
 const node = (tag, text = '', className = '') => {
@@ -18,6 +19,7 @@ const params = new URLSearchParams(location.search), isDayPage = document.body.d
 const isCatalogPage = document.body.dataset.page === 'catalog';
 const isStaticPage = document.body.dataset.delivery === 'static';
 const isPublishedPage = document.body.dataset.source === 'journals';
+let focusPreviewPaper=document.body.hasAttribute('data-ui-preview')&&location.hash==='#paperList';
 let today = beijingDay();
 const selectedDate = isDayPage ? params.get('date') : '';
 const state = { data: null, page: 1, month: validMonth(params.get('month')) ? params.get('month') : today.slice(0, 7),
@@ -66,6 +68,7 @@ function renderLocalStatus(data) {
     (latest?' 最近完成：'+timeText(latest.finished_at)+'；新增 '+latest.stats.added+' 条，更新 '+latest.stats.updated+' 条。':'');
   renderOverviewStats(data);
   $('libraryMeta').append(node('p','待翻译共 '+data.pending.field_count+' 个字段；当前请求范围 '+rss.active_journals.length+' 刊。','meta'));
+  if(Number.isInteger(job?.one_sentence_total))$('libraryMeta').append(node('p',`本轮研究要点：已完成 ${job.one_sentence_done||0} / ${job.one_sentence_total} 篇，待处理 ${job.one_sentence_failed||0} 篇。`,'meta'));
   const failures=(rss.failures||[]).filter(f=>f.status==='open');
   $('attemptWarning').hidden=!(job?.errors?.length||failures.length);
   if(job?.errors?.length||failures.length) {
@@ -409,21 +412,23 @@ function renderPaper(paper) {
     const link = node('a', ` · 查看 ${sourceLabel(paper.abstract_source)} 来源`, 'ghost-link'); link.href = sourceUrl; link.target = '_blank'; link.rel = 'noopener noreferrer'; abstractState.append(link);
   }
   abstractState.classList.add('paper-abstract-source');
+  const oneSentence=renderOneSentence(paper);if(oneSentence)card.append(oneSentence);
   if (paper.abstract_original) {
     const originalLanguage = paper.abstract_status === 'english_missing' ? 'fr' : 'en';
     const translated = paper.abstract_translation_status === 'done' && Boolean(paper.abstract_zh);
     const abstract = node('p', translated ? paper.abstract_zh : paper.abstract_original, 'summary');
     abstract.lang = translated ? 'zh-CN' : originalLanguage;
+    const abstractHeading=node('div','','paper-abstract-heading');abstractHeading.append(node('h4','论文摘要'));card.append(abstractHeading);
     if (translated) {
       const controls = node('div', '', 'abstract-switch'); controls.setAttribute('aria-label', '摘要语言');
       const setLanguage = (zh) => {
         abstract.textContent = zh ? paper.abstract_zh : paper.abstract_original; abstract.lang = zh ? 'zh-CN' : originalLanguage;
         chinese.setAttribute('aria-pressed', String(zh)); english.setAttribute('aria-pressed', String(!zh));
       };
-      const chinese = button('中文摘要', () => setLanguage(true));
-      const english = button(originalLanguage === 'fr' ? '法文原文（英文待补）' : 'English abstract', () => setLanguage(false));
-      controls.append(chinese, english); setLanguage(true); card.append(controls);
-    } else card.append(node('p', originalLanguage === 'fr' ? '法文原文（英文待补）' : '英文摘要', 'meta'));
+      const chinese = button('中文', () => setLanguage(true));
+      const english = button(originalLanguage === 'fr' ? '法文' : '英文', () => setLanguage(false));
+      controls.append(chinese, english); setLanguage(true); abstractHeading.append(controls);
+    } else abstractHeading.append(node('span', originalLanguage === 'fr' ? '法文原文（英文待补）' : '英文', 'meta'));
     card.append(abstract);
   } else card.append(node('p', '来源未提供摘要。暂不补写或推测论文内容。', 'empty-state'));
   const oldAbstract = oldTranslation('abstract', paper); if (oldAbstract) card.append(oldAbstract);
@@ -454,6 +459,7 @@ function renderList(papers) {
   state.page = Math.min(state.page, pageCount);
   $('listMeta').textContent = `找到 ${papers.length} 条${isCatalogPage?'当前目录内的':isDayPage ? '本日' : '全部日期的'}匹配记录（${DOCUMENT_LABELS[state.filters.kind]}）${papers.length ? `；第 ${state.page}/${pageCount} 页，每页最多 ${pageSize} 条` : ''}。`;
   $('paperList').replaceChildren(...papers.slice((state.page - 1) * pageSize, state.page * pageSize).map(renderPaper));
+  if(focusPreviewPaper&&papers.length){focusPreviewPaper=false;requestAnimationFrame(()=>$('paperList').scrollIntoView({block:'start'}));}
   if (!papers.length) $('paperList').append(node('p', isCatalogPage?'当前目录及筛选条件下没有记录。可清空搜索、选择全部文献，或切换目录。':!state.data.initialized ? (isStaticPage ? '尚无已发布的论文，请等待维护者完成首次采集。' : '尚未建立真实论文库。完成一次手动采集并保存后，在这里重新读取即可。') :
     '当前条件下没有记录。可切换文献类型、重置筛选或查看其他日期；没有匹配结果不表示当天已成功采集。', 'empty-state'));
   $('pagination').replaceChildren();
@@ -550,7 +556,7 @@ syncUrl();
 load();
 
 // Refresh local results automatically without triggering collection or translation.
-if(!isPublishedPage&&(location.hostname==='127.0.0.1'||location.hostname==='localhost')) setInterval(async()=>{
+if(!document.body.hasAttribute('data-ui-preview')&&!isPublishedPage&&(location.hostname==='127.0.0.1'||location.hostname==='localhost')) setInterval(async()=>{
   if(document.hidden||composingQuery||document.activeElement===$('query'))return;
   try{
     const response=await fetch('./data.json',{cache:'no-store',signal:AbortSignal.timeout(5000)});
@@ -562,7 +568,7 @@ if(!isPublishedPage&&(location.hostname==='127.0.0.1'||location.hostname==='loca
 },5000);
 
 // Publication status is separate from the unchanged local data.json contract.
-if(!isPublishedPage) setInterval(async()=>{
+if(!document.body.hasAttribute('data-ui-preview')&&!isPublishedPage) setInterval(async()=>{
   if(document.hidden)return;
   try{
     const response=await fetch('./_local/publication/status',{cache:'no-store',signal:AbortSignal.timeout(5000)});
